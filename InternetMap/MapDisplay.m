@@ -277,7 +277,7 @@ enum
 }
 
 -(void) rotateRadiansY:(float)rotate {
-    _rotationMatrix = GLKMatrix4Multiply(GLKMatrix4MakeRotation(rotate, 0.0f, 1.0f, 0.0f), _rotationMatrix);
+    _rotationMatrix = GLKMatrix4Multiply(GLKMatrix4MakeRotation(rotate, 1.0f, 0.0f, 0.0f), _rotationMatrix);
 }
 
 -(void)setNodesToDisplay:(DisplayNode*)nodes count:(int)count {
