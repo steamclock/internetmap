@@ -3,16 +3,21 @@
 //  InternetMap
 //
 
-typedef struct {
-    float x;
-    float y;
-    float z;
-    float size;
-} DisplayNode;
+@class DisplayNode;
+
+@interface DisplayNode : NSObject
+
+@property (nonatomic) float x;
+@property (nonatomic) float y;
+@property (nonatomic) float z;
+@property (nonatomic) float size;
+
+@end
 
 @interface MapDisplay : NSObject
 
-@property CGSize size;
+@property (nonatomic) NSUInteger numNodes;
+@property (nonatomic) CGSize size;
 
 -(void)update;
 -(void)draw;
@@ -21,6 +26,6 @@ typedef struct {
 -(void)rotateRadiansY:(float)rotate;
 -(void)zoom:(float)zoom;
 
--(void)setNodesToDisplay:(DisplayNode*)nodes count:(int)count;
+-(DisplayNode*)displayNodeAtIndex:(NSUInteger)index;
 
 @end

@@ -76,7 +76,7 @@
     count++;
     if(count == 30) {
         count = 0;
-        NSLog(@"%.2f", self.timeSinceLastDraw * 1000);
+        NSLog(@"render: %.2fms", self.timeSinceLastDraw * 1000);
     }
     
     [self.display draw];

@@ -8,6 +8,16 @@
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
+static const int MAX_NODES = 30000;
+
+// GL vertex data for nodes
+typedef struct {
+    float x;
+    float y;
+    float z;
+    float size;
+} RawDisplayNode;
+
 // Uniform index.
 enum
 {
@@ -25,6 +35,15 @@ enum
     NUM_ATTRIBUTES
 };
 
+@interface DisplayNode ()
+
+-(id)initWithDisplay:(MapDisplay*)display index:(NSUInteger)index;
+
+@property (strong, nonatomic) MapDisplay* parent;
+@property (nonatomic) NSUInteger index;
+
+@end
+
 @interface MapDisplay () {
     GLuint _program;
     
@@ -35,13 +54,11 @@ enum
     
     GLuint _vertexArray;
     GLuint _vertexBuffer;
-    
-    int _numPoints;
 }
 
 @property (strong, nonatomic) EAGLContext *context;
 
-@property BOOL hasBuffer;
+@property (nonatomic) RawDisplayNode* lockedNodes;
 
 - (void)setupGL;
 - (void)tearDownGL;
@@ -78,6 +95,23 @@ enum
     glBlendFunc(GL_ONE, GL_ONE);
     
     glEnable(GL_POINT_SPRITE_OES);
+    
+    // setup vertex buffer for nodes
+    glGenVertexArraysOES(1, &_vertexArray);
+    glBindVertexArrayOES(_vertexArray);
+    
+    glGenBuffers(1, &_vertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
+    
+    glBufferData(GL_ARRAY_BUFFER, MAX_NODES * sizeof(RawDisplayNode), NULL, GL_DYNAMIC_DRAW);
+    
+    glEnableVertexAttribArray(ATTRIB_VERTEX);
+    glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, GL_FALSE, sizeof(RawDisplayNode), BUFFER_OFFSET(0));
+    
+    glEnableVertexAttribArray(ATTRIB_SIZE);
+    glVertexAttribPointer(ATTRIB_SIZE, 1, GL_FLOAT, GL_FALSE, sizeof(RawDisplayNode), BUFFER_OFFSET(sizeof(float) * 3));
+    
+    glBindVertexArrayOES(0);
 
     _rotationMatrix = GLKMatrix4Identity;
     _zoom = -3.0f;
@@ -102,7 +136,7 @@ enum
 {
     float aspect = fabsf(self.size.width / self.size.height);
     GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0f), aspect, 0.1f, 100.0f);
-    
+
     GLKMatrix4 baseModelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, _zoom);
     baseModelViewMatrix = GLKMatrix4Multiply(baseModelViewMatrix, _rotationMatrix);
 
@@ -111,6 +145,16 @@ enum
 
 - (void)draw
 {
+    if(self.lockedNodes) {
+        glUnmapBufferOES(GL_ARRAY_BUFFER);
+        self.lockedNodes = NULL;
+    }
+    
+    if( self.numNodes > MAX_NODES) {
+        NSLog(@"Display node count is too high, need to increase limit");
+        self.numNodes = MAX_NODES;
+    }
+
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
@@ -120,7 +164,7 @@ enum
     
     glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, _modelViewProjectionMatrix.m);
     
-    glDrawArrays(GL_POINTS, 0, _numPoints);
+    glDrawArrays(GL_POINTS, 0, self.numNodes);
 }
 
 #pragma mark -  OpenGL ES 2 shader compilation
@@ -294,31 +338,69 @@ enum
     }
 }
 
--(void)setNodesToDisplay:(DisplayNode*)nodes count:(int)count {
-    if(self.hasBuffer) {
-        glDeleteVertexArraysOES(1, &_vertexArray);
-        glDeleteBuffers(1, &_vertexBuffer);
+-(RawDisplayNode*)rawDisplayNodeAtIndex:(NSUInteger)index {
+    if(!self.lockedNodes) {
+        glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
+        self.lockedNodes = glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
     }
     
-    self.hasBuffer = YES;
-    
-    glGenVertexArraysOES(1, &_vertexArray);
-    glBindVertexArrayOES(_vertexArray);
-    
-    glGenBuffers(1, &_vertexBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
-    
-    _numPoints = count;
-    
-    glBufferData(GL_ARRAY_BUFFER, _numPoints * sizeof(DisplayNode), nodes, GL_STATIC_DRAW);
-    
-    glEnableVertexAttribArray(ATTRIB_VERTEX);
-    glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, GL_FALSE, sizeof(DisplayNode), BUFFER_OFFSET(0));
-    
-    glEnableVertexAttribArray(ATTRIB_SIZE);
-    glVertexAttribPointer(ATTRIB_SIZE, 1, GL_FLOAT, GL_FALSE, sizeof(DisplayNode), BUFFER_OFFSET(sizeof(float) * 3));
-    
-    glBindVertexArrayOES(0);
+    return &self.lockedNodes[index];
 }
+
+-(DisplayNode*)displayNodeAtIndex:(NSUInteger)index {
+    if(index >= MIN(self.numNodes, MAX_NODES)) {
+        NSLog(@"trying to modify an invalid display node index");
+        return NULL;
+    }
+    
+    return [[DisplayNode alloc] initWithDisplay:self index:index];
+}
+
+@end
+
+
+@implementation DisplayNode
+
+-(id)initWithDisplay:(MapDisplay*)display index:(NSUInteger)index {
+    if((self = [super init])) {
+        self.parent = display;
+        self.index = index;
+    }
+    
+    return self;
+}
+
+-(float)x {
+    return [self.parent rawDisplayNodeAtIndex:self.index]->x;
+}
+
+-(void)setX:(float)x {
+    [self.parent rawDisplayNodeAtIndex:self.index]->x = x;
+}
+
+-(float)y {
+    return [self.parent rawDisplayNodeAtIndex:self.index]->y;
+}
+
+-(void)setY:(float)y {
+    [self.parent rawDisplayNodeAtIndex:self.index]->y = y;
+}
+
+-(float)z {
+    return [self.parent rawDisplayNodeAtIndex:self.index]->z;
+}
+
+-(void)setZ:(float)z {
+    [self.parent rawDisplayNodeAtIndex:self.index]->z = z;
+}
+
+-(float)size {
+    return [self.parent rawDisplayNodeAtIndex:self.index]->size;
+}
+
+-(void)setSize:(float)size {
+    [self.parent rawDisplayNodeAtIndex:self.index]->size = size;
+}
+
 
 @end
