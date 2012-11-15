@@ -19,6 +19,7 @@ typedef struct {
 
 -(void)rotateRadiansX:(float)rotate;
 -(void)rotateRadiansY:(float)rotate;
+-(void)zoom:(float)zoom;
 
 -(void)setNodesToDisplay:(DisplayNode*)nodes count:(int)count;
 

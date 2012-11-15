@@ -31,6 +31,7 @@ enum
     GLKMatrix4 _modelViewProjectionMatrix;
     GLKMatrix4 _rotationMatrix;
     float _rotation;
+    float _zoom;
     
     GLuint _vertexArray;
     GLuint _vertexBuffer;
@@ -79,6 +80,7 @@ enum
     glEnable(GL_POINT_SPRITE_OES);
 
     _rotationMatrix = GLKMatrix4Identity;
+    _zoom = -3.0f;
 }
 
 - (void)tearDownGL
@@ -101,7 +103,7 @@ enum
     float aspect = fabsf(self.size.width / self.size.height);
     GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0f), aspect, 0.1f, 100.0f);
     
-    GLKMatrix4 baseModelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, -3.0f);
+    GLKMatrix4 baseModelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, _zoom);
     baseModelViewMatrix = GLKMatrix4Multiply(baseModelViewMatrix, _rotationMatrix);
 
     _modelViewProjectionMatrix = GLKMatrix4Multiply(projectionMatrix, baseModelViewMatrix);
@@ -278,6 +280,18 @@ enum
 
 -(void) rotateRadiansY:(float)rotate {
     _rotationMatrix = GLKMatrix4Multiply(GLKMatrix4MakeRotation(rotate, 1.0f, 0.0f, 0.0f), _rotationMatrix);
+}
+
+-(void) zoom:(float)zoom {
+    _zoom += zoom * -_zoom;
+    
+    if(_zoom > -0.2) {
+        _zoom = -0.2;
+    }
+    
+    if(_zoom < -10.0f) {
+        _zoom = -10.0f;
+    }
 }
 
 -(void)setNodesToDisplay:(DisplayNode*)nodes count:(int)count {

@@ -13,6 +13,12 @@
 @property (strong, nonatomic) MapDisplay* display;
 @property (strong, nonatomic) MapData* data;
 
+@property (strong, nonatomic) UIPanGestureRecognizer* panRecognizer;
+@property (strong, nonatomic) UIPinchGestureRecognizer* pinchRecognizer;
+
+@property (nonatomic) CGPoint lastPanPosition;
+@property (nonatomic) float lastScale;
+
 @end
 
 @implementation ViewController
@@ -40,6 +46,12 @@
     
     [self.data loadFromFile:[[NSBundle mainBundle] pathForResource:@"data" ofType:@"txt"]];
     [self.data updateDisplay:self.display];
+    
+    self.panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+    self.pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinch:)];
+    
+    [self.view addGestureRecognizer:self.panRecognizer];
+    [self.view addGestureRecognizer:self.pinchRecognizer];
 }
 
 - (void)dealloc
@@ -70,13 +82,38 @@
     [self.display draw];
 }
 
--(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    UITouch* touch = [touches anyObject];
-    float deltaX = [touch locationInView:self.view].x - [touch previousLocationInView:self.view].x;
-    float deltaY = [touch locationInView:self.view].y - [touch previousLocationInView:self.view].y;
+-(void)handlePan:(UIPanGestureRecognizer *)gestureRecognizer
+{
+    if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
+        CGPoint translation = [gestureRecognizer translationInView:self.view];
+        self.lastPanPosition = translation;
+    }
     
-    [self.display rotateRadiansX:deltaX * 0.01];
-    [self.display rotateRadiansY:deltaY * 0.01];
+    if([gestureRecognizer state] == UIGestureRecognizerStateChanged)
+    {
+        
+        CGPoint translation = [gestureRecognizer translationInView:self.view];
+        CGPoint delta = CGPointMake(translation.x - self.lastPanPosition.x, translation.y - self.lastPanPosition.y);
+        self.lastPanPosition = translation;
+        
+        [self.display rotateRadiansX:delta.x * 0.01];
+        [self.display rotateRadiansY:delta.y * 0.01];
+    }
 }
+
+-(void)handlePinch:(UIPinchGestureRecognizer *)gestureRecognizer
+{
+    if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
+        self.lastScale = gestureRecognizer.scale;
+    }
     
+    if([gestureRecognizer state] == UIGestureRecognizerStateChanged)
+    {
+        float deltaZoom = gestureRecognizer.scale - self.lastScale;
+        self.lastScale = gestureRecognizer.scale;
+        [self.display zoom:deltaZoom];
+    }
+
+}
+
 @end
