@@ -25,6 +25,8 @@
     int numPoints = [[[[lines objectAtIndex:0] componentsSeparatedByString:@" "] objectAtIndex:0] intValue];
     display.numNodes = numPoints;
     
+    UIColor* color = [UIColor colorWithRed:0.2 green:0.0 blue:0.2 alpha:0.2];
+    
     for (int i = 0; i < numPoints; i++) {
         NSArray* pointDesc = [[lines objectAtIndex:1 + i] componentsSeparatedByString:@" "];
         DisplayNode* point = [display displayNodeAtIndex:i];
@@ -33,9 +35,10 @@
         point.y = [[pointDesc objectAtIndex:2] floatValue];
         point.z = [[pointDesc objectAtIndex:3] floatValue];
         point.size = ([[UIScreen mainScreen] scale] == 2.00) ? 10.0f : 5.0f;
+        point.color = color;
     }
     
-    NSLog(@"load : %.2fms", [NSDate timeIntervalSinceReferenceDate] - start);
+    NSLog(@"load : %.2fms", ([NSDate timeIntervalSinceReferenceDate] - start) * 1000.0f);
 }
 
 @end

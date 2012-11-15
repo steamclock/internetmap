@@ -6,12 +6,11 @@
 @class DisplayNode;
 
 @interface DisplayNode : NSObject
-
-@property (nonatomic) float x;
-@property (nonatomic) float y;
-@property (nonatomic) float z;
-@property (nonatomic) float size;
-
+-(void)setX:(float)x;
+-(void)setY:(float)y;
+-(void)setZ:(float)z;
+-(void)setSize:(float)size;
+-(void)setColor:(UIColor *)color;
 @end
 
 @interface MapDisplay : NSObject

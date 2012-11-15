@@ -16,6 +16,10 @@ typedef struct {
     float y;
     float z;
     float size;
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
+    unsigned char a;
 } RawDisplayNode;
 
 // Uniform index.
@@ -32,6 +36,7 @@ enum
 {
     ATTRIB_VERTEX,
     ATTRIB_SIZE,
+    ATTRIB_COLOR,
     NUM_ATTRIBUTES
 };
 
@@ -110,6 +115,9 @@ enum
     
     glEnableVertexAttribArray(ATTRIB_SIZE);
     glVertexAttribPointer(ATTRIB_SIZE, 1, GL_FLOAT, GL_FALSE, sizeof(RawDisplayNode), BUFFER_OFFSET(sizeof(float) * 3));
+    
+    glEnableVertexAttribArray(ATTRIB_COLOR);
+    glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(RawDisplayNode), BUFFER_OFFSET(sizeof(float) * 4));
     
     glBindVertexArrayOES(0);
 
@@ -201,6 +209,7 @@ enum
     // This needs to be done prior to linking.
     glBindAttribLocation(_program, ATTRIB_VERTEX, "position");
     glBindAttribLocation(_program, ATTRIB_SIZE, "size");
+    glBindAttribLocation(_program, ATTRIB_COLOR, "color");
     
     // Link program.
     if (![self linkProgram:_program]) {
@@ -370,37 +379,30 @@ enum
     return self;
 }
 
--(float)x {
-    return [self.parent rawDisplayNodeAtIndex:self.index]->x;
-}
-
 -(void)setX:(float)x {
     [self.parent rawDisplayNodeAtIndex:self.index]->x = x;
-}
-
--(float)y {
-    return [self.parent rawDisplayNodeAtIndex:self.index]->y;
 }
 
 -(void)setY:(float)y {
     [self.parent rawDisplayNodeAtIndex:self.index]->y = y;
 }
 
--(float)z {
-    return [self.parent rawDisplayNodeAtIndex:self.index]->z;
-}
-
 -(void)setZ:(float)z {
     [self.parent rawDisplayNodeAtIndex:self.index]->z = z;
-}
-
--(float)size {
-    return [self.parent rawDisplayNodeAtIndex:self.index]->size;
 }
 
 -(void)setSize:(float)size {
     [self.parent rawDisplayNodeAtIndex:self.index]->size = size;
 }
 
+-(void)setColor:(UIColor *)color {
+    RawDisplayNode* node = [self.parent rawDisplayNodeAtIndex:self.index];
+    float r,g,b,a;
+    [color getRed:&r green:&g blue:&b alpha:&a];
+    node->r = (int)(r * 255.0f);
+    node->g = (int)(g * 255.0f);
+    node->b = (int)(b * 255.0f);
+    node->a = (int)(a * 255.0f);
+}
 
 @end
