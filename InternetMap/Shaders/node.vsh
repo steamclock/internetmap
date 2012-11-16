@@ -10,10 +10,12 @@ attribute float size;
 varying vec4 fragColor;
 
 uniform mat4 modelViewProjectionMatrix;
+uniform float maxSize;
 
 void main()
 {
     fragColor = color;
-    gl_Position = modelViewProjectionMatrix * position;
-    gl_PointSize = size;
+    vec4 transformed = modelViewProjectionMatrix * position;
+    gl_Position = transformed;
+    gl_PointSize = clamp(size * (1.0/transformed.z), 0.0, maxSize);
 }

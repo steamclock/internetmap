@@ -72,12 +72,14 @@
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
+    /*
     static int count = 0;
     count++;
     if(count == 30) {
         count = 0;
         NSLog(@"render: %.2fms", self.timeSinceLastDraw * 1000);
     }
+     */
     
     [self.display draw];
 }

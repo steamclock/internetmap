@@ -26,6 +26,7 @@ typedef struct {
 enum
 {
     UNIFORM_MODELVIEWPROJECTION_MATRIX,
+    UNIFORM_MAX_SIZE,
     NUM_UNIFORMS
 };
 
@@ -171,6 +172,7 @@ enum
     glUseProgram(_program);
     
     glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, _modelViewProjectionMatrix.m);
+    glUniform1f(uniforms[UNIFORM_MAX_SIZE], ([[UIScreen mainScreen] scale] == 2.00) ? 50.0f : 25.0f);
     
     glDrawArrays(GL_POINTS, 0, self.numNodes);
 }
@@ -233,6 +235,7 @@ enum
     
     // Get uniform locations.
     uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX] = glGetUniformLocation(_program, "modelViewProjectionMatrix");
+    uniforms[UNIFORM_MAX_SIZE] = glGetUniformLocation(_program, "maxSize");
     
     // Release vertex and fragment shaders.
     if (vertShader) {
