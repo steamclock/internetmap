@@ -26,5 +26,6 @@
 -(void)zoom:(float)zoom;
 
 -(DisplayNode*)displayNodeAtIndex:(NSUInteger)index;
+-(void)setLineIndices:(NSArray*)lineIndices;
 
 @end

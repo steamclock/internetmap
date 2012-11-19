@@ -4,6 +4,7 @@
 //
 
 #import "MapDisplay.h"
+#import "Program.h"
 #import <GLKit/GLKit.h>
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
@@ -22,25 +23,6 @@ typedef struct {
     unsigned char a;
 } RawDisplayNode;
 
-// Uniform index.
-enum
-{
-    UNIFORM_MODELVIEWPROJECTION_MATRIX,
-    UNIFORM_MAX_SIZE,
-    NUM_UNIFORMS
-};
-
-GLint uniforms[NUM_UNIFORMS];
-
-// Attribute index.
-enum
-{
-    ATTRIB_VERTEX,
-    ATTRIB_SIZE,
-    ATTRIB_COLOR,
-    NUM_ATTRIBUTES
-};
-
 @interface DisplayNode ()
 
 -(id)initWithDisplay:(MapDisplay*)display index:(NSUInteger)index;
@@ -51,8 +33,6 @@ enum
 @end
 
 @interface MapDisplay () {
-    GLuint _program;
-    
     GLKMatrix4 _modelViewProjectionMatrix;
     GLKMatrix4 _rotationMatrix;
     float _rotation;
@@ -65,14 +45,14 @@ enum
 @property (strong, nonatomic) EAGLContext *context;
 
 @property (nonatomic) RawDisplayNode* lockedNodes;
+@property (strong, nonatomic) NSData* lineIndexData;
+
+@property (strong, nonatomic) Program* nodeProgram;
+@property (strong, nonatomic) Program* connectionProgram;
 
 - (void)setupGL;
 - (void)tearDownGL;
 
-- (BOOL)loadShaders;
-- (BOOL)compileShader:(GLuint *)shader type:(GLenum)type file:(NSString *)file;
-- (BOOL)linkProgram:(GLuint)prog;
-- (BOOL)validateProgram:(GLuint)prog;
 @end
 
 @implementation MapDisplay
@@ -92,8 +72,9 @@ enum
 }
 
 - (void)setupGL
-{    
-    [self loadShaders];
+{
+    self.nodeProgram = [[Program alloc] initWithName:@"node"];
+    self.connectionProgram = [[Program alloc] initWithName:@"line"];
     
     //glEnable(GL_DEPTH_TEST);
     
@@ -128,15 +109,14 @@ enum
 
 - (void)tearDownGL
 {
+    self.nodeProgram = nil;
+    self. connectionProgram = nil;
+    
     [EAGLContext setCurrentContext:self.context];
     
     glDeleteBuffers(1, &_vertexBuffer);
     glDeleteVertexArraysOES(1, &_vertexArray);
         
-    if (_program) {
-        glDeleteProgram(_program);
-        _program = 0;
-    }
 }
 
 #pragma mark - GLKView and GLKViewController delegate methods
@@ -168,167 +148,19 @@ enum
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     glBindVertexArrayOES(_vertexArray);
-    
-    glUseProgram(_program);
-    
-    glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, _modelViewProjectionMatrix.m);
-    glUniform1f(uniforms[UNIFORM_MAX_SIZE], ([[UIScreen mainScreen] scale] == 2.00) ? 50.0f : 25.0f);
+
+    [self.nodeProgram use];
+    glUniformMatrix4fv([self.nodeProgram uniformForName:@"modelViewProjectionMatrix"], 1, 0, _modelViewProjectionMatrix.m);
+    glUniform1f([self.nodeProgram uniformForName:@"maxSize"], ([[UIScreen mainScreen] scale] == 2.00) ? 50.0f : 25.0f);
     
     glDrawArrays(GL_POINTS, 0, self.numNodes);
+    
+    [self.connectionProgram use];
+    glUniformMatrix4fv([self.connectionProgram uniformForName:@"modelViewProjectionMatrix"], 1, 0, _modelViewProjectionMatrix.m);
+    glDrawElements(GL_LINES, self.lineIndexData.length / 2, GL_UNSIGNED_SHORT, self.lineIndexData.bytes);
 }
 
-#pragma mark -  OpenGL ES 2 shader compilation
 
-- (BOOL)loadShaders
-{
-    GLuint vertShader, fragShader;
-    NSString *vertShaderPathname, *fragShaderPathname;
-    
-    // Create shader program.
-    _program = glCreateProgram();
-    
-    // Create and compile vertex shader.
-    vertShaderPathname = [[NSBundle mainBundle] pathForResource:@"node" ofType:@"vsh"];
-    if (![self compileShader:&vertShader type:GL_VERTEX_SHADER file:vertShaderPathname]) {
-        NSLog(@"Failed to compile vertex shader");
-        return NO;
-    }
-    
-    // Create and compile fragment shader.
-    fragShaderPathname = [[NSBundle mainBundle] pathForResource:@"node" ofType:@"fsh"];
-    if (![self compileShader:&fragShader type:GL_FRAGMENT_SHADER file:fragShaderPathname]) {
-        NSLog(@"Failed to compile fragment shader");
-        return NO;
-    }
-    
-    // Attach vertex shader to program.
-    glAttachShader(_program, vertShader);
-    
-    // Attach fragment shader to program.
-    glAttachShader(_program, fragShader);
-    
-    // Bind attribute locations.
-    // This needs to be done prior to linking.
-    glBindAttribLocation(_program, ATTRIB_VERTEX, "position");
-    glBindAttribLocation(_program, ATTRIB_SIZE, "size");
-    glBindAttribLocation(_program, ATTRIB_COLOR, "color");
-    
-    // Link program.
-    if (![self linkProgram:_program]) {
-        NSLog(@"Failed to link program: %d", _program);
-        
-        if (vertShader) {
-            glDeleteShader(vertShader);
-            vertShader = 0;
-        }
-        if (fragShader) {
-            glDeleteShader(fragShader);
-            fragShader = 0;
-        }
-        if (_program) {
-            glDeleteProgram(_program);
-            _program = 0;
-        }
-        
-        return NO;
-    }
-    
-    // Get uniform locations.
-    uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX] = glGetUniformLocation(_program, "modelViewProjectionMatrix");
-    uniforms[UNIFORM_MAX_SIZE] = glGetUniformLocation(_program, "maxSize");
-    
-    // Release vertex and fragment shaders.
-    if (vertShader) {
-        glDetachShader(_program, vertShader);
-        glDeleteShader(vertShader);
-    }
-    if (fragShader) {
-        glDetachShader(_program, fragShader);
-        glDeleteShader(fragShader);
-    }
-    
-    return YES;
-}
-
-- (BOOL)compileShader:(GLuint *)shader type:(GLenum)type file:(NSString *)file
-{
-    GLint status;
-    const GLchar *source;
-    
-    source = (GLchar *)[[NSString stringWithContentsOfFile:file encoding:NSUTF8StringEncoding error:nil] UTF8String];
-    if (!source) {
-        NSLog(@"Failed to load vertex shader");
-        return NO;
-    }
-    
-    *shader = glCreateShader(type);
-    glShaderSource(*shader, 1, &source, NULL);
-    glCompileShader(*shader);
-    
-#if defined(DEBUG)
-    GLint logLength;
-    glGetShaderiv(*shader, GL_INFO_LOG_LENGTH, &logLength);
-    if (logLength > 0) {
-        GLchar *log = (GLchar *)malloc(logLength);
-        glGetShaderInfoLog(*shader, logLength, &logLength, log);
-        NSLog(@"Shader compile log:\n%s", log);
-        free(log);
-    }
-#endif
-    
-    glGetShaderiv(*shader, GL_COMPILE_STATUS, &status);
-    if (status == 0) {
-        glDeleteShader(*shader);
-        return NO;
-    }
-    
-    return YES;
-}
-
-- (BOOL)linkProgram:(GLuint)prog
-{
-    GLint status;
-    glLinkProgram(prog);
-    
-#if defined(DEBUG)
-    GLint logLength;
-    glGetProgramiv(prog, GL_INFO_LOG_LENGTH, &logLength);
-    if (logLength > 0) {
-        GLchar *log = (GLchar *)malloc(logLength);
-        glGetProgramInfoLog(prog, logLength, &logLength, log);
-        NSLog(@"Program link log:\n%s", log);
-        free(log);
-    }
-#endif
-    
-    glGetProgramiv(prog, GL_LINK_STATUS, &status);
-    if (status == 0) {
-        return NO;
-    }
-    
-    return YES;
-}
-
-- (BOOL)validateProgram:(GLuint)prog
-{
-    GLint logLength, status;
-    
-    glValidateProgram(prog);
-    glGetProgramiv(prog, GL_INFO_LOG_LENGTH, &logLength);
-    if (logLength > 0) {
-        GLchar *log = (GLchar *)malloc(logLength);
-        glGetProgramInfoLog(prog, logLength, &logLength, log);
-        NSLog(@"Program validate log:\n%s", log);
-        free(log);
-    }
-    
-    glGetProgramiv(prog, GL_VALIDATE_STATUS, &status);
-    if (status == 0) {
-        return NO;
-    }
-    
-    return YES;
-}
 
 -(void) rotateRadiansX:(float)rotate {
     _rotationMatrix = GLKMatrix4Multiply(GLKMatrix4MakeRotation(rotate, 0.0f, 1.0f, 0.0f), _rotationMatrix);
@@ -366,6 +198,16 @@ enum
     }
     
     return [[DisplayNode alloc] initWithDisplay:self index:index];
+}
+
+-(void)setLineIndices:(NSArray*)lineIndices {
+    GLushort* rawData = alloca(lineIndices.count * sizeof(GLushort));
+    
+    for(int i = 0; i < lineIndices.count; i++) {
+        rawData[i] = [[lineIndices objectAtIndex:i] intValue];
+    }
+    
+    self.lineIndexData = [NSData dataWithBytes:rawData length:lineIndices.count * sizeof(GLushort)];
 }
 
 @end
