@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A6B56BF2165AE28A00DDE753 /* Node.m in Sources */ = {isa = PBXBuildFile; fileRef = A6B56BF1165AE28A00DDE753 /* Node.m */; };
 		A6D54A8C16544DBF00028B51 /* MapDisplay.m in Sources */ = {isa = PBXBuildFile; fileRef = A6D54A8B16544DBF00028B51 /* MapDisplay.m */; };
 		A6D54A8F1654532100028B51 /* MapData.m in Sources */ = {isa = PBXBuildFile; fileRef = A6D54A8E1654532100028B51 /* MapData.m */; };
 		A6F3F5631640F1FB0070E6AE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5621640F1FB0070E6AE /* UIKit.framework */; };
@@ -29,6 +30,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A6B56BF0165AE28A00DDE753 /* Node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Node.h; sourceTree = "<group>"; };
+		A6B56BF1165AE28A00DDE753 /* Node.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Node.m; sourceTree = "<group>"; };
 		A6D54A8A16544DBF00028B51 /* MapDisplay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapDisplay.h; sourceTree = "<group>"; };
 		A6D54A8B16544DBF00028B51 /* MapDisplay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapDisplay.m; sourceTree = "<group>"; };
 		A6D54A8D1654532100028B51 /* MapData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapData.h; sourceTree = "<group>"; };
@@ -82,6 +85,8 @@
 				A6D54A8E1654532100028B51 /* MapData.m */,
 				A6D54A8A16544DBF00028B51 /* MapDisplay.h */,
 				A6D54A8B16544DBF00028B51 /* MapDisplay.m */,
+				A6B56BF0165AE28A00DDE753 /* Node.h */,
+				A6B56BF1165AE28A00DDE753 /* Node.m */,
 			);
 			name = Map;
 			path = InternetMap;
@@ -223,6 +228,7 @@
 				A6F3F5841640F1FB0070E6AE /* ViewController.m in Sources */,
 				A6D54A8C16544DBF00028B51 /* MapDisplay.m in Sources */,
 				A6D54A8F1654532100028B51 /* MapData.m in Sources */,
+				A6B56BF2165AE28A00DDE753 /* Node.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

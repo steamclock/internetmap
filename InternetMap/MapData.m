@@ -5,40 +5,60 @@
 
 #import "MapData.h"
 #import "MapDisplay.h"
+#import "Node.h"
 
 @interface MapData ()
+@property (strong, nonatomic) NSMutableArray* nodes;
 @property (strong, nonatomic) NSString* filename;
 @end
 
 @implementation MapData
 
 -(void)loadFromFile:(NSString*)filename {
-    self.filename = filename;
+    NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
+    
+    NSString *fileContents = [NSString stringWithContentsOfFile:filename encoding:NSUTF8StringEncoding error:NULL];
+    NSArray *lines = [fileContents componentsSeparatedByString:@"\n"];
+    
+    NSArray* header = [[lines objectAtIndex:0] componentsSeparatedByString:@" "];
+    int numNodes = [[header objectAtIndex:0] intValue];
+    
+    self.nodes = [[NSMutableArray alloc] initWithCapacity:numNodes];
+
+    for (int i = 0; i < numNodes; i++) {
+        NSArray* nodeDesc = [[lines objectAtIndex:1 + i] componentsSeparatedByString:@" "];
+        
+        Node* node = [Node new];
+        node.uid = [nodeDesc objectAtIndex:0];
+        node.index = i;
+        node.importance = [[nodeDesc objectAtIndex:1] floatValue];
+        node.positionX = [[nodeDesc objectAtIndex:2] floatValue];
+        node.positionY = [[nodeDesc objectAtIndex:3] floatValue];
+        
+        [self.nodes addObject:node];
+    }
+    
+    NSLog(@"load : %.2fms", ([NSDate timeIntervalSinceReferenceDate] - start) * 1000.0f);
 }
 
 -(void)updateDisplay:(MapDisplay*)display {
     NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
     
-    NSString *fileContents = [NSString stringWithContentsOfFile:self.filename encoding:NSUTF8StringEncoding error:NULL];
-    NSArray *lines = [fileContents componentsSeparatedByString:@"\n"];
-    
-    int numPoints = [[[[lines objectAtIndex:0] componentsSeparatedByString:@" "] objectAtIndex:0] intValue];
-    display.numNodes = numPoints;
+    display.numNodes = self.nodes.count;
     
     UIColor* color = [UIColor colorWithRed:0.2 green:0.0 blue:0.2 alpha:0.2];
     
-    for (int i = 0; i < numPoints; i++) {
-        NSArray* pointDesc = [[lines objectAtIndex:1 + i] componentsSeparatedByString:@" "];
-        DisplayNode* point = [display displayNodeAtIndex:i];
+    [self.nodes enumerateObjectsUsingBlock:^(Node* obj, NSUInteger idx, BOOL *stop) {
+        DisplayNode* point = [display displayNodeAtIndex:idx];
         
-        point.x = log10f([[pointDesc objectAtIndex:1] floatValue]) + 2.0f;
-        point.y = [[pointDesc objectAtIndex:2] floatValue];
-        point.z = [[pointDesc objectAtIndex:3] floatValue];
+        point.x = log10f(obj.importance) + 2.0f;
+        point.y = obj.positionX;
+        point.z = obj.positionY;
         point.size = ([[UIScreen mainScreen] scale] == 2.00) ? 10.0f : 5.0f;
         point.color = color;
-    }
+    }];
     
-    NSLog(@"load : %.2fms", ([NSDate timeIntervalSinceReferenceDate] - start) * 1000.0f);
+    NSLog(@"update display : %.2fms", ([NSDate timeIntervalSinceReferenceDate] - start) * 1000.0f);
 }
 
 @end
