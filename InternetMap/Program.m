@@ -72,6 +72,7 @@
     glBindAttribLocation(_program, ATTRIB_VERTEX, "position");
     glBindAttribLocation(_program, ATTRIB_SIZE, "size");
     glBindAttribLocation(_program, ATTRIB_COLOR, "color");
+    glBindAttribLocation(_program, ATTRIB_LINECOLOR, "lineColor");
     
     // Link program.
     if (![self linkProgram:_program]) {

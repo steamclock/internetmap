@@ -21,6 +21,10 @@ typedef struct {
     unsigned char g;
     unsigned char b;
     unsigned char a;
+    unsigned char lineR;
+    unsigned char lineG;
+    unsigned char lineB;
+    unsigned char lineA;
 } RawDisplayNode;
 
 @interface DisplayNode ()
@@ -100,6 +104,9 @@ typedef struct {
     
     glEnableVertexAttribArray(ATTRIB_COLOR);
     glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(RawDisplayNode), BUFFER_OFFSET(sizeof(float) * 4));
+    
+    glEnableVertexAttribArray(ATTRIB_LINECOLOR);
+    glVertexAttribPointer(ATTRIB_LINECOLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(RawDisplayNode), BUFFER_OFFSET((sizeof(float) * 4) + 4));
     
     glBindVertexArrayOES(0);
 
@@ -248,6 +255,16 @@ typedef struct {
     node->g = (int)(g * 255.0f);
     node->b = (int)(b * 255.0f);
     node->a = (int)(a * 255.0f);
+}
+
+-(void)setLineColor:(UIColor *)color {
+    RawDisplayNode* node = [self.parent rawDisplayNodeAtIndex:self.index];
+    float r,g,b,a;
+    [color getRed:&r green:&g blue:&b alpha:&a];
+    node->lineR = (int)(r * 255.0f);
+    node->lineG = (int)(g * 255.0f);
+    node->lineB = (int)(b * 255.0f);
+    node->lineA = (int)(a * 255.0f);
 }
 
 @end

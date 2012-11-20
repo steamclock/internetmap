@@ -11,6 +11,7 @@
 -(void)setZ:(float)z;
 -(void)setSize:(float)size;
 -(void)setColor:(UIColor *)color;
+-(void)setLineColor:(UIColor *)color;
 @end
 
 @interface MapDisplay : NSObject

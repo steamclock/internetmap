@@ -65,7 +65,7 @@
     
     display.numNodes = self.nodes.count;
     
-    UIColor* color = [UIColor colorWithRed:0.0 green:0.2 blue:0.2 alpha:0.2];
+    UIColor* nodeColor = [UIColor colorWithRed:0.0 green:1.0 blue:1.0 alpha:1.0];
     
     [self.nodes enumerateObjectsUsingBlock:^(Node* obj, NSUInteger idx, BOOL *stop) {
         DisplayNode* point = [display displayNodeAtIndex:idx];
@@ -74,7 +74,11 @@
         point.y = obj.positionX;
         point.z = obj.positionY;
         point.size = ([[UIScreen mainScreen] scale] == 2.00) ? 10.0f : 5.0f;
-        point.color = color;
+        point.color = nodeColor;
+
+        float lineImportance = MAX(obj.importance - 0.01f, 0.0f) * 2.0f;
+        UIColor* lineColor = [UIColor colorWithRed:lineImportance green:0.0 blue:lineImportance alpha:1.0];
+        point.lineColor = lineColor;
     }];
     
     [display setLineIndices:self.connections];

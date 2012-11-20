@@ -4,7 +4,7 @@
 //
 
 attribute vec4 position;
-attribute vec4 color;
+attribute vec4 lineColor;
 
 varying vec4 fragColor;
 
@@ -12,7 +12,7 @@ uniform mat4 modelViewProjectionMatrix;
 
 void main()
 {
-    fragColor = color;
+    fragColor = lineColor;
     vec4 transformed = modelViewProjectionMatrix * position;
     gl_Position = transformed;
 }
