@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1FFD9C87165C9E7400FED149 /* as2attr.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1FFD9C86165C9E7400FED149 /* as2attr.txt */; };
 		A6B56BF2165AE28A00DDE753 /* Node.m in Sources */ = {isa = PBXBuildFile; fileRef = A6B56BF1165AE28A00DDE753 /* Node.m */; };
 		A6B56BF5165AEDF700DDE753 /* line.fsh in Sources */ = {isa = PBXBuildFile; fileRef = A6B56BF3165AEDF700DDE753 /* line.fsh */; };
 		A6B56BF6165AEDF700DDE753 /* line.vsh in Sources */ = {isa = PBXBuildFile; fileRef = A6B56BF4165AEDF700DDE753 /* line.vsh */; };
@@ -35,6 +36,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1FFD9C86165C9E7400FED149 /* as2attr.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = as2attr.txt; path = InternetMap/as2attr.txt; sourceTree = "<group>"; };
 		A6B56BF0165AE28A00DDE753 /* Node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Node.h; sourceTree = "<group>"; };
 		A6B56BF1165AE28A00DDE753 /* Node.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Node.m; sourceTree = "<group>"; };
 		A6B56BF3165AEDF700DDE753 /* line.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = line.fsh; path = Shaders/line.fsh; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 		A6F3F5531640F1FB0070E6AE = {
 			isa = PBXGroup;
 			children = (
+				1FFD9C86165C9E7400FED149 /* as2attr.txt */,
 				A6F3F5901640F7080070E6AE /* data.txt */,
 				A6F3F56D1640F1FB0070E6AE /* Supporting Files */,
 				A6F3F56C1640F1FB0070E6AE /* UI */,
@@ -228,6 +231,7 @@
 				A6F3F5871640F1FB0070E6AE /* ViewController_iPhone.xib in Resources */,
 				A6F3F58A1640F1FB0070E6AE /* ViewController_iPad.xib in Resources */,
 				A6F3F5911640F7080070E6AE /* data.txt in Resources */,
+				1FFD9C87165C9E7400FED149 /* as2attr.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

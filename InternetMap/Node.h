@@ -12,5 +12,6 @@
 @property float importance;
 @property float positionX;
 @property float positionY;
+@property int type;
 
 @end

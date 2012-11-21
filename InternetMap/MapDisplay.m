@@ -158,7 +158,7 @@ typedef struct {
 
     [self.nodeProgram use];
     glUniformMatrix4fv([self.nodeProgram uniformForName:@"modelViewProjectionMatrix"], 1, 0, _modelViewProjectionMatrix.m);
-    glUniform1f([self.nodeProgram uniformForName:@"maxSize"], ([[UIScreen mainScreen] scale] == 2.00) ? 50.0f : 25.0f);
+    glUniform1f([self.nodeProgram uniformForName:@"maxSize"], ([[UIScreen mainScreen] scale] == 2.00) ? 150.0f : 75.0f);
     
     glDrawArrays(GL_POINTS, 0, self.numNodes);
     
