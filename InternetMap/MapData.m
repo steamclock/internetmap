@@ -52,7 +52,7 @@
         Node* first = [self.nodesByUid valueForKey:[connectionDesc objectAtIndex:0]];
         Node* second = [self.nodesByUid valueForKey:[connectionDesc objectAtIndex:1]];
         
-        if((first.importance > 0.02) && (second.importance > 0.01)) {
+        if((first.importance > 0.01) && (second.importance > 0.01)) {
             [self.connections addObject:[NSNumber numberWithInt:first.index]];
             [self.connections addObject:[NSNumber numberWithInt:second.index]];
         }
@@ -156,8 +156,8 @@
                 break;
         }
 
-        float lineImportance = MAX(obj.importance - 0.01f, 0.0f) * 2.0f;
-        UIColor* lineColor = [UIColor colorWithRed:0.0 green:0.0 blue:lineImportance alpha:1.0];
+        float lineImportance = MAX(obj.importance - 0.01f, 0.0f) * 0.5f;
+        UIColor* lineColor = [UIColor colorWithRed:lineImportance green:lineImportance blue:lineImportance alpha:1.0];
         point.lineColor = lineColor;
     }];
     
