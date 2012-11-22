@@ -72,21 +72,7 @@
 
 - (void)update
 {
-    GLKVector3 target;
-    if(self.targetNode != NSNotFound) {
-        Node* node = [self.data nodeAtIndex:self.targetNode];
-        
-        // TODO: need a way to make sure this calc matches visualization
-        target.x = log10f(node.importance) + 2.0f;
-        target.y = node.positionX;
-        target.z = node.positionY;
-    }
-    else {
-        target.x = target.y = target.z = 0;        
-    }
-
     self.display.camera.displaySize = self.view.bounds.size;
-    self.display.camera.target = target;
     [self.display update];
 }
 
@@ -145,6 +131,21 @@
     else {
         self.targetNode++;
     }
+    
+    GLKVector3 target;
+    if(self.targetNode != NSNotFound) {
+        Node* node = [self.data nodeAtIndex:self.targetNode];
+        
+        // TODO: need a way to make sure this calc matches visualization
+        target.x = log10f(node.importance) + 2.0f;
+        target.y = node.positionX;
+        target.z = node.positionY;
+    }
+    else {
+        target.x = target.y = target.z = 0;
+    }
+    
+    self.display.camera.target = target;
 }
 
 @end
