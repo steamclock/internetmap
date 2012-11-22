@@ -6,6 +6,7 @@
 #import "MapDisplay.h"
 #import "Program.h"
 #import <GLKit/GLKit.h>
+#import "Camera.h"
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
@@ -37,10 +38,6 @@ typedef struct {
 @end
 
 @interface MapDisplay () {
-    GLKMatrix4 _modelViewProjectionMatrix;
-    GLKMatrix4 _rotationMatrix;
-    float _rotation;
-    float _zoom;
     
     GLuint _vertexArray;
     GLuint _vertexBuffer;
@@ -53,6 +50,8 @@ typedef struct {
 
 @property (strong, nonatomic) Program* nodeProgram;
 @property (strong, nonatomic) Program* connectionProgram;
+
+@property (strong, nonatomic, readwrite) Camera* camera;
 
 - (void)setupGL;
 - (void)tearDownGL;
@@ -109,9 +108,8 @@ typedef struct {
     glVertexAttribPointer(ATTRIB_LINECOLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(RawDisplayNode), BUFFER_OFFSET((sizeof(float) * 4) + 4));
     
     glBindVertexArrayOES(0);
-
-    _rotationMatrix = GLKMatrix4Identity;
-    _zoom = -3.0f;
+    
+    self.camera = [Camera new];
 }
 
 - (void)tearDownGL
@@ -123,20 +121,13 @@ typedef struct {
     
     glDeleteBuffers(1, &_vertexBuffer);
     glDeleteVertexArraysOES(1, &_vertexArray);
-        
 }
 
 #pragma mark - GLKView and GLKViewController delegate methods
 
 - (void)update
 {
-    float aspect = fabsf(self.size.width / self.size.height);
-    GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0f), aspect, 0.1f, 100.0f);
-
-    GLKMatrix4 baseModelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, _zoom);
-    baseModelViewMatrix = GLKMatrix4Multiply(baseModelViewMatrix, _rotationMatrix);
-
-    _modelViewProjectionMatrix = GLKMatrix4Multiply(projectionMatrix, baseModelViewMatrix);
+    [self.camera update];
 }
 
 - (void)draw
@@ -151,42 +142,22 @@ typedef struct {
         self.numNodes = MAX_NODES;
     }
 
+    GLKMatrix4 mvp = [self.camera currentModelViewProjection];
+    
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     glBindVertexArrayOES(_vertexArray);
 
     [self.nodeProgram use];
-    glUniformMatrix4fv([self.nodeProgram uniformForName:@"modelViewProjectionMatrix"], 1, 0, _modelViewProjectionMatrix.m);
+    glUniformMatrix4fv([self.nodeProgram uniformForName:@"modelViewProjectionMatrix"], 1, 0, mvp.m);
     glUniform1f([self.nodeProgram uniformForName:@"maxSize"], ([[UIScreen mainScreen] scale] == 2.00) ? 150.0f : 75.0f);
     
     glDrawArrays(GL_POINTS, 0, self.numNodes);
     
     [self.connectionProgram use];
-    glUniformMatrix4fv([self.connectionProgram uniformForName:@"modelViewProjectionMatrix"], 1, 0, _modelViewProjectionMatrix.m);
+    glUniformMatrix4fv([self.connectionProgram uniformForName:@"modelViewProjectionMatrix"], 1, 0, mvp.m);
     glDrawElements(GL_LINES, self.lineIndexData.length / 2, GL_UNSIGNED_SHORT, self.lineIndexData.bytes);
-}
-
-
-
--(void) rotateRadiansX:(float)rotate {
-    _rotationMatrix = GLKMatrix4Multiply(GLKMatrix4MakeRotation(rotate, 0.0f, 1.0f, 0.0f), _rotationMatrix);
-}
-
--(void) rotateRadiansY:(float)rotate {
-    _rotationMatrix = GLKMatrix4Multiply(GLKMatrix4MakeRotation(rotate, 1.0f, 0.0f, 0.0f), _rotationMatrix);
-}
-
--(void) zoom:(float)zoom {
-    _zoom += zoom * -_zoom;
-    
-    if(_zoom > -0.2) {
-        _zoom = -0.2;
-    }
-    
-    if(_zoom < -10.0f) {
-        _zoom = -10.0f;
-    }
 }
 
 -(RawDisplayNode*)rawDisplayNodeAtIndex:(NSUInteger)index {

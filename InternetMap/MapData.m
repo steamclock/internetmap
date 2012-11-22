@@ -16,6 +16,10 @@
 
 @implementation MapData
 
+-(Node*)nodeAtIndex:(NSUInteger)index {
+    return [self.nodes objectAtIndex:index];
+}
+
 -(void)loadFromFile:(NSString*)filename {
     NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
     

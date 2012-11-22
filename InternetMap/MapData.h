@@ -16,10 +16,14 @@ enum
     AS_NIC
 };
 
+@class Node;
+
 @interface MapData : NSObject
 
 -(void)loadFromFile:(NSString*)filename;
 -(void)loadFromAttrFile:(NSString*)filename;
 -(void)updateDisplay:(MapDisplay*)display;
+
+-(Node*)nodeAtIndex:(NSUInteger)index;
 
 @end

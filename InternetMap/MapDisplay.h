@@ -4,6 +4,7 @@
 //
 
 @class DisplayNode;
+@class Camera;
 
 @interface DisplayNode : NSObject
 -(void)setX:(float)x;
@@ -17,14 +18,11 @@
 @interface MapDisplay : NSObject
 
 @property (nonatomic) NSUInteger numNodes;
-@property (nonatomic) CGSize size;
+
+@property (strong, nonatomic, readonly) Camera* camera;
 
 -(void)update;
 -(void)draw;
-
--(void)rotateRadiansX:(float)rotate;
--(void)rotateRadiansY:(float)rotate;
--(void)zoom:(float)zoom;
 
 -(DisplayNode*)displayNodeAtIndex:(NSUInteger)index;
 -(void)setLineIndices:(NSArray*)lineIndices;

@@ -6,6 +6,8 @@
 #import "ViewController.h"
 #import "MapDisplay.h"
 #import "MapData.h"
+#import "Camera.h"
+#import "Node.h"
 
 @interface ViewController ()
 
@@ -18,6 +20,8 @@
 
 @property (nonatomic) CGPoint lastPanPosition;
 @property (nonatomic) float lastScale;
+
+@property (nonatomic) NSUInteger targetNode;
 
 @end
 
@@ -53,6 +57,8 @@
     
     [self.view addGestureRecognizer:self.panRecognizer];
     [self.view addGestureRecognizer:self.pinchRecognizer];
+    
+    self.targetNode = NSNotFound;
 }
 
 - (void)dealloc
@@ -66,8 +72,21 @@
 
 - (void)update
 {
-    self.display.size = self.view.bounds.size;
-    
+    GLKVector3 target;
+    if(self.targetNode != NSNotFound) {
+        Node* node = [self.data nodeAtIndex:self.targetNode];
+        
+        // TODO: need a way to make sure this calc matches visualization
+        target.x = log10f(node.importance) + 2.0f;
+        target.y = node.positionX;
+        target.z = node.positionY;
+    }
+    else {
+        target.x = target.y = target.z = 0;        
+    }
+
+    self.display.camera.displaySize = self.view.bounds.size;
+    self.display.camera.target = target;
     [self.display update];
 }
 
@@ -99,8 +118,8 @@
         CGPoint delta = CGPointMake(translation.x - self.lastPanPosition.x, translation.y - self.lastPanPosition.y);
         self.lastPanPosition = translation;
         
-        [self.display rotateRadiansX:delta.x * 0.01];
-        [self.display rotateRadiansY:delta.y * 0.01];
+        [self.display.camera rotateRadiansX:delta.x * 0.01];
+        [self.display.camera rotateRadiansY:delta.y * 0.01];
     }
 }
 
@@ -114,9 +133,18 @@
     {
         float deltaZoom = gestureRecognizer.scale - self.lastScale;
         self.lastScale = gestureRecognizer.scale;
-        [self.display zoom:deltaZoom];
+        [self.display.camera zoom:deltaZoom];
     }
 
+}
+
+-(IBAction)nextTarget:(id)sender {
+    if(self.targetNode == NSNotFound) {
+        self.targetNode = 0;
+    }
+    else {
+        self.targetNode++;
+    }
 }
 
 @end
