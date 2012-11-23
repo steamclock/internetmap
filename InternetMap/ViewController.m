@@ -8,6 +8,7 @@
 #import "MapData.h"
 #import "Camera.h"
 #import "Node.h"
+#import "DefaultVisualization.h"
 
 @interface ViewController ()
 
@@ -47,6 +48,7 @@
     
     self.display = [MapDisplay new];
     self.data = [MapData new];
+    self.data.visualization = [DefaultVisualization new];
     
     [self.data loadFromFile:[[NSBundle mainBundle] pathForResource:@"data" ofType:@"txt"]];
     [self.data loadFromAttrFile:[[NSBundle mainBundle] pathForResource:@"as2attr" ofType:@"txt"]];
@@ -129,17 +131,19 @@
         self.targetNode = 0;
     }
     else {
+        Node* node = [self.data nodeAtIndex:self.targetNode];
+
+        // update current node to default state
+        [self.data.visualization updateDisplay:self.display forNodes:@[node]];
+        
         self.targetNode++;
     }
     
     GLKVector3 target;
     if(self.targetNode != NSNotFound) {
         Node* node = [self.data nodeAtIndex:self.targetNode];
-        
-        // TODO: need a way to make sure this calc matches visualization
-        target.x = log10f(node.importance) + 2.0f;
-        target.y = node.positionX;
-        target.z = node.positionY;
+        target = [self.data.visualization nodePosition:node];
+        [[self.display displayNodeAtIndex:node.index] setColor:[UIColor redColor]];
     }
     else {
         target.x = target.y = target.z = 0;

@@ -100,70 +100,10 @@
 }
 
 
-#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
-
 -(void)updateDisplay:(MapDisplay*)display {
     NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
-    
     display.numNodes = self.nodes.count;
-    
-//    UIColor* nodeColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
-    
-//    UIColor* t1Color = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
-//    UIColor* t2Color = [UIColor colorWithRed:1.0 green:0.7 blue:1.0 alpha:1.0];
-//    UIColor* compColor = [UIColor colorWithRed:1.0 green:0.2 blue:0.2 alpha:1.0];
-//    UIColor* eduColor = [UIColor colorWithRed:1.0 green:0.7 blue:0.7 alpha:1.0];
-//    UIColor* ixColor = [UIColor colorWithRed:0.7 green:1.0 blue:0.7 alpha:1.0];
-//    UIColor* nicColor = [UIColor colorWithRed:0.7 green:0.7 blue:1.0 alpha:1.0];
-//    UIColor* unknownColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1.0];
-
-    UIColor* t1Color = UIColorFromRGB(0x36a3e6);
-    UIColor* t2Color = UIColorFromRGB(0x2246a7);
-    UIColor* unknownColor = UIColorFromRGB(0x8e44bd);
-    UIColor* compColor = UIColorFromRGB(0x4490ce);
-    UIColor* eduColor = UIColorFromRGB(0xecb7fd);
-    UIColor* ixColor = UIColorFromRGB(0xb7fddc);
-    UIColor* nicColor = UIColorFromRGB(0xb0a2d3);
-    
-    [self.nodes enumerateObjectsUsingBlock:^(Node* obj, NSUInteger idx, BOOL *stop) {
-        DisplayNode* point = [display displayNodeAtIndex:idx];
-        
-        point.x = log10f(obj.importance) + 2.0f;
-        point.y = obj.positionX;
-        point.z = obj.positionY;
-        float size = 2.0 + 400*powf(obj.importance, .75);
-//        float size = 2.0 + 100*sqrtf(obj.importance);
-//        float size = 2.0 + 1000*obj.importance;
-        point.size = ([[UIScreen mainScreen] scale] == 2.00) ? 2.0*size : 1.0*size;
-        
-        switch(obj.type) {
-            case AS_T1:
-                point.color = t1Color;
-                break;
-            case AS_T2:
-                point.color = t2Color;
-                break;
-            case AS_COMP:
-                point.color = compColor;
-                break;
-            case AS_EDU:
-                point.color = eduColor;
-                break;
-            case AS_IX:
-                point.color = ixColor;
-                break;
-            case AS_NIC:
-                point.color = nicColor;
-                break;
-            default:
-                point.color = unknownColor;
-                break;
-        }
-
-        float lineImportance = MAX(obj.importance - 0.01f, 0.0f) * 0.5f;
-        UIColor* lineColor = [UIColor colorWithRed:lineImportance green:lineImportance blue:lineImportance alpha:1.0];
-        point.lineColor = lineColor;
-    }];
+    [self.visualization updateDisplay:display forNodes:self.nodes];
     
     [display setLineIndices:self.connections];
     

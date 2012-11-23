@@ -3,22 +3,17 @@
 //  InternetMap
 //
 
+#import "Visualization.h"
+
 @class MapDisplay;
 
-enum
-{
-    AS_UNKNOWN,
-    AS_T1,
-    AS_T2,
-    AS_COMP,
-    AS_EDU,
-    AS_IX,
-    AS_NIC
-};
+
 
 @class Node;
 
 @interface MapData : NSObject
+
+@property (strong, nonatomic) NSObject<Visualization>* visualization;
 
 -(void)loadFromFile:(NSString*)filename;
 -(void)loadFromAttrFile:(NSString*)filename;

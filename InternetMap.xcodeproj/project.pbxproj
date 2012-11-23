@@ -15,6 +15,7 @@
 		A6D54A8C16544DBF00028B51 /* MapDisplay.m in Sources */ = {isa = PBXBuildFile; fileRef = A6D54A8B16544DBF00028B51 /* MapDisplay.m */; };
 		A6D54A8F1654532100028B51 /* MapData.m in Sources */ = {isa = PBXBuildFile; fileRef = A6D54A8E1654532100028B51 /* MapData.m */; };
 		A6DC6610165E926100EDA4F6 /* Camera.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DC660F165E926100EDA4F6 /* Camera.m */; };
+		A6DC6614165EE8FA00EDA4F6 /* DefaultVisualization.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DC6613165EE8F900EDA4F6 /* DefaultVisualization.m */; };
 		A6F3F5631640F1FB0070E6AE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5621640F1FB0070E6AE /* UIKit.framework */; };
 		A6F3F5651640F1FB0070E6AE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5641640F1FB0070E6AE /* Foundation.framework */; };
 		A6F3F5671640F1FB0070E6AE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5661640F1FB0070E6AE /* CoreGraphics.framework */; };
@@ -48,6 +49,9 @@
 		A6D54A8E1654532100028B51 /* MapData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapData.m; sourceTree = "<group>"; };
 		A6DC660E165E926100EDA4F6 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
 		A6DC660F165E926100EDA4F6 /* Camera.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Camera.m; sourceTree = "<group>"; };
+		A6DC6611165EE8D200EDA4F6 /* Visualization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Visualization.h; sourceTree = "<group>"; };
+		A6DC6612165EE8F900EDA4F6 /* DefaultVisualization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DefaultVisualization.h; sourceTree = "<group>"; };
+		A6DC6613165EE8F900EDA4F6 /* DefaultVisualization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DefaultVisualization.m; sourceTree = "<group>"; };
 		A6F3F55E1640F1FB0070E6AE /* InternetMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InternetMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6F3F5621640F1FB0070E6AE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		A6F3F5641640F1FB0070E6AE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -105,6 +109,9 @@
 				A6B56BF8165AF53F00DDE753 /* Program.m */,
 				A6DC660E165E926100EDA4F6 /* Camera.h */,
 				A6DC660F165E926100EDA4F6 /* Camera.m */,
+				A6DC6611165EE8D200EDA4F6 /* Visualization.h */,
+				A6DC6612165EE8F900EDA4F6 /* DefaultVisualization.h */,
+				A6DC6613165EE8F900EDA4F6 /* DefaultVisualization.m */,
 			);
 			name = Map;
 			path = InternetMap;
@@ -253,6 +260,7 @@
 				A6B56BF2165AE28A00DDE753 /* Node.m in Sources */,
 				A6B56BF9165AF53F00DDE753 /* Program.m in Sources */,
 				A6DC6610165E926100EDA4F6 /* Camera.m in Sources */,
+				A6DC6614165EE8FA00EDA4F6 /* DefaultVisualization.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
