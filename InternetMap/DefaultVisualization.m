@@ -15,6 +15,14 @@
     return GLKVector3Make(log10f(node.importance) + 2.0f, node.positionX, node.positionY);
 }
 
+-(float)nodeSize:(Node*)node {
+    float size = 2.0 + 400*powf(node.importance, .75);
+//        float size = 2.0 + 100*sqrtf(obj.importance);
+//        float size = 2.0 + 1000*obj.importance;
+    return ([[UIScreen mainScreen] scale] == 2.00) ? 2.0*size : size;
+
+}
+
 -(void)updateDisplay:(MapDisplay*)display forNodes:(NSArray*)nodes {
     //    UIColor* nodeColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
     
@@ -41,11 +49,8 @@
         point.x = position.x;
         point.y = position.y;
         point.z = position.z;
-        
-        float size = 2.0 + 400*powf(node.importance, .75);
-        //        float size = 2.0 + 100*sqrtf(obj.importance);
-        //        float size = 2.0 + 1000*obj.importance;
-        point.size = ([[UIScreen mainScreen] scale] == 2.00) ? 2.0*size : 1.0*size;
+
+        point.size = [self nodeSize:node];
         
         switch(node.type) {
             case AS_T1:

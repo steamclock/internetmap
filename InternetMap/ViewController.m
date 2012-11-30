@@ -16,6 +16,9 @@
 @property (strong, nonatomic) MapDisplay* display;
 @property (strong, nonatomic) MapData* data;
 
+@property (strong, nonatomic) UITapGestureRecognizer* tapRecognizer;
+@property (strong, nonatomic) UITapGestureRecognizer* twoFingerTapRecognizer;
+@property (strong, nonatomic) UITapGestureRecognizer* doubleTapRecognizer;
 @property (strong, nonatomic) UIPanGestureRecognizer* panRecognizer;
 @property (strong, nonatomic) UIPinchGestureRecognizer* pinchRecognizer;
 
@@ -54,9 +57,20 @@
     [self.data loadFromAttrFile:[[NSBundle mainBundle] pathForResource:@"as2attr" ofType:@"txt"]];
     [self.data updateDisplay:self.display];
     
+    self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    self.twoFingerTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTwoFingerTap:)];
+    self.twoFingerTapRecognizer.numberOfTouchesRequired = 2;
+    
+    self.doubleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
+    self.doubleTapRecognizer.numberOfTapsRequired = 2;
+    [self.tapRecognizer requireGestureRecognizerToFail:self.doubleTapRecognizer];
+    
     self.panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
     self.pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinch:)];
     
+    [self.view addGestureRecognizer:self.tapRecognizer];
+    [self.view addGestureRecognizer:self.doubleTapRecognizer];
+    [self.view addGestureRecognizer:self.twoFingerTapRecognizer];
     [self.view addGestureRecognizer:self.panRecognizer];
     [self.view addGestureRecognizer:self.pinchRecognizer];
     
@@ -124,32 +138,132 @@
         [self.display.camera zoom:deltaZoom];
     }
 
+
+}
+
+-(void)handleTap:(UITapGestureRecognizer*)gestureRecognizer {
+    
+    NSDate* date = [NSDate date];
+    CGPoint pointInView = [gestureRecognizer locationInView:self.view];
+    float xOld = pointInView.x;
+    CGFloat xLoOld = 0;
+    CGFloat xHiOld = [HelperMethods deviceIsiPad] ? 1024 : 480;
+    CGFloat xLoNew = -1;
+    CGFloat xHiNew = 1;
+
+    pointInView.x = (xOld-xLoOld) / (xHiOld-xLoOld) * (xHiNew-xLoNew) + xLoNew;
+    
+    float yOld = pointInView.y;
+    CGFloat yLoOld = 0;
+    CGFloat yHiOld = [HelperMethods deviceIsiPad] ? 768 : 320;
+    CGFloat yLoNew = 1;
+    CGFloat yHiNew = -1;
+    
+    pointInView.y = (yOld-yLoOld) / (yHiOld-yLoOld) * (yHiNew-yLoNew) + yLoNew;
+    GLKVector3 cameraInObjectSpace = [self.display.camera cameraInObjectSpace]; //A
+    GLKVector3 pointOnClipPlaneInObjectSpace = [self.display.camera applyModelViewToPoint:pointInView]; //B
+    float xA, yA, zA;
+    float xB, yB, zB;
+    float xC, yC, zC;
+    float r;
+    float maxDelta = -1;
+    int foundI = NSNotFound;
+
+    xA = cameraInObjectSpace.x;
+    yA = cameraInObjectSpace.y;
+    zA = cameraInObjectSpace.z;
+    
+    xB = pointOnClipPlaneInObjectSpace.x;
+    yB = pointOnClipPlaneInObjectSpace.y;
+    zB = pointOnClipPlaneInObjectSpace.z;
+    
+    for (int i = 0; i < [self.data.nodes count]; i++) {
+        Node* node = [self.data nodeAtIndex:i];
+        
+        GLKVector3 nodePosition = [self.data.visualization nodePosition:node];
+        xC = nodePosition.x;
+        yC = nodePosition.y;
+        zC = nodePosition.z;
+        
+        r = 0.01;
+        
+        float a = powf((xB-xA), 2)+powf((yB-yA), 2)+powf((zB-zA), 2);
+        float b = 2*((xB-xA)*(xA-xC)+(yB-yA)*(yA-yC)+(zB-zA)*(zA-zC));
+        float c = powf((xA-xC), 2)+powf((yA-yC), 2)+powf((zA-zC), 2)-powf(r, 2);
+        float delta = powf(b, 2)-4*a*c;
+        if (delta >= 0) {
+            NSLog(@"intersected node %i: %@, delta: %f", i, NSStringFromGLKVector3(nodePosition), delta);
+            if (delta > maxDelta) {
+                maxDelta = delta;
+                foundI = i;
+            }
+        }
+    }
+    
+    if (foundI != NSNotFound) {
+        NSLog(@"selected node %i", foundI);
+        [self updateTargetForIndex:foundI];
+    }else {
+        NSLog(@"No node found, will bring up onscreen controls");
+    }
+    
+    NSLog(@"time for intersection calculation: %f", [date timeIntervalSinceNow]);
+    
+}
+
+- (void)handleTwoFingerTap:(UIGestureRecognizer*)gestureRecognizer {
+    NSLog(@"Zoomed out");
+    if (gestureRecognizer.numberOfTouches == 2) {
+        float deltaZoom = -0.3;
+        self.lastScale = self.lastScale+deltaZoom;
+        
+        [self.display.camera zoom:deltaZoom];
+    }
+}
+
+- (void)handleDoubleTap:(UIGestureRecognizer*)gestureRecongizer {
+    NSLog(@"Zoomed in");
+    float deltaZoom = 0.3;
+    self.lastScale = self.lastScale+deltaZoom;
+    
+    [self.display.camera zoom:deltaZoom];
 }
 
 -(IBAction)nextTarget:(id)sender {
     if(self.targetNode == NSNotFound) {
-        self.targetNode = 0;
+        [self updateTargetForIndex:0];
     }
     else {
-        Node* node = [self.data nodeAtIndex:self.targetNode];
+        [self updateTargetForIndex:+1];
+    }
+}
 
-        // update current node to default state
-        [self.data.visualization updateDisplay:self.display forNodes:@[node]];
+- (void)updateTargetForIndex:(int)index {
+    GLKVector3 target;
+
+    // update current node to default state
+    if (self.targetNode != NSNotFound) {
+        Node* node = [self.data nodeAtIndex:self.targetNode];
         
-        self.targetNode++;
+        [self.data.visualization updateDisplay:self.display forNodes:@[node]];
     }
     
-    GLKVector3 target;
-    if(self.targetNode != NSNotFound) {
+    //set new node as targeted and change camera anchor point
+    if (index != NSNotFound) {
+        
+        self.targetNode = index;
         Node* node = [self.data nodeAtIndex:self.targetNode];
         target = [self.data.visualization nodePosition:node];
         [[self.display displayNodeAtIndex:node.index] setColor:[UIColor redColor]];
-    }
-    else {
-        target.x = target.y = target.z = 0;
+
+        
+    }else {
+        target = GLKVector3Make(0, 0, 0);
     }
     
+
     self.display.camera.target = target;
+
 }
 
 @end

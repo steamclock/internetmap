@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		11134D2416695AD60061BDED /* HelperMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 11134D2316695AD60061BDED /* HelperMethods.m */; };
 		1FFD9C87165C9E7400FED149 /* as2attr.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1FFD9C86165C9E7400FED149 /* as2attr.txt */; };
 		A6B56BF2165AE28A00DDE753 /* Node.m in Sources */ = {isa = PBXBuildFile; fileRef = A6B56BF1165AE28A00DDE753 /* Node.m */; };
 		A6B56BF9165AF53F00DDE753 /* Program.m in Sources */ = {isa = PBXBuildFile; fileRef = A6B56BF8165AF53F00DDE753 /* Program.m */; };
@@ -36,6 +37,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		11134D2216695AD60061BDED /* HelperMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelperMethods.h; sourceTree = "<group>"; };
+		11134D2316695AD60061BDED /* HelperMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelperMethods.m; sourceTree = "<group>"; };
 		1FFD9C86165C9E7400FED149 /* as2attr.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = as2attr.txt; path = InternetMap/as2attr.txt; sourceTree = "<group>"; };
 		A6B56BF0165AE28A00DDE753 /* Node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Node.h; sourceTree = "<group>"; };
 		A6B56BF1165AE28A00DDE753 /* Node.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Node.m; sourceTree = "<group>"; };
@@ -153,6 +156,8 @@
 		A6F3F56C1640F1FB0070E6AE /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				11134D2216695AD60061BDED /* HelperMethods.h */,
+				11134D2316695AD60061BDED /* HelperMethods.m */,
 				A6F3F5751640F1FB0070E6AE /* AppDelegate.h */,
 				A6F3F5761640F1FB0070E6AE /* AppDelegate.m */,
 				A6F3F5821640F1FB0070E6AE /* ViewController.h */,
@@ -261,6 +266,7 @@
 				A6B56BF9165AF53F00DDE753 /* Program.m in Sources */,
 				A6DC6610165E926100EDA4F6 /* Camera.m in Sources */,
 				A6DC6614165EE8FA00EDA4F6 /* DefaultVisualization.m in Sources */,
+				11134D2416695AD60061BDED /* HelperMethods.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

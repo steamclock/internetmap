@@ -8,7 +8,6 @@
 #import "Node.h"
 
 @interface MapData ()
-@property (strong, nonatomic) NSMutableArray* nodes;
 @property (strong, nonatomic) NSMutableDictionary* nodesByUid;
 @property (strong, nonatomic) NSMutableArray* connections;
 @property (strong, nonatomic) NSString* filename;

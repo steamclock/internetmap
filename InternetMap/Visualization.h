@@ -12,6 +12,7 @@
 @protocol Visualization <NSObject>
 
 -(GLKVector3)nodePosition:(Node*)node;
+-(float)nodeSize:(Node*)node;
 -(void)updateDisplay:(MapDisplay*)display forNodes:(NSArray*)nodes;
 
 @end

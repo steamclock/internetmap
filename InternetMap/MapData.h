@@ -21,4 +21,6 @@
 
 -(Node*)nodeAtIndex:(NSUInteger)index;
 
+@property (strong, nonatomic) NSMutableArray* nodes;
+
 @end
