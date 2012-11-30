@@ -9,6 +9,7 @@
 #import "Camera.h"
 #import "Node.h"
 #import "DefaultVisualization.h"
+#import "VisualizationsTableViewController.h"
 
 @interface ViewController ()
 
@@ -27,10 +28,14 @@
 
 @property (nonatomic) NSUInteger targetNode;
 
+
+/* UIKit Overlay */
 @property (weak, nonatomic) IBOutlet UIButton* searchButton;
 @property (weak, nonatomic) IBOutlet UIButton* youAreHereButton;
 @property (weak, nonatomic) IBOutlet UIButton* visualizationsButton;
 @property (weak, nonatomic) IBOutlet UIButton* timelineButton;
+
+@property (strong, nonatomic) UIPopoverController* visualizationSelectionPopover;
 
 
 @end
@@ -270,6 +275,25 @@
 
     self.display.camera.target = target;
 
+}
+
+-(IBAction)selectVisualization:(id)sender {
+    if (!self.visualizationSelectionPopover) {
+        VisualizationsTableViewController *tableforPopover = [[VisualizationsTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:tableforPopover];
+        self.visualizationSelectionPopover.delegate = self;
+        self.visualizationSelectionPopover = [[UIPopoverController alloc] initWithContentViewController:navController];
+        [self.visualizationSelectionPopover setPopoverContentSize:tableforPopover.contentSizeForViewInPopover];
+    }
+    [self.visualizationSelectionPopover presentPopoverFromRect:self.visualizationsButton.bounds inView:self.visualizationsButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+}
+
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
+    
+}
+
+- (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController{
+    return YES;
 }
 
 @end
