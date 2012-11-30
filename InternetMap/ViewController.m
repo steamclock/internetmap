@@ -27,6 +27,12 @@
 
 @property (nonatomic) NSUInteger targetNode;
 
+@property (weak, nonatomic) IBOutlet UIButton* searchButton;
+@property (weak, nonatomic) IBOutlet UIButton* youAreHereButton;
+@property (weak, nonatomic) IBOutlet UIButton* visualizationsButton;
+@property (weak, nonatomic) IBOutlet UIButton* timelineButton;
+
+
 @end
 
 @implementation ViewController
