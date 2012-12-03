@@ -8,7 +8,7 @@
 #import "Node.h"
 
 @interface MapData ()
-@property (strong, nonatomic) NSMutableDictionary* nodesByUid;
+@property (strong, nonatomic) NSMutableDictionary* nodesByAsn;
 @property (strong, nonatomic) NSMutableArray* connections;
 @property (strong, nonatomic) NSString* filename;
 @end
@@ -30,13 +30,13 @@
     int numConnections = [[header objectAtIndex:1] intValue];
     
     self.nodes = [[NSMutableArray alloc] initWithCapacity:numNodes];
-    self.nodesByUid = [[NSMutableDictionary alloc] initWithCapacity:numNodes];
+    self.nodesByAsn = [[NSMutableDictionary alloc] initWithCapacity:numNodes];
 
     for (int i = 0; i < numNodes; i++) {
         NSArray* nodeDesc = [[lines objectAtIndex:1 + i] componentsSeparatedByString:@" "];
         
         Node* node = [Node new];
-        node.uid = [nodeDesc objectAtIndex:0];
+        node.asn = [nodeDesc objectAtIndex:0];
         node.index = i;
         node.importance = [[nodeDesc objectAtIndex:1] floatValue];
         node.positionX = [[nodeDesc objectAtIndex:2] floatValue];
@@ -44,7 +44,7 @@
         node.type = AS_UNKNOWN;
         
         [self.nodes addObject:node];
-        [self.nodesByUid setObject:node forKey:node.uid];
+        [self.nodesByAsn setObject:node forKey:node.asn];
     }
     
     self.connections = [NSMutableArray new];
@@ -52,8 +52,8 @@
     for (int i = 0; i < numConnections; i++) {
         NSArray* connectionDesc = [[lines objectAtIndex:1 + numNodes + i] componentsSeparatedByString:@" "];
         
-        Node* first = [self.nodesByUid valueForKey:[connectionDesc objectAtIndex:0]];
-        Node* second = [self.nodesByUid valueForKey:[connectionDesc objectAtIndex:1]];
+        Node* first = [self.nodesByAsn valueForKey:[connectionDesc objectAtIndex:0]];
+        Node* second = [self.nodesByAsn valueForKey:[connectionDesc objectAtIndex:1]];
         
         if((first.importance > 0.01) && (second.importance > 0.01)) {
             [self.connections addObject:[NSNumber numberWithInt:first.index]];
@@ -86,12 +86,11 @@
     for(NSString *line in lines) {
         NSArray* asDesc = [line componentsSeparatedByString:@"\t"];
         
-        Node* node = [self.nodesByUid objectForKey:[asDesc objectAtIndex:0]];
+        Node* node = [self.nodesByAsn objectForKey:[asDesc objectAtIndex:0]];
         if(node){
             node.type = [[asTypeDict objectForKey: [asDesc objectAtIndex:7]] intValue];
+            node.textDescription = [asDesc objectAtIndex:1];
         }
-//        NSLog(@"%@",[asDesc objectAtIndex:0]);
-//        NSLog(@"%@", node);
     }
     
     

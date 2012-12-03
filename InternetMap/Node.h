@@ -18,11 +18,13 @@ enum
 
 @interface Node : NSObject
 
-@property (strong, nonatomic) NSString* uid;
+@property (strong, nonatomic) NSString* asn;
 @property NSUInteger index;
 @property float importance;
 @property float positionX;
 @property float positionY;
 @property int type;
+
+@property (strong, nonatomic) NSString* textDescription;
 
 @end
