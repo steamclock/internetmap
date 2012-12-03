@@ -88,6 +88,10 @@
     self.targetNode = NSNotFound;
 }
 
+-(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    return UIInterfaceOrientationIsLandscape(interfaceOrientation);
+}
+
 - (void)dealloc
 {    
     if ([EAGLContext currentContext] == self.context) {
