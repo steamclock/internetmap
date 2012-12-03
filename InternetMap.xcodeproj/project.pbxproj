@@ -45,6 +45,10 @@
 		D4CEA33416694E65004B8E8A /* youarehere.png in Resources */ = {isa = PBXBuildFile; fileRef = D4CEA32A16694E65004B8E8A /* youarehere.png */; };
 		D4CEA33516694E65004B8E8A /* youarehere@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D4CEA32B16694E65004B8E8A /* youarehere@2x.png */; };
 		D4CEA338166962F8004B8E8A /* VisualizationsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CEA337166962F8004B8E8A /* VisualizationsTableViewController.m */; };
+		D4F65DE4166D56C10077BF5A /* UIBarButtonItem+WEPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = D4F65DDC166D56C10077BF5A /* UIBarButtonItem+WEPopover.m */; };
+		D4F65DE5166D56C10077BF5A /* WEPopoverContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4F65DDE166D56C10077BF5A /* WEPopoverContainerView.m */; };
+		D4F65DE6166D56C10077BF5A /* WEPopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = D4F65DE0166D56C10077BF5A /* WEPopoverController.m */; };
+		D4F65DE7166D56C10077BF5A /* WETouchableView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4F65DE3166D56C10077BF5A /* WETouchableView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -100,6 +104,15 @@
 		D4CEA32B16694E65004B8E8A /* youarehere@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "youarehere@2x.png"; path = "Images/youarehere@2x.png"; sourceTree = "<group>"; };
 		D4CEA336166962F8004B8E8A /* VisualizationsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VisualizationsTableViewController.h; sourceTree = "<group>"; };
 		D4CEA337166962F8004B8E8A /* VisualizationsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VisualizationsTableViewController.m; sourceTree = "<group>"; };
+		D4F65DDB166D56C10077BF5A /* UIBarButtonItem+WEPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIBarButtonItem+WEPopover.h"; path = "3rd Party Code/WEPopover/UIBarButtonItem+WEPopover.h"; sourceTree = "<group>"; };
+		D4F65DDC166D56C10077BF5A /* UIBarButtonItem+WEPopover.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIBarButtonItem+WEPopover.m"; path = "3rd Party Code/WEPopover/UIBarButtonItem+WEPopover.m"; sourceTree = "<group>"; };
+		D4F65DDD166D56C10077BF5A /* WEPopoverContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WEPopoverContainerView.h; path = "3rd Party Code/WEPopover/WEPopoverContainerView.h"; sourceTree = "<group>"; };
+		D4F65DDE166D56C10077BF5A /* WEPopoverContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WEPopoverContainerView.m; path = "3rd Party Code/WEPopover/WEPopoverContainerView.m"; sourceTree = "<group>"; };
+		D4F65DDF166D56C10077BF5A /* WEPopoverController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WEPopoverController.h; path = "3rd Party Code/WEPopover/WEPopoverController.h"; sourceTree = "<group>"; };
+		D4F65DE0166D56C10077BF5A /* WEPopoverController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WEPopoverController.m; path = "3rd Party Code/WEPopover/WEPopoverController.m"; sourceTree = "<group>"; };
+		D4F65DE1166D56C10077BF5A /* WEPopoverParentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WEPopoverParentView.h; path = "3rd Party Code/WEPopover/WEPopoverParentView.h"; sourceTree = "<group>"; };
+		D4F65DE2166D56C10077BF5A /* WETouchableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WETouchableView.h; path = "3rd Party Code/WEPopover/WETouchableView.h"; sourceTree = "<group>"; };
+		D4F65DE3166D56C10077BF5A /* WETouchableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WETouchableView.m; path = "3rd Party Code/WEPopover/WETouchableView.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,6 +192,7 @@
 		A6F3F56C1640F1FB0070E6AE /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				D4F65DD9166D56A90077BF5A /* 3rd Party Code */,
 				11134D2216695AD60061BDED /* HelperMethods.h */,
 				11134D2316695AD60061BDED /* HelperMethods.m */,
 				D4CEA32016694E53004B8E8A /* Images */,
@@ -225,6 +239,22 @@
 				D4CEA32B16694E65004B8E8A /* youarehere@2x.png */,
 			);
 			name = Images;
+			sourceTree = "<group>";
+		};
+		D4F65DD9166D56A90077BF5A /* 3rd Party Code */ = {
+			isa = PBXGroup;
+			children = (
+				D4F65DDB166D56C10077BF5A /* UIBarButtonItem+WEPopover.h */,
+				D4F65DDC166D56C10077BF5A /* UIBarButtonItem+WEPopover.m */,
+				D4F65DDD166D56C10077BF5A /* WEPopoverContainerView.h */,
+				D4F65DDE166D56C10077BF5A /* WEPopoverContainerView.m */,
+				D4F65DDF166D56C10077BF5A /* WEPopoverController.h */,
+				D4F65DE0166D56C10077BF5A /* WEPopoverController.m */,
+				D4F65DE1166D56C10077BF5A /* WEPopoverParentView.h */,
+				D4F65DE2166D56C10077BF5A /* WETouchableView.h */,
+				D4F65DE3166D56C10077BF5A /* WETouchableView.m */,
+			);
+			name = "3rd Party Code";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -321,6 +351,10 @@
 				A6DC6614165EE8FA00EDA4F6 /* DefaultVisualization.m in Sources */,
 				11134D2416695AD60061BDED /* HelperMethods.m in Sources */,
 				D4CEA338166962F8004B8E8A /* VisualizationsTableViewController.m in Sources */,
+				D4F65DE4166D56C10077BF5A /* UIBarButtonItem+WEPopover.m in Sources */,
+				D4F65DE5166D56C10077BF5A /* WEPopoverContainerView.m in Sources */,
+				D4F65DE6166D56C10077BF5A /* WEPopoverController.m in Sources */,
+				D4F65DE7166D56C10077BF5A /* WETouchableView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
