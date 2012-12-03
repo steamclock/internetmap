@@ -10,6 +10,7 @@
 #import "Node.h"
 #import "DefaultVisualization.h"
 #import "VisualizationsTableViewController.h"
+#import "NodeSearchViewController.h"
 
 @interface ViewController ()
 
@@ -34,9 +35,8 @@
 @property (weak, nonatomic) IBOutlet UIButton* youAreHereButton;
 @property (weak, nonatomic) IBOutlet UIButton* visualizationsButton;
 @property (weak, nonatomic) IBOutlet UIButton* timelineButton;
-
 @property (strong, nonatomic) UIPopoverController* visualizationSelectionPopover;
-
+@property (strong, nonatomic) UIPopoverController* nodeSearchPopover;
 
 @end
 
@@ -281,6 +281,8 @@
 
 }
 
+#pragma mark - UIKit Controls Overlay
+
 -(IBAction)selectVisualization:(id)sender {
     if (!self.visualizationSelectionPopover) {
         VisualizationsTableViewController *tableforPopover = [[VisualizationsTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
@@ -291,6 +293,21 @@
     }
     [self.visualizationSelectionPopover presentPopoverFromRect:self.visualizationsButton.bounds inView:self.visualizationsButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 }
+
+-(IBAction)searchNodes:(id)sender {
+    if (!self.nodeSearchPopover) {
+        NodeSearchViewController *tableforPopover = [[NodeSearchViewController alloc] initWithStyle:UITableViewStylePlain];
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:tableforPopover];
+        self.nodeSearchPopover.delegate = self;
+        self.nodeSearchPopover = [[UIPopoverController alloc] initWithContentViewController:navController];
+        [self.nodeSearchPopover setPopoverContentSize:tableforPopover.contentSizeForViewInPopover];
+    }
+    [self.nodeSearchPopover presentPopoverFromRect:self.searchButton.bounds inView:self.searchButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+}
+
+
+
+#pragma mark - UIPopoverController Delegate
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
     

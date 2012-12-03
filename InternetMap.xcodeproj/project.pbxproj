@@ -45,6 +45,7 @@
 		D4CEA33416694E65004B8E8A /* youarehere.png in Resources */ = {isa = PBXBuildFile; fileRef = D4CEA32A16694E65004B8E8A /* youarehere.png */; };
 		D4CEA33516694E65004B8E8A /* youarehere@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D4CEA32B16694E65004B8E8A /* youarehere@2x.png */; };
 		D4CEA338166962F8004B8E8A /* VisualizationsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CEA337166962F8004B8E8A /* VisualizationsTableViewController.m */; };
+		D4F65E02166D6D530077BF5A /* NodeSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D4F65E01166D6D530077BF5A /* NodeSearchViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -100,6 +101,8 @@
 		D4CEA32B16694E65004B8E8A /* youarehere@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "youarehere@2x.png"; path = "Images/youarehere@2x.png"; sourceTree = "<group>"; };
 		D4CEA336166962F8004B8E8A /* VisualizationsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VisualizationsTableViewController.h; sourceTree = "<group>"; };
 		D4CEA337166962F8004B8E8A /* VisualizationsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VisualizationsTableViewController.m; sourceTree = "<group>"; };
+		D4F65E00166D6D530077BF5A /* NodeSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeSearchViewController.h; sourceTree = "<group>"; };
+		D4F65E01166D6D530077BF5A /* NodeSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NodeSearchViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -185,6 +188,8 @@
 				A6F3F5751640F1FB0070E6AE /* AppDelegate.h */,
 				A6F3F5761640F1FB0070E6AE /* AppDelegate.m */,
 				A6F3F5821640F1FB0070E6AE /* ViewController.h */,
+				D4F65E00166D6D530077BF5A /* NodeSearchViewController.h */,
+				D4F65E01166D6D530077BF5A /* NodeSearchViewController.m */,
 				A6F3F5831640F1FB0070E6AE /* ViewController.m */,
 				A6F3F5851640F1FB0070E6AE /* ViewController_iPhone.xib */,
 				A6F3F5881640F1FB0070E6AE /* ViewController_iPad.xib */,
@@ -321,6 +326,7 @@
 				A6DC6614165EE8FA00EDA4F6 /* DefaultVisualization.m in Sources */,
 				11134D2416695AD60061BDED /* HelperMethods.m in Sources */,
 				D4CEA338166962F8004B8E8A /* VisualizationsTableViewController.m in Sources */,
+				D4F65E02166D6D530077BF5A /* NodeSearchViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
