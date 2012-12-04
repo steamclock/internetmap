@@ -35,6 +35,7 @@
 @property (weak, nonatomic) IBOutlet UIButton* youAreHereButton;
 @property (weak, nonatomic) IBOutlet UIButton* visualizationsButton;
 @property (weak, nonatomic) IBOutlet UIButton* timelineButton;
+@property (weak, nonatomic) IBOutlet UISlider* timelineSlider;
 @property (strong, nonatomic) UIPopoverController* visualizationSelectionPopover;
 @property (strong, nonatomic) UIPopoverController* nodeSearchPopover;
 
@@ -302,6 +303,22 @@
         [self.nodeSearchPopover setPopoverContentSize:tableforPopover.contentSizeForViewInPopover];
     }
     [self.nodeSearchPopover presentPopoverFromRect:self.searchButton.bounds inView:self.searchButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+}
+
+-(IBAction)toggleTimelineMode:(id)sender {
+    if (self.timelineSlider.hidden) {
+        self.timelineSlider.hidden = NO;
+        
+        self.searchButton.enabled = NO;
+        self.youAreHereButton.enabled = NO;
+        self.visualizationsButton.enabled = NO;
+    } else {
+        self.timelineSlider.hidden = YES;
+        
+        self.searchButton.enabled = YES;
+        self.youAreHereButton.enabled = YES;
+        self.visualizationsButton.enabled = YES;
+    }
 }
 
 

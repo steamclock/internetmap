@@ -183,17 +183,17 @@
 			isa = PBXGroup;
 			children = (
 				D4F65DD9166D56A90077BF5A /* 3rd Party Code */,
+				A6F3F5751640F1FB0070E6AE /* AppDelegate.h */,
+				A6F3F5761640F1FB0070E6AE /* AppDelegate.m */,
 				11134D2216695AD60061BDED /* HelperMethods.h */,
 				11134D2316695AD60061BDED /* HelperMethods.m */,
 				D4CEA32016694E53004B8E8A /* Images */,
-				A6F3F5751640F1FB0070E6AE /* AppDelegate.h */,
-				A6F3F5761640F1FB0070E6AE /* AppDelegate.m */,
-				A6F3F5821640F1FB0070E6AE /* ViewController.h */,
 				D4F65E00166D6D530077BF5A /* NodeSearchViewController.h */,
 				D4F65E01166D6D530077BF5A /* NodeSearchViewController.m */,
+				A6F3F5821640F1FB0070E6AE /* ViewController.h */,
 				A6F3F5831640F1FB0070E6AE /* ViewController.m */,
-				A6F3F5851640F1FB0070E6AE /* ViewController_iPhone.xib */,
 				A6F3F5881640F1FB0070E6AE /* ViewController_iPad.xib */,
+				A6F3F5851640F1FB0070E6AE /* ViewController_iPhone.xib */,
 				D4CEA336166962F8004B8E8A /* VisualizationsTableViewController.h */,
 				D4CEA337166962F8004B8E8A /* VisualizationsTableViewController.m */,
 			);
