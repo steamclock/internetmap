@@ -283,6 +283,27 @@
 
 }
 
+-(CGPoint)getCoordinatesForNode{
+    Node* node = [self.data nodeAtIndex:self.targetNode];
+    
+    int viewport[4] = {0, 0, self.display.camera.displaySize.width, self.display.camera.displaySize.height};
+    
+    GLKVector3 nodePosition = [self.data.visualization nodePosition:node];
+    
+    GLKMatrix4 model = [self.display.camera currentModelView];
+    
+    GLKMatrix4 projection = [self.display.camera currentProjection];
+    
+    GLKVector3 coordinates = GLKMathProject(nodePosition, model, projection, viewport);
+    
+    CGPoint point = CGPointMake(coordinates.x,self.display.camera.displaySize.height - coordinates.y);
+    
+    //NSLog(@"%@", NSStringFromCGPoint(point));
+    
+    return point;
+    
+}
+
 #pragma mark - UIKit Controls Overlay
 
 -(IBAction)selectVisualization:(id)sender {
@@ -321,27 +342,6 @@
         self.youAreHereButton.enabled = YES;
         self.visualizationsButton.enabled = YES;
     }
-}
-
--(CGPoint)getCoordinatesForNode{
-    Node* node = [self.data nodeAtIndex:self.targetNode];
-    
-    int viewport[4] = {0, 0, self.display.camera.displaySize.width, self.display.camera.displaySize.height};
-    
-    GLKVector3 nodePosition = [self.data.visualization nodePosition:node];
-    
-    GLKMatrix4 model = [self.display.camera currentModelView];
-    
-    GLKMatrix4 projection = [self.display.camera currentProjection];
-    
-    GLKVector3 coordinates = GLKMathProject(nodePosition, model, projection, viewport);
-    
-    CGPoint point = CGPointMake(coordinates.x,self.display.camera.displaySize.height - coordinates.y);
-    
-    NSLog(@"%@", NSStringFromCGPoint(point));
-    
-    return point;
-    
 }
 
 -(void)displayInformationPopoverForCurrentNode {
