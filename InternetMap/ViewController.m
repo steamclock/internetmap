@@ -208,7 +208,8 @@
         float delta = powf(b, 2)-4*a*c;
         if (delta >= 0) {
             NSLog(@"intersected node %i: %@, delta: %f", i, NSStringFromGLKVector3(nodePosition), delta);
-            if (delta > maxDelta) {
+            GLKVector4 transformedNodePosition = GLKMatrix4MultiplyVector4(self.display.camera.currentModelView, GLKVector4MakeWithVector3(nodePosition, 1));
+            if ((delta > maxDelta) && (transformedNodePosition.z < -0.1)) {
                 maxDelta = delta;
                 foundI = i;
             }
