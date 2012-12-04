@@ -130,20 +130,13 @@ static const float MOVE_TIME = 1.0f;
 }
 
 -(GLKVector3)applyModelViewToPoint:(CGPoint)point {
-//    float tanFovHalf = tanf(GLKMathDegreesToRadians(65.0f/2.0f));
     GLKVector4 vec4FromPoint = GLKVector4Make(point.x, point.y, -0.1, 1);
     GLKMatrix4 invertedModelViewProjectionMatrix = GLKMatrix4Invert(_modelViewProjectionMatrix, NULL);
     vec4FromPoint = GLKMatrix4MultiplyVector4(invertedModelViewProjectionMatrix, vec4FromPoint);
     vec4FromPoint = GLKVector4DivideScalar(vec4FromPoint, vec4FromPoint.w);
-//    NSLog(@"vec4: %@", NSStringFromGLKVector4(vec4FromPoint));
 
-    GLKVector3 pointOnClipPlaneInObjectSpace = GLKVector3Make(vec4FromPoint.x, vec4FromPoint.y, vec4FromPoint.z);
-//    GLKVector3 cameraInObjectSpace = [self cameraInObjectSpace];
-//    NSLog(@"%@", NSStringFromGLKMatrix4(_modelViewMatrix));
-//    NSLog(@"pointOnClipPlaneInObjectSpace: %@", NSStringFromGLKVector3(pointOnClipPlaneInObjectSpace));
-//    NSLog(@"camera: %@", NSStringFromGLKVector3(cameraInObjectSpace));
-//    NSLog(@"final vector: %@", NSStringFromGLKVector3(GLKVector3Subtract(pointOnClipPlaneInObjectSpace, cameraInObjectSpace)));
-    return pointOnClipPlaneInObjectSpace;
+    return GLKVector3Make(vec4FromPoint.x, vec4FromPoint.y, vec4FromPoint.z);
+
 }
 
 @end
