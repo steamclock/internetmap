@@ -18,7 +18,8 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        self.title = @"Node Information";
+        [self setContentSizeForViewInPopover:CGSizeMake(320, 150)];
     }
     return self;
 }

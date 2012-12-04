@@ -25,6 +25,7 @@ enum
 @property float positionY;
 @property int type;
 
+@property (strong, nonatomic) NSString* typeString;
 @property (strong, nonatomic) NSString* textDescription;
 
 @end

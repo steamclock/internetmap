@@ -89,6 +89,7 @@
         Node* node = [self.nodesByAsn objectForKey:[asDesc objectAtIndex:0]];
         if(node){
             node.type = [[asTypeDict objectForKey: [asDesc objectAtIndex:7]] intValue];
+            node.typeString = [asDesc objectAtIndex:7];
             node.textDescription = [asDesc objectAtIndex:1];
         }
     }

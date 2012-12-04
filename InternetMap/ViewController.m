@@ -11,6 +11,7 @@
 #import "DefaultVisualization.h"
 #import "VisualizationsTableViewController.h"
 #import "NodeSearchViewController.h"
+#import "NodeInformationViewController.h"
 
 @interface ViewController ()
 
@@ -345,13 +346,21 @@
 }
 
 -(void)displayInformationPopoverForCurrentNode {
-    if (!self.nodeInformationPopover) {
-        VisualizationsTableViewController *tableforPopover = [[VisualizationsTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
-        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:tableforPopover];
-        self.nodeInformationPopover.delegate = self;
-        self.nodeInformationPopover = [[UIPopoverController alloc] initWithContentViewController:navController];
-        [self.nodeInformationPopover setPopoverContentSize:tableforPopover.contentSizeForViewInPopover];
-    }
+    Node* node = [self.data nodeAtIndex:self.targetNode];
+    
+    NodeInformationViewController *nodeInfo = [[NodeInformationViewController alloc] initWithNibName:@"NodeInformationViewController" bundle:nil];
+    
+    NSLog(@"ASN:%@, Text Desc: %@", node.asn, node.textDescription);
+    
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:nodeInfo];
+    
+    self.nodeInformationPopover.delegate = self;
+    self.nodeInformationPopover = [[UIPopoverController alloc] initWithContentViewController:navController];
+    
+    nodeInfo.asnLabel.text = node.asn;
+    nodeInfo.textDescriptionLabel.text = node.textDescription;
+    nodeInfo.nodeTypeLabel.text = node.typeString;
+    
     
     // TODO: This should be called as a part a camera object callback when the camera has finished zooming
     
