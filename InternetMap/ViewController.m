@@ -252,6 +252,8 @@
     else {
         [self updateTargetForIndex:+1];
     }
+    
+    [self getCoordinatesForNode];
 }
 
 - (void)updateTargetForIndex:(int)index {
@@ -322,12 +324,32 @@
     }
 }
 
+-(CGPoint)getCoordinatesForNode{
+    Node* node = [self.data nodeAtIndex:self.targetNode];
+    
+    CGRect bounds = [[UIScreen mainScreen] bounds];
+    
+    int viewport[4] = {0, 0, bounds.size.width, bounds.size.height};
+    
+    GLKVector3 nodePosition = [self.data.visualization nodePosition:node];
+    
+    GLKMatrix4 model = [self.display.camera currentModelView];
+    
+    GLKMatrix4 projection = [self.display.camera currentProjection];
+    
+    GLKVector3 coordinates = GLKMathProject(nodePosition, model, projection, viewport);
+    
+    NSLog(@"Coordinates: %f, %f", coordinates.x, coordinates.y);
+    
+    return CGPointMake(coordinates.x, coordinates.y);
+    
+}
 
 
 #pragma mark - UIPopoverController Delegate
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
-    
+    //Do stuff
 }
 
 - (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController{
