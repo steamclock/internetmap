@@ -38,6 +38,7 @@
 @property (weak, nonatomic) IBOutlet UISlider* timelineSlider;
 @property (strong, nonatomic) UIPopoverController* visualizationSelectionPopover;
 @property (strong, nonatomic) UIPopoverController* nodeSearchPopover;
+@property (strong, nonatomic) UIPopoverController* nodeInformationPopover;
 
 @end
 
@@ -250,10 +251,8 @@
         [self updateTargetForIndex:0];
     }
     else {
-        [self updateTargetForIndex:+1];
+        [self updateTargetForIndex:self.targetNode+1];
     }
-    
-    [self getCoordinatesForNode];
 }
 
 - (void)updateTargetForIndex:(int)index {
@@ -273,14 +272,14 @@
         Node* node = [self.data nodeAtIndex:self.targetNode];
         target = [self.data.visualization nodePosition:node];
         [[self.display displayNodeAtIndex:node.index] setColor:[UIColor redColor]];
-
         
-    }else {
+    } else {
         target = GLKVector3Make(0, 0, 0);
     }
     
-
     self.display.camera.target = target;
+    
+    [self displayInformationPopoverForCurrentNode];
 
 }
 
@@ -327,9 +326,7 @@
 -(CGPoint)getCoordinatesForNode{
     Node* node = [self.data nodeAtIndex:self.targetNode];
     
-    CGRect bounds = [[UIScreen mainScreen] bounds];
-    
-    int viewport[4] = {0, 0, bounds.size.width, bounds.size.height};
+    int viewport[4] = {0, 0, self.display.camera.displaySize.width, self.display.camera.displaySize.height};
     
     GLKVector3 nodePosition = [self.data.visualization nodePosition:node];
     
@@ -339,9 +336,31 @@
     
     GLKVector3 coordinates = GLKMathProject(nodePosition, model, projection, viewport);
     
-    NSLog(@"Coordinates: %f, %f", coordinates.x, coordinates.y);
+    CGPoint point = CGPointMake(coordinates.x,self.display.camera.displaySize.height - coordinates.y);
     
-    return CGPointMake(coordinates.x, coordinates.y);
+    NSLog(@"%@", NSStringFromCGPoint(point));
+    
+    return point;
+    
+}
+
+-(void)displayInformationPopoverForCurrentNode {
+    if (!self.nodeInformationPopover) {
+        VisualizationsTableViewController *tableforPopover = [[VisualizationsTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:tableforPopover];
+        self.nodeInformationPopover.delegate = self;
+        self.nodeInformationPopover = [[UIPopoverController alloc] initWithContentViewController:navController];
+        [self.nodeInformationPopover setPopoverContentSize:tableforPopover.contentSizeForViewInPopover];
+    }
+    
+    // TODO: This should be called as a part a camera object callback when the camera has finished zooming
+    
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 1.0f * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void)
+    {
+        CGPoint center = [self getCoordinatesForNode];
+       [self.nodeInformationPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    });
     
 }
 
