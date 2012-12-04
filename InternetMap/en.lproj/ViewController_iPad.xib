@@ -41,6 +41,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{914, 14}, {100, 44}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
+						<reference key="NSWindow"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<int key="IBUIContentMode">4</int>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -59,6 +60,7 @@
 								<int key="NSvFlags">301</int>
 								<string key="NSFrame">{{20, 20}, {55, 55}}</string>
 								<reference key="NSSuperview" ref="580833300"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="586805203"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -97,6 +99,7 @@
 								<int key="NSvFlags">301</int>
 								<string key="NSFrame">{{79, 20}, {55, 55}}</string>
 								<reference key="NSSuperview" ref="580833300"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="341091275"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -122,6 +125,7 @@
 								<int key="NSvFlags">301</int>
 								<string key="NSFrame">{{138, 20}, {55, 55}}</string>
 								<reference key="NSSuperview" ref="580833300"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="747164839"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -147,6 +151,7 @@
 								<int key="NSvFlags">301</int>
 								<string key="NSFrame">{{197, 20}, {55, 55}}</string>
 								<reference key="NSSuperview" ref="580833300"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="958763738"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -182,7 +187,6 @@
 				</array>
 				<string key="NSFrame">{{0, 20}, {1024, 748}}</string>
 				<reference key="NSSuperview"/>
-				<reference key="NSNextKeyView" ref="724447255"/>
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="580833300"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
@@ -357,16 +361,27 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-<<<<<<< HEAD
 			<int key="maxID">27</int>
-=======
-			<int key="maxID">26</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<object class="IBPartialClassDescription">
 					<string key="className">ViewController</string>
 					<string key="superclassName">GLKViewController</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="nextTarget:">id</string>
+						<string key="selectVisualization:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="nextTarget:">
+							<string key="name">nextTarget:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="selectVisualization:">
+							<string key="name">selectVisualization:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="searchButton">UIButton</string>
 						<string key="timelineButton">UIButton</string>
@@ -398,7 +413,6 @@
 				</object>
 			</array>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBIPadFramework</string>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
