@@ -16,10 +16,7 @@
 }
 
 -(float)nodeSize:(Node*)node {
-    float size = 2.0 + 400*powf(node.importance, .75);
-//        float size = 2.0 + 100*sqrtf(obj.importance);
-//        float size = 2.0 + 1000*obj.importance;
-    return ([[UIScreen mainScreen] scale] == 2.00) ? 2.0*size : size;
+    return 0.005 + 0.70*powf(node.importance, .75);
 
 }
 

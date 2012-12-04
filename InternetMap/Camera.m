@@ -10,6 +10,8 @@ static const float MOVE_TIME = 1.0f;
 @interface Camera () {
     GLKMatrix4 _modelViewProjectionMatrix;
     GLKMatrix4 _modelViewMatrix;
+    GLKMatrix4 _projectionMatrix;
+    
     GLKMatrix4 _rotationMatrix;
     float _rotation;
     float _zoom;
@@ -102,12 +104,22 @@ static const float MOVE_TIME = 1.0f;
     GLKMatrix4 zoom = GLKMatrix4MakeTranslation(0.0f, 0.0f, _zoom);
     GLKMatrix4 modelView = GLKMatrix4Multiply(zoom, model);
     
+    _projectionMatrix = projectionMatrix;
     _modelViewMatrix = modelView;
     _modelViewProjectionMatrix = GLKMatrix4Multiply(projectionMatrix, modelView);
 }
 
 -(GLKMatrix4)currentModelViewProjection {
     return _modelViewProjectionMatrix;
+}
+
+-(GLKMatrix4)currentModelView {
+    return _modelViewMatrix;
+}
+
+
+-(GLKMatrix4)currentProjection {
+    return _projectionMatrix;
 }
 
 

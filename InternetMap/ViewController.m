@@ -156,13 +156,12 @@
 
 }
 
--(void)handleTap:(UITapGestureRecognizer*)gestureRecognizer {
-    
+-(void)handleTap:(UITapGestureRecognizer*)gestureRecognizer {    
     NSDate* date = [NSDate date];
     CGPoint pointInView = [gestureRecognizer locationInView:self.view];
     float xOld = pointInView.x;
     CGFloat xLoOld = 0;
-    CGFloat xHiOld = [HelperMethods deviceIsiPad] ? 1024 : 480;
+    CGFloat xHiOld = self.display.camera.displaySize.width;
     CGFloat xLoNew = -1;
     CGFloat xHiNew = 1;
 
@@ -170,7 +169,7 @@
     
     float yOld = pointInView.y;
     CGFloat yLoOld = 0;
-    CGFloat yHiOld = [HelperMethods deviceIsiPad] ? 768 : 320;
+    CGFloat yHiOld = self.display.camera.displaySize.height;
     CGFloat yLoNew = 1;
     CGFloat yHiNew = -1;
     
@@ -200,7 +199,7 @@
         yC = nodePosition.y;
         zC = nodePosition.z;
         
-        r = 0.01;
+        r = [self.data.visualization nodeSize:node]/2;
         
         float a = powf((xB-xA), 2)+powf((yB-yA), 2)+powf((zB-zA), 2);
         float b = 2*((xB-xA)*(xA-xC)+(yB-yA)*(yA-yC)+(zB-zA)*(zA-zC));

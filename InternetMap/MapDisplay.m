@@ -143,6 +143,8 @@ typedef struct {
     }
 
     GLKMatrix4 mvp = [self.camera currentModelViewProjection];
+    GLKMatrix4 mv = [self.camera currentModelView];
+    GLKMatrix4 p = [self.camera currentProjection];
     
     glClearColor(0.05882f, 0.09411f, 0.25098f, 1.0f); //Visualization background color
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -150,8 +152,11 @@ typedef struct {
     glBindVertexArrayOES(_vertexArray);
 
     [self.nodeProgram use];
-    glUniformMatrix4fv([self.nodeProgram uniformForName:@"modelViewProjectionMatrix"], 1, 0, mvp.m);
+    glUniformMatrix4fv([self.nodeProgram uniformForName:@"modelViewMatrix"], 1, 0, mv.m);
+    glUniformMatrix4fv([self.nodeProgram uniformForName:@"projectionMatrix"], 1, 0, p.m);
     glUniform1f([self.nodeProgram uniformForName:@"maxSize"], ([[UIScreen mainScreen] scale] == 2.00) ? 150.0f : 75.0f);
+    glUniform1f([self.nodeProgram uniformForName:@"screenWidth"], ([[UIScreen mainScreen] scale] == 2.00) ? self.camera.displaySize.width*2 : self.camera.displaySize.width);
+    glUniform1f([self.nodeProgram uniformForName:@"screenHeight"], ([[UIScreen mainScreen] scale] == 2.00) ? self.camera.displaySize.height*2 : self.camera.displaySize.height);
     
     glDrawArrays(GL_POINTS, 0, self.numNodes);
     

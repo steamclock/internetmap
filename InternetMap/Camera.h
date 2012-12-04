@@ -18,6 +18,9 @@
 -(void)update;
 
 -(GLKMatrix4)currentModelViewProjection;
+-(GLKMatrix4)currentModelView;
+-(GLKMatrix4)currentProjection;
+
 -(GLKVector3)applyModelViewToPoint:(CGPoint)point;
 -(GLKVector3)cameraInObjectSpace;
 
