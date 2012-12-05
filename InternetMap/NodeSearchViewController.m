@@ -7,13 +7,13 @@
 //
 
 #import "NodeSearchViewController.h"
+#import "Node.h"
 
 @interface NodeSearchViewController ()
 
 @property (strong, nonatomic) UISearchDisplayController* nodeSearchDisplayController;
 @property (strong, nonatomic) UISearchBar* searchBar;
-@property (strong, nonatomic) NSArray* searchResults;
-@property (strong, nonatomic) NSArray* tableData;
+@property (strong, nonatomic) NSMutableArray* searchResults;
 
 @end
 
@@ -23,8 +23,7 @@
 {
     self = [super initWithStyle:style];
     if (self) {
-        self.contentSizeForViewInPopover = CGSizeMake(320, 300);
-        self.title = @"Search Nodes";
+        // Do stuff
     }
     return self;
 }
@@ -33,8 +32,17 @@
 {
     [super viewDidLoad];
     
+    
+    self.contentSizeForViewInPopover = CGSizeMake(320, 300);
+    self.title = @"Search Nodes";
+    
     self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
     self.tableView.tableHeaderView = self.searchBar;
+    
+    self.nodeSearchDisplayController = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self];
+    self.nodeSearchDisplayController.delegate = self;
+    self.nodeSearchDisplayController.searchResultsDataSource = self;
+
 
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -58,15 +66,27 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.tableData.count;
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        return self.searchResults.count;
+    } else {
+        return self.allItems.count;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    // Configure the cell...
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    }
+    
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        //
+    } else {
+        //
+    }
     
     return cell;
 }
@@ -121,10 +141,52 @@
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
+    
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        // search
+    } else {
+        //normal
+    }
 }
 
 #pragma mark - UISearchBar Delegate
 
 #pragma mark - UISearchDisplayController Delegate
+
+- (void)searchDisplayControllerDidBeginSearch:(UISearchDisplayController *)controller{
+    // moo
+}
+
+- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption {
+    return YES;
+}
+
+- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
+    return YES;
+}
+- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
+{
+    [self.searchResults removeAllObjects]; // First clear the filtered array.
+    for (Node *node in self.allItems)
+    {
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF contains[cd] %@)", searchText];
+        [node.textDescription compare:searchText options:NSCaseInsensitiveSearch];
+        
+        BOOL resultName = [predicate evaluateWithObject:node.textDescription];
+        
+//        if([scope isEqualToString:@&quot;Product ID&quot;] && resultID)
+//        {
+//            [self.filteredData addObject:product];
+//        }
+//        if([scope isEqualToString:@"Product Name"] && resultName)
+//        {
+//            [self.filteredData addObject:product];
+//        }
+//        if([scope isEqualToString:@"Any"] && (resultID || resultName))
+//        {
+//            [self.filteredData addObject:product];
+//        }
+    }
+}
 
 @end

@@ -6,9 +6,6 @@
 #import "Visualization.h"
 
 @class MapDisplay;
-
-
-
 @class Node;
 
 @interface MapData : NSObject

@@ -159,7 +159,10 @@
 
 }
 
--(void)handleTap:(UITapGestureRecognizer*)gestureRecognizer {    
+-(void)handleTap:(UITapGestureRecognizer*)gestureRecognizer {
+    
+    //TODO: Someone please comment the code in this function :)
+    
     NSDate* date = [NSDate date];
     CGPoint pointInView = [gestureRecognizer locationInView:self.view];
     float xOld = pointInView.x;
@@ -350,7 +353,7 @@
     
     NodeInformationViewController *nodeInfo = [[NodeInformationViewController alloc] initWithNibName:@"NodeInformationViewController" bundle:nil];
     
-    NSLog(@"ASN:%@, Text Desc: %@", node.asn, node.textDescription);
+    //NSLog(@"ASN:%@, Text Desc: %@", node.asn, node.textDescription);
     
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:nodeInfo];
     
@@ -362,7 +365,7 @@
     nodeInfo.nodeTypeLabel.text = node.typeString;
     
     
-    // TODO: This should be called as a part a camera object callback when the camera has finished zooming
+    // TODO: This should be called as a part of a camera object callback when the camera has finished zooming, not by 'waiting'
     
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 1.0f * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void)
