@@ -85,10 +85,10 @@
     
     if (tableView == self.searchDisplayController.searchResultsTableView) {
         Node* node = self.searchResults[indexPath.row];
-        cell.textLabel.text = node.textDescription;
+        cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", node.asn, node.textDescription];
     } else {
         Node* node = self.allItems[indexPath.row];
-        cell.textLabel.text = node.textDescription;
+        cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", node.asn, node.textDescription];
     }
     
     return cell;
