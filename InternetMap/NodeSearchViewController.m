@@ -13,7 +13,7 @@
 
 @property (strong, nonatomic) UISearchDisplayController* nodeSearchDisplayController;
 @property (strong, nonatomic) UISearchBar* searchBar;
-@property (strong, nonatomic) NSMutableArray* searchResults;
+@property (strong, nonatomic) NSArray* searchResults;
 
 @end
 
@@ -33,10 +33,11 @@
     [super viewDidLoad];
     
     
-    self.contentSizeForViewInPopover = CGSizeMake(320, 300);
+    self.contentSizeForViewInPopover = CGSizeMake(600, 300);
     self.title = @"Search Nodes";
     
-    self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
+    self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.contentSizeForViewInPopover.width, 44)];
+    self.searchBar.delegate = self;
     self.tableView.tableHeaderView = self.searchBar;
     
     self.nodeSearchDisplayController = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self];
@@ -83,73 +84,32 @@
     }
     
     if (tableView == self.searchDisplayController.searchResultsTableView) {
-        //
+        Node* node = self.searchResults[indexPath.row];
+        cell.textLabel.text = node.textDescription;
     } else {
-        //
+        Node* node = self.allItems[indexPath.row];
+        cell.textLabel.text = node.textDescription;
     }
     
     return cell;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
     
     if (tableView == self.searchDisplayController.searchResultsTableView) {
         // search
+        //Select node
     } else {
         //normal
+        //do we do anything special here?
     }
 }
 
 #pragma mark - UISearchBar Delegate
+
 
 #pragma mark - UISearchDisplayController Delegate
 
@@ -157,36 +117,20 @@
     // moo
 }
 
-- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption {
-    return YES;
-}
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
-    return YES;
+    [self filterContentForSearchText:searchString];
+    return NO;
 }
-- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
+
+- (void)filterContentForSearchText:(NSString*)searchText
 {
-    [self.searchResults removeAllObjects]; // First clear the filtered array.
-    for (Node *node in self.allItems)
-    {
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF contains[cd] %@)", searchText];
-        [node.textDescription compare:searchText options:NSCaseInsensitiveSearch];
-        
-        BOOL resultName = [predicate evaluateWithObject:node.textDescription];
-        
-//        if([scope isEqualToString:@&quot;Product ID&quot;] && resultID)
-//        {
-//            [self.filteredData addObject:product];
-//        }
-//        if([scope isEqualToString:@"Product Name"] && resultName)
-//        {
-//            [self.filteredData addObject:product];
-//        }
-//        if([scope isEqualToString:@"Any"] && (resultID || resultName))
-//        {
-//            [self.filteredData addObject:product];
-//        }
-    }
+    self.searchResults = nil; // First clear the filtered array.
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(textDescription contains[cd] %@)", searchText];
+    self.searchResults = [self.allItems filteredArrayUsingPredicate:predicate];
+    
+    [self.searchDisplayController.searchResultsTableView reloadData];
 }
 
 @end

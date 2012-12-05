@@ -323,11 +323,12 @@
 
 -(IBAction)searchNodes:(id)sender {
     if (!self.nodeSearchPopover) {
-        NodeSearchViewController *tableforPopover = [[NodeSearchViewController alloc] initWithStyle:UITableViewStylePlain];
-        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:tableforPopover];
+        NodeSearchViewController *searchController = [[NodeSearchViewController alloc] initWithStyle:UITableViewStylePlain];
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:searchController];
         self.nodeSearchPopover.delegate = self;
         self.nodeSearchPopover = [[UIPopoverController alloc] initWithContentViewController:navController];
-        [self.nodeSearchPopover setPopoverContentSize:tableforPopover.contentSizeForViewInPopover];
+        [self.nodeSearchPopover setPopoverContentSize:searchController.contentSizeForViewInPopover];
+        searchController.allItems = self.data.nodes;
     }
     [self.nodeSearchPopover presentPopoverFromRect:self.searchButton.bounds inView:self.searchButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 }
