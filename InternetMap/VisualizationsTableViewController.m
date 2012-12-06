@@ -56,7 +56,11 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
-    cell.textLabel.textColor = [UIColor blackColor];
+    if (indexPath.row == 0) {
+        cell.textLabel.text = @"Visualization 1";
+    } else {
+        cell.textLabel.text = @"Visualization 2";
+    }
 
     return cell;
 }
@@ -105,12 +109,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Hard-coded values for now that do nothing, not sure what other visualizations there will be
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    if (indexPath.row == 0) {
-        cell.textLabel.text = @"Visualization 1";
-    } else {
-        cell.textLabel.text = @"Visualization 2";
-    }
+    //UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
 }
 
 @end
