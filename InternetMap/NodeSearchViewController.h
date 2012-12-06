@@ -8,8 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
+@class Node;
+
+@protocol NodeSearchDelegate
+
+-(void)nodeSelected:(Node*)node;
+
+@end
+
 @interface NodeSearchViewController : UITableViewController <UISearchDisplayDelegate, UISearchBarDelegate>
 
+@property (strong, nonatomic) id delegate;
 @property (strong, nonatomic) NSArray* allItems;
 
 @end

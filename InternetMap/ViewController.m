@@ -250,6 +250,8 @@
     [self.display.camera zoom:deltaZoom];
 }
 
+#pragma mark - Update selected/active node
+
 -(IBAction)nextTarget:(id)sender {
     if(self.targetNode == NSNotFound) {
         [self updateTargetForIndex:0];
@@ -286,6 +288,24 @@
     [self displayInformationPopoverForCurrentNode];
 
 }
+
+//-(void)updateTargetforNode:(Node*)node {
+//    
+//    GLKVector3 target;
+//    
+//    NSLog(@"Node Index: %u", node.index);
+//    
+//    if (node) {
+//        target = [self.data.visualization nodePosition:node];
+//        [[self.display displayNodeAtIndex:node.index] setColor:[UIColor redColor]];
+//    } else {
+//        target = GLKVector3Make(0, 0, 0);
+//    }
+//    
+//    self.display.camera.target = target;
+//    [self displayInformationPopoverForCurrentNode];
+//    
+//}
 
 -(CGPoint)getCoordinatesForNode{
     Node* node = [self.data nodeAtIndex:self.targetNode];
@@ -324,6 +344,7 @@
 -(IBAction)searchNodes:(id)sender {
     if (!self.nodeSearchPopover) {
         NodeSearchViewController *searchController = [[NodeSearchViewController alloc] initWithStyle:UITableViewStylePlain];
+        searchController.delegate = self;
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:searchController];
         self.nodeSearchPopover.delegate = self;
         self.nodeSearchPopover = [[UIPopoverController alloc] initWithContentViewController:navController];
@@ -377,11 +398,17 @@
     
 }
 
+#pragma mark - NodeSearch Delegate
+
+-(void)nodeSelected:(Node*)node{
+    [self.nodeSearchPopover dismissPopoverAnimated:YES];
+    [self updateTargetForIndex:node.index];
+}
 
 #pragma mark - UIPopoverController Delegate
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
-    //Do stuff
+    // Beep boop.
 }
 
 - (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController{

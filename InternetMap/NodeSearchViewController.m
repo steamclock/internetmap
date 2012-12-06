@@ -42,6 +42,7 @@
     
     self.nodeSearchDisplayController = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self];
     self.nodeSearchDisplayController.delegate = self;
+    self.nodeSearchDisplayController.searchResultsDelegate = self;
     self.nodeSearchDisplayController.searchResultsDataSource = self;
 
 
@@ -98,13 +99,13 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+
     if (tableView == self.searchDisplayController.searchResultsTableView) {
-        // search
-        //Select node
+        Node* node = self.searchResults[indexPath.row];
+        [self.delegate nodeSelected:node];
     } else {
-        //normal
-        //do we do anything special here?
+        Node* node = self.allItems[indexPath.row];
+        [self.delegate nodeSelected:node];
     }
 }
 
