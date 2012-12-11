@@ -13,6 +13,7 @@
 #import "NodeSearchViewController.h"
 #import "NodeInformationViewController.h"
 #import <dns_sd.h>
+#import "Lines.h"
 
 @interface ViewController ()
 
@@ -392,6 +393,30 @@ void callback (
     }
 }
 
+-(void)highlightRoute:(NSArray*)nodeList {
+    if(nodeList.count <= 1) {
+        self.display.highlightLines = nil;
+        
+    }
+    Lines* lines = [[Lines alloc] initWithLineCount:nodeList.count - 1];
+    
+    [lines beginUpdate];
+    
+    UIColor* lineColor = [UIColor redColor];
+    
+    for(int i = 0; i < nodeList.count - 2; i++) {
+        Node* a = nodeList[i];
+        Node* b = nodeList[i+1];
+        
+        [lines updateLine:i withStart:[self.data.visualization nodePosition:a] startColor:lineColor end:[self.data.visualization nodePosition:b] endColor:lineColor];
+    }
+    
+    [lines endUpdate];
+    
+    self.display.highlightLines = lines;
+}
+
+
 - (void)updateTargetForIndex:(int)index {
     GLKVector3 target;
 
@@ -417,7 +442,11 @@ void callback (
     self.display.camera.target = target;
     
     [self displayInformationPopoverForCurrentNode];
-
+    
+    //Line highlighting test
+    int len = MIN(10, self.data.nodes.count - (index + 1));
+    NSRange highlightRange = NSMakeRange(index, len);
+    [self highlightRoute:[self.data.nodes subarrayWithRange:highlightRange]];
 }
 
 //-(void)updateTargetforNode:(Node*)node {

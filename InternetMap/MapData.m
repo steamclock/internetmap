@@ -6,11 +6,11 @@
 #import "MapData.h"
 #import "MapDisplay.h"
 #import "Node.h"
+#import "Lines.h"
+#import "Connection.h"
 
 @interface MapData ()
 @property (strong, nonatomic) NSMutableDictionary* nodesByAsn;
-@property (strong, nonatomic) NSMutableArray* connections;
-@property (strong, nonatomic) NSString* filename;
 @end
 
 @implementation MapData
@@ -52,13 +52,10 @@
     for (int i = 0; i < numConnections; i++) {
         NSArray* connectionDesc = [[lines objectAtIndex:1 + numNodes + i] componentsSeparatedByString:@" "];
         
-        Node* first = [self.nodesByAsn valueForKey:[connectionDesc objectAtIndex:0]];
-        Node* second = [self.nodesByAsn valueForKey:[connectionDesc objectAtIndex:1]];
-        
-        if((first.importance > 0.01) && (second.importance > 0.01)) {
-            [self.connections addObject:[NSNumber numberWithInt:first.index]];
-            [self.connections addObject:[NSNumber numberWithInt:second.index]];
-        }
+        Connection* connection = [Connection new];
+        connection.first = [self.nodesByAsn valueForKey:[connectionDesc objectAtIndex:0]];
+        connection.second = [self.nodesByAsn valueForKey:[connectionDesc objectAtIndex:1]];
+        [self.connections addObject:connection];
     }
     
     NSLog(@"load : %.2fms", ([NSDate timeIntervalSinceReferenceDate] - start) * 1000.0f);
@@ -103,9 +100,8 @@
     NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
     display.numNodes = self.nodes.count;
     [self.visualization updateDisplay:display forNodes:self.nodes];
-    
-    [display setLineIndices:self.connections];
-    
+    [self.visualization updateLineDisplay:display forConnections:self.connections];
+        
     NSLog(@"update display : %.2fms", ([NSDate timeIntervalSinceReferenceDate] - start) * 1000.0f);
 }
 

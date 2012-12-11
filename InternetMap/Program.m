@@ -11,12 +11,14 @@
 
 @interface Program ()
 @property (nonatomic) GLuint program;
+@property (strong, nonatomic) NSIndexSet* activeAttributes;
 @end
 
 @implementation Program
 
--(id)initWithName:(NSString*)name {
+-(id)initWithName:(NSString*)name activeAttributes:(NSIndexSet*)attribs {
     if((self = [super init])) {
+        self.activeAttributes = attribs;
         [self loadShaders:name];
     }
     return self;
@@ -69,10 +71,17 @@
     
     // Bind attribute locations.
     // This needs to be done prior to linking.
-    glBindAttribLocation(_program, ATTRIB_VERTEX, "position");
-    glBindAttribLocation(_program, ATTRIB_SIZE, "size");
-    glBindAttribLocation(_program, ATTRIB_COLOR, "color");
-    glBindAttribLocation(_program, ATTRIB_LINECOLOR, "lineColor");
+    if([self.activeAttributes containsIndex:ATTRIB_VERTEX]) {
+        glBindAttribLocation(_program, ATTRIB_VERTEX, "position");
+    }
+    
+    if([self.activeAttributes containsIndex:ATTRIB_SIZE]) {
+        glBindAttribLocation(_program, ATTRIB_SIZE, "size");
+    }
+    
+    if([self.activeAttributes containsIndex:ATTRIB_COLOR]) {
+        glBindAttribLocation(_program, ATTRIB_COLOR, "color");
+    }
     
     // Link program.
     if (![self linkProgram:_program]) {

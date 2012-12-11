@@ -6,6 +6,8 @@
 #import "DefaultVisualization.h"
 #import "MapDisplay.h"
 #import "Node.h"
+#import "Lines.h"
+#import "Connection.h"
 
 #define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
@@ -72,12 +74,41 @@
                 point.color = unknownColor;
                 break;
         }
-        
-        float lineImportance = MAX(node.importance - 0.01f, 0.0f) * 0.5f;
-        UIColor* lineColor = [UIColor colorWithRed:lineImportance green:lineImportance blue:lineImportance alpha:1.0];
-        point.lineColor = lineColor;
     };
 
+}
+
+-(void)updateLineDisplay:(MapDisplay*)display forConnections:(NSArray*)connections {
+    NSMutableArray* filteredConnections = [NSMutableArray new];
+    
+    // We are only drawing lines to nodes with > 0.01 importance, filter those out
+    for(Connection* connection in connections) {
+        if((connection.first.importance > 0.01) && (connection.second.importance > 0.01)) {
+            [filteredConnections addObject:connection];
+        }
+    }
+    
+    Lines* lines = [[Lines alloc] initWithLineCount:filteredConnections.count];
+    
+    [lines beginUpdate];
+    
+    int currentIndex = 0;
+    for(Connection* connection in filteredConnections) {
+        Node* a = connection.first;
+        Node* b = connection.second;
+        
+        float lineImportanceA = MAX(a.importance - 0.01f, 0.0f) * 0.5f;
+        UIColor* lineColorA = [UIColor colorWithRed:lineImportanceA green:lineImportanceA blue:lineImportanceA alpha:1.0];
+        
+        float lineImportanceB = MAX(b.importance - 0.01f, 0.0f) * 0.5f;
+        UIColor* lineColorB = [UIColor colorWithRed:lineImportanceB green:lineImportanceB blue:lineImportanceB alpha:1.0];
+        
+        [lines updateLine:currentIndex withStart:[self nodePosition:a] startColor:lineColorA end:[self nodePosition:b] endColor:lineColorB];
+        currentIndex++;
+    }
+    [lines endUpdate];
+    
+    display.visualizationLines = lines;
 }
 
 @end

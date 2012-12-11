@@ -5,6 +5,7 @@
 
 @class DisplayNode;
 @class Camera;
+@class Lines;
 
 @interface DisplayNode : NSObject
 -(void)setX:(float)x;
@@ -12,7 +13,6 @@
 -(void)setZ:(float)z;
 -(void)setSize:(float)size;
 -(void)setColor:(UIColor *)color;
--(void)setLineColor:(UIColor *)color;
 @end
 
 @interface MapDisplay : NSObject
@@ -21,10 +21,11 @@
 
 @property (strong, nonatomic, readonly) Camera* camera;
 
+@property (strong, nonatomic) Lines* visualizationLines;
+@property (strong, nonatomic) Lines* highlightLines;
+-(DisplayNode*)displayNodeAtIndex:(NSUInteger)index;
+
 -(void)update;
 -(void)draw;
-
--(DisplayNode*)displayNodeAtIndex:(NSUInteger)index;
--(void)setLineIndices:(NSArray*)lineIndices;
 
 @end
