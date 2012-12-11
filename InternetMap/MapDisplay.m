@@ -7,6 +7,7 @@
 #import "Program.h"
 #import <GLKit/GLKit.h>
 #import "Camera.h"
+#import "Lines.h"
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
@@ -150,6 +151,7 @@ typedef struct {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     glBindVertexArrayOES(_vertexArray);
+    glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
 
     [self.nodeProgram use];
     glUniformMatrix4fv([self.nodeProgram uniformForName:@"modelViewMatrix"], 1, 0, mv.m);
@@ -160,9 +162,12 @@ typedef struct {
     
     glDrawArrays(GL_POINTS, 0, self.numNodes);
     
-    [self.connectionProgram use];
-    glUniformMatrix4fv([self.connectionProgram uniformForName:@"modelViewProjectionMatrix"], 1, 0, mvp.m);
-    glDrawElements(GL_LINES, self.lineIndexData.length / 2, GL_UNSIGNED_SHORT, self.lineIndexData.bytes);
+    if(self.lines) {
+        [self.connectionProgram use];
+        glUniformMatrix4fv([self.connectionProgram uniformForName:@"modelViewProjectionMatrix"], 1, 0, mvp.m);
+        //glDrawElements(GL_LINES, self.lineIndexData.length / 2, GL_UNSIGNED_SHORT, self.lineIndexData.bytes);
+        [self.lines display];
+    }
 }
 
 -(RawDisplayNode*)rawDisplayNodeAtIndex:(NSUInteger)index {

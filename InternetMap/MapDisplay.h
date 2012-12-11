@@ -5,6 +5,7 @@
 
 @class DisplayNode;
 @class Camera;
+@class Lines;
 
 @interface DisplayNode : NSObject
 -(void)setX:(float)x;
@@ -20,6 +21,7 @@
 @property (nonatomic) NSUInteger numNodes;
 
 @property (strong, nonatomic, readonly) Camera* camera;
+@property (strong, nonatomic) Lines* lines;
 
 -(void)update;
 -(void)draw;

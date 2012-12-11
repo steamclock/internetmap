@@ -6,6 +6,7 @@
 #import "MapData.h"
 #import "MapDisplay.h"
 #import "Node.h"
+#import "Lines.h"
 
 @interface MapData ()
 @property (strong, nonatomic) NSMutableDictionary* nodesByAsn;
@@ -103,6 +104,25 @@
     NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
     display.numNodes = self.nodes.count;
     [self.visualization updateDisplay:display forNodes:self.nodes];
+    
+    Lines* lines = [[Lines alloc] initWithLineCount:self.connections.count / 2];
+    
+    [lines beginUpdate];
+    for(int i = 0; i < (self.connections.count - 1); i = i + 2) {
+        Node* a = [self.nodes objectAtIndex:[[self.connections objectAtIndex:i] intValue]];
+        Node* b = [self.nodes objectAtIndex:[[self.connections objectAtIndex:i+1] intValue]];
+        
+        float lineImportanceA = MAX(a.importance - 0.01f, 0.0f) * 0.5f;
+        UIColor* lineColorA = [UIColor colorWithRed:lineImportanceA green:lineImportanceA blue:lineImportanceA alpha:1.0];
+        
+        float lineImportanceB = MAX(b.importance - 0.01f, 0.0f) * 0.5f;
+        UIColor* lineColorB = [UIColor colorWithRed:lineImportanceB green:lineImportanceB blue:lineImportanceB alpha:1.0];
+        
+        [lines updateLine:(i / 2) withStart:[self.visualization nodePosition:a] startColor:lineColorA end:[self.visualization nodePosition:b]  endColor:lineColorB];
+    }
+    [lines endUpdate];
+    
+    display.lines = lines;
     
     [display setLineIndices:self.connections];
     
