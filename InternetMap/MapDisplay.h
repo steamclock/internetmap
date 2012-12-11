@@ -21,7 +21,8 @@
 
 @property (strong, nonatomic, readonly) Camera* camera;
 
-@property (strong, nonatomic) Lines* lines;
+@property (strong, nonatomic) Lines* visualizationLines;
+@property (strong, nonatomic) Lines* highlightLines;
 -(DisplayNode*)displayNodeAtIndex:(NSUInteger)index;
 
 -(void)update;

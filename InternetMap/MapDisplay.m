@@ -162,11 +162,18 @@ typedef struct {
     glUniform1f([self.nodeProgram uniformForName:@"screenHeight"], ([[UIScreen mainScreen] scale] == 2.00) ? self.camera.displaySize.height*2 : self.camera.displaySize.height);
     
     glDrawArrays(GL_POINTS, 0, self.numNodes);
-    
-    if(self.lines) {
+
+    if(self.visualizationLines || self.highlightLines) {
         [self.connectionProgram use];
         glUniformMatrix4fv([self.connectionProgram uniformForName:@"modelViewProjectionMatrix"], 1, 0, mvp.m);
-        [self.lines display];
+    }
+    
+    if(self.visualizationLines) {
+        [self.visualizationLines display];
+    }
+
+    if(self.highlightLines) {
+        [self.highlightLines display];
     }
 }
 

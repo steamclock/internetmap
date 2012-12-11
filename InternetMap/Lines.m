@@ -51,6 +51,11 @@ typedef struct {
     return self;
 }
 
+-(void)dealloc {
+    glDeleteBuffers(1, &_vertexBuffer);
+    glDeleteVertexArraysOES(1, &_vertexArray);
+}
+
 -(void)beginUpdate {
     if(!self.lockedVertices) {
         glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
@@ -59,6 +64,7 @@ typedef struct {
 }
 
 -(void)endUpdate {
+    self.lockedVertices = NULL;
     glUnmapBufferOES(GL_ARRAY_BUFFER);
 }
 

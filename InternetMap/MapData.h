@@ -19,5 +19,6 @@
 -(Node*)nodeAtIndex:(NSUInteger)index;
 
 @property (strong, nonatomic) NSMutableArray* nodes;
+@property (strong, nonatomic) NSMutableArray* connections;
 
 @end
