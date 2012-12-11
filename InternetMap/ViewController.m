@@ -12,6 +12,7 @@
 #import "VisualizationsTableViewController.h"
 #import "NodeSearchViewController.h"
 #import "NodeInformationViewController.h"
+#import <dns_sd.h>
 
 @interface ViewController ()
 
@@ -29,11 +30,13 @@
 @property (nonatomic) float lastScale;
 
 @property (nonatomic) NSUInteger targetNode;
+@property (nonatomic) int isCurrentlyFetchingASN;
 
 
 /* UIKit Overlay */
 @property (weak, nonatomic) IBOutlet UIButton* searchButton;
 @property (weak, nonatomic) IBOutlet UIButton* youAreHereButton;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView* youAreHereActivityIndicator;
 @property (weak, nonatomic) IBOutlet UIButton* visualizationsButton;
 @property (weak, nonatomic) IBOutlet UIButton* timelineButton;
 @property (weak, nonatomic) IBOutlet UISlider* timelineSlider;
@@ -43,12 +46,139 @@
 
 @end
 
+void callback (
+               DNSServiceRef sdRef,
+               DNSServiceFlags flags,
+               uint32_t interfaceIndex,
+               DNSServiceErrorType errorCode,
+               const char *fullname,
+               uint16_t rrtype,
+               uint16_t rrclass,
+               uint16_t rdlen,
+               const void *rdata,
+               uint32_t ttl,
+               void *context ) {
+    
+    NSData* data = [NSData dataWithBytes:rdata length:strlen(rdata)+1];
+    NSString* string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    int value;
+    NSCharacterSet* nonDigits = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
+    BOOL success = [[NSScanner scannerWithString:[string stringByTrimmingCharactersInSet:nonDigits]] scanInteger:&value];
+    if (success) {
+        [[SCDispatchQueue mainQueue] dispatchAsync:^{
+            [(__bridge ViewController*)context finishedFetchingCurrentASN:value];
+        }];
+    }else {
+        [[SCDispatchQueue mainQueue] dispatchAsync:^{
+            [(__bridge ViewController*)context failedFetchingCurrentASN:@"Couldn't resolve DNS."];
+        }];
+    }
+    
+}
+
 @implementation ViewController
+
+#pragma mark - Temporary! ASN fetching code, will move to Web fetching class
+
+- (void)startFetchingCurrentASN {
+    if (!self.isCurrentlyFetchingASN) {
+        self.isCurrentlyFetchingASN = YES;
+        self.youAreHereActivityIndicator.hidden = NO;
+        [self.youAreHereActivityIndicator startAnimating];
+        self.youAreHereButton.hidden = YES;
+        [[SCDispatchQueue defaultPriorityQueue] dispatchAsync:^{
+            NSString* ip = [self fetchGlobalIP];
+            if (!ip || [ip isEqualToString:@""]) {
+                [[SCDispatchQueue mainQueue] dispatchAsync:^{
+                    [self failedFetchingCurrentASN:@"Couldn't get global IP address"];
+                }];
+            }else {
+                [self fetchASNForIP:ip];
+            }
+        }];
+    }
+}
+
+- (void)fetchASNForIP:(NSString*)ip {
+    NSArray* ipComponents = [ip componentsSeparatedByString:@"."];
+    NSString* dnsString = [NSString stringWithFormat:@"origin.asn.cymru.com"];
+    for (NSString* component in ipComponents) {
+        dnsString = [NSString stringWithFormat:@"%@.%@", component, dnsString];
+    }
+    DNSServiceRef sdRef;
+    DNSServiceErrorType res;
+    
+    res = DNSServiceQueryRecord(
+                                &sdRef, 0, 0,
+                                [dnsString cStringUsingEncoding:NSUTF8StringEncoding],
+                                kDNSServiceType_TXT,
+                                kDNSServiceClass_IN,
+                                callback,
+                                (__bridge void *)(self)
+                                );
+    
+    if (res != kDNSServiceErr_NoError) {
+        [[SCDispatchQueue mainQueue] dispatchAsync:^{
+            [self failedFetchingCurrentASN:@"Couldn't resolve DNS."];
+        }];
+    }
+    
+    DNSServiceProcessResult(sdRef);
+    DNSServiceRefDeallocate(sdRef);
+}
+
+
+
+- (NSString*)fetchGlobalIP {
+    NSString* address = @"http://stage.steamclocksw.com/ip.php";
+    NSURL *url = [[NSURL alloc] initWithString:address];
+    NSError* error;
+    NSString *ip = [NSString stringWithContentsOfURL:url encoding:NSASCIIStringEncoding error:&error];
+    return ip;
+}
+
+- (void)finishedFetchingCurrentASN:(int)asn {
+    NSLog(@"ASN fetched: %i", asn);
+    self.isCurrentlyFetchingASN = NO;
+    [self.youAreHereActivityIndicator stopAnimating];
+    self.youAreHereActivityIndicator.hidden = YES;
+    self.youAreHereButton.hidden = NO;
+    [self selectNodeForASN:asn];
+}
+
+- (void)failedFetchingCurrentASN:(NSString*)error {
+    NSLog(@"ASN fetching failed with error: %@", error);
+    self.isCurrentlyFetchingASN = NO;
+    [self.youAreHereActivityIndicator stopAnimating];
+    self.youAreHereActivityIndicator.hidden = YES;
+    self.youAreHereButton.hidden = NO;
+    
+    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error locating your node", nil) message:error delegate:nil cancelButtonTitle:nil otherButtonTitles:@"ok", nil];
+    [alert show];
+}
+
+- (void)selectNodeForASN:(int)asn {
+    for (int i = 0; i < [self.data.nodes count]; i++) {
+        Node* node = [self.data.nodes objectAtIndex:i];
+        if ([node.asn intValue] == asn) {
+            [self updateTargetForIndex:i];
+            break;
+        }
+    }
+}
+
+
+- (void)dealloc
+{
+    if ([EAGLContext currentContext] == self.context) {
+        [EAGLContext setCurrentContext:nil];
+    }
+}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     
     self.preferredFramesPerSecond = 60.0f;
@@ -88,18 +218,14 @@
     [self.view addGestureRecognizer:self.panRecognizer];
     [self.view addGestureRecognizer:self.pinchRecognizer];
     
+    
+    self.youAreHereActivityIndicator.frame = CGRectMake(self.youAreHereActivityIndicator.frame.origin.x, self.youAreHereActivityIndicator.frame.origin.y, 30, 30);
+    
     self.targetNode = NSNotFound;
 }
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return UIInterfaceOrientationIsLandscape(interfaceOrientation);
-}
-
-- (void)dealloc
-{    
-    if ([EAGLContext currentContext] == self.context) {
-        [EAGLContext setCurrentContext:nil];
-    }
 }
 
 #pragma mark - GLKView and GLKViewController delegate methods
@@ -251,6 +377,11 @@
 }
 
 #pragma mark - Update selected/active node
+
+-(IBAction)youAreHereButtonPressed:(id)sender {
+    [self startFetchingCurrentASN];
+
+}
 
 -(IBAction)nextTarget:(id)sender {
     if(self.targetNode == NSNotFound) {

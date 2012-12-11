@@ -9,4 +9,7 @@
 
 @interface ViewController : GLKViewController <UIPopoverControllerDelegate, NodeSearchDelegate>
 
+- (void)finishedFetchingCurrentASN:(int)asn;
+- (void)failedFetchingCurrentASN:(NSString*)error;
+
 @end
