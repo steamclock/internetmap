@@ -174,7 +174,9 @@ typedef struct {
     }
 
     if(self.highlightLines) {
+        glLineWidth(([[UIScreen mainScreen] scale] == 2.00) ? 6.0 : 3.0);
         [self.highlightLines display];
+        glLineWidth(1.0f);
     }
 }
 

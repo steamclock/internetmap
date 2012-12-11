@@ -81,6 +81,7 @@
 -(void)updateLineDisplay:(MapDisplay*)display forConnections:(NSArray*)connections {
     NSMutableArray* filteredConnections = [NSMutableArray new];
     
+    // We are only drawing lines to nodes with > 0.01 importance, filter those out
     for(Connection* connection in connections) {
         if((connection.first.importance > 0.01) && (connection.second.importance > 0.01)) {
             [filteredConnections addObject:connection];

@@ -10,6 +10,7 @@
 
 -(id)initWithLineCount:(NSUInteger)count;
 
+// Note: Must bracket calls to updateLine with beginUpdate/endUpdate
 -(void)beginUpdate;
 -(void)endUpdate;
 -(void)updateLine:(NSUInteger)index withStart:(GLKVector3)start startColor:(UIColor*)startColour end:(GLKVector3)end endColor:(UIColor*)endColor;
