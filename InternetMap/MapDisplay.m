@@ -135,6 +135,7 @@ typedef struct {
 - (void)draw
 {
     if(self.lockedNodes) {
+        glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
         glUnmapBufferOES(GL_ARRAY_BUFFER);
         self.lockedNodes = NULL;
     }

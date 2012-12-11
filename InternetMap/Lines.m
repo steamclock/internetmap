@@ -65,6 +65,7 @@ typedef struct {
 
 -(void)endUpdate {
     self.lockedVertices = NULL;
+    glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
     glUnmapBufferOES(GL_ARRAY_BUFFER);
 }
 
