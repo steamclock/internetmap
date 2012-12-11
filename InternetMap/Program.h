@@ -10,15 +10,14 @@
 enum
 {
     ATTRIB_VERTEX,
-    ATTRIB_SIZE,
     ATTRIB_COLOR,
-    ATTRIB_LINECOLOR,
+    ATTRIB_SIZE,
     NUM_ATTRIBUTES
 };
 
 @interface Program : NSObject
 
--(id)initWithName:(NSString*)name; // loads shaders from name.vsh and name.fsh in applicaiton bundle
+-(id)initWithName:(NSString*)name activeAttributes:(NSIndexSet*)attribs; // loads shaders from name.vsh and name.fsh in application bundle
 
 -(int)uniformForName:(NSString*)uniformName;
 -(void)use;

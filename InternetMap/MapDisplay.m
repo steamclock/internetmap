@@ -23,10 +23,6 @@ typedef struct {
     unsigned char g;
     unsigned char b;
     unsigned char a;
-    unsigned char lineR;
-    unsigned char lineG;
-    unsigned char lineB;
-    unsigned char lineA;
 } RawDisplayNode;
 
 @interface DisplayNode ()
@@ -47,7 +43,6 @@ typedef struct {
 @property (strong, nonatomic) EAGLContext *context;
 
 @property (nonatomic) RawDisplayNode* lockedNodes;
-@property (strong, nonatomic) NSData* lineIndexData;
 
 @property (strong, nonatomic) Program* nodeProgram;
 @property (strong, nonatomic) Program* connectionProgram;
@@ -77,8 +72,17 @@ typedef struct {
 
 - (void)setupGL
 {
-    self.nodeProgram = [[Program alloc] initWithName:@"node"];
-    self.connectionProgram = [[Program alloc] initWithName:@"line"];
+    NSMutableIndexSet* nodeVertexComponents = [NSMutableIndexSet new];
+    [nodeVertexComponents addIndex:ATTRIB_VERTEX];
+    [nodeVertexComponents addIndex:ATTRIB_COLOR];
+    [nodeVertexComponents addIndex:ATTRIB_SIZE];
+    
+    NSMutableIndexSet* lineVertexComponents = [NSMutableIndexSet new];
+    [lineVertexComponents addIndex:ATTRIB_VERTEX];
+    [lineVertexComponents addIndex:ATTRIB_COLOR];
+    
+    self.nodeProgram = [[Program alloc] initWithName:@"node" activeAttributes:nodeVertexComponents];
+    self.connectionProgram = [[Program alloc] initWithName:@"line" activeAttributes:lineVertexComponents];
     
     //glEnable(GL_DEPTH_TEST);
     
@@ -104,10 +108,7 @@ typedef struct {
     
     glEnableVertexAttribArray(ATTRIB_COLOR);
     glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(RawDisplayNode), BUFFER_OFFSET(sizeof(float) * 4));
-    
-    glEnableVertexAttribArray(ATTRIB_LINECOLOR);
-    glVertexAttribPointer(ATTRIB_LINECOLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(RawDisplayNode), BUFFER_OFFSET((sizeof(float) * 4) + 4));
-    
+        
     glBindVertexArrayOES(0);
     
     self.camera = [Camera new];
@@ -165,7 +166,6 @@ typedef struct {
     if(self.lines) {
         [self.connectionProgram use];
         glUniformMatrix4fv([self.connectionProgram uniformForName:@"modelViewProjectionMatrix"], 1, 0, mvp.m);
-        //glDrawElements(GL_LINES, self.lineIndexData.length / 2, GL_UNSIGNED_SHORT, self.lineIndexData.bytes);
         [self.lines display];
     }
 }
@@ -186,16 +186,6 @@ typedef struct {
     }
     
     return [[DisplayNode alloc] initWithDisplay:self index:index];
-}
-
--(void)setLineIndices:(NSArray*)lineIndices {
-    GLushort* rawData = alloca(lineIndices.count * sizeof(GLushort));
-    
-    for(int i = 0; i < lineIndices.count; i++) {
-        rawData[i] = [[lineIndices objectAtIndex:i] intValue];
-    }
-    
-    self.lineIndexData = [NSData dataWithBytes:rawData length:lineIndices.count * sizeof(GLushort)];
 }
 
 @end
@@ -236,16 +226,6 @@ typedef struct {
     node->g = (int)(g * 255.0f);
     node->b = (int)(b * 255.0f);
     node->a = (int)(a * 255.0f);
-}
-
--(void)setLineColor:(UIColor *)color {
-    RawDisplayNode* node = [self.parent rawDisplayNodeAtIndex:self.index];
-    float r,g,b,a;
-    [color getRed:&r green:&g blue:&b alpha:&a];
-    node->lineR = (int)(r * 255.0f);
-    node->lineG = (int)(g * 255.0f);
-    node->lineB = (int)(b * 255.0f);
-    node->lineA = (int)(a * 255.0f);
 }
 
 @end

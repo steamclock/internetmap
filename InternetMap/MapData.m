@@ -123,9 +123,7 @@
     [lines endUpdate];
     
     display.lines = lines;
-    
-    [display setLineIndices:self.connections];
-    
+        
     NSLog(@"update display : %.2fms", ([NSDate timeIntervalSinceReferenceDate] - start) * 1000.0f);
 }
 

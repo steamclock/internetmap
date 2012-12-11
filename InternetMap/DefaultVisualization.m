@@ -72,10 +72,6 @@
                 point.color = unknownColor;
                 break;
         }
-        
-        float lineImportance = MAX(node.importance - 0.01f, 0.0f) * 0.5f;
-        UIColor* lineColor = [UIColor colorWithRed:lineImportance green:lineImportance blue:lineImportance alpha:1.0];
-        point.lineColor = lineColor;
     };
 
 }
