@@ -10,7 +10,6 @@
 #import "Connection.h"
 
 @interface MapData ()
-@property (strong, nonatomic) NSMutableDictionary* nodesByAsn;
 @end
 
 @implementation MapData

@@ -159,12 +159,12 @@ void callback (
 }
 
 - (void)selectNodeForASN:(int)asn {
-    for (int i = 0; i < [self.data.nodes count]; i++) {
-        Node* node = [self.data.nodes objectAtIndex:i];
-        if ([node.asn intValue] == asn) {
-            [self updateTargetForIndex:i];
-            break;
-        }
+    Node* node = [self.data.nodesByAsn objectForKey:[NSString stringWithFormat:@"%i", asn]];
+    if (node) {
+        [self updateTargetForIndex:node.index];
+    }else {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error locating your node", nil) message:@"Couldn't finde a node associated with your IP." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"ok", nil];
+        [alert show];
     }
 }
 
