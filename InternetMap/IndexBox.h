@@ -26,11 +26,16 @@ static const float boxSizeXWithoutOverlap = lengthX/numberOfCellsX;
 static const float boxSizeYWithoutOverlap = lengthY/numberOfCellsY;
 static const float boxSizeZWithoutOverlap = lengthZ/numberOfCellsZ;
 
-@interface IndexBox : NSObject
+@interface IndexBox : NSObject {
+    GLKVector3 parameters[2];
+}
 
     @property (nonatomic, assign) GLKVector3 center;
+    @property (nonatomic, assign) GLKVector3 minCorner;
+    @property (nonatomic, assign) GLKVector3 maxCorner;
     @property (nonatomic, strong) NSMutableIndexSet* indices;
 
 - (BOOL)isPointInside:(GLKVector3)point;
+- (BOOL)doesLineIntersectOptimized:(GLKVector3)origin pointB:(GLKVector3)invertedDirection sign:(int *)sign;
 
 @end

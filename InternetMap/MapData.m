@@ -75,7 +75,8 @@
                 float x = IndexBoxMinX + boxSizeXWithoutOverlap*i;
                 IndexBox* box = [[IndexBox alloc] init];
                 box.center = GLKVector3Make(x+boxSizeXWithoutOverlap/2, y+boxSizeYWithoutOverlap/2, z+boxSizeZWithoutOverlap/2);
-                
+                box.minCorner = GLKVector3Make(x, y, z);
+                box.maxCorner = GLKVector3Make(x+boxSizeXWithoutOverlap, y+boxSizeYWithoutOverlap, z+boxSizeZWithoutOverlap);
                 [self.boxesForNodes addObject:box];
             }
         }
