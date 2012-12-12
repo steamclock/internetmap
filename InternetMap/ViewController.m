@@ -14,6 +14,8 @@
 #import "NodeInformationViewController.h"
 #import <dns_sd.h>
 #import "Lines.h"
+#import "IndexBox.h"
+
 
 @interface ViewController ()
 
@@ -289,9 +291,9 @@ void callback (
 
 -(void)handleTap:(UITapGestureRecognizer*)gestureRecognizer {
     
-    //TODO: Someone please comment the code in this function :)
     
     NSDate* date = [NSDate date];
+    //get point in view and adjust it for viewport
     CGPoint pointInView = [gestureRecognizer locationInView:self.view];
     float xOld = pointInView.x;
     CGFloat xLoOld = 0;
@@ -308,15 +310,18 @@ void callback (
     CGFloat yHiNew = -1;
     
     pointInView.y = (yOld-yLoOld) / (yHiOld-yLoOld) * (yHiNew-yLoNew) + yLoNew;
+    //transform point from screen- to object-space
     GLKVector3 cameraInObjectSpace = [self.display.camera cameraInObjectSpace]; //A
     GLKVector3 pointOnClipPlaneInObjectSpace = [self.display.camera applyModelViewToPoint:pointInView]; //B
+    
+    //do actual line-sphere intersection
     float xA, yA, zA;
     float xB, yB, zB;
-    float xC, yC, zC;
-    float r;
-    float maxDelta = -1;
-    int foundI = NSNotFound;
-
+    __block float xC, yC, zC;
+    __block float r;
+    __block float maxDelta = -1;
+    __block int foundI = NSNotFound;
+    
     xA = cameraInObjectSpace.x;
     yA = cameraInObjectSpace.y;
     zA = cameraInObjectSpace.z;
@@ -325,27 +330,43 @@ void callback (
     yB = pointOnClipPlaneInObjectSpace.y;
     zB = pointOnClipPlaneInObjectSpace.z;
     
-    for (int i = 0; i < [self.data.nodes count]; i++) {
-        Node* node = [self.data nodeAtIndex:i];
-        
-        GLKVector3 nodePosition = [self.data.visualization nodePosition:node];
-        xC = nodePosition.x;
-        yC = nodePosition.y;
-        zC = nodePosition.z;
-        
-        r = [self.data.visualization nodeSize:node]/2;
-        
-        float a = powf((xB-xA), 2)+powf((yB-yA), 2)+powf((zB-zA), 2);
-        float b = 2*((xB-xA)*(xA-xC)+(yB-yA)*(yA-yC)+(zB-zA)*(zA-zC));
-        float c = powf((xA-xC), 2)+powf((yA-yC), 2)+powf((zA-zC), 2)-powf(r, 2);
-        float delta = powf(b, 2)-4*a*c;
-        if (delta >= 0) {
-            NSLog(@"intersected node %i: %@, delta: %f", i, NSStringFromGLKVector3(nodePosition), delta);
-            GLKVector4 transformedNodePosition = GLKMatrix4MultiplyVector4(self.display.camera.currentModelView, GLKVector4MakeWithVector3(nodePosition, 1));
-            if ((delta > maxDelta) && (transformedNodePosition.z < -0.1)) {
-                maxDelta = delta;
-                foundI = i;
-            }
+    GLKVector3 direction = GLKVector3Subtract(pointOnClipPlaneInObjectSpace, cameraInObjectSpace);
+    direction = GLKVector3Make(1.0f/direction.x, 1.0f/direction.y, 1.0f/direction.z);
+    int sign[3];
+    sign[0] = (direction.x < 0);
+    sign[1] = (direction.y < 0);
+    sign[2] = (direction.z < 0);
+    
+    IndexBox* box;
+    for (int j = 0; j<[self.data.boxesForNodes count]; j++) {
+        box = [self.data.boxesForNodes objectAtIndex:j];
+        if ([box doesLineIntersectOptimized:cameraInObjectSpace pointB:direction sign:sign]) {
+//            NSLog(@"intersects box %i at pos %@", j, NSStringFromGLKVector3(box.center));
+            [box.indices enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+                int i = idx;
+                Node* node = [self.data nodeAtIndex:i];
+                
+                GLKVector3 nodePosition = [self.data.visualization nodePosition:node];
+                xC = nodePosition.x;
+                yC = nodePosition.y;
+                zC = nodePosition.z;
+                
+                r = [self.data.visualization nodeSize:node]/2;
+                
+                float a = powf((xB-xA), 2)+powf((yB-yA), 2)+powf((zB-zA), 2);
+                float b = 2*((xB-xA)*(xA-xC)+(yB-yA)*(yA-yC)+(zB-zA)*(zA-zC));
+                float c = powf((xA-xC), 2)+powf((yA-yC), 2)+powf((zA-zC), 2)-powf(r, 2);
+                float delta = powf(b, 2)-4*a*c;
+                if (delta >= 0) {
+                    NSLog(@"intersected node %i: %@, delta: %f", i, NSStringFromGLKVector3(nodePosition), delta);
+                    GLKVector4 transformedNodePosition = GLKMatrix4MultiplyVector4(self.display.camera.currentModelView, GLKVector4MakeWithVector3(nodePosition, 1));
+                    if ((delta > maxDelta) && (transformedNodePosition.z < -0.1)) {
+                        maxDelta = delta;
+                        foundI = i;
+                    }
+                }
+
+            }];
         }
     }
     
