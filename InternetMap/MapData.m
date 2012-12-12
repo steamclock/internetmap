@@ -8,6 +8,7 @@
 #import "Node.h"
 #import "Lines.h"
 #import "Connection.h"
+#import "IndexBox.h"
 
 @interface MapData ()
 @end
@@ -57,11 +58,74 @@
         [self.connections addObject:connection];
     }
     
+    [self createNodeBoxes];
+    
     NSLog(@"load : %.2fms", ([NSDate timeIntervalSinceReferenceDate] - start) * 1000.0f);
 }
 
+- (void)createNodeBoxes {
+    
+    self.boxesForNodes = [NSMutableArray array];
+    
+    for (int k = 0; k < numberOfCellsZ; k++) {
+        float z = IndexBoxMinZ + boxSizeZWithoutOverlap*k;
+        for (int j = 0; j < numberOfCellsY; j++) {
+            float y = IndexBoxMinY + boxSizeYWithoutOverlap*j;
+            for(int i = 0; i < numberOfCellsX; i++) {
+                float x = IndexBoxMinX + boxSizeXWithoutOverlap*i;
+                IndexBox* box = [[IndexBox alloc] init];
+                box.center = GLKVector3Make(x+boxSizeXWithoutOverlap/2, y+boxSizeYWithoutOverlap/2, z+boxSizeZWithoutOverlap/2);
+                
+                [self.boxesForNodes addObject:box];
+            }
+        }
+    }
+    
+    for (int i = 0; i < [self.nodes count]; i++) {
+        Node* node = [self.nodes objectAtIndex:i];
+        GLKVector3 pos = [self.visualization nodePosition:node];
+        IndexBox* box = [self indexBoxForPoint:pos];
+        [box.indices addIndex:i];
+    }
+}
 
+- (IndexBox*)indexBoxForPoint:(GLKVector3)point {
+    GLKVector3 pos = point;
+    
+    //assumes all boxes have the same size
+    float x = pos.x;
+    if (x >= 0) {
+        x += fabsf(IndexBoxMinX);
+    }
+    
+    float y = pos.y;
+    if (y >= 0) {
+        y += fabsf(IndexBoxMinY);
+    }
+    
+    float z = pos.z;
+    if (z >= 0) {
+        z += fabsf(IndexBoxMinZ);
+    }
+    
+    int posX = (int)fabsf(x/boxSizeXWithoutOverlap);
+    int posY = (int)fabsf(y/boxSizeYWithoutOverlap);
+    int posZ = (int)fabsf(z/boxSizeZWithoutOverlap);
+    int posInArray = posX + (fabsf(IndexBoxMinX) + fabsf(IndexBoxMaxX))/boxSizeXWithoutOverlap*posY + (fabsf(IndexBoxMinX) + fabsf(IndexBoxMaxX))/boxSizeXWithoutOverlap*(fabsf(IndexBoxMinY)+fabsf(IndexBoxMaxY))/boxSizeYWithoutOverlap*posZ;
+    
+    return [self.boxesForNodes objectAtIndex:posInArray];
 
+}
+
+- (void)addNodesToBox:(IndexBox*)box {
+    for (int i = 0; i < [self.nodes count]; i++) {
+        Node* node = [self.nodes objectAtIndex:i];
+        GLKVector3 pos = [self.visualization nodePosition:node];
+        if ([box isPointInside:pos]) {
+            [box.indices addIndex:i];
+        }
+    }
+}
 
 -(void)loadFromAttrFile:(NSString*)filename {
     NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
