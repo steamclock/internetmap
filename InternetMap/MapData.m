@@ -159,6 +159,35 @@
 }
 
 
+-(void)loadAsInfo:(NSString*)filename {
+    NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
+    
+    NSString *fileContents = [NSString stringWithContentsOfFile:filename encoding:NSUTF8StringEncoding error:NULL];
+    NSError *parseError = nil;
+    NSData* data = [fileContents dataUsingEncoding:NSUTF8StringEncoding];
+    id jsonObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:&parseError];
+    
+//    NSLog(@"%d", [jsonObject count]);
+    for(id key in jsonObject)
+    {
+        Node* node = [self.nodesByAsn objectForKey:key];
+        if(node){
+            NSArray *as = [jsonObject objectForKey:key];
+            node.name = [as objectAtIndex:1];
+            node.textDescription = [as objectAtIndex:5];
+            node.dateRegistered = [as objectAtIndex:3];
+            node.address = [as objectAtIndex:7];
+            node.city = [as objectAtIndex:8];
+            node.state = [as objectAtIndex:9];
+            node.postalCode = [as objectAtIndex:10];
+            node.country = [as objectAtIndex:11];
+        }
+    }
+
+    NSLog(@"asinfo load : %.2fms", ([NSDate timeIntervalSinceReferenceDate] - start) * 1000.0f);
+}
+
+
 -(void)updateDisplay:(MapDisplay*)display {
     NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
     display.numNodes = self.nodes.count;

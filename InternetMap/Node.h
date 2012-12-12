@@ -26,6 +26,15 @@ enum
 @property int type;
 
 @property (strong, nonatomic) NSString* typeString;
+
+@property (strong, nonatomic) NSString* name;
 @property (strong, nonatomic) NSString* textDescription;
+@property (strong, nonatomic) NSString* dateRegistered;
+@property (strong, nonatomic) NSString* address;
+@property (strong, nonatomic) NSString* city;
+@property (strong, nonatomic) NSString* state;
+@property (strong, nonatomic) NSString* postalCode;
+@property (strong, nonatomic) NSString* country;
+
 
 @end

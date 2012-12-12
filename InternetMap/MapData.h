@@ -14,6 +14,7 @@
 
 -(void)loadFromFile:(NSString*)filename;
 -(void)loadFromAttrFile:(NSString*)filename;
+-(void)loadAsInfo:(NSString*)filename;
 -(void)updateDisplay:(MapDisplay*)display;
 
 -(Node*)nodeAtIndex:(NSUInteger)index;
