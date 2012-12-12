@@ -12,5 +12,6 @@
 @property (weak, nonatomic) IBOutlet UILabel* asnLabel;
 @property (weak, nonatomic) IBOutlet UILabel* textDescriptionLabel;
 @property (weak, nonatomic) IBOutlet UILabel* nodeTypeLabel;
+@property (weak, nonatomic) id delegate;
 
 @end

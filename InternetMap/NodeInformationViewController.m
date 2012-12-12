@@ -20,20 +20,22 @@
     if (self) {
         self.title = @"Node Information";
         [self setContentSizeForViewInPopover:CGSizeMake(320, 150)];
+        
     }
     return self;
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(donePressed)];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)donePressed {
+    if ([self.delegate respondsToSelector:@selector(dismissNodeInfoPopover)]) {
+        [self.delegate performSelector:@selector(dismissNodeInfoPopover)];
+    }
+
 }
 
 @end

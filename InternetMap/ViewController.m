@@ -570,13 +570,14 @@ void callback (
     Node* node = [self.data nodeAtIndex:self.targetNode];
     
     NodeInformationViewController *nodeInfo = [[NodeInformationViewController alloc] initWithNibName:@"NodeInformationViewController" bundle:nil];
-    
+    nodeInfo.delegate = self;
     //NSLog(@"ASN:%@, Text Desc: %@", node.asn, node.textDescription);
     
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:nodeInfo];
     
-    self.nodeInformationPopover.delegate = self;
+    [self.nodeInformationPopover dismissPopoverAnimated:YES]; //this line is important, in case the popover for another node is already visible
     self.nodeInformationPopover = [[UIPopoverController alloc] initWithContentViewController:navController];
+    self.nodeInformationPopover.passthroughViews = @[self.view];
     
     nodeInfo.asnLabel.text = node.asn;
     nodeInfo.textDescriptionLabel.text = node.textDescription;
@@ -599,6 +600,11 @@ void callback (
 -(void)nodeSelected:(Node*)node{
     [self.nodeSearchPopover dismissPopoverAnimated:YES];
     [self updateTargetForIndex:node.index];
+}
+
+#pragma mark - NodeInfo delegate
+- (void)dismissNodeInfoPopover {
+    [self.nodeInformationPopover dismissPopoverAnimated:YES];
 }
 
 #pragma mark - UIPopoverController Delegate
