@@ -93,25 +93,9 @@
 - (IndexBox*)indexBoxForPoint:(GLKVector3)point {
     GLKVector3 pos = point;
     
-    //assumes all boxes have the same size
-    float x = pos.x;
-    if (x >= 0) {
-        x += fabsf(IndexBoxMinX);
-    }
-    
-    float y = pos.y;
-    if (y >= 0) {
-        y += fabsf(IndexBoxMinY);
-    }
-    
-    float z = pos.z;
-    if (z >= 0) {
-        z += fabsf(IndexBoxMinZ);
-    }
-    
-    int posX = (int)fabsf(x/boxSizeXWithoutOverlap);
-    int posY = (int)fabsf(y/boxSizeYWithoutOverlap);
-    int posZ = (int)fabsf(z/boxSizeZWithoutOverlap);
+    int posX = (int)fabsf((pos.x + fabsf(IndexBoxMinX))/boxSizeXWithoutOverlap);
+    int posY = (int)fabsf((pos.y + fabsf(IndexBoxMinY))/boxSizeYWithoutOverlap);
+    int posZ = (int)fabsf((pos.z + fabsf(IndexBoxMinZ))/boxSizeZWithoutOverlap);
     int posInArray = posX + (fabsf(IndexBoxMinX) + fabsf(IndexBoxMaxX))/boxSizeXWithoutOverlap*posY + (fabsf(IndexBoxMinX) + fabsf(IndexBoxMaxX))/boxSizeXWithoutOverlap*(fabsf(IndexBoxMinY)+fabsf(IndexBoxMaxY))/boxSizeYWithoutOverlap*posZ;
     
     return [self.boxesForNodes objectAtIndex:posInArray];

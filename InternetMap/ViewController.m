@@ -369,32 +369,6 @@ void callback (
         }
     }
     
-    
-    
-//    for (int i = 0; i < [self.data.nodes count]; i++) {
-//        Node* node = [self.data nodeAtIndex:i];
-//        
-//        GLKVector3 nodePosition = [self.data.visualization nodePosition:node];
-//        xC = nodePosition.x;
-//        yC = nodePosition.y;
-//        zC = nodePosition.z;
-//        
-//        r = [self.data.visualization nodeSize:node]/2;
-//        
-//        float a = powf((xB-xA), 2)+powf((yB-yA), 2)+powf((zB-zA), 2);
-//        float b = 2*((xB-xA)*(xA-xC)+(yB-yA)*(yA-yC)+(zB-zA)*(zA-zC));
-//        float c = powf((xA-xC), 2)+powf((yA-yC), 2)+powf((zA-zC), 2)-powf(r, 2);
-//        float delta = powf(b, 2)-4*a*c;
-//        if (delta >= 0) {
-//            NSLog(@"intersected node %i: %@, delta: %f", i, NSStringFromGLKVector3(nodePosition), delta);
-//            GLKVector4 transformedNodePosition = GLKMatrix4MultiplyVector4(self.display.camera.currentModelView, GLKVector4MakeWithVector3(nodePosition, 1));
-//            if ((delta > maxDelta) && (transformedNodePosition.z < -0.1)) {
-//                maxDelta = delta;
-//                foundI = i;
-//            }
-//        }
-//    }
-    
     if (foundI != NSNotFound) {
         NSLog(@"selected node %i", foundI);
         [self updateTargetForIndex:foundI];
