@@ -39,7 +39,7 @@
     parameters[1] = maxCorner;
 }
 
-- (BOOL)doesLineIntersectOptimized:(GLKVector3)origin pointB:(GLKVector3)invertedDirection sign:(int *)sign {
+- (BOOL)doesLineIntersectOptimized:(GLKVector3)origin invertedDirection:(GLKVector3)invertedDirection sign:(int *)sign {
     float tmin, tmax, tymin, tymax, tzmin, tzmax;
     
     tmin = (parameters[sign[0]].x - origin.x) * invertedDirection.x;

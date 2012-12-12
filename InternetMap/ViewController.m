@@ -23,8 +23,11 @@
 @property (strong, nonatomic) MapDisplay* display;
 @property (strong, nonatomic) MapData* data;
 
+@property (strong, nonatomic) NSDate* lastIntersectionDate;
+
 @property (strong, nonatomic) UITapGestureRecognizer* tapRecognizer;
 @property (strong, nonatomic) UITapGestureRecognizer* twoFingerTapRecognizer;
+@property (strong, nonatomic) UILongPressGestureRecognizer* longPressGestureRecognizer;
 @property (strong, nonatomic) UITapGestureRecognizer* doubleTapRecognizer;
 @property (strong, nonatomic) UIPanGestureRecognizer* panRecognizer;
 @property (strong, nonatomic) UIPinchGestureRecognizer* pinchRecognizer;
@@ -215,13 +218,15 @@ void callback (
     
     self.panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
     self.pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinch:)];
+    self.longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
+    self.longPressGestureRecognizer.enabled = NO;
     
     [self.view addGestureRecognizer:self.tapRecognizer];
     [self.view addGestureRecognizer:self.doubleTapRecognizer];
     [self.view addGestureRecognizer:self.twoFingerTapRecognizer];
     [self.view addGestureRecognizer:self.panRecognizer];
     [self.view addGestureRecognizer:self.pinchRecognizer];
-    
+    [self.view addGestureRecognizer:self.longPressGestureRecognizer];
     
     self.youAreHereActivityIndicator.frame = CGRectMake(self.youAreHereActivityIndicator.frame.origin.x, self.youAreHereActivityIndicator.frame.origin.y, 30, 30);
     
@@ -291,10 +296,13 @@ void callback (
 
 -(void)handleTap:(UITapGestureRecognizer*)gestureRecognizer {
     
+    [self handleSelectionAtPoint:[gestureRecognizer locationInView:self.view]];
     
+}
+
+- (void)handleSelectionAtPoint:(CGPoint)pointInView {
     NSDate* date = [NSDate date];
     //get point in view and adjust it for viewport
-    CGPoint pointInView = [gestureRecognizer locationInView:self.view];
     float xOld = pointInView.x;
     CGFloat xLoOld = 0;
     CGFloat xHiOld = self.display.camera.displaySize.width;
@@ -316,7 +324,6 @@ void callback (
     
     //do actual line-sphere intersection
     float xA, yA, zA;
-    float xB, yB, zB;
     __block float xC, yC, zC;
     __block float r;
     __block float maxDelta = -1;
@@ -326,22 +333,20 @@ void callback (
     yA = cameraInObjectSpace.y;
     zA = cameraInObjectSpace.z;
     
-    xB = pointOnClipPlaneInObjectSpace.x;
-    yB = pointOnClipPlaneInObjectSpace.y;
-    zB = pointOnClipPlaneInObjectSpace.z;
-    
-    GLKVector3 direction = GLKVector3Subtract(pointOnClipPlaneInObjectSpace, cameraInObjectSpace);
-    direction = GLKVector3Make(1.0f/direction.x, 1.0f/direction.y, 1.0f/direction.z);
+    GLKVector3 direction = GLKVector3Subtract(pointOnClipPlaneInObjectSpace, cameraInObjectSpace); //direction = B - A
+    GLKVector3 invertedDirection = GLKVector3Make(1.0f/direction.x, 1.0f/direction.y, 1.0f/direction.z);
     int sign[3];
-    sign[0] = (direction.x < 0);
-    sign[1] = (direction.y < 0);
-    sign[2] = (direction.z < 0);
+    sign[0] = (invertedDirection.x < 0);
+    sign[1] = (invertedDirection.y < 0);
+    sign[2] = (invertedDirection.z < 0);
+
+    float a = powf((direction.x), 2)+powf((direction.y), 2)+powf((direction.z), 2);
     
     IndexBox* box;
     for (int j = 0; j<[self.data.boxesForNodes count]; j++) {
         box = [self.data.boxesForNodes objectAtIndex:j];
-        if ([box doesLineIntersectOptimized:cameraInObjectSpace pointB:direction sign:sign]) {
-//            NSLog(@"intersects box %i at pos %@", j, NSStringFromGLKVector3(box.center));
+        if ([box doesLineIntersectOptimized:cameraInObjectSpace invertedDirection:invertedDirection sign:sign]) {
+            //            NSLog(@"intersects box %i at pos %@", j, NSStringFromGLKVector3(box.center));
             [box.indices enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
                 int i = idx;
                 Node* node = [self.data nodeAtIndex:i];
@@ -353,8 +358,7 @@ void callback (
                 
                 r = [self.data.visualization nodeSize:node]/2;
                 
-                float a = powf((xB-xA), 2)+powf((yB-yA), 2)+powf((zB-zA), 2);
-                float b = 2*((xB-xA)*(xA-xC)+(yB-yA)*(yA-yC)+(zB-zA)*(zA-zC));
+                float b = 2*((direction.x)*(xA-xC)+(direction.y)*(yA-yC)+(direction.z)*(zA-zC));
                 float c = powf((xA-xC), 2)+powf((yA-yC), 2)+powf((zA-zC), 2)-powf(r, 2);
                 float delta = powf(b, 2)-4*a*c;
                 if (delta >= 0) {
@@ -365,7 +369,7 @@ void callback (
                         foundI = i;
                     }
                 }
-
+                
             }];
         }
     }
@@ -378,8 +382,18 @@ void callback (
     }
     
     NSLog(@"time for intersection calculation: %f", [date timeIntervalSinceNow]);
-    
 }
+
+- (void)handleLongPress:(UILongPressGestureRecognizer *)gesture
+{
+    if(gesture.state == UIGestureRecognizerStateBegan || gesture.state == UIGestureRecognizerStateChanged) {
+        if (!self.lastIntersectionDate || fabs([self.lastIntersectionDate timeIntervalSinceNow]) > 0.1) {
+            [self handleSelectionAtPoint:[gesture locationInView:self.view]];
+            self.lastIntersectionDate = [NSDate date];
+        }
+    }
+}
+
 
 - (void)handleTwoFingerTap:(UIGestureRecognizer*)gestureRecognizer {
     NSLog(@"Zoomed out");

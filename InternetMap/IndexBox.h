@@ -36,6 +36,6 @@ static const float boxSizeZWithoutOverlap = lengthZ/numberOfCellsZ;
     @property (nonatomic, strong) NSMutableIndexSet* indices;
 
 - (BOOL)isPointInside:(GLKVector3)point;
-- (BOOL)doesLineIntersectOptimized:(GLKVector3)origin pointB:(GLKVector3)invertedDirection sign:(int *)sign;
+- (BOOL)doesLineIntersectOptimized:(GLKVector3)origin invertedDirection:(GLKVector3)invertedDirection sign:(int *)sign;
 
 @end
