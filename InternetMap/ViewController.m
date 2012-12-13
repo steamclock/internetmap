@@ -638,26 +638,15 @@ void callback (
     self.tracerouteOutput.text = @"";
     self.tracerouteOutput.hidden = NO;
     
-    [[SCDispatchQueue defaultPriorityQueue] dispatchAsync:^{
-        NSString* ip = [self fetchGlobalIP];
-        if (!ip || [ip isEqualToString:@""]) {
-            [[SCDispatchQueue mainQueue] dispatchAsync:^{
-                self.tracerouteOutput.text = @"Could not locate IP for node.";
-            }];
-        } else {
-            [[SCDispatchQueue mainQueue] dispatchAsync:^{
-                self.tracer = [SCTraceroute tracerouteWithAddress:ip]; //plugging in address for testing locally in later function call
-                self.tracer.delegate = self;
-                [self.tracer start];
-            }];
-        }
-    }];
+    self.tracer = [SCTraceroute tracerouteWithAddress:@"74.125.48.233"]; //we need ip for node!
+    self.tracer.delegate = self;
+    [self.tracer start];
     
 
 }
 
 -(void)doneTapped{
-    [self.nodeInformationPopover dismissPopoverAnimated:YES];  
+    [self.nodeInformationPopover dismissPopoverAnimated:YES];
 }
 
 @end
