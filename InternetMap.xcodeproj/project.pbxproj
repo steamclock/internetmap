@@ -40,6 +40,10 @@
 		A6F3F5871640F1FB0070E6AE /* ViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6F3F5851640F1FB0070E6AE /* ViewController_iPhone.xib */; };
 		A6F3F58A1640F1FB0070E6AE /* ViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6F3F5881640F1FB0070E6AE /* ViewController_iPad.xib */; };
 		A6F3F5911640F7080070E6AE /* data.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6F3F5901640F7080070E6AE /* data.txt */; };
+		D46808FD1679560A00A2C1CC /* SCPacketUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = D46808FA1679560A00A2C1CC /* SCPacketUtility.m */; };
+		D46808FE1679560A00A2C1CC /* SCTraceroute.m in Sources */ = {isa = PBXBuildFile; fileRef = D46808FC1679560A00A2C1CC /* SCTraceroute.m */; };
+		D468090416795D4600A2C1CC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D468090216795CC200A2C1CC /* SystemConfiguration.framework */; };
+		D468090516795D4D00A2C1CC /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D468090016795CB700A2C1CC /* CFNetwork.framework */; };
 		D4CEA32C16694E65004B8E8A /* eye.png in Resources */ = {isa = PBXBuildFile; fileRef = D4CEA32216694E65004B8E8A /* eye.png */; };
 		D4CEA32D16694E65004B8E8A /* eye@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D4CEA32316694E65004B8E8A /* eye@2x.png */; };
 		D4CEA32E16694E65004B8E8A /* peer1logo.png in Resources */ = {isa = PBXBuildFile; fileRef = D4CEA32416694E65004B8E8A /* peer1logo.png */; };
@@ -107,6 +111,12 @@
 		A6F3F5861640F1FB0070E6AE /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPhone.xib; sourceTree = "<group>"; };
 		A6F3F5891640F1FB0070E6AE /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPad.xib; sourceTree = "<group>"; };
 		A6F3F5901640F7080070E6AE /* data.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = data.txt; path = InternetMap/data.txt; sourceTree = "<group>"; };
+		D46808F91679560A00A2C1CC /* SCPacketUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPacketUtility.h; sourceTree = "<group>"; };
+		D46808FA1679560A00A2C1CC /* SCPacketUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPacketUtility.m; sourceTree = "<group>"; };
+		D46808FB1679560A00A2C1CC /* SCTraceroute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCTraceroute.h; sourceTree = "<group>"; };
+		D46808FC1679560A00A2C1CC /* SCTraceroute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCTraceroute.m; sourceTree = "<group>"; };
+		D468090016795CB700A2C1CC /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		D468090216795CC200A2C1CC /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		D4CEA32216694E65004B8E8A /* eye.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = eye.png; path = Images/eye.png; sourceTree = "<group>"; };
 		D4CEA32316694E65004B8E8A /* eye@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "eye@2x.png"; path = "Images/eye@2x.png"; sourceTree = "<group>"; };
 		D4CEA32416694E65004B8E8A /* peer1logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = peer1logo.png; path = Images/peer1logo.png; sourceTree = "<group>"; };
@@ -131,6 +141,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D468090516795D4D00A2C1CC /* CFNetwork.framework in Frameworks */,
+				D468090416795D4600A2C1CC /* SystemConfiguration.framework in Frameworks */,
 				1117E57B1676BFCD0046AA69 /* libresolv.dylib in Frameworks */,
 				A6F3F5631640F1FB0070E6AE /* UIKit.framework in Frameworks */,
 				A6F3F5651640F1FB0070E6AE /* Foundation.framework in Frameworks */,
@@ -199,6 +211,8 @@
 		A6F3F5611640F1FB0070E6AE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D468090216795CC200A2C1CC /* SystemConfiguration.framework */,
+				D468090016795CB700A2C1CC /* CFNetwork.framework */,
 				1117E57A1676BFCD0046AA69 /* libresolv.dylib */,
 				A6F3F5621640F1FB0070E6AE /* UIKit.framework */,
 				A6F3F5641640F1FB0070E6AE /* Foundation.framework */,
@@ -212,6 +226,10 @@
 		A6F3F56C1640F1FB0070E6AE /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				D46808F91679560A00A2C1CC /* SCPacketUtility.h */,
+				D46808FA1679560A00A2C1CC /* SCPacketUtility.m */,
+				D46808FB1679560A00A2C1CC /* SCTraceroute.h */,
+				D46808FC1679560A00A2C1CC /* SCTraceroute.m */,
 				D4F65DD9166D56A90077BF5A /* 3rd Party Code */,
 				A6F3F5751640F1FB0070E6AE /* AppDelegate.h */,
 				A6F3F5761640F1FB0070E6AE /* AppDelegate.m */,
@@ -385,6 +403,8 @@
 				A6E6DB681676A0CE00B78F44 /* Lines.m in Sources */,
 				A6E6DB6C1676B6C800B78F44 /* Connection.m in Sources */,
 				11D4CFC41677DAE400ED328D /* IndexBox.m in Sources */,
+				D46808FD1679560A00A2C1CC /* SCPacketUtility.m in Sources */,
+				D46808FE1679560A00A2C1CC /* SCTraceroute.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

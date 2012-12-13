@@ -38,6 +38,8 @@
 @property (nonatomic) NSUInteger targetNode;
 @property (nonatomic) int isCurrentlyFetchingASN;
 
+@property (strong, nonatomic) SCTraceroute* tracer;
+
 
 /* UIKit Overlay */
 @property (weak, nonatomic) IBOutlet UIButton* searchButton;
@@ -46,6 +48,8 @@
 @property (weak, nonatomic) IBOutlet UIButton* visualizationsButton;
 @property (weak, nonatomic) IBOutlet UIButton* timelineButton;
 @property (weak, nonatomic) IBOutlet UISlider* timelineSlider;
+@property (strong, nonatomic) IBOutlet UITextView* tracerouteOutput;
+
 @property (strong, nonatomic) UIPopoverController* visualizationSelectionPopover;
 @property (strong, nonatomic) UIPopoverController* nodeSearchPopover;
 @property (strong, nonatomic) UIPopoverController* nodeInformationPopover;
@@ -98,7 +102,7 @@ void callback (
                 [[SCDispatchQueue mainQueue] dispatchAsync:^{
                     [self failedFetchingCurrentASN:@"Couldn't get global IP address"];
                 }];
-            }else {
+            } else {
                 [self fetchASNForIP:ip];
             }
         }];
@@ -602,11 +606,6 @@ void callback (
     [self updateTargetForIndex:node.index];
 }
 
-#pragma mark - NodeInfo delegate
-- (void)dismissNodeInfoPopover {
-    [self.nodeInformationPopover dismissPopoverAnimated:YES];
-}
-
 #pragma mark - UIPopoverController Delegate
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
@@ -615,6 +614,50 @@ void callback (
 
 - (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController{
     return YES;
+}
+
+
+#pragma mark - SCTraceroute Delegate
+
+- (void)tracerouteDidFindHop:(NSString*)report{
+    
+    NSLog(@"%@", report);
+    
+    self.tracerouteOutput.text = [NSString stringWithFormat:@"%@\n%@", self.tracerouteOutput.text, report];
+    
+}
+- (void)tracerouteDidComplete:(NSMutableArray*)hops{
+    [self.tracer stop];
+    self.tracer = nil;
+    self.tracerouteOutput.text = [NSString stringWithFormat:@"%@\nTraceroute complete.", self.tracerouteOutput.text];
+}
+
+#pragma mark - Node Info View Delegate
+
+-(void)tracerouteButtonTapped{
+    self.tracerouteOutput.text = @"";
+    self.tracerouteOutput.hidden = NO;
+    
+    [[SCDispatchQueue defaultPriorityQueue] dispatchAsync:^{
+        NSString* ip = [self fetchGlobalIP];
+        if (!ip || [ip isEqualToString:@""]) {
+            [[SCDispatchQueue mainQueue] dispatchAsync:^{
+                self.tracerouteOutput.text = @"Could not locate IP for node.";
+            }];
+        } else {
+            [[SCDispatchQueue mainQueue] dispatchAsync:^{
+                self.tracer = [SCTraceroute tracerouteWithAddress:ip]; //plugging in address for testing locally in later function call
+                self.tracer.delegate = self;
+                [self.tracer start];
+            }];
+        }
+    }];
+    
+
+}
+
+-(void)doneTapped{
+    [self.nodeInformationPopover dismissPopoverAnimated:YES];  
 }
 
 @end

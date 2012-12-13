@@ -19,7 +19,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = @"Node Information";
-        [self setContentSizeForViewInPopover:CGSizeMake(320, 150)];
+        [self setContentSizeForViewInPopover:CGSizeMake(320, 200)];
         
     }
     return self;
@@ -28,14 +28,20 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(donePressed)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneTapped)];
 }
 
-- (void)donePressed {
-    if ([self.delegate respondsToSelector:@selector(dismissNodeInfoPopover)]) {
-        [self.delegate performSelector:@selector(dismissNodeInfoPopover)];
+- (void)doneTapped {
+    if ([self.delegate respondsToSelector:@selector(doneTapped)]) {
+        [self.delegate performSelector:@selector(doneTapped)];
     }
 
+}
+
+-(IBAction)tracerouteButtonTapped:(id)sender{
+    if ([self.delegate respondsToSelector:@selector(tracerouteButtonTapped)]) {
+        [self.delegate performSelector:@selector(tracerouteButtonTapped)];
+    }
 }
 
 @end
