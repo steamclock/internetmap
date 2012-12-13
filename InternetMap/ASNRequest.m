@@ -42,15 +42,10 @@ void callbackCurrent (
     NSDictionary* dict = (__bridge NSDictionary*)context;
     ASNRequest* request = [dict objectForKey:@"request"];
     if (success) {
-        [[SCDispatchQueue mainQueue] dispatchAsync:^{
-            [request finishedFetchingASN:@{@"asn" : [NSNumber numberWithInt:value], @"index" : [dict objectForKey:@"index"]}];
-        }];
+        [request finishedFetchingASN:@{@"asn" : [NSNumber numberWithInt:value], @"index" : [dict objectForKey:@"index"]}];
     }else {
-        [[SCDispatchQueue mainQueue] dispatchAsync:^{
-            [request failedFetchingASN:@{@"error" : @"Couldn't resolve DNS.", @"index" : [dict objectForKey:@"index"]}];
-        }];
+        [request failedFetchingASN:@{@"error" : @"Couldn't resolve DNS.", @"index" : [dict objectForKey:@"index"]}];
     }
-    
 }
 
 
@@ -82,8 +77,7 @@ void callbackCurrent (
 }
 
 - (void)startFetchingASNsForIPs:(NSArray*)theIPs{
-    SCDispatchQueue *queue = [SCDispatchQueue new];
-    [queue dispatchAsync:^{
+    [[SCDispatchQueue defaultPriorityQueue] dispatchAsync:^{
         for (int i = 0; i < [theIPs count]; i++) {
             NSString* ip = [theIPs objectAtIndex:i];
             if (!ip || [ip isEqualToString:@""]) {
@@ -93,6 +87,10 @@ void callbackCurrent (
             }else {
                 [self fetchASNForIP:ip index:i];
             }
+        }
+        
+        if ([self.delegate respondsToSelector:@selector(asnRequestFinished:)]) {
+            [self.delegate asnRequestFinished:self];
         }
     }];
 
@@ -164,27 +162,12 @@ void callbackCurrent (
     int index = [[dict objectForKey:@"index"] intValue];
     NSLog(@"ASN fetched for index %i: %i", index, asn);
     [self.result replaceObjectAtIndex:index withObject:[dict objectForKey:@"asn"]];
-    self.numberOfRequests--;
-    
-    if (self.numberOfRequests == 0) {
-        if ([self.delegate respondsToSelector:@selector(asnRequestFinished:)]) {
-            [self.delegate asnRequestFinished:self];
-        }
-    }
-
 }
 
 - (void)failedFetchingASN:(NSDictionary*)dict {
     NSString* error = [dict objectForKey:@"error"];
     int index = [[dict objectForKey:@"index"] intValue];
     NSLog(@"Failed for index: %i, error: %@", index, error);
-
-    self.numberOfRequests--;
-    if (self.numberOfRequests == 0) {
-        if ([self.delegate respondsToSelector:@selector(asnRequestFinished:)]) {
-            [self.delegate asnRequestFinished:self];
-        }
-    }
 }
 
 
