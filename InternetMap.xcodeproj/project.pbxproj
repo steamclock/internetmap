@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		11134D2416695AD60061BDED /* HelperMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 11134D2316695AD60061BDED /* HelperMethods.m */; };
 		1117E57B1676BFCD0046AA69 /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1117E57A1676BFCD0046AA69 /* libresolv.dylib */; };
+		113D861916795AB900A15888 /* ASNRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 113D861816795AB900A15888 /* ASNRequest.m */; };
 		11D4CFBC1677B67200ED328D /* SCDispatchQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 11D4CFBB1677B67200ED328D /* SCDispatchQueue.m */; };
 		11D4CFC41677DAE400ED328D /* IndexBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 11D4CFC31677DAE400ED328D /* IndexBox.m */; };
 		1FA5962E167931F800C7E703 /* asinfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 1FA5962D167931F800C7E703 /* asinfo.json */; };
@@ -65,6 +66,8 @@
 		11134D2216695AD60061BDED /* HelperMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelperMethods.h; sourceTree = "<group>"; };
 		11134D2316695AD60061BDED /* HelperMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelperMethods.m; sourceTree = "<group>"; };
 		1117E57A1676BFCD0046AA69 /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
+		113D861716795AB900A15888 /* ASNRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASNRequest.h; sourceTree = "<group>"; };
+		113D861816795AB900A15888 /* ASNRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNRequest.m; sourceTree = "<group>"; };
 		11D4CFBA1677B67200ED328D /* SCDispatchQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCDispatchQueue.h; sourceTree = "<group>"; };
 		11D4CFBB1677B67200ED328D /* SCDispatchQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCDispatchQueue.m; sourceTree = "<group>"; };
 		11D4CFC21677DAE400ED328D /* IndexBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IndexBox.h; sourceTree = "<group>"; };
@@ -238,6 +241,8 @@
 				11134D2216695AD60061BDED /* HelperMethods.h */,
 				11134D2316695AD60061BDED /* HelperMethods.m */,
 				D4CEA32016694E53004B8E8A /* Images */,
+				113D861716795AB900A15888 /* ASNRequest.h */,
+				113D861816795AB900A15888 /* ASNRequest.m */,
 				D4D17D1B166EA612003A489C /* NodeInformationViewController.h */,
 				D4D17D1C166EA612003A489C /* NodeInformationViewController.m */,
 				D4F65E00166D6D530077BF5A /* NodeSearchViewController.h */,
@@ -407,6 +412,7 @@
 				11D4CFC41677DAE400ED328D /* IndexBox.m in Sources */,
 				D46808FD1679560A00A2C1CC /* SCPacketUtility.m in Sources */,
 				D46808FE1679560A00A2C1CC /* SCTraceroute.m in Sources */,
+				113D861916795AB900A15888 /* ASNRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
