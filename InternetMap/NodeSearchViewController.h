@@ -13,6 +13,7 @@
 @protocol NodeSearchDelegate
 
 -(void)nodeSelected:(Node*)node;
+-(void)selectNodeByHostLookup:(NSString*)host;
 
 @end
 

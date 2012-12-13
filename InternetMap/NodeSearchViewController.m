@@ -14,7 +14,7 @@
 @property (strong, nonatomic) UISearchDisplayController* nodeSearchDisplayController;
 @property (strong, nonatomic) UISearchBar* searchBar;
 @property (strong, nonatomic) NSArray* searchResults;
-
+@property BOOL showHostLookup;
 @end
 
 @implementation NodeSearchViewController
@@ -69,7 +69,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (tableView == self.searchDisplayController.searchResultsTableView) {
-        return self.searchResults.count;
+        return self.searchResults.count + (self.showHostLookup ? 1 : 0);
     } else {
         return self.allItems.count;
     }
@@ -85,7 +85,19 @@
     }
     
     if (tableView == self.searchDisplayController.searchResultsTableView) {
-        Node* node = self.searchResults[indexPath.row];
+        int row = indexPath.row;
+        
+        if(self.showHostLookup) {
+            if(row == 0) {
+                cell.textLabel.text = [NSString stringWithFormat:@"Find host '%@'", [self.searchBar.text lowercaseString] ];
+                return cell;
+            }
+            else
+            {
+                row--;
+            }
+        }
+        Node* node = self.searchResults[row];
         cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", node.asn, node.textDescription];
     } else {
         Node* node = self.allItems[indexPath.row];
@@ -101,7 +113,19 @@
 {
 
     if (tableView == self.searchDisplayController.searchResultsTableView) {
-        Node* node = self.searchResults[indexPath.row];
+        int row = indexPath.row;
+        
+        if(self.showHostLookup) {
+            if(row == 0) {
+                [self.delegate selectNodeByHostLookup:[self.searchBar.text lowercaseString]];
+                return;
+            }
+            else{
+                row--;
+            }
+        }
+
+        Node* node = self.searchResults[row];
         [self.delegate nodeSelected:node];
     } else {
         Node* node = self.allItems[indexPath.row];
@@ -120,6 +144,7 @@
 
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
+    self.showHostLookup = searchString.length != 0;
     [self filterContentForSearchText:searchString];
     return NO;
 }
