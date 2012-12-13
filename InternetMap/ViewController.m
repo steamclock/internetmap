@@ -12,6 +12,7 @@
 #import "VisualizationsTableViewController.h"
 #import "NodeSearchViewController.h"
 #import "NodeInformationViewController.h"
+#import "ASNRequest.h"
 #import <dns_sd.h>
 #import "Lines.h"
 #import "IndexBox.h"
@@ -428,21 +429,18 @@ void callback (
 
 -(IBAction)youAreHereButtonPressed:(id)sender {
     [self startFetchingCurrentASN];
-//    self.request = [[ASNRequest alloc] init];
-//    self.request.delegate = self;
-//    [self.request setArrIPs:@[@"173.194.33.36",
-//     @"72.30.38.140",
-//     @"69.163.243.254",
-//     @"62.146.88.67",
-//     @"208.64.202.68",
-//     @"66.228.36.120",
-//     @"17.149.160.49",
-//     @"184.107.161.242"]];
-//    [self.request start];
-}
-
-- (void)asnRequestFinished:(ASNRequest *)request {
-    NSLog(@"result: %@", request.result);
+    /*
+    [ASNRequest fetchForAddresses:@[@"173.194.33.36",
+     @"72.30.38.140",
+     @"69.163.243.254",
+     @"62.146.88.67",
+     @"208.64.202.68",
+     @"66.228.36.120",
+     @"17.149.160.49",
+     @"184.107.161.242"] responseBlock:^(NSArray *asn) {
+            NSLog(@"result: %@", asn);
+    }];
+     */
 }
 
 -(IBAction)nextTarget:(id)sender {

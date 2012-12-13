@@ -8,27 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-@class ASNRequest;
-
-@protocol ASNRequestDelegate <NSObject>
-
-- (void)asnRequestFinished:(ASNRequest*)request;
-
-@end
-
+typedef void (^ASNResponseBlock)(NSArray* asn);
 
 @interface ASNRequest : NSObject
 
-- (void)finishedFetchingASN:(NSDictionary*)dict;
-- (void)failedFetchingASN:(NSDictionary*)dict;
-- (void)start;
-- (void)setArrIPs:(NSArray*)arr;
-- (void)setSingleIP:(NSString*)str;
-
-
-@property (nonatomic, weak) id<ASNRequestDelegate> delegate;
-@property (nonatomic, readonly) NSMutableArray* result;
-
++(void)fetchForAddresses:(NSArray*)addresses responseBlock:(ASNResponseBlock)result;
 
 @end
 
