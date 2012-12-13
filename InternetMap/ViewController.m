@@ -665,9 +665,12 @@
         Node* last = nil;
         
         for(NSNumber* asn in asns) {
-            Node* current = [self.data.nodesByAsn objectForKey:[NSString stringWithFormat:@"%i", [asn intValue]]];
-            if(current && (current != last)) {
-                [nodes addObject:current];
+            if(![asn isEqual:[NSNull null]]) {
+                Node* current = [self.data.nodesByAsn objectForKey:[NSString stringWithFormat:@"%i", [asn intValue]]];
+                if(current && (current != last)) {
+                    [nodes addObject:current];
+                }
+                
             }
         }
         
