@@ -15,7 +15,7 @@
 #import <dns_sd.h>
 #import "Lines.h"
 #import "IndexBox.h"
-
+#import "WEPopoverController.h"
 
 @interface ViewController ()
 
@@ -46,9 +46,9 @@
 @property (weak, nonatomic) IBOutlet UIButton* visualizationsButton;
 @property (weak, nonatomic) IBOutlet UIButton* timelineButton;
 @property (weak, nonatomic) IBOutlet UISlider* timelineSlider;
-@property (strong, nonatomic) UIPopoverController* visualizationSelectionPopover;
-@property (strong, nonatomic) UIPopoverController* nodeSearchPopover;
-@property (strong, nonatomic) UIPopoverController* nodeInformationPopover;
+@property (strong, nonatomic) WEPopoverController* visualizationSelectionPopover;
+@property (strong, nonatomic) WEPopoverController* nodeSearchPopover;
+@property (strong, nonatomic) WEPopoverController* nodeInformationPopover;
 
 @end
 
@@ -530,8 +530,7 @@ void callback (
     if (!self.visualizationSelectionPopover) {
         VisualizationsTableViewController *tableforPopover = [[VisualizationsTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:tableforPopover];
-        self.visualizationSelectionPopover.delegate = self;
-        self.visualizationSelectionPopover = [[UIPopoverController alloc] initWithContentViewController:navController];
+        self.visualizationSelectionPopover = [[WEPopoverController alloc] initWithContentViewController:navController];
         [self.visualizationSelectionPopover setPopoverContentSize:tableforPopover.contentSizeForViewInPopover];
     }
     [self.visualizationSelectionPopover presentPopoverFromRect:self.visualizationsButton.bounds inView:self.visualizationsButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
@@ -542,8 +541,8 @@ void callback (
         NodeSearchViewController *searchController = [[NodeSearchViewController alloc] initWithStyle:UITableViewStylePlain];
         searchController.delegate = self;
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:searchController];
-        self.nodeSearchPopover.delegate = self;
-        self.nodeSearchPopover = [[UIPopoverController alloc] initWithContentViewController:navController];
+
+        self.nodeSearchPopover = [[WEPopoverController alloc] initWithContentViewController:navController];
         [self.nodeSearchPopover setPopoverContentSize:searchController.contentSizeForViewInPopover];
         searchController.allItems = self.data.nodes;
     }
@@ -576,7 +575,7 @@ void callback (
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:nodeInfo];
     
     [self.nodeInformationPopover dismissPopoverAnimated:YES]; //this line is important, in case the popover for another node is already visible
-    self.nodeInformationPopover = [[UIPopoverController alloc] initWithContentViewController:navController];
+    self.nodeInformationPopover = [[WEPopoverController alloc] initWithContentViewController:navController];
     self.nodeInformationPopover.passthroughViews = @[self.view];
     
     nodeInfo.asnLabel.text = node.asn;
@@ -605,16 +604,6 @@ void callback (
 #pragma mark - NodeInfo delegate
 - (void)dismissNodeInfoPopover {
     [self.nodeInformationPopover dismissPopoverAnimated:YES];
-}
-
-#pragma mark - UIPopoverController Delegate
-
-- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
-    // Beep boop.
-}
-
-- (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController{
-    return YES;
 }
 
 @end
