@@ -45,6 +45,8 @@
 
 @property (strong, nonatomic) SCTraceroute* tracer;
 
+@property (strong, nonatomic) NSString* lastSearchIP;
+
 
 /* UIKit Overlay */
 @property (weak, nonatomic) IBOutlet UIButton* searchButton;
@@ -385,6 +387,7 @@ void callback (
     
     if (foundI != NSNotFound) {
         NSLog(@"selected node %i", foundI);
+        self.lastSearchIP = nil;
         [self updateTargetForIndex:foundI];
     }else {
         NSLog(@"No node found, will bring up onscreen controls");
@@ -662,6 +665,7 @@ void callback (
         NSArray* addresses = [ViewController addressesForHostname:host];
         if(addresses.count != 0) {
             [[SCDispatchQueue mainQueue] dispatchAsync:^{
+                self.lastSearchIP = addresses[0];
                 [self fetchASNForIP:addresses[0]];
             }];
         }
@@ -705,11 +709,15 @@ void callback (
     self.tracerouteOutput.text = @"";
     self.tracerouteOutput.hidden = NO;
     
-    self.tracer = [SCTraceroute tracerouteWithAddress:@"74.125.48.233"]; //we need ip for node!
-    self.tracer.delegate = self;
-    [self.tracer start];
-    
-
+    if(self.lastSearchIP) {
+        self.tracer = [SCTraceroute tracerouteWithAddress:self.lastSearchIP]; //we need ip for node!
+        self.tracer.delegate = self;
+        [self.tracer start];
+    }
+    else {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Can't do tracreoute", nil) message:NSLocalizedString(@"Can't currently traceroute to tap selected node. Need to search for an IP or hostname.", nil) delegate:nil cancelButtonTitle:nil otherButtonTitles:@"ok", nil];
+        [alert show];
+    }
 }
 
 -(void)doneTapped{
