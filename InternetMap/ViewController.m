@@ -647,6 +647,7 @@ void callback (
 
 -(void)doneTapped{
     [self.nodeInformationPopover dismissPopoverAnimated:YES];
+    self.tracerouteOutput.hidden = YES;
 }
 
 @end
