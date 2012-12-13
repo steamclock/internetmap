@@ -54,6 +54,31 @@ void callbackCurrent (
 
 @implementation ASNRequest
 
+-(BOOL)isInvalidOrPrivate:(NSString*)ipAddress {
+    NSArray* components = [ipAddress componentsSeparatedByString:@"."];
+    
+    if(components.count != 4) {
+        return TRUE;
+    }
+    
+    int a = [components[0] intValue];
+    int b = [components[1] intValue];
+    
+    if (a == 10) {
+        return TRUE;
+    }
+    
+    if((a == 172) && ((b >= 16) && (b <= 31))) {
+        return TRUE;
+    }
+    
+    if((a == 192) && (b == 168)) {
+        return TRUE;
+    }
+    
+    return FALSE;
+}
+
 - (void)startFetchingASNsForIPs:(NSArray*)theIPs{
     self.result = [NSMutableArray arrayWithCapacity:theIPs.count];
     
@@ -64,17 +89,17 @@ void callbackCurrent (
     [[SCDispatchQueue defaultPriorityQueue] dispatchAsync:^{
         for (int i = 0; i < [theIPs count]; i++) {
             NSString* ip = [theIPs objectAtIndex:i];
-            if (!ip || [ip isEqualToString:@""]) {
-                [[SCDispatchQueue mainQueue] dispatchAsync:^{
-                    [self failedFetchingASNForIndex:i error:@"Couldn't resolve DNS."];
-                }];
+            if (!ip || [self isInvalidOrPrivate:ip]) {
+                [self failedFetchingASNForIndex:i error:@"Couldn't resolve DNS."];
             }else {
                 [self fetchASNForIP:ip index:i];
             }
         }
         
         if (self.response) {
-            self.response(self.result);
+            [[SCDispatchQueue mainQueue] dispatchAsync:^{
+                self.response(self.result);
+            }];
         }
     }];
 
@@ -101,14 +126,31 @@ void callbackCurrent (
                                 );
     
     if (res != kDNSServiceErr_NoError) {
-        [[SCDispatchQueue mainQueue] dispatchAsync:^{
-            [self failedFetchingASNForIndex:index error:@"Couldn't resolve DNS."];
-        }];
+        [self failedFetchingASNForIndex:index error:@"Couldn't resolve DNS."];
     }
     
     DNSServiceProcessResult(sdRef);
-    DNSServiceRefDeallocate(sdRef);
+    /*
+     // trying to use select, so we have a timeout, just calling DNSServiceProcessREsult
+     // can block forever, but doesn't work
+    int dns_sd_fd = DNSServiceRefSockFD(sdRef);
+    fd_set readfds;
+    struct timeval tv;
     
+    FD_ZERO(&readfds);
+    FD_SET(dns_sd_fd, &readfds);
+    tv.tv_sec = 10;
+    tv.tv_usec = 0;
+    int result = select(1, &readfds, (fd_set*)NULL, (fd_set*)NULL, &tv);
+    if ((result > 0) && FD_ISSET(dns_sd_fd, &readfds)) {
+         DNSServiceProcessResult(sdRef);
+    }
+    else {
+        [self failedFetchingASNForIndex:index error:@"Couldn't resolve DNS."];
+    }
+     */
+    
+    DNSServiceRefDeallocate(sdRef);
 }
 
 - (void)finishedFetchingASN:(int)asn forIndex:(int)index {

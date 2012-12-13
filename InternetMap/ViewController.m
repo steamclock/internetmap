@@ -45,7 +45,7 @@
 
 @property (strong, nonatomic) SCTraceroute* tracer;
 
-@property (strong, nonatomic) NSString* lastSearchIP;
+@property (strong) NSString* lastSearchIP;
 
 
 /* UIKit Overlay */
@@ -63,88 +63,7 @@
 
 @end
 
-void callback (
-               DNSServiceRef sdRef,
-               DNSServiceFlags flags,
-               uint32_t interfaceIndex,
-               DNSServiceErrorType errorCode,
-               const char *fullname,
-               uint16_t rrtype,
-               uint16_t rrclass,
-               uint16_t rdlen,
-               const void *rdata,
-               uint32_t ttl,
-               void *context ) {
-    
-    NSData* data = [NSData dataWithBytes:rdata length:strlen(rdata)+1];
-    NSString* string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    int value;
-    NSCharacterSet* nonDigits = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
-    BOOL success = [[NSScanner scannerWithString:[string stringByTrimmingCharactersInSet:nonDigits]] scanInteger:&value];
-    if (success) {
-        [[SCDispatchQueue mainQueue] dispatchAsync:^{
-            [(__bridge ViewController*)context finishedFetchingCurrentASN:value];
-        }];
-    }else {
-        [[SCDispatchQueue mainQueue] dispatchAsync:^{
-            [(__bridge ViewController*)context failedFetchingCurrentASN:@"Couldn't resolve DNS."];
-        }];
-    }
-    
-}
-
 @implementation ViewController
-
-#pragma mark - Temporary! ASN fetching code, will move to Web fetching class
-
-- (void)startFetchingCurrentASN {
-    if (!self.isCurrentlyFetchingASN) {
-        self.isCurrentlyFetchingASN = YES;
-        self.youAreHereActivityIndicator.hidden = NO;
-        [self.youAreHereActivityIndicator startAnimating];
-        self.youAreHereButton.hidden = YES;
-        [[SCDispatchQueue defaultPriorityQueue] dispatchAsync:^{
-            NSString* ip = [self fetchGlobalIP];
-            if (!ip || [ip isEqualToString:@""]) {
-                [[SCDispatchQueue mainQueue] dispatchAsync:^{
-                    [self failedFetchingCurrentASN:@"Couldn't get global IP address"];
-                }];
-            } else {
-                [self fetchASNForIP:ip];
-            }
-        }];
-    }
-}
-
-- (void)fetchASNForIP:(NSString*)ip {
-    NSArray* ipComponents = [ip componentsSeparatedByString:@"."];
-    NSString* dnsString = [NSString stringWithFormat:@"origin.asn.cymru.com"];
-    for (NSString* component in ipComponents) {
-        dnsString = [NSString stringWithFormat:@"%@.%@", component, dnsString];
-    }
-    DNSServiceRef sdRef;
-    DNSServiceErrorType res;
-    
-    res = DNSServiceQueryRecord(
-                                &sdRef, 0, 0,
-                                [dnsString cStringUsingEncoding:NSUTF8StringEncoding],
-                                kDNSServiceType_TXT,
-                                kDNSServiceClass_IN,
-                                callback,
-                                (__bridge void *)(self)
-                                );
-    
-    if (res != kDNSServiceErr_NoError) {
-        [[SCDispatchQueue mainQueue] dispatchAsync:^{
-            [self failedFetchingCurrentASN:@"Couldn't resolve DNS."];
-        }];
-    }
-    
-    DNSServiceProcessResult(sdRef);
-    DNSServiceRefDeallocate(sdRef);
-}
-
-
 
 - (NSString*)fetchGlobalIP {
     NSString* address = @"http://stage.steamclocksw.com/ip.php";
@@ -152,6 +71,34 @@ void callback (
     NSError* error;
     NSString *ip = [NSString stringWithContentsOfURL:url encoding:NSASCIIStringEncoding error:&error];
     return ip;
+}
+
+- (void)startFetchingCurrentASN {
+    if (!self.isCurrentlyFetchingASN) {
+        self.isCurrentlyFetchingASN = YES;
+        self.youAreHereActivityIndicator.hidden = NO;
+        [self.youAreHereActivityIndicator startAnimating];
+        self.youAreHereButton.hidden = YES;
+        
+        [[SCDispatchQueue defaultPriorityQueue] dispatchAsync:^{
+            NSString* ip = [self fetchGlobalIP];
+            if (!ip || [ip isEqualToString:@""]) {
+                [[SCDispatchQueue mainQueue] dispatchAsync:^{
+                    [self failedFetchingCurrentASN:@"Couldn't get global IP address"];
+                }];
+            } else {
+                [ASNRequest fetchForAddresses:@[ip] responseBlock:^(NSArray *asn) {
+                    NSNumber* myASN = asn[0];
+                    if([myASN isEqual:[NSNull null]]) {
+                        [self failedFetchingCurrentASN:@"ASN lookup failed"];
+                    }
+                    else {
+                        [self finishedFetchingCurrentASN:[myASN intValue]];
+                    }
+                }];
+            }
+        }];
+    }
 }
 
 - (void)finishedFetchingCurrentASN:(int)asn {
@@ -501,11 +448,6 @@ void callback (
     self.display.camera.target = target;
     
     [self displayInformationPopoverForCurrentNode];
-    
-    //Line highlighting test
-    int len = MIN(10, self.data.nodes.count - (index + 1));
-    NSRange highlightRange = NSMakeRange(index, len);
-    [self highlightRoute:[self.data.nodes subarrayWithRange:highlightRange]];
 }
 
 //-(void)updateTargetforNode:(Node*)node {
@@ -675,9 +617,14 @@ void callback (
     [[SCDispatchQueue defaultPriorityQueue] dispatchAsync:^{
         NSArray* addresses = [ViewController addressesForHostname:host];
         if(addresses.count != 0) {
-            [[SCDispatchQueue mainQueue] dispatchAsync:^{
-                self.lastSearchIP = addresses[0];
-                [self fetchASNForIP:addresses[0]];
+            self.lastSearchIP = addresses[0];
+            [ASNRequest fetchForAddresses:@[addresses[0]] responseBlock:^(NSArray *asn) {
+                NSNumber* myASN = asn[0];
+                if([myASN isEqual:[NSNull null]]) {
+                }
+                else {
+                    [self selectNodeForASN:[myASN intValue]];
+                }
             }];
         }
     }];
@@ -712,6 +659,20 @@ void callback (
     [self.tracer stop];
     self.tracer = nil;
     self.tracerouteOutput.text = [NSString stringWithFormat:@"%@\nTraceroute complete.", self.tracerouteOutput.text];
+    
+    [ASNRequest fetchForAddresses:hops responseBlock:^(NSArray *asns) {
+        NSMutableArray* nodes = [NSMutableArray new];
+        Node* last = nil;
+        
+        for(NSNumber* asn in asns) {
+            Node* current = [self.data.nodesByAsn objectForKey:[NSString stringWithFormat:@"%i", [asn intValue]]];
+            if(current && (current != last)) {
+                [nodes addObject:current];
+            }
+        }
+        
+        [self highlightRoute:nodes];
+    }];
 }
 
 #pragma mark - Node Info View Delegate

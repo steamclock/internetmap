@@ -150,6 +150,7 @@
             // This should always return true
             NSLog(@"Error, if we have a type 0 then our IPs should match");
         } else {
+            [self.ipsForCurrentRequest addObject:self.lastIP];
             self.totalResponsesForHop++;
             if (self.totalResponsesForHop == 1) { //We only need to call this once even though there are three packets coming back
                 if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:)]) {
