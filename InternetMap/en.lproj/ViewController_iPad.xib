@@ -2,10 +2,10 @@
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1536</int>
-		<string key="IBDocument.SystemVersion">11G63</string>
+		<string key="IBDocument.SystemVersion">12C60</string>
 		<string key="IBDocument.InterfaceBuilderVersion">2844</string>
-		<string key="IBDocument.AppKitVersion">1138.51</string>
-		<string key="IBDocument.HIToolboxVersion">569.00</string>
+		<string key="IBDocument.AppKitVersion">1187.34</string>
+		<string key="IBDocument.HIToolboxVersion">625.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			<string key="NS.object.0">1930</string>
@@ -44,7 +44,8 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{914, 14}, {100, 44}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
-						<reference key="NSNextKeyView" ref="812170113"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="160431943"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<int key="IBUIContentMode">4</int>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -63,7 +64,8 @@
 								<int key="NSvFlags">301</int>
 								<string key="NSFrame">{{20, 20}, {55, 55}}</string>
 								<reference key="NSSuperview" ref="580833300"/>
-								<reference key="NSNextKeyView" ref="586805203"/>
+								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView" ref="354409866"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<int key="IBUIContentMode">4</int>
@@ -96,11 +98,23 @@
 									<int key="NSfFlags">16</int>
 								</object>
 							</object>
+							<object class="IBUIActivityIndicatorView" id="354409866">
+								<reference key="NSNextResponder" ref="580833300"/>
+								<int key="NSvFlags">-2147483356</int>
+								<string key="NSFrame">{{38, 40}, {20, 20}}</string>
+								<reference key="NSSuperview" ref="580833300"/>
+								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView" ref="586805203"/>
+								<string key="NSReuseIdentifierKey">_NS:9</string>
+								<bool key="IBUIOpaque">NO</bool>
+								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+							</object>
 							<object class="IBUIButton" id="586805203">
 								<reference key="NSNextResponder" ref="580833300"/>
 								<int key="NSvFlags">301</int>
 								<string key="NSFrame">{{79, 20}, {55, 55}}</string>
 								<reference key="NSSuperview" ref="580833300"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="135839533"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -121,12 +135,24 @@
 								<reference key="IBUIFontDescription" ref="622120600"/>
 								<reference key="IBUIFont" ref="402028046"/>
 							</object>
+							<object class="IBUIActivityIndicatorView" id="135839533">
+								<reference key="NSNextResponder" ref="580833300"/>
+								<int key="NSvFlags">-2147483356</int>
+								<string key="NSFrame">{{93, 33}, {20, 20}}</string>
+								<reference key="NSSuperview" ref="580833300"/>
+								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView" ref="931664156"/>
+								<string key="NSReuseIdentifierKey">_NS:9</string>
+								<bool key="IBUIOpaque">NO</bool>
+								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+							</object>
 							<object class="IBUIButton" id="341091275">
 								<reference key="NSNextResponder" ref="580833300"/>
 								<int key="NSvFlags">301</int>
 								<string key="NSFrame">{{138, 20}, {55, 55}}</string>
 								<reference key="NSSuperview" ref="580833300"/>
-								<reference key="NSNextKeyView" ref="747164839"/>
+								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView" ref="178017470"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<int key="IBUIContentMode">4</int>
@@ -146,11 +172,23 @@
 								<reference key="IBUIFontDescription" ref="622120600"/>
 								<reference key="IBUIFont" ref="402028046"/>
 							</object>
+							<object class="IBUIActivityIndicatorView" id="178017470">
+								<reference key="NSNextResponder" ref="580833300"/>
+								<int key="NSvFlags">-2147483356</int>
+								<string key="NSFrame">{{156, 38}, {20, 20}}</string>
+								<reference key="NSSuperview" ref="580833300"/>
+								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView" ref="747164839"/>
+								<string key="NSReuseIdentifierKey">_NS:9</string>
+								<bool key="IBUIOpaque">NO</bool>
+								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+							</object>
 							<object class="IBUIButton" id="747164839">
 								<reference key="NSNextResponder" ref="580833300"/>
 								<int key="NSvFlags">301</int>
 								<string key="NSFrame">{{197, 20}, {55, 55}}</string>
 								<reference key="NSSuperview" ref="580833300"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="958763738"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -171,11 +209,12 @@
 								<reference key="IBUIFontDescription" ref="622120600"/>
 								<reference key="IBUIFont" ref="402028046"/>
 							</object>
-							<object class="IBUIActivityIndicatorView" id="135839533">
+							<object class="IBUIActivityIndicatorView" id="931664156">
 								<reference key="NSNextResponder" ref="580833300"/>
 								<int key="NSvFlags">-2147483356</int>
-								<string key="NSFrame">{{93, 33}, {20, 20}}</string>
+								<string key="NSFrame">{{215, 37}, {20, 20}}</string>
 								<reference key="NSSuperview" ref="580833300"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="341091275"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -184,6 +223,7 @@
 						</array>
 						<string key="NSFrame">{{-20, -20}, {252, 75}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="724447255"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
@@ -197,6 +237,8 @@
 						<int key="NSvFlags">-2147483356</int>
 						<string key="NSFrame">{{18, 720}, {988, 23}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -209,6 +251,8 @@
 						<int key="NSvFlags">-2147483356</int>
 						<string key="NSFrame">{{739, 105}, {240, 325}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="812170113"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">1</int>
@@ -236,6 +280,7 @@
 				</array>
 				<string key="NSFrame">{{0, 20}, {1024, 748}}</string>
 				<reference key="NSSuperview"/>
+				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="580833300"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
@@ -321,6 +366,30 @@
 					<int key="connectionID">38</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">searchActivityIndicator</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="354409866"/>
+					</object>
+					<int key="connectionID">40</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">visualizationsActivityIndicator</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="178017470"/>
+					</object>
+					<int key="connectionID">42</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">timelineActivityIndicator</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="931664156"/>
+					</object>
+					<int key="connectionID">44</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">searchNodes:</string>
 						<reference key="source" ref="724447255"/>
@@ -401,6 +470,9 @@
 							<reference ref="341091275"/>
 							<reference ref="747164839"/>
 							<reference ref="135839533"/>
+							<reference ref="354409866"/>
+							<reference ref="178017470"/>
+							<reference ref="931664156"/>
 						</array>
 						<reference key="parent" ref="191373211"/>
 					</object>
@@ -433,11 +505,30 @@
 						<int key="objectID">34</int>
 						<reference key="object" ref="135839533"/>
 						<reference key="parent" ref="580833300"/>
+						<string key="objectName">youAreHere Activity Indicator</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">37</int>
 						<reference key="object" ref="160431943"/>
 						<reference key="parent" ref="191373211"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">39</int>
+						<reference key="object" ref="354409866"/>
+						<reference key="parent" ref="580833300"/>
+						<string key="objectName">search Activity Indicator</string>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">41</int>
+						<reference key="object" ref="178017470"/>
+						<reference key="parent" ref="580833300"/>
+						<string key="objectName">visualizations Activity Indicator</string>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">43</int>
+						<reference key="object" ref="931664156"/>
+						<reference key="parent" ref="580833300"/>
+						<string key="objectName">timeline Activity Indicator</string>
 					</object>
 				</array>
 			</object>
@@ -458,14 +549,111 @@
 				<string key="28.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="34.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="37.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="39.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="41.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="43.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">38</int>
+			<int key="maxID">44</int>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes"/>
+		<object class="IBClassDescriber" key="IBDocument.Classes">
+			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
+				<object class="IBPartialClassDescription">
+					<string key="className">ViewController</string>
+					<string key="superclassName">GLKViewController</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="nextTarget:">id</string>
+						<string key="searchNodes:">id</string>
+						<string key="selectVisualization:">id</string>
+						<string key="toggleTimelineMode:">id</string>
+						<string key="youAreHereButtonPressed:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="nextTarget:">
+							<string key="name">nextTarget:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="searchNodes:">
+							<string key="name">searchNodes:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="selectVisualization:">
+							<string key="name">selectVisualization:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="toggleTimelineMode:">
+							<string key="name">toggleTimelineMode:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="youAreHereButtonPressed:">
+							<string key="name">youAreHereButtonPressed:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="searchActivityIndicator">UIActivityIndicatorView</string>
+						<string key="searchButton">UIButton</string>
+						<string key="timelineActivityIndicator">UIActivityIndicatorView</string>
+						<string key="timelineButton">UIButton</string>
+						<string key="timelineSlider">UISlider</string>
+						<string key="tracerouteOutput">UITextView</string>
+						<string key="visualizationsActivityIndicator">UIActivityIndicatorView</string>
+						<string key="visualizationsButton">UIButton</string>
+						<string key="youAreHereActivityIndicator">UIActivityIndicatorView</string>
+						<string key="youAreHereButton">UIButton</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="searchActivityIndicator">
+							<string key="name">searchActivityIndicator</string>
+							<string key="candidateClassName">UIActivityIndicatorView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="searchButton">
+							<string key="name">searchButton</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="timelineActivityIndicator">
+							<string key="name">timelineActivityIndicator</string>
+							<string key="candidateClassName">UIActivityIndicatorView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="timelineButton">
+							<string key="name">timelineButton</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="timelineSlider">
+							<string key="name">timelineSlider</string>
+							<string key="candidateClassName">UISlider</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="tracerouteOutput">
+							<string key="name">tracerouteOutput</string>
+							<string key="candidateClassName">UITextView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="visualizationsActivityIndicator">
+							<string key="name">visualizationsActivityIndicator</string>
+							<string key="candidateClassName">UIActivityIndicatorView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="visualizationsButton">
+							<string key="name">visualizationsButton</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="youAreHereActivityIndicator">
+							<string key="name">youAreHereActivityIndicator</string>
+							<string key="candidateClassName">UIActivityIndicatorView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="youAreHereButton">
+							<string key="name">youAreHereButton</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/ViewController.h</string>
+					</object>
+				</object>
+			</array>
+		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBIPadFramework</string>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>

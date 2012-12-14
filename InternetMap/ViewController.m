@@ -51,10 +51,14 @@
 /* UIKit Overlay */
 @property (weak, nonatomic) IBOutlet UIButton* searchButton;
 @property (weak, nonatomic) IBOutlet UIButton* youAreHereButton;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView* youAreHereActivityIndicator;
 @property (weak, nonatomic) IBOutlet UIButton* visualizationsButton;
 @property (weak, nonatomic) IBOutlet UIButton* timelineButton;
 @property (weak, nonatomic) IBOutlet UISlider* timelineSlider;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView* searchActivityIndicator;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView* youAreHereActivityIndicator;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView* visualizationsActivityIndicator;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView* timelineActivityIndicator;
+
 @property (strong, nonatomic) IBOutlet UITextView* tracerouteOutput;
 @property (strong, nonatomic) WEPopoverController* visualizationSelectionPopover;
 @property (strong, nonatomic) WEPopoverController* nodeSearchPopover;
@@ -192,7 +196,10 @@
     [self.view addGestureRecognizer:self.pinchRecognizer];
     [self.view addGestureRecognizer:self.longPressGestureRecognizer];
     
+    self.searchActivityIndicator.frame = CGRectMake(self.searchActivityIndicator.frame.origin.x, self.searchActivityIndicator.frame.origin.y, 30, 30);
     self.youAreHereActivityIndicator.frame = CGRectMake(self.youAreHereActivityIndicator.frame.origin.x, self.youAreHereActivityIndicator.frame.origin.y, 30, 30);
+    self.visualizationsActivityIndicator.frame = CGRectMake(self.visualizationsActivityIndicator.frame.origin.x, self.visualizationsActivityIndicator.frame.origin.y, 30, 30);
+    self.timelineActivityIndicator.frame = CGRectMake(self.timelineActivityIndicator.frame.origin.x, self.timelineActivityIndicator.frame.origin.y, 30, 30);
     
     self.targetNode = NSNotFound;
 }
