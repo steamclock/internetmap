@@ -690,8 +690,25 @@
         [self.tracer start];
     }
     else {
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Can't do tracreoute", nil) message:NSLocalizedString(@"Can't currently traceroute to tap selected node. Need to search for an IP or hostname.", nil) delegate:nil cancelButtonTitle:nil otherButtonTitles:@"ok", nil];
-        [alert show];
+        Node* node = [self.data nodeAtIndex:self.targetNode];
+        if ([node.asn intValue]) {
+            [ASNRequest fetchForASN:[node.asn intValue] responseBlock:^(NSArray *asn) {
+                if (asn[0] != [NSNull null]) {
+                    NSLog(@"starting tracerout with IP: %@", asn[0]);
+                    self.tracer = [SCTraceroute tracerouteWithAddress:asn[0]];
+                    self.tracer.delegate = self;
+                    [self.tracer start];
+                }else {
+                    NSLog(@"asn couldn't be resolved to IP");
+                    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Can't do tracreoute", nil) message:NSLocalizedString(@"ASN couldn't be resolved into IP", nil) delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+                    [alert show];
+                }
+            }];
+        }else {
+            NSLog(@"asn is not an int");
+            UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Can't do tracreoute", nil) message:NSLocalizedString(@"The ASN associated with this node couln't be resolved into an integer.", nil) delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+            [alert show];
+        }
     }
 }
 

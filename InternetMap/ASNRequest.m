@@ -8,6 +8,7 @@
 
 #import "ASNRequest.h"
 #import <dns_sd.h>
+#import "ASIHTTPRequest.h"
 
 @interface ASNRequest()
 
@@ -166,6 +167,21 @@ void callbackCurrent (
     ASNRequest* request = [ASNRequest new];
     request.response = response;
     [request startFetchingASNsForIPs:addresses];
+}
+
++(void)fetchForASN:(int)asn responseBlock:(ASNResponseBlock)response {
+    __weak ASIHTTPRequest* request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://bgp.he.net/AS%i", asn]]];
+    [request setCompletionBlock:^{
+        NSRange range = [[request responseString] rangeOfString:@"/net/.*?/" options:NSRegularExpressionSearch];
+        if(range.location != NSNotFound) {
+            NSString* string = [[request responseString] substringWithRange:NSMakeRange(range.location+5, range.length-6)];
+            response(@[string]);
+        }else {
+            response(@[[NSNull null]]);
+        }
+
+    }];
+    [request startAsynchronous];
 }
 
 @end

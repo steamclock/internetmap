@@ -13,6 +13,7 @@ typedef void (^ASNResponseBlock)(NSArray* asn);
 @interface ASNRequest : NSObject
 
 +(void)fetchForAddresses:(NSArray*)addresses responseBlock:(ASNResponseBlock)result;
++(void)fetchForASN:(int)asn responseBlock:(ASNResponseBlock)result;
 
 @end
 
