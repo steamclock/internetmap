@@ -8,7 +8,7 @@
 #import "NodeSearchViewController.h"
 #import "SCTraceroute.h"
 
-@interface ViewController : GLKViewController <UIPopoverControllerDelegate, NodeSearchDelegate, SCTracerouteDelegate>
+@interface ViewController : GLKViewController <NodeSearchDelegate, SCTracerouteDelegate, UIGestureRecognizerDelegate>
 
 - (void)finishedFetchingCurrentASN:(int)asn;
 - (void)failedFetchingCurrentASN:(NSString*)error;
