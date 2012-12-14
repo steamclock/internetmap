@@ -7,6 +7,7 @@
 
 #import "HelperMethods.h"
 #import <QuartzCore/QuartzCore.h>
+#import "Reachability.h"
 
 void SCLogRect(CGRect rect) {
 
@@ -38,6 +39,12 @@ void SCLogRect(CGRect rect) {
     UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return viewImage;
+}
+
++(BOOL)deviceHasInternetConnection {
+
+    return [[Reachability reachabilityForInternetConnection] currentReachabilityStatus] != kNotReachable;
+
 }
 
 @end

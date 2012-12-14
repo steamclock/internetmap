@@ -14,5 +14,6 @@ extern void SCLogRect(CGRect rect);
 + (BOOL)deviceIsiPad;
 + (UIImage *)imageWithColor:(UIColor *)color size:(CGSize)size;
 + (UIImage*)imageFromView:(UIView*)view;
++ (BOOL)deviceHasInternetConnection;
 
 @end

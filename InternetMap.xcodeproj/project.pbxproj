@@ -26,6 +26,7 @@
 		110F6B0F167BD1C400D5907E /* popoverBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 110F6B00167BD1C400D5907E /* popoverBg.png */; };
 		110F6B10167BD1C400D5907E /* popoverBg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 110F6B01167BD1C400D5907E /* popoverBg@2x.png */; };
 		110F6B11167BD1C400D5907E /* popoverBgSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = 110F6B02167BD1C400D5907E /* popoverBgSimple.png */; };
+		110F6B1D167BE1F900D5907E /* ErrorInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 110F6B1C167BE1F900D5907E /* ErrorInfoView.m */; };
 		11134D2416695AD60061BDED /* HelperMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 11134D2316695AD60061BDED /* HelperMethods.m */; };
 		1117E57B1676BFCD0046AA69 /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1117E57A1676BFCD0046AA69 /* libresolv.dylib */; };
 		113D861916795AB900A15888 /* ASNRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 113D861816795AB900A15888 /* ASNRequest.m */; };
@@ -116,6 +117,8 @@
 		110F6B00167BD1C400D5907E /* popoverBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = popoverBg.png; path = Images/popoverBg.png; sourceTree = "<group>"; };
 		110F6B01167BD1C400D5907E /* popoverBg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "popoverBg@2x.png"; path = "Images/popoverBg@2x.png"; sourceTree = "<group>"; };
 		110F6B02167BD1C400D5907E /* popoverBgSimple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = popoverBgSimple.png; path = Images/popoverBgSimple.png; sourceTree = "<group>"; };
+		110F6B1B167BE1F900D5907E /* ErrorInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ErrorInfoView.h; sourceTree = "<group>"; };
+		110F6B1C167BE1F900D5907E /* ErrorInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ErrorInfoView.m; sourceTree = "<group>"; };
 		11134D2216695AD60061BDED /* HelperMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelperMethods.h; sourceTree = "<group>"; };
 		11134D2316695AD60061BDED /* HelperMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelperMethods.m; sourceTree = "<group>"; };
 		1117E57A1676BFCD0046AA69 /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
@@ -409,6 +412,8 @@
 				D4CEA32016694E53004B8E8A /* Images */,
 				113D861716795AB900A15888 /* ASNRequest.h */,
 				113D861816795AB900A15888 /* ASNRequest.m */,
+				110F6B1B167BE1F900D5907E /* ErrorInfoView.h */,
+				110F6B1C167BE1F900D5907E /* ErrorInfoView.m */,
 				D4D17D1B166EA612003A489C /* NodeInformationViewController.h */,
 				D4D17D1C166EA612003A489C /* NodeInformationViewController.m */,
 				D4F65E00166D6D530077BF5A /* NodeSearchViewController.h */,
@@ -608,6 +613,7 @@
 				110F6AF0167BD1AE00D5907E /* WEPopoverContainerView.m in Sources */,
 				110F6AF1167BD1AE00D5907E /* WEPopoverController.m in Sources */,
 				110F6AF2167BD1AE00D5907E /* WETouchableView.m in Sources */,
+				110F6B1D167BE1F900D5907E /* ErrorInfoView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

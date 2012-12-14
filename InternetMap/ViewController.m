@@ -21,6 +21,7 @@
 #import <ifaddrs.h>
 #import <arpa/inet.h>
 #import "WEPopoverController.h"
+#import "ErrorInfoView.h"
 
 @interface ViewController ()
 @property (strong, nonatomic) ASNRequest* request;
@@ -63,6 +64,8 @@
 @property (strong, nonatomic) WEPopoverController* visualizationSelectionPopover;
 @property (strong, nonatomic) WEPopoverController* nodeSearchPopover;
 @property (strong, nonatomic) WEPopoverController* nodeInformationPopover;
+
+@property (strong, nonatomic) ErrorInfoView* errorInfoView;
 
 @end
 
@@ -169,6 +172,8 @@
     [self.data loadAsInfo:[[NSBundle mainBundle] pathForResource:@"asinfo" ofType:@"json"]];
     [self.data updateDisplay:self.display];
     
+    
+    //add gesture recognizers
     self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
     self.twoFingerTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTwoFingerTap:)];
     self.twoFingerTapRecognizer.numberOfTouchesRequired = 2;
@@ -200,6 +205,10 @@
     self.youAreHereActivityIndicator.frame = CGRectMake(self.youAreHereActivityIndicator.frame.origin.x, self.youAreHereActivityIndicator.frame.origin.y, 30, 30);
     self.visualizationsActivityIndicator.frame = CGRectMake(self.visualizationsActivityIndicator.frame.origin.x, self.visualizationsActivityIndicator.frame.origin.y, 30, 30);
     self.timelineActivityIndicator.frame = CGRectMake(self.timelineActivityIndicator.frame.origin.x, self.timelineActivityIndicator.frame.origin.y, 30, 30);
+    
+    //create error info view
+    self.errorInfoView = [[ErrorInfoView alloc] initWithFrame:CGRectMake(10, 40, 300, 40)];
+    [self.view addSubview:self.errorInfoView];
     
     self.targetNode = NSNotFound;
 }
@@ -387,21 +396,7 @@
 
 #pragma mark - Update selected/active node
 
--(IBAction)youAreHereButtonPressed:(id)sender {
-    [self startFetchingCurrentASN];
-    /*
-    [ASNRequest fetchForAddresses:@[@"173.194.33.36",
-     @"72.30.38.140",
-     @"69.163.243.254",
-     @"62.146.88.67",
-     @"208.64.202.68",
-     @"66.228.36.120",
-     @"17.149.160.49",
-     @"184.107.161.242"] responseBlock:^(NSArray *asn) {
-            NSLog(@"result: %@", asn);
-    }];
-     */
-}
+
 
 -(IBAction)nextTarget:(id)sender {
     if(self.targetNode == NSNotFound) {
@@ -504,6 +499,28 @@
 
 #pragma mark - UIKit Controls Overlay
 
+-(IBAction)searchNodes:(id)sender {
+    if (!self.nodeSearchPopover) {
+        NodeSearchViewController *searchController = [[NodeSearchViewController alloc] initWithStyle:UITableViewStylePlain];
+        searchController.delegate = self;
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:searchController];
+        
+        self.nodeSearchPopover = [[WEPopoverController alloc] initWithContentViewController:navController];
+        [self.nodeSearchPopover setPopoverContentSize:searchController.contentSizeForViewInPopover];
+        searchController.allItems = self.data.nodes;
+    }
+    [self.nodeSearchPopover presentPopoverFromRect:self.searchButton.bounds inView:self.searchButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+}
+
+-(IBAction)youAreHereButtonPressed:(id)sender {
+    if ([HelperMethods deviceHasInternetConnection]) {
+        [self startFetchingCurrentASN];
+    }else {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No Internet connection" message:@"Please connect to the internet." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+        [alert show];
+    }
+}
+
 -(IBAction)selectVisualization:(id)sender {
     if (!self.visualizationSelectionPopover) {
         VisualizationsTableViewController *tableforPopover = [[VisualizationsTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
@@ -512,19 +529,6 @@
         [self.visualizationSelectionPopover setPopoverContentSize:tableforPopover.contentSizeForViewInPopover];
     }
     [self.visualizationSelectionPopover presentPopoverFromRect:self.visualizationsButton.bounds inView:self.visualizationsButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-}
-
--(IBAction)searchNodes:(id)sender {
-    if (!self.nodeSearchPopover) {
-        NodeSearchViewController *searchController = [[NodeSearchViewController alloc] initWithStyle:UITableViewStylePlain];
-        searchController.delegate = self;
-        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:searchController];
-
-        self.nodeSearchPopover = [[WEPopoverController alloc] initWithContentViewController:navController];
-        [self.nodeSearchPopover setPopoverContentSize:searchController.contentSizeForViewInPopover];
-        searchController.allItems = self.data.nodes;
-    }
-    [self.nodeSearchPopover presentPopoverFromRect:self.searchButton.bounds inView:self.searchButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 }
 
 -(IBAction)toggleTimelineMode:(id)sender {
@@ -635,21 +639,32 @@
 -(void)selectNodeByHostLookup:(NSString*)host {
     [self.nodeSearchPopover dismissPopoverAnimated:YES];
 
-    // TODO :detect an IP address and call fetchASNForIP directly rather than doing no-op lookup
-    [[SCDispatchQueue defaultPriorityQueue] dispatchAsync:^{
-        NSArray* addresses = [ViewController addressesForHostname:host];
-        if(addresses.count != 0) {
-            self.lastSearchIP = addresses[0];
-            [ASNRequest fetchForAddresses:@[addresses[0]] responseBlock:^(NSArray *asn) {
-                NSNumber* myASN = asn[0];
-                if([myASN isEqual:[NSNull null]]) {
-                }
-                else {
-                    [self selectNodeForASN:[myASN intValue]];
-                }
-            }];
-        }
-    }];
+    if ([HelperMethods deviceHasInternetConnection]) {
+        // TODO :detect an IP address and call fetchASNForIP directly rather than doing no-op lookup
+        [self.searchActivityIndicator startAnimating];
+        self.searchButton.hidden = YES;
+        [[SCDispatchQueue defaultPriorityQueue] dispatchAsync:^{
+            NSArray* addresses = [ViewController addressesForHostname:host];
+            if(addresses.count != 0) {
+                self.lastSearchIP = addresses[0];
+                [ASNRequest fetchForAddresses:@[addresses[0]] responseBlock:^(NSArray *asn) {
+                    [self.searchActivityIndicator stopAnimating];
+                    self.searchButton.hidden = NO;
+                    NSNumber* myASN = asn[0];
+                    if([myASN isEqual:[NSNull null]]) {
+                        [self.errorInfoView setErrorString:@"Couldn't resolve address for hostname."];
+                    }
+                    else {
+                        [self selectNodeForASN:[myASN intValue]];
+                    }
+                }];
+            }
+        }];
+    }else {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No Internet connection" message:@"Please connect to the internet." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+        [alert show];
+    }
+    
 }
 
 #pragma mark - NodeInfo delegate
@@ -692,34 +707,39 @@
 #pragma mark - Node Info View Delegate
 
 -(void)tracerouteButtonTapped{
-    self.tracerouteOutput.text = @"";
-    self.tracerouteOutput.hidden = NO;
-    
-    if(self.lastSearchIP) {
-        self.tracer = [SCTraceroute tracerouteWithAddress:self.lastSearchIP]; //we need ip for node!
-        self.tracer.delegate = self;
-        [self.tracer start];
-    }
-    else {
-        Node* node = [self.data nodeAtIndex:self.targetNode];
-        if ([node.asn intValue]) {
-            [ASNRequest fetchForASN:[node.asn intValue] responseBlock:^(NSArray *asn) {
-                if (asn[0] != [NSNull null]) {
-                    NSLog(@"starting tracerout with IP: %@", asn[0]);
-                    self.tracer = [SCTraceroute tracerouteWithAddress:asn[0]];
-                    self.tracer.delegate = self;
-                    [self.tracer start];
-                }else {
-                    NSLog(@"asn couldn't be resolved to IP");
-                    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Can't do tracreoute", nil) message:NSLocalizedString(@"ASN couldn't be resolved into IP", nil) delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-                    [alert show];
-                }
-            }];
-        }else {
-            NSLog(@"asn is not an int");
-            UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Can't do tracreoute", nil) message:NSLocalizedString(@"The ASN associated with this node couln't be resolved into an integer.", nil) delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-            [alert show];
+    if ([HelperMethods deviceHasInternetConnection]) {
+        self.tracerouteOutput.text = @"";
+        self.tracerouteOutput.hidden = NO;
+        
+        if(self.lastSearchIP) {
+            self.tracer = [SCTraceroute tracerouteWithAddress:self.lastSearchIP]; //we need ip for node!
+            self.tracer.delegate = self;
+            [self.tracer start];
         }
+        else {
+            Node* node = [self.data nodeAtIndex:self.targetNode];
+            if ([node.asn intValue]) {
+                [ASNRequest fetchForASN:[node.asn intValue] responseBlock:^(NSArray *asn) {
+                    if (asn[0] != [NSNull null]) {
+                        NSLog(@"starting tracerout with IP: %@", asn[0]);
+                        self.tracer = [SCTraceroute tracerouteWithAddress:asn[0]];
+                        self.tracer.delegate = self;
+                        [self.tracer start];
+                    }else {
+                        NSLog(@"asn couldn't be resolved to IP");
+                        //TODO: this error should be displayed in the actual traceroute interface
+                        [self.errorInfoView setErrorString:@"ASN couldn't be resolved into IP"];
+                    }
+                }];
+            }else {
+                NSLog(@"asn is not an int");
+                //TODO: this error should be displayed in the actual traceroute interface
+                [self.errorInfoView setErrorString:@"The ASN associated with this node couln't be resolved into an integer."];
+            }
+        }
+    }else {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No Internet connection" message:@"Please connect to the internet." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+        [alert show];
     }
 }
 
