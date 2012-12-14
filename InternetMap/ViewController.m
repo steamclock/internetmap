@@ -221,6 +221,13 @@ void callback (
     self.longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
     self.longPressGestureRecognizer.enabled = NO;
     
+    self.tapRecognizer.delegate = self;
+    self.doubleTapRecognizer.delegate = self;
+    self.twoFingerTapRecognizer.delegate = self;
+    self.panRecognizer.delegate = self;
+    self.pinchRecognizer.delegate = self;
+    self.longPressGestureRecognizer.delegate = self;
+    
     [self.view addGestureRecognizer:self.tapRecognizer];
     [self.view addGestureRecognizer:self.doubleTapRecognizer];
     [self.view addGestureRecognizer:self.twoFingerTapRecognizer];
@@ -592,6 +599,16 @@ void callback (
        [self.nodeInformationPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     });
     
+}
+
+#pragma mark UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    if (touch.view != self.view) {
+        return NO;
+    }
+    
+    return YES;
 }
 
 #pragma mark - NodeSearch Delegate
