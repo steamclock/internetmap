@@ -589,6 +589,10 @@
     return YES;
 }
 
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
+}
+
 #pragma mark - NodeSearch Delegate
 
 -(void)nodeSelected:(Node*)node{
