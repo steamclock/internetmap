@@ -22,6 +22,7 @@
 #import <arpa/inet.h>
 #import "WEPopoverController.h"
 #import "ErrorInfoView.h"
+#import "Nodes.h"
 
 @interface ViewController ()
 @property (strong, nonatomic) ASNRequest* request;
@@ -447,7 +448,9 @@
         self.targetNode = index;
         Node* node = [self.data nodeAtIndex:self.targetNode];
         target = [self.data.visualization nodePosition:node];
-        [[self.display displayNodeAtIndex:node.index] setColor:[UIColor redColor]];
+        [self.display.nodes beginUpdate];
+        [self.display.nodes updateNode:node.index color:[UIColor redColor]];
+        [self.display.nodes endUpdate];
         
     } else {
         target = GLKVector3Make(0, 0, 0);

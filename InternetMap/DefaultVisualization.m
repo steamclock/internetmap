@@ -8,6 +8,7 @@
 #import "Node.h"
 #import "Lines.h"
 #import "Connection.h"
+#import "Nodes.h"
 
 #define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
@@ -22,7 +23,7 @@
 
 }
 
--(void)updateDisplay:(MapDisplay*)display forNodes:(NSArray*)nodes {
+-(void)updateDisplay:(MapDisplay*)display forNodes:(NSArray*)arrNodes {
     //    UIColor* nodeColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
     
     //    UIColor* t1Color = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
@@ -40,41 +41,45 @@
     UIColor* eduColor = UIColorFromRGB(0xecb7fd);
     UIColor* ixColor = UIColorFromRGB(0xb7fddc);
     UIColor* nicColor = UIColorFromRGB(0xb0a2d3);
-    
-    for(Node* node in nodes) {
-        DisplayNode* point = [display displayNodeAtIndex:node.index]; // use index from node, not in array, so that partiual updates can work
-        
-        GLKVector3 position = [self nodePosition:node];
-        point.x = position.x;
-        point.y = position.y;
-        point.z = position.z;
+    Nodes* nodes = [[Nodes alloc] initWithNodeCount:[arrNodes count]];
 
-        point.size = [self nodeSize:node];
+    [nodes beginUpdate];
+    for(int i = 0; i < nodes.count; i++) {
+        Node* node = arrNodes[i];
         
+        UIColor* color;
         switch(node.type) {
             case AS_T1:
-                point.color = t1Color;
+                color = t1Color;
                 break;
             case AS_T2:
-                point.color = t2Color;
+                color = t2Color;
                 break;
             case AS_COMP:
-                point.color = compColor;
+                color = compColor;
                 break;
             case AS_EDU:
-                point.color = eduColor;
+                color = eduColor;
                 break;
             case AS_IX:
-                point.color = ixColor;
+                color = ixColor;
                 break;
             case AS_NIC:
-                point.color = nicColor;
+                color = nicColor;
                 break;
             default:
-                point.color = unknownColor;
+                color = unknownColor;
                 break;
         }
-    };
+
+        
+        [nodes updateNode:node.index position:[self nodePosition:node] size:[self nodeSize:node] color:color]; // use index from node, not in array, so that partiual updates can work
+        
+    }
+    
+    [nodes endUpdate];
+
+    display.nodes = nodes;
 
 }
 
