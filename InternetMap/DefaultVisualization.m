@@ -23,23 +23,26 @@
 }
 
 -(void)updateDisplay:(MapDisplay*)display forNodes:(NSArray*)nodes {
-    //    UIColor* nodeColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+
     
-    //    UIColor* t1Color = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
-    //    UIColor* t2Color = [UIColor colorWithRed:1.0 green:0.7 blue:1.0 alpha:1.0];
-    //    UIColor* compColor = [UIColor colorWithRed:1.0 green:0.2 blue:0.2 alpha:1.0];
-    //    UIColor* eduColor = [UIColor colorWithRed:1.0 green:0.7 blue:0.7 alpha:1.0];
-    //    UIColor* ixColor = [UIColor colorWithRed:0.7 green:1.0 blue:0.7 alpha:1.0];
-    //    UIColor* nicColor = [UIColor colorWithRed:0.7 green:0.7 blue:1.0 alpha:1.0];
-    //    UIColor* unknownColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1.0];
+//    UIColor* t1Color = UIColorFromRGB(0x36a3e6);
+//    UIColor* t2Color = UIColorFromRGB(0x2246a7);
+//    UIColor* unknownColor = UIColorFromRGB(0x8e44bd);
+//    UIColor* compColor = UIColorFromRGB(0x4490ce);
+//    UIColor* eduColor = UIColorFromRGB(0xecb7fd);
+//    UIColor* ixColor = UIColorFromRGB(0xb7fddc);
+//    UIColor* nicColor = UIColorFromRGB(0xb0a2d3);
     
-    UIColor* t1Color = UIColorFromRGB(0x36a3e6);
-    UIColor* t2Color = UIColorFromRGB(0x2246a7);
-    UIColor* unknownColor = UIColorFromRGB(0x8e44bd);
-    UIColor* compColor = UIColorFromRGB(0x4490ce);
-    UIColor* eduColor = UIColorFromRGB(0xecb7fd);
-    UIColor* ixColor = UIColorFromRGB(0xb7fddc);
-    UIColor* nicColor = UIColorFromRGB(0xb0a2d3);
+    UIColor* t1Color = UIColorFromRGB(0x548dff); // Changed to blue in style guide
+    UIColor* t2Color = UIColorFromRGB(0x375ca6); // Slightly darker blue than in style guide
+    UIColor* unknownColor = UIColorFromRGB(0x7ce346); // slightly brighter green than style guide
+    UIColor* compColor = UIColorFromRGB(0x4490ce); //some other blue
+    UIColor* eduColor = UIColorFromRGB(0x7200ff); //purpley
+    UIColor* ixColor = UIColorFromRGB(0x75787b); //slate 
+    UIColor* nicColor = UIColorFromRGB(0xffffff); //white, obvs
+
+
+
     
     for(Node* node in nodes) {
         DisplayNode* point = [display displayNodeAtIndex:node.index]; // use index from node, not in array, so that partiual updates can work

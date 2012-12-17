@@ -23,6 +23,8 @@
 #import "WEPopoverController.h"
 #import "ErrorInfoView.h"
 
+#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+
 @interface ViewController ()
 @property (strong, nonatomic) ASNRequest* request;
 @property (strong, nonatomic) EAGLContext *context;
@@ -447,7 +449,8 @@
         self.targetNode = index;
         Node* node = [self.data nodeAtIndex:self.targetNode];
         target = [self.data.visualization nodePosition:node];
-        [[self.display displayNodeAtIndex:node.index] setColor:[UIColor redColor]];
+        UIColor* orange = UIColorFromRGB(0xffa300);
+        [[self.display displayNodeAtIndex:node.index] setColor: orange];
         
     } else {
         target = GLKVector3Make(0, 0, 0);

@@ -149,7 +149,7 @@ typedef struct {
     GLKMatrix4 mv = [self.camera currentModelView];
     GLKMatrix4 p = [self.camera currentProjection];
     
-    glClearColor(0.05882f, 0.09411f, 0.25098f, 1.0f); //Visualization background color
+    glClearColor(0, 0, 0, 1.0f); //Visualization background color
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     glBindVertexArrayOES(_vertexArray);
