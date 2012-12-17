@@ -449,8 +449,10 @@
         Node* node = [self.data nodeAtIndex:self.targetNode];
         target = [self.data.visualization nodePosition:node];
         [self.display.nodes beginUpdate];
-        [self.display.nodes updateNode:node.index color:[UIColor redColor]];
+        [self.display.nodes updateNode:node.index color:[UIColor clearColor]];
         [self.display.nodes endUpdate];
+        
+        [self.data.visualization resetDisplay:self.display forSelectedNodes:@[node]];
         
     } else {
         target = GLKVector3Make(0, 0, 0);

@@ -81,10 +81,28 @@
     
 }
 
+-(void)updateDisplay:(MapDisplay*)display forSelectedNodes:(NSArray*)arrNodes {
+    [display.selectedNodes beginUpdate];
+    for(int i = 0; i < arrNodes.count; i++) {
+        Node* node = arrNodes[i];
+        
+        
+        [display.selectedNodes updateNode:i position:[self nodePosition:node] size:[self nodeSize:node] color:[UIColor redColor]]; // use index from node, not in array, so that partiual updates can work
+        
+    }
+    [display.selectedNodes endUpdate];
+    
+}
+
 - (void)resetDisplay:(MapDisplay*)display forNodes:(NSArray*)arrNodes {
     display.nodes = [[Nodes alloc] initWithNodeCount:[arrNodes count]];
     
     [self updateDisplay:display forNodes:arrNodes];
+}
+
+- (void)resetDisplay:(MapDisplay *)display forSelectedNodes:(NSArray*)arrNodes {
+    display.selectedNodes = [[Nodes alloc] initWithNodeCount:[arrNodes count]];
+    [self updateDisplay:display forSelectedNodes:arrNodes];
 }
 
 -(void)updateLineDisplay:(MapDisplay*)display forConnections:(NSArray*)connections {

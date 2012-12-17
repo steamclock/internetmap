@@ -13,5 +13,6 @@
 -(void)updateDisplay:(MapDisplay*)display forNodes:(NSArray*)nodes;
 -(void)updateLineDisplay:(MapDisplay*)display forConnections:(NSArray*)connections;
 -(void)resetDisplay:(MapDisplay*)display forNodes:(NSArray*)arrNodes;
+- (void)resetDisplay:(MapDisplay *)display forSelectedNodes:(NSArray*)arrNodes;
 
 @end

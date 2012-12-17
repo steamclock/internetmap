@@ -56,7 +56,6 @@
     self.nodeProgram = [[Program alloc] initWithName:@"node" activeAttributes:nodeVertexComponents];
     self.connectionProgram = [[Program alloc] initWithName:@"line" activeAttributes:lineVertexComponents];
     
-//    glEnable(GL_DEPTH_TEST);
     
 
     
@@ -70,6 +69,7 @@
     
     [EAGLContext setCurrentContext:self.context];
     self.nodes = nil;
+    self.selectedNodes = nil;
 }
 
 #pragma mark - GLKView and GLKViewController delegate methods
@@ -98,9 +98,20 @@
     glUniform1f([self.nodeProgram uniformForName:@"screenWidth"], ([[UIScreen mainScreen] scale] == 2.00) ? self.camera.displaySize.width*2 : self.camera.displaySize.width);
     glUniform1f([self.nodeProgram uniformForName:@"screenHeight"], ([[UIScreen mainScreen] scale] == 2.00) ? self.camera.displaySize.height*2 : self.camera.displaySize.height);
     
+    glEnable(GL_DEPTH_TEST);
+    if (self.selectedNodes) {
+        [self.selectedNodes display];
+    }
+    
+    glDepthMask(GL_FALSE);
     if (self.nodes) {
         [self.nodes display];
     }
+    
+    
+    glDisable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+
 
     if(self.visualizationLines || self.highlightLines) {
         [self.connectionProgram use];
