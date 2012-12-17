@@ -23,7 +23,7 @@
 
 }
 
--(void)updateDisplay:(MapDisplay*)display forNodes:(NSArray*)arrNodes {
+-(void)updateDisplay:(MapDisplay*)display forNodes:(NSArray*)arrNodes {    
     //    UIColor* nodeColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
     
     //    UIColor* t1Color = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
@@ -41,10 +41,10 @@
     UIColor* eduColor = UIColorFromRGB(0xecb7fd);
     UIColor* ixColor = UIColorFromRGB(0xb7fddc);
     UIColor* nicColor = UIColorFromRGB(0xb0a2d3);
-    Nodes* nodes = [[Nodes alloc] initWithNodeCount:[arrNodes count]];
-
-    [nodes beginUpdate];
-    for(int i = 0; i < nodes.count; i++) {
+    
+    [display.nodes beginUpdate];
+    
+    for(int i = 0; i < arrNodes.count; i++) {
         Node* node = arrNodes[i];
         
         UIColor* color;
@@ -71,16 +71,20 @@
                 color = unknownColor;
                 break;
         }
-
         
-        [nodes updateNode:node.index position:[self nodePosition:node] size:[self nodeSize:node] color:color]; // use index from node, not in array, so that partiual updates can work
+        
+        [display.nodes updateNode:node.index position:[self nodePosition:node] size:[self nodeSize:node] color:color]; // use index from node, not in array, so that partiual updates can work
         
     }
     
-    [nodes endUpdate];
+    [display.nodes endUpdate];
+    
+}
 
-    display.nodes = nodes;
-
+- (void)resetDisplay:(MapDisplay*)display forNodes:(NSArray*)arrNodes {
+    display.nodes = [[Nodes alloc] initWithNodeCount:[arrNodes count]];
+    
+    [self updateDisplay:display forNodes:arrNodes];
 }
 
 -(void)updateLineDisplay:(MapDisplay*)display forConnections:(NSArray*)connections {
