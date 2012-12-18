@@ -95,7 +95,7 @@
 
 #pragma mark - ICMP Traceroute
 
--(void)processPacket:(NSData *)packet{
+-(void)processICMPPacket:(NSData *)packet{
     
     // TODO: Swap in constants for magic numbers (ICMP Codes), remove NSLogs since delegation is working, and generally fix this up since it's hairy in here.
     
@@ -112,8 +112,10 @@
     ip[3] = IPHeader->sourceAddress[3];
     
     self.lastIP = [NSString stringWithFormat:@"%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]];
+    
+    NSLog(@"ICMP Type: %d and Code: %d", type, code);
 
-    if (type == 11) { //TTL Expired
+    if (type == kICMPTimeExceeded) { //TTL Expired
         
         if (self.ipsForCurrentRequest.count < 1) {
             // First address/hop case, empty array
@@ -151,7 +153,7 @@
                 }
             }
         }
-    } else if (type == 0) { //ECHO Response
+    } else if (type == kICMPTypeEchoReply) { //ECHO Response
         if (![self reachedTargetAddress]) {
             // This should always return true
             NSLog(@"Error, if we have a type 0 then our IPs should match");
@@ -233,7 +235,7 @@
 
 - (void)SCPacketUtility:(SCPacketUtility*)packetUtility didReceiveResponsePacket:(NSData *)packet {
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
-    [self processPacket:packet];
+    [self processICMPPacket:packet];
 }
 
 - (void)SCPacketUtility:(SCPacketUtility*)tracer didReceiveUnexpectedPacket:(NSData *)packet {
