@@ -6,6 +6,7 @@
 #import "Camera.h"
 
 static const float MOVE_TIME = 1.0f;
+static const float FINAL_ZOOM_ON_SELECTION = -0.4;
 
 @interface Camera () {
     GLKMatrix4 _modelViewProjectionMatrix;
@@ -20,6 +21,7 @@ static const float MOVE_TIME = 1.0f;
 
 @property (nonatomic) NSTimeInterval targetMoveStart;
 @property (nonatomic) GLKVector3 targetMoveStartPosition;
+@property (nonatomic) float targetZoomStart;
 @end
 
 @implementation Camera
@@ -46,7 +48,6 @@ static const float MOVE_TIME = 1.0f;
 
 -(void) zoom:(float)zoom {
     _zoom += zoom * -_zoom;
-    
     if(_zoom > -0.2) {
         _zoom = -0.2;
     }
@@ -54,11 +55,15 @@ static const float MOVE_TIME = 1.0f;
     if(_zoom < -10.0f) {
         _zoom = -10.0f;
     }
+    
+    NSLog(@"zoom: %f", _zoom);
+
 }
 
 -(void)setTarget:(GLKVector3)target {
     _targetMoveStartPosition = _target;
     _target = target;
+    _targetZoomStart = _zoom;
     _targetMoveStart = [NSDate timeIntervalSinceReferenceDate];
 }
 
@@ -71,7 +76,6 @@ static const float MOVE_TIME = 1.0f;
     NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
     
     GLKVector3 currentTarget;
-    
     if(self.targetMoveStart < now) {
         float timeT = (now - self.targetMoveStart) / MOVE_TIME;
         if(timeT > 1.0f) {
@@ -91,6 +95,7 @@ static const float MOVE_TIME = 1.0f;
             }
             
             currentTarget = GLKVector3Add(self.targetMoveStartPosition, GLKVector3MultiplyScalar(GLKVector3Subtract(self.target, self.targetMoveStartPosition), positionT));
+            _zoom = self.targetZoomStart + (FINAL_ZOOM_ON_SELECTION-self.targetZoomStart)*positionT;
         }
     }
     else {
