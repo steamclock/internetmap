@@ -310,7 +310,7 @@
 }
 
 - (void)handleSelectionAtPoint:(CGPoint)pointInView {
-    NSDate* date = [NSDate date];
+//    NSDate* date = [NSDate date];
     //get point in view and adjust it for viewport
     float xOld = pointInView.x;
     CGFloat xLoOld = 0;
@@ -366,12 +366,13 @@
                 zC = nodePosition.z;
                 
                 r = [self.data.visualization nodeSize:node]/2;
-                
+                r = MAX(r, 0.02);
+
                 float b = 2*((direction.x)*(xA-xC)+(direction.y)*(yA-yC)+(direction.z)*(zA-zC));
                 float c = powf((xA-xC), 2)+powf((yA-yC), 2)+powf((zA-zC), 2)-powf(r, 2);
                 float delta = powf(b, 2)-4*a*c;
                 if (delta >= 0) {
-                    NSLog(@"intersected node %i: %@, delta: %f", i, NSStringFromGLKVector3(nodePosition), delta);
+//                    NSLog(@"intersected node %i: %@, delta: %f", i, NSStringFromGLKVector3(nodePosition), delta);
                     GLKVector4 transformedNodePosition = GLKMatrix4MultiplyVector4(self.display.camera.currentModelView, GLKVector4MakeWithVector3(nodePosition, 1));
                     if ((delta > maxDelta) && (transformedNodePosition.z < -0.1)) {
                         maxDelta = delta;
@@ -384,14 +385,14 @@
     }
     
     if (foundI != NSNotFound) {
-        NSLog(@"selected node %i", foundI);
+//        NSLog(@"selected node %i", foundI);
         self.lastSearchIP = nil;
         [self updateTargetForIndex:foundI];
     }else {
-        NSLog(@"No node found, will bring up onscreen controls");
+//        NSLog(@"No node found, will bring up onscreen controls");
     }
     
-    NSLog(@"time for intersection calculation: %f", [date timeIntervalSinceNow]);
+//    NSLog(@"time for intersection calculation: %f", [date timeIntervalSinceNow]);
 }
 
 - (void)handleLongPress:(UILongPressGestureRecognizer *)gesture

@@ -62,7 +62,7 @@
 }
 
 - (void)setAllItems:(NSMutableArray *)allItems {
-    _allItems = allItems;
+    _allItems = [allItems mutableCopy];
     NSArray* arr = ASNS_AT_TOP;
     for (int i = 0; i < [arr count]; i++) {
         int asn = [arr[i] intValue];
@@ -169,8 +169,7 @@
 - (void)filterContentForSearchText:(NSString*)searchText
 {
     self.searchResults = nil; // First clear the filtered array.
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(textDescription contains[cd] %@)", searchText];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(textDescription contains[cd] %@) OR (asn contains[cd] %@)", searchText, searchText];
     self.searchResults = [self.allItems filteredArrayUsingPredicate:predicate];
     
     [self.searchDisplayController.searchResultsTableView reloadData];
