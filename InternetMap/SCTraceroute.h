@@ -9,10 +9,13 @@
 #import <Foundation/Foundation.h>
 #import "SCPacketUtility.h"
 
+static const int MAX_HOPS = 30;
+
 @protocol SCTracerouteDelegate <NSObject>
 
 - (void)tracerouteDidFindHop:(NSString*)report;
 - (void)tracerouteDidComplete:(NSMutableArray*)hops;
+- (void)tracerouteDidTimeout;
 
 @end
 

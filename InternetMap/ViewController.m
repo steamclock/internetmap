@@ -461,24 +461,6 @@
     [self displayInformationPopoverForCurrentNode];
 }
 
-//-(void)updateTargetforNode:(Node*)node {
-//    
-//    GLKVector3 target;
-//    
-//    NSLog(@"Node Index: %u", node.index);
-//    
-//    if (node) {
-//        target = [self.data.visualization nodePosition:node];
-//        [[self.display displayNodeAtIndex:node.index] setColor:[UIColor redColor]];
-//    } else {
-//        target = GLKVector3Make(0, 0, 0);
-//    }
-//    
-//    self.display.camera.target = target;
-//    [self displayInformationPopoverForCurrentNode];
-//    
-//}
-
 -(CGPoint)getCoordinatesForNode{
     Node* node = [self.data nodeAtIndex:self.targetNode];
     
@@ -599,6 +581,7 @@
 // Get a set of IP addresses for a given host name
 // Originally pulled from here: http://www.bdunagan.com/2009/11/28/iphone-tip-no-nshost/
 // MIT License
+
 + (NSArray *)addressesForHostname:(NSString *)hostname {
     // Get the addresses for the given hostname.
     CFHostRef hostRef = CFHostCreateWithName(kCFAllocatorDefault, (__bridge CFStringRef)hostname);
@@ -707,6 +690,10 @@
     }];
 }
 
+-(void)tracerouteDidTimeout {
+    NSLog(@"Traceroute timed out, perform UDP traceroute?");
+}
+
 #pragma mark - Node Info View Delegate
 
 -(void)tracerouteButtonTapped{
@@ -715,7 +702,7 @@
         self.tracerouteOutput.hidden = NO;
         
         if(self.lastSearchIP) {
-            self.tracer = [SCTraceroute tracerouteWithAddress:self.lastSearchIP]; //we need ip for node!
+            self.tracer = [SCTraceroute tracerouteWithAddress:self.lastSearchIP ofType:kICMP]; //we need ip for node!
             self.tracer.delegate = self;
             [self.tracer start];
         }
@@ -725,7 +712,7 @@
                 [ASNRequest fetchForASN:[node.asn intValue] responseBlock:^(NSArray *asn) {
                     if (asn[0] != [NSNull null]) {
                         NSLog(@"starting tracerout with IP: %@", asn[0]);
-                        self.tracer = [SCTraceroute tracerouteWithAddress:asn[0]];
+                        self.tracer = [SCTraceroute tracerouteWithAddress:asn[0] ofType:kICMP];
                         self.tracer.delegate = self;
                         [self.tracer start];
                     }else {
@@ -749,6 +736,7 @@
 -(void)doneTapped{
     [self.nodeInformationPopover dismissPopoverAnimated:YES];
     self.tracerouteOutput.hidden = YES;
+    [self.tracer stop];
 }
 
 @end
