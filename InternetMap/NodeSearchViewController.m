@@ -169,8 +169,7 @@
 - (void)filterContentForSearchText:(NSString*)searchText
 {
     self.searchResults = nil; // First clear the filtered array.
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(textDescription contains[cd] %@)", searchText];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(textDescription contains[cd] %@) OR (asn contains[cd] %@)", searchText, searchText];
     self.searchResults = [self.allItems filteredArrayUsingPredicate:predicate];
     
     [self.searchDisplayController.searchResultsTableView reloadData];
