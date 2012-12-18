@@ -580,7 +580,7 @@
 -(void)displayInformationPopoverForCurrentNode {
     Node* node = [self.data nodeAtIndex:self.targetNode];
     
-    NodeInformationViewController *nodeInfo = [[NodeInformationViewController alloc] initWithNibName:@"NodeInformationViewController" bundle:nil];
+    NodeInformationViewController *nodeInfo = [[NodeInformationViewController alloc] initWithNibName:@"NodeInformationViewController" bundle:nil node:node];
     nodeInfo.delegate = self;
     //NSLog(@"ASN:%@, Text Desc: %@", node.asn, node.textDescription);
     
@@ -589,11 +589,6 @@
     [self.nodeInformationPopover dismissPopoverAnimated:YES]; //this line is important, in case the popover for another node is already visible
     self.nodeInformationPopover = [[WEPopoverController alloc] initWithContentViewController:navController];
     self.nodeInformationPopover.passthroughViews = @[self.view];
-    
-    nodeInfo.asnLabel.text = node.asn;
-    nodeInfo.textDescriptionLabel.text = node.textDescription;
-    nodeInfo.nodeTypeLabel.text = node.typeString;
-    
     
     // TODO: This should be called as a part of a camera object callback when the camera has finished zooming, not by 'waiting'
     

@@ -7,19 +7,24 @@
 //
 
 #import "NodeInformationViewController.h"
+#import "Node.h"
 
 @interface NodeInformationViewController ()
+
+@property (nonatomic, strong) Node* node;
 
 @end
 
 @implementation NodeInformationViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil node:(Node*)node
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = @"Node Information";
         [self setContentSizeForViewInPopover:CGSizeMake(320, 200)];
+        
+        self.node = node;
         
     }
     return self;
@@ -29,6 +34,10 @@
     [super viewDidLoad];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneTapped)];
+    
+    self.asnLabel.text = self.node.asn;
+    self.textDescriptionLabel.text = self.node.textDescription;
+    self.nodeTypeLabel.text = self.node.typeString;
 }
 
 - (void)doneTapped {

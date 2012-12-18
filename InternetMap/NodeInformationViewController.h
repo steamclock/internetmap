@@ -15,6 +15,11 @@
 @end
 
 @interface NodeInformationViewController : UIViewController
+
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil node:(Node*)node;
+
+
 @property (weak, nonatomic) IBOutlet UILabel* asnLabel;
 @property (weak, nonatomic) IBOutlet UILabel* textDescriptionLabel;
 @property (weak, nonatomic) IBOutlet UILabel* nodeTypeLabel;
