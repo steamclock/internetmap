@@ -108,11 +108,6 @@
         [self.nodes display];
     }
     
-    
-    glDisable(GL_DEPTH_TEST);
-    glDepthMask(GL_TRUE);
-
-
     if(self.visualizationLines || self.highlightLines) {
         [self.connectionProgram use];
         glUniformMatrix4fv([self.connectionProgram uniformForName:@"modelViewProjectionMatrix"], 1, 0, mvp.m);
@@ -127,6 +122,10 @@
         [self.highlightLines display];
         glLineWidth(1.0f);
     }
+    
+    glDisable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    
 }
 
 
