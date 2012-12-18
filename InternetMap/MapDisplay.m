@@ -98,12 +98,14 @@
     glUniform1f([self.nodeProgram uniformForName:@"screenWidth"], ([[UIScreen mainScreen] scale] == 2.00) ? self.camera.displaySize.width*2 : self.camera.displaySize.width);
     glUniform1f([self.nodeProgram uniformForName:@"screenHeight"], ([[UIScreen mainScreen] scale] == 2.00) ? self.camera.displaySize.height*2 : self.camera.displaySize.height);
     
-    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST); //enable z testing and writing
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     if (self.selectedNodes) {
         [self.selectedNodes display];
     }
     
-    glDepthMask(GL_FALSE);
+    glBlendFunc(GL_ONE, GL_ONE);
+    glDepthMask(GL_FALSE); //disable z writing only
     if (self.nodes) {
         [self.nodes display];
     }

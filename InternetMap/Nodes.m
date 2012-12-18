@@ -45,10 +45,10 @@ typedef struct {
         self.count = count;
         
         glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE);
         
         glEnable(GL_POINT_SPRITE_OES);
-        
+        glEnable(GL_POINT_SMOOTH);
+
         // setup vertex buffer for nodes
         glGenVertexArraysOES(1, &_vertexArray);
         glBindVertexArrayOES(_vertexArray);
