@@ -18,6 +18,13 @@
 
 #pragma mark - SCPacketUtility
 
+// Packet types
+// TODO:could expand to support TCP maybe?
+typedef enum {
+    kUDP   = 0,           // code is always 0
+    kICMP   = 1,
+}packetType;
+
 // SCPacketUtility is a simple class for sending and receiving ICMP packets.
 
 @protocol SCPacketUtilityDelegate;
@@ -43,11 +50,13 @@
 @property (nonatomic, assign, readonly)  uint16_t               identifier;
 @property (nonatomic, assign, readonly)  uint16_t               nextSequenceNumber;
 
+// Packet types
+
 - (void)start;
 // Starts the packet utility object doing it's thing.  You should call this after
 // you've setup the delegate and any packet parameters.
 
-- (void)sendPacketWithData:(NSData *)data withTTL:(int)ttl;
+- (void)sendPacketOfType:(packetType)type withData:(NSData *)data withTTL:(int)ttl;
 // Sends a packet.
 // Do not try to send a packet before you receive the -SCPacketUtility:didStartWithAddress: delegate
 // callback.
@@ -97,7 +106,6 @@
 
 #pragma mark - Traceroute packet structure declarations
 
-// The following declarations specify the structure of traceroute packets
 struct IPHeader {
     uint8_t     versionAndHeaderLength;
     uint8_t     differentiatedServices;
@@ -127,16 +135,7 @@ check_compile_time(offsetof(IPHeader, headerChecksum) == 10);
 check_compile_time(offsetof(IPHeader, sourceAddress) == 12);
 check_compile_time(offsetof(IPHeader, destinationAddress) == 16);
 
-// ICMP type and code combinations:
-
-enum {
-    kICMPTypeEchoReply   = 0,           // code is always 0
-    kICMPTypeDestinationUnreachable = 3,
-    kICMPTypeEchoRequest = 8,            // code is always 0
-    kICMPTimeExceeded = 11
-};
-
-// ICMP header structure:
+// ICMP:
 
 struct ICMPHeader {
     uint8_t     type;
@@ -146,7 +145,17 @@ struct ICMPHeader {
     uint16_t    sequenceNumber;
     // data...
 };
+
 typedef struct ICMPHeader ICMPHeader;
+
+// ICMP type and code combinations
+
+enum {
+    kICMPTypeEchoReply   = 0,           // code is always 0
+    kICMPTypeDestinationUnreachable = 3,
+    kICMPTypeEchoRequest = 8,            // code is always 0
+    kICMPTimeExceeded = 11
+};
 
 check_compile_time(sizeof(ICMPHeader) == 8);
 check_compile_time(offsetof(ICMPHeader, type) == 0);
@@ -154,3 +163,23 @@ check_compile_time(offsetof(ICMPHeader, code) == 1);
 check_compile_time(offsetof(ICMPHeader, checksum) == 2);
 check_compile_time(offsetof(ICMPHeader, identifier) == 4);
 check_compile_time(offsetof(ICMPHeader, sequenceNumber) == 6);
+
+// UDP:
+
+struct UDPHeader {
+    uint16_t sport;  /* source port      */
+    uint16_t dport;  /* destination port */
+    uint16_t length;     /* udp length       */
+    uint16_t checksum;    /* udp checksum     */
+    // data
+};
+
+typedef struct UDPHeader UDPHeader;
+
+check_compile_time(sizeof(UDPHeader) == 8);
+check_compile_time(offsetof(UDPHeader, sport) == 0);
+check_compile_time(offsetof(UDPHeader, dport) == 2);
+check_compile_time(offsetof(UDPHeader, length) == 4);
+check_compile_time(offsetof(UDPHeader,checksum) == 6);
+
+

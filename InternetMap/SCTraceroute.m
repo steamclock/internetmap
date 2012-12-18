@@ -20,29 +20,33 @@
 @property (nonatomic, strong) NSString *targetIP;
 @property (nonatomic, strong) NSString *lastIP;
 @property (nonatomic, strong )NSMutableArray *ipsForCurrentRequest;
+@property packetType currentTracerouteType;
 
 @end
 
 @implementation SCTraceroute
 
 //We init with 
-- (id)initWithAddress:(NSString *)hostAddress
+- (id)initWithAddress:(NSString *)hostAddress andPacketType:(packetType)type
 {
     self = [super init];
     if (self != nil) {
         NSData *address = [self formatAddress:hostAddress];
         self.packetUtility = [SCPacketUtility utilityWithHostAddress:address];
         self.packetUtility.delegate = self;
+        self.currentTracerouteType = type;
+        
     }
     return self;
 }
 
-- (id)initWithHostName:(NSString*)hostName{
+- (id)initWithHostName:(NSString*)hostName andPacketType:(packetType)type{
     
     self = [super init];
     if (self != nil) {
         self.packetUtility = [SCPacketUtility utilityWithHostName:hostName];
         self.packetUtility.delegate = self;
+        self.currentTracerouteType = type;
     }
     return self;
 }
@@ -58,13 +62,13 @@
 }
 
 
-+ (SCTraceroute*)tracerouteWithAddress:(NSString*)address
++ (SCTraceroute*)tracerouteWithAddress:(NSString*)address ofType:(packetType)type
 {
-    return [[SCTraceroute alloc] initWithAddress:address];
+    return [[SCTraceroute alloc] initWithAddress:address andPacketType:type];
 }
 
-+(SCTraceroute*)tracerouteWithHostName:(NSString*)hostname{
-    return [[SCTraceroute alloc] initWithHostName:hostname];
++(SCTraceroute*)tracerouteWithHostName:(NSString*)hostname ofType:(packetType)type{
+    return [[SCTraceroute alloc] initWithHostName:hostname andPacketType:type];
 }
 
 #pragma Start/Stop
@@ -88,6 +92,8 @@
 -(void)stop{
     [self.packetUtility stop];
 }
+
+#pragma mark - ICMP Traceroute
 
 -(void)processPacket:(NSData *)packet{
     
@@ -169,10 +175,21 @@
 
 - (void)sendPackets:(NSData*)data{
     self.timeExceededCount = 0;
-    //Send three packets each time, 'cause this is a traceroute after all
-    [self.packetUtility sendPacketWithData:data withTTL:self.ttlCount];
-    [self.packetUtility sendPacketWithData:data withTTL:self.ttlCount];
-    [self.packetUtility sendPacketWithData:data withTTL:self.ttlCount];
+    
+    switch (self.currentTracerouteType) {
+        case kICMP:
+            [self.packetUtility sendPacketOfType:kICMP withData:data withTTL:self.ttlCount];
+            [self.packetUtility sendPacketOfType:kICMP withData:data withTTL:self.ttlCount];
+            [self.packetUtility sendPacketOfType:kICMP withData:data withTTL:self.ttlCount];
+            break;
+        case kUDP:
+            [self.packetUtility sendPacketOfType:kUDP withData:data withTTL:self.ttlCount];
+            [self.packetUtility sendPacketOfType:kUDP withData:data withTTL:self.ttlCount];
+            [self.packetUtility sendPacketOfType:kUDP withData:data withTTL:self.ttlCount];
+            break;
+        default:
+            break;
+    }
 }
 
 -(void)timeExceededForPacket {
@@ -185,6 +202,11 @@
         [self sendPackets:nil];
     }
 }
+
+
+#pragma mark - UDP 
+
+//UDP specific stuff here?
 
 #pragma mark - Packet utility delegate
 
@@ -212,9 +234,9 @@
 - (void)SCPacketUtility:(SCPacketUtility*)tracer didReceiveUnexpectedPacket:(NSData *)packet {
     //This doesn't do much since a big chunk of validation is commented out right now. Angelina will be repurposing this stuff later once we're validating against the sequence number to obtain the RTT
 	NSLog(@"Cap'n, tis' a rogue packet!");
-    const ICMPHeader* header = [SCPacketUtility icmpInPacket:packet];
-	NSLog(@"Received packet! ICMP Header stuff ~ Type: %d, Code: %c", header->type, header->code);
 }
+
+
 
 
 @end

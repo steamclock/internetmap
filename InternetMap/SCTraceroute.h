@@ -20,8 +20,8 @@
 
 @property (weak, nonatomic) id<SCTracerouteDelegate> delegate;
 
-+(SCTraceroute*)tracerouteWithHostName:(NSString*)hostname;
-+(SCTraceroute*)tracerouteWithAddress:(NSString*)address; //Pass me an IP as a string
++(SCTraceroute*)tracerouteWithHostName:(NSString*)hostname ofType:(packetType)type;
++(SCTraceroute*)tracerouteWithAddress:(NSString*)address ofType:(packetType)type; //Pass me an IP as a string
 
 -(void)start;
 -(void)stop;

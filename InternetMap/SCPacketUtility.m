@@ -12,8 +12,6 @@
 #include <netinet/in.h>
 #include <errno.h>
 
-#pragma - ICMP packet format
-
 static uint16_t in_cksum(const void *buffer, size_t bufferLen)
 // This is the standard BSD checksum code, modified to use modern types.
 {
@@ -127,9 +125,21 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
     [self _didFailWithError:error];
 }
 
-- (void)sendPacketWithData:(NSData *)data withTTL:(int)ttl
-// See comment in header.
-{
+- (void)sendPacketOfType:(packetType)type withData:(NSData *)data withTTL:(int)ttl{
+    switch (type) {
+        case kUDP:
+            [self sendUDPPacket:data withTTL:ttl];
+            break;
+        case kICMP:
+            [self sendICMPPacket:data withTTL:ttl];
+            break;
+        default:
+            break;
+    }
+}
+
+-(void)sendICMPPacket:(NSData *)data withTTL:(int)ttl{
+    
     int             err;
     NSData *        payload;
     NSMutableData * packet;
@@ -219,6 +229,10 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
     }
     
     self.nextSequenceNumber += 1;
+}
+
+-(void)sendUDPPacket:(NSData *)data withTTL:(int)ttl{
+    NSLog(@"I should send a UDP packet nao.");
 }
 
 + (NSUInteger)_icmpHeaderOffsetInPacket:(NSData *)packet
