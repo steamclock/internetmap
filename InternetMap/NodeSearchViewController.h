@@ -20,6 +20,6 @@
 @interface NodeSearchViewController : UITableViewController <UISearchDisplayDelegate, UISearchBarDelegate>
 
 @property (weak, nonatomic) id delegate;
-@property (strong, nonatomic) NSArray* allItems;
+@property (strong, nonatomic) NSMutableArray* allItems;
 
 @end
