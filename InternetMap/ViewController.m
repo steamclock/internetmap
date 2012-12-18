@@ -771,6 +771,8 @@
 -(void)doneTapped{
     [self.nodeInformationPopover dismissPopoverAnimated:YES];
     self.tracerouteOutput.hidden = YES;
+    [self.tracer stop];
+    self.tracer = nil;
 }
 
 @end

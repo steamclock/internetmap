@@ -170,6 +170,7 @@
 - (void)sendPackets:(NSData*)data{
     self.timeExceededCount = 0;
     //Send three packets each time, 'cause this is a traceroute after all
+    
     [self.packetUtility sendPacketWithData:data withTTL:self.ttlCount];
     [self.packetUtility sendPacketWithData:data withTTL:self.ttlCount];
     [self.packetUtility sendPacketWithData:data withTTL:self.ttlCount];
