@@ -50,6 +50,9 @@
 
 @property (strong) NSString* lastSearchIP;
 
+@property (strong, nonatomic) NSTimer* idleTimer;
+@property (nonatomic) BOOL isIdle; // For "attract" mode
+
 
 /* UIKit Overlay */
 @property (weak, nonatomic) IBOutlet UIButton* searchButton;
@@ -213,6 +216,25 @@
     [self.view addSubview:self.errorInfoView];
     
     self.targetNode = NSNotFound;
+
+    [self resetIdleTimer];
+}
+
+-(void)resetIdleTimer {
+    float secondsUntilIdle = 2.0;
+    
+    self.isIdle = NO;
+    [self.idleTimer invalidate];
+    self.idleTimer = [NSTimer scheduledTimerWithTimeInterval:secondsUntilIdle
+                                                      target:self
+                                                    selector:@selector(idleTimerFired)
+                                                    userInfo:nil
+                                                     repeats:NO];
+}
+
+-(void)idleTimerFired {
+    self.isIdle = YES;
+    NSLog(@"idle!");
 }
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -224,6 +246,12 @@
 - (void)update
 {
     self.display.camera.displaySize = self.view.bounds.size;
+    
+    if (self.isIdle) {
+        [self.display.camera rotateRadiansX:0.001];
+        [self.display.camera rotateRadiansY:0.0001];
+    }
+    
     [self.display update];
 }
 
@@ -243,6 +271,8 @@
 
 -(void)handlePan:(UIPanGestureRecognizer *)gestureRecognizer
 {
+    [self resetIdleTimer];
+    
     if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
         CGPoint translation = [gestureRecognizer translationInView:self.view];
         self.lastPanPosition = translation;
@@ -262,6 +292,8 @@
 
 -(void)handlePinch:(UIPinchGestureRecognizer *)gestureRecognizer
 {
+    [self resetIdleTimer];
+
     if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
         self.lastScale = gestureRecognizer.scale;
     }
@@ -277,6 +309,7 @@
 }
 
 -(void)handleTap:(UITapGestureRecognizer*)gestureRecognizer {
+    [self resetIdleTimer];
     
     [self handleSelectionAtPoint:[gestureRecognizer locationInView:self.view]];
     
