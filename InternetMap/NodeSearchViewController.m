@@ -9,6 +9,8 @@
 #import "NodeSearchViewController.h"
 #import "Node.h"
 
+#define ASNS_AT_TOP @[@13768, @3, @15169, @714, @32934, @7847] //Peer1, MIT, google, apple, facebook, NASA
+
 @interface NodeSearchViewController ()
 
 @property (strong, nonatomic) UISearchDisplayController* nodeSearchDisplayController;
@@ -57,6 +59,21 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)setAllItems:(NSMutableArray *)allItems {
+    _allItems = allItems;
+    NSArray* arr = ASNS_AT_TOP;
+    for (int i = 0; i < [arr count]; i++) {
+        int asn = [arr[i] intValue];
+        for (int j = 0; j < [self.allItems count]; j++) {
+            Node* node = self.allItems[j];
+            if ([node.asn intValue] == asn) {
+                [self.allItems exchangeObjectAtIndex:i withObjectAtIndex:j];
+                break;
+            }
+        }
+    }
 }
 
 #pragma mark - Table view data source

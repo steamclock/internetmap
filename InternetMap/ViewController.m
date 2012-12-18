@@ -50,6 +50,8 @@
 
 @property (strong) NSString* lastSearchIP;
 
+@property (nonatomic) NSTimeInterval idleStartTime; // For "attract" mode
+
 
 /* UIKit Overlay */
 @property (weak, nonatomic) IBOutlet UIButton* searchButton;
@@ -213,6 +215,12 @@
     [self.view addSubview:self.errorInfoView];
     
     self.targetNode = NSNotFound;
+
+    [self resetIdleTimer];
+}
+
+-(void)resetIdleTimer {
+    self.idleStartTime = [NSDate timeIntervalSinceReferenceDate];
 }
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -224,6 +232,20 @@
 - (void)update
 {
     self.display.camera.displaySize = self.view.bounds.size;
+    
+    // Rotate camera if idle
+    
+    NSTimeInterval idleTime = [NSDate timeIntervalSinceReferenceDate] - self.idleStartTime;
+    float idleDelay = 0.1;
+    
+    if (idleTime > idleDelay) {
+        // Ease in
+        float spinupFactor = fminf(1.0, (idleTime - idleDelay) / 2);
+        
+        [self.display.camera rotateRadiansX:0.0006 * spinupFactor];
+        [self.display.camera rotateRadiansY:0.0001 * spinupFactor];
+    }
+    
     [self.display update];
 }
 
@@ -243,6 +265,8 @@
 
 -(void)handlePan:(UIPanGestureRecognizer *)gestureRecognizer
 {
+    [self resetIdleTimer];
+    
     if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
         CGPoint translation = [gestureRecognizer translationInView:self.view];
         self.lastPanPosition = translation;
@@ -262,6 +286,8 @@
 
 -(void)handlePinch:(UIPinchGestureRecognizer *)gestureRecognizer
 {
+    [self resetIdleTimer];
+
     if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
         self.lastScale = gestureRecognizer.scale;
     }
@@ -277,6 +303,7 @@
 }
 
 -(void)handleTap:(UITapGestureRecognizer*)gestureRecognizer {
+    [self resetIdleTimer];
     
     [self handleSelectionAtPoint:[gestureRecognizer locationInView:self.view]];
     
@@ -535,7 +562,7 @@
 -(void)displayInformationPopoverForCurrentNode {
     Node* node = [self.data nodeAtIndex:self.targetNode];
     
-    NodeInformationViewController *nodeInfo = [[NodeInformationViewController alloc] initWithNibName:@"NodeInformationViewController" bundle:nil];
+    NodeInformationViewController *nodeInfo = [[NodeInformationViewController alloc] initWithNibName:@"NodeInformationViewController" bundle:nil node:node];
     nodeInfo.delegate = self;
     //NSLog(@"ASN:%@, Text Desc: %@", node.asn, node.textDescription);
     
@@ -544,11 +571,6 @@
     [self.nodeInformationPopover dismissPopoverAnimated:YES]; //this line is important, in case the popover for another node is already visible
     self.nodeInformationPopover = [[WEPopoverController alloc] initWithContentViewController:navController];
     self.nodeInformationPopover.passthroughViews = @[self.view];
-    
-    nodeInfo.asnLabel.text = node.asn;
-    nodeInfo.textDescriptionLabel.text = node.textDescription;
-    nodeInfo.nodeTypeLabel.text = node.typeString;
-    
     
     // TODO: This should be called as a part of a camera object callback when the camera has finished zooming, not by 'waiting'
     

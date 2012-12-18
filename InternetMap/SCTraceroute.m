@@ -175,7 +175,6 @@
 
 - (void)sendPackets:(NSData*)data{
     self.timeExceededCount = 0;
-    
     if (self.ttlCount <= MAX_HOPS) {
         switch (self.currentTracerouteType) {
             case kICMP:
