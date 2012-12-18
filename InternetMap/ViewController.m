@@ -691,7 +691,9 @@
 }
 
 -(void)tracerouteDidTimeout {
-    NSLog(@"Traceroute timed out, perform UDP traceroute?");
+    [self.tracer stop];
+    self.tracer = nil;
+    self.tracerouteOutput.text = [NSString stringWithFormat:@"%@\nTraceroute could not be completed; reached maximum number of hops (max 30).", self.tracerouteOutput.text];
 }
 
 #pragma mark - Node Info View Delegate
@@ -737,6 +739,7 @@
     [self.nodeInformationPopover dismissPopoverAnimated:YES];
     self.tracerouteOutput.hidden = YES;
     [self.tracer stop];
+    self.tracer = nil;
 }
 
 @end

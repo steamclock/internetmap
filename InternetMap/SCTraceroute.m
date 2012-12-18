@@ -176,19 +176,25 @@
 - (void)sendPackets:(NSData*)data{
     self.timeExceededCount = 0;
     
-    switch (self.currentTracerouteType) {
-        case kICMP:
-            [self.packetUtility sendPacketOfType:kICMP withData:data withTTL:self.ttlCount];
-            [self.packetUtility sendPacketOfType:kICMP withData:data withTTL:self.ttlCount];
-            [self.packetUtility sendPacketOfType:kICMP withData:data withTTL:self.ttlCount];
-            break;
-        case kUDP:
-            [self.packetUtility sendPacketOfType:kUDP withData:data withTTL:self.ttlCount];
-            [self.packetUtility sendPacketOfType:kUDP withData:data withTTL:self.ttlCount];
-            [self.packetUtility sendPacketOfType:kUDP withData:data withTTL:self.ttlCount];
-            break;
-        default:
-            break;
+    if (self.ttlCount <= MAX_HOPS) {
+        switch (self.currentTracerouteType) {
+            case kICMP:
+                [self.packetUtility sendPacketOfType:kICMP withData:data withTTL:self.ttlCount];
+                [self.packetUtility sendPacketOfType:kICMP withData:data withTTL:self.ttlCount];
+                [self.packetUtility sendPacketOfType:kICMP withData:data withTTL:self.ttlCount];
+                break;
+            case kUDP:
+                [self.packetUtility sendPacketOfType:kUDP withData:data withTTL:self.ttlCount];
+                [self.packetUtility sendPacketOfType:kUDP withData:data withTTL:self.ttlCount];
+                [self.packetUtility sendPacketOfType:kUDP withData:data withTTL:self.ttlCount];
+                break;
+            default:
+                break;
+        }
+    } else if (self.ttlCount > MAX_HOPS) {
+        if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidTimeout)]) {
+            [self.delegate tracerouteDidTimeout];
+        }
     }
 }
 
