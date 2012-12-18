@@ -50,8 +50,7 @@
 
 @property (strong) NSString* lastSearchIP;
 
-@property (strong, nonatomic) NSTimer* idleTimer;
-@property (nonatomic) BOOL isIdle; // For "attract" mode
+@property (nonatomic) NSTimeInterval idleStartTime; // For "attract" mode
 
 
 /* UIKit Overlay */
@@ -221,20 +220,7 @@
 }
 
 -(void)resetIdleTimer {
-    float secondsUntilIdle = 2.0;
-    
-    self.isIdle = NO;
-    [self.idleTimer invalidate];
-    self.idleTimer = [NSTimer scheduledTimerWithTimeInterval:secondsUntilIdle
-                                                      target:self
-                                                    selector:@selector(idleTimerFired)
-                                                    userInfo:nil
-                                                     repeats:NO];
-}
-
--(void)idleTimerFired {
-    self.isIdle = YES;
-    NSLog(@"idle!");
+    self.idleStartTime = [NSDate timeIntervalSinceReferenceDate];
 }
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -247,9 +233,17 @@
 {
     self.display.camera.displaySize = self.view.bounds.size;
     
-    if (self.isIdle) {
-        [self.display.camera rotateRadiansX:0.001];
-        [self.display.camera rotateRadiansY:0.0001];
+    // Rotate camera if idle
+    
+    NSTimeInterval idleTime = [NSDate timeIntervalSinceReferenceDate] - self.idleStartTime;
+    float idleDelay = 0.1;
+    
+    if (idleTime > idleDelay) {
+        // Ease in
+        float spinupFactor = fminf(1.0, (idleTime - idleDelay) / 2);
+        
+        [self.display.camera rotateRadiansX:0.0006 * spinupFactor];
+        [self.display.camera rotateRadiansY:0.0001 * spinupFactor];
     }
     
     [self.display update];
