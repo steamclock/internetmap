@@ -56,6 +56,9 @@
 @property (nonatomic) CGPoint rotationVelocity;
 @property (nonatomic) NSTimeInterval rotationEndTime;
 
+@property (nonatomic) CGFloat zoomVelocity;
+@property (nonatomic) NSTimeInterval zoomEndTime;
+
 @property (nonatomic) NSTimeInterval updateTime;
 
 /* UIKit Overlay */
@@ -260,12 +263,11 @@
         [self.display.camera rotateRadiansY:0.0001 * spinupFactor];
     }
     
-    //momentum panning rotation
-    NSTimeInterval rotationTime = now-self.rotationEndTime;
-    static NSTimeInterval totalTime = 1.0;
-    
-    if (self.rotationVelocity.x != 0 && self.rotationVelocity.y != 0 && rotationTime < totalTime) {
+    //momentum panning    
+    if (self.rotationVelocity.x != 0 && self.rotationVelocity.y != 0) {
         
+        NSTimeInterval rotationTime = now-self.rotationEndTime;
+        static NSTimeInterval totalTime = 1.0;
         float timeT = rotationTime / totalTime;
         if(timeT > 1.0f) {
             self.rotationVelocity = CGPointZero;
@@ -280,6 +282,22 @@
 
     }
 
+    //momentum zooming
+    
+    if (self.zoomVelocity != 0) {
+        static NSTimeInterval totalTime = 0.5;
+        NSTimeInterval zoomTime = now-self.zoomEndTime;
+        float timeT = zoomTime / totalTime;
+        if(timeT > 1.0f) {
+            self.zoomVelocity = 0;
+        }
+        else {
+            //quadratic ease out
+            float positionT = 1+(timeT*timeT-2.0f*timeT);
+            
+            [self.display.camera zoom:self.zoomVelocity*delta*positionT];
+        }
+    }
     
     [self.display update];
 }
@@ -341,7 +359,8 @@
         self.lastScale = gestureRecognizer.scale;
         [self.display.camera zoom:deltaZoom];
     }else if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-    
+        self.zoomVelocity = gestureRecognizer.velocity*0.5;
+        self.zoomEndTime = [NSDate timeIntervalSinceReferenceDate];
     }
 }
 
