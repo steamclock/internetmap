@@ -56,7 +56,6 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
         _zoom = -10.0f;
     }
     
-    NSLog(@"zoom: %f", _zoom);
 
 }
 

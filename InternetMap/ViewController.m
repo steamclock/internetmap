@@ -36,6 +36,7 @@
 @property (strong, nonatomic) UITapGestureRecognizer* tapRecognizer;
 @property (strong, nonatomic) UITapGestureRecognizer* twoFingerTapRecognizer;
 @property (strong, nonatomic) UILongPressGestureRecognizer* longPressGestureRecognizer;
+@property (strong, nonatomic) UILongPressGestureRecognizer* touchDownGestureRecognizer;
 @property (strong, nonatomic) UITapGestureRecognizer* doubleTapRecognizer;
 @property (strong, nonatomic) UIPanGestureRecognizer* panRecognizer;
 @property (strong, nonatomic) UIPinchGestureRecognizer* pinchRecognizer;
@@ -52,6 +53,10 @@
 
 @property (nonatomic) NSTimeInterval idleStartTime; // For "attract" mode
 
+@property (nonatomic) CGPoint rotationVelocity;
+@property (nonatomic) NSTimeInterval rotationEndTime;
+
+@property (nonatomic) NSTimeInterval updateTime;
 
 /* UIKit Overlay */
 @property (weak, nonatomic) IBOutlet UIButton* searchButton;
@@ -191,12 +196,16 @@
     self.longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
     self.longPressGestureRecognizer.enabled = NO;
     
+    self.touchDownGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleTouchDown:)];
+    self.touchDownGestureRecognizer.minimumPressDuration = 0;
+    
     self.tapRecognizer.delegate = self;
     self.doubleTapRecognizer.delegate = self;
     self.twoFingerTapRecognizer.delegate = self;
     self.panRecognizer.delegate = self;
     self.pinchRecognizer.delegate = self;
     self.longPressGestureRecognizer.delegate = self;
+    self.touchDownGestureRecognizer.delegate = self;
     
     [self.view addGestureRecognizer:self.tapRecognizer];
     [self.view addGestureRecognizer:self.doubleTapRecognizer];
@@ -204,6 +213,7 @@
     [self.view addGestureRecognizer:self.panRecognizer];
     [self.view addGestureRecognizer:self.pinchRecognizer];
     [self.view addGestureRecognizer:self.longPressGestureRecognizer];
+    [self.view addGestureRecognizer:self.touchDownGestureRecognizer];
     
     self.searchActivityIndicator.frame = CGRectMake(self.searchActivityIndicator.frame.origin.x, self.searchActivityIndicator.frame.origin.y, 30, 30);
     self.youAreHereActivityIndicator.frame = CGRectMake(self.youAreHereActivityIndicator.frame.origin.x, self.youAreHereActivityIndicator.frame.origin.y, 30, 30);
@@ -231,11 +241,15 @@
 
 - (void)update
 {
+    
+    NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
+    NSTimeInterval delta = now - self.updateTime;
+    self.updateTime = now;
+    
     self.display.camera.displaySize = self.view.bounds.size;
     
     // Rotate camera if idle
-    
-    NSTimeInterval idleTime = [NSDate timeIntervalSinceReferenceDate] - self.idleStartTime;
+    NSTimeInterval idleTime = now - self.idleStartTime;
     float idleDelay = 0.1;
     
     if (idleTime > idleDelay) {
@@ -245,6 +259,27 @@
         [self.display.camera rotateRadiansX:0.0006 * spinupFactor];
         [self.display.camera rotateRadiansY:0.0001 * spinupFactor];
     }
+    
+    //momentum panning rotation
+    NSTimeInterval rotationTime = now-self.rotationEndTime;
+    static NSTimeInterval totalTime = 1.0;
+    
+    if (self.rotationVelocity.x != 0 && self.rotationVelocity.y != 0 && rotationTime < totalTime) {
+        
+        float timeT = rotationTime / totalTime;
+        if(timeT > 1.0f) {
+            self.rotationVelocity = CGPointZero;
+        }
+        else {
+            //quadratic ease out
+            float positionT = 1+(timeT*timeT-2.0f*timeT);
+            
+            [self.display.camera rotateRadiansX:self.rotationVelocity.x*delta*positionT];
+            [self.display.camera rotateRadiansY:self.rotationVelocity.y*delta*positionT];
+        }
+
+    }
+
     
     [self.display update];
 }
@@ -270,10 +305,8 @@
     if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
         CGPoint translation = [gestureRecognizer translationInView:self.view];
         self.lastPanPosition = translation;
-    }
-    
-    if([gestureRecognizer state] == UIGestureRecognizerStateChanged)
-    {
+        self.rotationVelocity = CGPointZero;
+    }else if([gestureRecognizer state] == UIGestureRecognizerStateChanged) {
         
         CGPoint translation = [gestureRecognizer translationInView:self.view];
         CGPoint delta = CGPointMake(translation.x - self.lastPanPosition.x, translation.y - self.lastPanPosition.y);
@@ -281,6 +314,18 @@
         
         [self.display.camera rotateRadiansX:delta.x * 0.01];
         [self.display.camera rotateRadiansY:delta.y * 0.01];
+    } else if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
+        CGPoint velocity = [gestureRecognizer velocityInView:self.view];
+        self.rotationVelocity = CGPointMake(velocity.x*0.002, velocity.y*0.002);
+        self.rotationEndTime = [NSDate timeIntervalSinceReferenceDate];
+    
+    }
+}
+
+- (void)handleTouchDown:(UILongPressGestureRecognizer*)gestureRecognizer {
+    //cancel panning/zooming momentum
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        self.rotationVelocity = CGPointZero;
     }
 }
 
@@ -290,16 +335,14 @@
 
     if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
         self.lastScale = gestureRecognizer.scale;
-    }
-    
-    if([gestureRecognizer state] == UIGestureRecognizerStateChanged)
+    }else if([gestureRecognizer state] == UIGestureRecognizerStateChanged)
     {
         float deltaZoom = gestureRecognizer.scale - self.lastScale;
         self.lastScale = gestureRecognizer.scale;
         [self.display.camera zoom:deltaZoom];
+    }else if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
+    
     }
-
-
 }
 
 -(void)handleTap:(UITapGestureRecognizer*)gestureRecognizer {
@@ -610,6 +653,18 @@
     }
     
     return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    if (gestureRecognizer == self.touchDownGestureRecognizer || otherGestureRecognizer == self.touchDownGestureRecognizer) {
+        return YES;
+    }
+    
+    if ((gestureRecognizer == self.panRecognizer && otherGestureRecognizer == self.pinchRecognizer) || (otherGestureRecognizer == self.panRecognizer && gestureRecognizer == self.pinchRecognizer)) {
+        return YES;
+    }
+    
+    return NO;
 }
 
 #pragma mark - NodeSearch Delegate
