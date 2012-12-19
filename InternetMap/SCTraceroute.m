@@ -102,6 +102,8 @@
     const ICMPHeader* header = [SCPacketUtility icmpInPacket:packet];
     NSInteger type = (NSInteger)header->type;
     NSInteger code = (NSInteger)header->code;
+    uint16_t sequenceNumber = CFSwapInt16BigToHost(header->sequenceNumber);
+    
     
     const IPHeader* IPHeader = (const struct IPHeader *) [packet bytes];
     
@@ -113,7 +115,7 @@
     
     self.lastIP = [NSString stringWithFormat:@"%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]];
     
-    NSLog(@"ICMP Type: %d and Code: %d", type, code);
+    NSLog(@"ICMP Type: %d and Code: %d with identifier: %d", type, code, sequenceNumber);
 
     if (type == kICMPTimeExceeded) { //TTL Expired
         

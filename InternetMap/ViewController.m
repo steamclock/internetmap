@@ -59,6 +59,7 @@
 @property (weak, nonatomic) IBOutlet UIButton* visualizationsButton;
 @property (weak, nonatomic) IBOutlet UIButton* timelineButton;
 @property (weak, nonatomic) IBOutlet UISlider* timelineSlider;
+@property (weak, nonatomic) IBOutlet UIImageView* logo;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* searchActivityIndicator;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* youAreHereActivityIndicator;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* visualizationsActivityIndicator;

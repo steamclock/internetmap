@@ -266,6 +266,8 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
     if (icmpHeaderOffset != NSNotFound) {
         result = (const struct ICMPHeader *) (((const uint8_t *)[packet bytes]) + icmpHeaderOffset);
     }
+    
+    
     return result;
 }
 
@@ -273,36 +275,29 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
 - (BOOL)_isValidResponsePacket:(NSMutableData *)packet
 //Not sure if we really need this since we return any kind now
 {
-//    BOOL                result;
-//    NSUInteger          icmpHeaderOffset;
-//    ICMPHeader *        icmpPtr;
-//    uint16_t            receivedChecksum;
-//    uint16_t            calculatedChecksum;
-//    
-//    result = NO;
-//    
-//    icmpHeaderOffset = [[self class] _icmpHeaderOffsetInPacket:packet];
-//    if (icmpHeaderOffset != NSNotFound) {
-//        icmpPtr = (struct ICMPHeader *) (((uint8_t *)[packet mutableBytes]) + icmpHeaderOffset);
-//        
-//        receivedChecksum   = icmpPtr->checksum;
-//        icmpPtr->checksum  = 0;
-//        calculatedChecksum = in_cksum(icmpPtr, [packet length] - icmpHeaderOffset);
-//        icmpPtr->checksum  = receivedChecksum;
-//        
-//        if (receivedChecksum == calculatedChecksum) {
-//            if ( OSSwapBigToHostInt16(icmpPtr->identifier) == self.identifier ) {
-//                if ( OSSwapBigToHostInt16(icmpPtr->sequenceNumber) < self.nextSequenceNumber ) {
-//                    result = YES;
-//                }
-//            }
-//            result = YES;
-//        }
-//    }
-//    
-//    return result;
+    BOOL                result;
+    NSUInteger          icmpHeaderOffset;
+    ICMPHeader *        icmpPtr;
+    uint16_t            receivedChecksum;
+    uint16_t            calculatedChecksum;
     
-    return YES;
+    result = NO;
+    
+    icmpHeaderOffset = [[self class] _icmpHeaderOffsetInPacket:packet];
+    if (icmpHeaderOffset != NSNotFound) {
+        icmpPtr = (struct ICMPHeader *) (((uint8_t *)[packet mutableBytes]) + icmpHeaderOffset);
+        
+        receivedChecksum   = icmpPtr->checksum;
+        icmpPtr->checksum  = 0;
+        calculatedChecksum = in_cksum(icmpPtr, [packet length] - icmpHeaderOffset);
+        icmpPtr->checksum  = receivedChecksum;
+        
+        if (receivedChecksum == calculatedChecksum) {
+            NSLog(@"YAY");
+        }
+    }
+    
+    return result;
 }
 
 - (void)_readData
