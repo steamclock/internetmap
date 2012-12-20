@@ -663,15 +663,14 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(IBAction)searchNodes:(id)sender {
     if (!self.nodeSearchPopover) {
-        NodeSearchViewController *searchController = [[NodeSearchViewController alloc] initWithStyle:UITableViewStylePlain];
+        NodeSearchViewController *searchController = [[NodeSearchViewController alloc] init];
         searchController.delegate = self;
-        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:searchController];
         
-        self.nodeSearchPopover = [[WEPopoverController alloc] initWithContentViewController:navController];
+        self.nodeSearchPopover = [[WEPopoverController alloc] initWithContentViewController:searchController];
         [self.nodeSearchPopover setPopoverContentSize:searchController.contentSizeForViewInPopover];
         searchController.allItems = self.data.nodes;
     }
-    [self.nodeSearchPopover presentPopoverFromRect:self.searchButton.bounds inView:self.searchButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    [self.nodeSearchPopover presentPopoverFromRect:self.searchButton.bounds inView:self.searchButton permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
 }
 
 -(IBAction)youAreHereButtonPressed:(id)sender {
@@ -760,6 +759,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 -(void)nodeSelected:(Node*)node{
     [self dismissNodeInfoPopover];
     [self updateTargetForIndex:node.index];
+}
+
+-(void)nodeSearchDelegateDone {
+    [self.nodeSearchPopover dismissPopoverAnimated:YES];
 }
 
 // Get a set of IP addresses for a given host name

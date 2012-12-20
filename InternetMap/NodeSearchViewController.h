@@ -12,14 +12,16 @@
 
 @protocol NodeSearchDelegate
 
+-(void)nodeSearchDelegateDone;
 -(void)nodeSelected:(Node*)node;
 -(void)selectNodeByHostLookup:(NSString*)host;
 
 @end
 
-@interface NodeSearchViewController : UITableViewController <UISearchDisplayDelegate, UISearchBarDelegate>
+@interface NodeSearchViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
 
 @property (weak, nonatomic) id delegate;
 @property (copy, nonatomic) NSMutableArray* allItems;
+@property (strong, nonatomic) UITableView* tableView;
 
 @end

@@ -13,19 +13,19 @@
 
 @interface NodeSearchViewController ()
 
-@property (strong, nonatomic) UISearchDisplayController* nodeSearchDisplayController;
-@property (strong, nonatomic) UISearchBar* searchBar;
+@property (strong, nonatomic) UITextField* textField;
 @property (strong, nonatomic) NSArray* searchResults;
 @property BOOL showHostLookup;
+@property BOOL isSearching;
 @end
 
 @implementation NodeSearchViewController
 
-- (id)initWithStyle:(UITableViewStyle)style
+- (id)init
 {
-    self = [super initWithStyle:style];
+    self = [super init];
     if (self) {
-        // Do stuff
+        self.contentSizeForViewInPopover = CGSizeMake(400, 290);
     }
     return self;
 }
@@ -34,25 +34,36 @@
 {
     [super viewDidLoad];
     
+
     
-    self.contentSizeForViewInPopover = CGSizeMake(600, 300);
     self.title = @"Search Nodes";
     
-    self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.contentSizeForViewInPopover.width, 44)];
-    self.searchBar.delegate = self;
-    self.tableView.tableHeaderView = self.searchBar;
+    UIImage* doneImage = [UIImage imageNamed:@"x-icon"];
+    self.textField = [[UITextField alloc] initWithFrame:CGRectMake(10, 10, self.contentSizeForViewInPopover.width-doneImage.size.width-26, 44)];
+    [self.textField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
+    self.textField.backgroundColor = [UIColor clearColor];
+    self.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+    self.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    self.textField.textColor = [UIColor whiteColor];
+    self.textField.delegate = self;
+    self.textField.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:24];
+    [self.view addSubview:self.textField];
     
-    self.nodeSearchDisplayController = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self];
-    self.nodeSearchDisplayController.delegate = self;
-    self.nodeSearchDisplayController.searchResultsDelegate = self;
-    self.nodeSearchDisplayController.searchResultsDataSource = self;
+    UIButton* doneButton = [[UIButton alloc] initWithFrame:CGRectMake(self.textField.x+self.textField.width, 14, doneImage.size.width, doneImage.size.height)];
+    [doneButton setImage:doneImage forState:UIControlStateNormal];
+    [doneButton addTarget:self action:@selector(done) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:doneButton];
+    
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(self.textField.x, self.textField.y+self.textField.height, self.contentSizeForViewInPopover.width-25, self.contentSizeForViewInPopover.height-self.textField.height-20) style:UITableViewStylePlain];
+    self.tableView.backgroundColor = [UIColor clearColor];
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [self.view addSubview:self.tableView];
+    
+    [self.textField becomeFirstResponder];
 
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -76,6 +87,21 @@
     }
 }
 
+#pragma mark - UITextField action method
+- (void)textFieldDidChange:(UITextField*)sender {
+    [self filterContentForSearchText:sender.text];
+}
+
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    self.isSearching = YES;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    self.isSearching = NO;
+    [self.tableView reloadData];
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -85,8 +111,8 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
-        return self.searchResults.count + (self.showHostLookup ? 1 : 0);
+    if (self.isSearching && self.textField.text != nil && ![self.textField.text isEqualToString:@""]) {
+            return (self.searchResults.count ? self.searchResults.count : 1) + (self.showHostLookup ? 1 : 0);
     } else {
         return self.allItems.count;
     }
@@ -99,14 +125,20 @@
     
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.textLabel.textColor = [UIColor whiteColor];
+        cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:24];
+        UIView* seperator = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.width, 1)];
+        seperator.backgroundColor = [UIColor whiteColor];
+        [cell.contentView addSubview:seperator];
     }
     
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
+    if (self.isSearching && self.textField.text != nil && ![self.textField.text isEqualToString:@""]) {
         int row = indexPath.row;
         
         if(self.showHostLookup) {
             if(row == 0) {
-                cell.textLabel.text = [NSString stringWithFormat:@"Find host '%@'", [self.searchBar.text lowercaseString] ];
+                
+                cell.textLabel.text = [NSString stringWithFormat:@"Find host '%@'", [self.textField.text lowercaseString] ];
                 return cell;
             }
             else
@@ -114,8 +146,13 @@
                 row--;
             }
         }
-        Node* node = self.searchResults[row];
-        cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", node.asn, node.textDescription];
+        
+        if (row >= self.searchResults.count) {
+            cell.textLabel.text = @"No results found";
+        }else {
+            Node* node = self.searchResults[row];
+            cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", node.asn, node.textDescription];
+        }
     } else {
         Node* node = self.allItems[indexPath.row];
         cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", node.asn, node.textDescription];
@@ -124,17 +161,21 @@
     return cell;
 }
 
+- (void)done{
+    [self.delegate nodeSearchDelegateDone];
+}
+
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
+    if (self.isSearching && self.textField.text != nil && ![self.textField.text isEqualToString:@""]) {
         int row = indexPath.row;
         
         if(self.showHostLookup) {
             if(row == 0) {
-                [self.delegate selectNodeByHostLookup:[self.searchBar.text lowercaseString]];
+                [self.delegate selectNodeByHostLookup:[self.textField.text lowercaseString]];
                 return;
             }
             else{
@@ -150,29 +191,15 @@
     }
 }
 
-#pragma mark - UISearchBar Delegate
-
-
-#pragma mark - UISearchDisplayController Delegate
-
-- (void)searchDisplayControllerDidBeginSearch:(UISearchDisplayController *)controller{
-    // moo
-}
-
-
-- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
-    self.showHostLookup = searchString.length != 0;
-    [self filterContentForSearchText:searchString];
-    return NO;
-}
 
 - (void)filterContentForSearchText:(NSString*)searchText
 {
+    self.showHostLookup = searchText.length != 0;
     self.searchResults = nil; // First clear the filtered array.
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(textDescription contains[cd] %@) OR (asn contains[cd] %@)", searchText, searchText];
     self.searchResults = [self.allItems filteredArrayUsingPredicate:predicate];
     
-    [self.searchDisplayController.searchResultsTableView reloadData];
+    [self.tableView reloadData];
 }
 
 @end
