@@ -20,7 +20,7 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil node:(Node*)node;
 
 
-@property (weak, nonatomic) IBOutlet UILabel* asnLabel;
+@property (weak, nonatomic) IBOutlet UILabel* topLabel;
 @property (weak, nonatomic) IBOutlet UILabel* textDescriptionLabel;
 @property (weak, nonatomic) IBOutlet UILabel* nodeTypeLabel;
 @property (weak, nonatomic) IBOutlet UIButton* tracerouteButton;
