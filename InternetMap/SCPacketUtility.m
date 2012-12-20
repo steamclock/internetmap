@@ -290,13 +290,14 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
 //    result = NO;
 //    
 //    icmpHeaderOffset = [[self class] _icmpHeaderOffsetInPacket:packet];
+//    
 //    if (icmpHeaderOffset != NSNotFound) {
 //        
 //        icmpPtr = (struct ICMPHeader *) (((uint8_t *)[packet mutableBytes]) + icmpHeaderOffset);
 //        
 //        
 //        if (icmpPtr->type == kICMPTimeExceeded) {
-//            errorPtr = (struct ICMPErrorPacket *)(((uint8_t *)[packet mutableBytes]) + icmpHeaderOffset);
+//            errorPtr = (struct ICMPErrorPacket *)((uint8_t *)[packet bytes]);
 //            receivedChecksum = errorPtr->checksum;
 //            errorPtr->checksum = 0;
 //            calculatedChecksum = in_cksum(errorPtr, [packet length] - icmpHeaderOffset);
@@ -318,10 +319,8 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
     return YES;
 }
 
-- (void)_readData
-// Called by the socket handling code (SocketReadCallback) to process an ICMP
-// messages waiting on the socket.
-{
+- (void)_readData{
+// Called by the socket handling code (SocketReadCallback) to process a message waiting on the socket
     int                     err;
     struct sockaddr_storage addr;
     socklen_t               addrLen;

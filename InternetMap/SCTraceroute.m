@@ -113,66 +113,7 @@
 
     if (type == kICMPTimeExceeded) { //TTL Expired
         
-        //Use ICMP error packet structure rather than valid response structure
         
-        const ICMPErrorPacket* errorPacket = (const struct ICMPErrorPacket *)[packet bytes];
-        
-        //Get sequence number to calculate RTT
-        NSInteger sequenceNumber = CFSwapInt16BigToHost(errorPacket->sequenceNumberOriginal);
-        
-        NSDate* departureTimeDate = [self.packetUtility.packetDepartureTimes objectForKey:[NSString stringWithFormat:@"%d", sequenceNumber]];
-        if (departureTimeDate) {
-            // If we sent a packet with a corresponding sequence number, let's calculate the RTT
-            
-            NSDate*  nowDate = [NSDate date];
-            double rtt = [nowDate timeIntervalSinceDate:departureTimeDate];
-            
-            NSLog(@"Packet sequence %d took %f", sequenceNumber, rtt);
-        }
-        // Debug bug bug
-        NSLog(@"ICMP Type: %d and Code: %d with sequenceNumber: %d", type, code, (NSInteger)sequenceNumber);
-        
-        if (self.ipsForCurrentRequest.count < 1) {
-            // First address/hop case, empty array
-            [self.ipsForCurrentRequest addObject:self.lastIP];
-            self.totalResponsesForHop++;
-            if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:)]) {
-                [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: %@", self.ttlCount, self.lastIP]];
-            }
-        } else {
-            
-            // Check if we've received a packet for this IP before
-            BOOL haveIP = NO;
-            
-            for (NSString* item in self.ipsForCurrentRequest)
-            {
-                if ([item isEqualToString:self.lastIP]){
-                    haveIP = YES;
-                    self.totalResponsesForHop++;
-                } else {
-                    haveIP = NO;
-                }
-            }
-            
-            //We check against count and THEN modify the array to avoid issues modifying array while it is being enumerated
-            
-            if (haveIP) {
-                if (self.totalResponsesForHop == 3) {
-                    // We have three responses, move on to the next hop
-                    // TODO: This is fragile - What if we get one packet and two bad?
-                    self.ttlCount++;
-                    [self sendPackets:nil];
-                    self.totalResponsesForHop = 0;
-                }
-            } else {
-                // We've found a new hop address
-                [self.ipsForCurrentRequest addObject:self.lastIP];
-                self.totalResponsesForHop++;
-                if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:)]) {
-                    [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: %@", self.ttlCount, self.lastIP]];
-                }
-            }
-        }
     } else if (type == kICMPTypeEchoReply) { //ECHO Response
         // If we have an echo response, then we should be done, let's check:
         if (![self reachedTargetAddress]) {
@@ -197,6 +138,69 @@
         
         NSLog(@"Something is wrong, and we can't continue.");
         NSLog(@"ICMP Type: %d and Code: %d", type, code);
+    }
+}
+
+-(void)processValidICMPPacket:(NSData *)packet{
+    //Use ICMP error packet structure rather than valid response structure
+    
+    const ICMPErrorPacket* errorPacket = (const struct ICMPErrorPacket *)[packet bytes];
+    
+    //Get sequence number to calculate RTT
+    NSInteger sequenceNumber = CFSwapInt16BigToHost(errorPacket->sequenceNumberOriginal);
+    
+    NSDate* departureTimeDate = [self.packetUtility.packetDepartureTimes objectForKey:[NSString stringWithFormat:@"%d", sequenceNumber]];
+    if (departureTimeDate) {
+        // If we sent a packet with a corresponding sequence number, let's calculate the RTT
+        
+        NSDate*  nowDate = [NSDate date];
+        double rtt = [nowDate timeIntervalSinceDate:departureTimeDate];
+        
+        NSLog(@"Packet sequence %d took %f", sequenceNumber, rtt);
+    }
+    // Debug bug bug
+    NSLog(@"ICMP Type: %d and Code: %d with sequenceNumber: %d", type, code, (NSInteger)sequenceNumber);
+    
+    if (self.ipsForCurrentRequest.count < 1) {
+        // First address/hop case, empty array
+        [self.ipsForCurrentRequest addObject:self.lastIP];
+        self.totalResponsesForHop++;
+        if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:)]) {
+            [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: %@", self.ttlCount, self.lastIP]];
+        }
+    } else {
+        
+        // Check if we've received a packet for this IP before
+        BOOL haveIP = NO;
+        
+        for (NSString* item in self.ipsForCurrentRequest)
+        {
+            if ([item isEqualToString:self.lastIP]){
+                haveIP = YES;
+                self.totalResponsesForHop++;
+            } else {
+                haveIP = NO;
+            }
+        }
+        
+        //We check against count and THEN modify the array to avoid issues modifying array while it is being enumerated
+        
+        if (haveIP) {
+            if (self.totalResponsesForHop == 3) {
+                // We have three responses, move on to the next hop
+                // TODO: This is fragile - What if we get one packet and two bad?
+                self.ttlCount++;
+                [self sendPackets:nil];
+                self.totalResponsesForHop = 0;
+            }
+        } else {
+            // We've found a new hop address
+            [self.ipsForCurrentRequest addObject:self.lastIP];
+            self.totalResponsesForHop++;
+            if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:)]) {
+                [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: %@", self.ttlCount, self.lastIP]];
+            }
+        }
     }
 }
 
