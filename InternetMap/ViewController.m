@@ -20,7 +20,6 @@
 #import <netdb.h>
 #import <ifaddrs.h>
 #import <arpa/inet.h>
-#import "WEPopoverController.h"
 #import "ErrorInfoView.h"
 #import "Nodes.h"
 
@@ -404,7 +403,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if (self.hoveredNodeIndex != NSNotFound) {
         self.lastSearchIP = nil;
         [self updateTargetForIndex:self.hoveredNodeIndex];
-    }else {
+    } else {
         int i = [self indexForNodeAtPoint:pointInView];
         if (i != NSNotFound) {
             self.lastSearchIP = nil;
@@ -668,8 +667,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     nodeInfo.delegate = self;
     //NSLog(@"ASN:%@, Text Desc: %@", node.asn, node.textDescription);
         
-    [self.nodeInformationPopover dismissPopoverAnimated:YES]; //this line is important, in case the popover for another node is already visible
+    [self dismissNodeInfoPopover];
+    //this line is important, in case the popover for another node is already visible and traceroute could be being performed
     self.nodeInformationPopover = [[WEPopoverController alloc] initWithContentViewController:nodeInfo];
+    self.nodeInformationPopover.delegate = self;
     self.nodeInformationPopover.passthroughViews = @[self.view];
     
     // TODO: This should be called as a part of a camera object callback when the camera has finished zooming, not by 'waiting'
@@ -708,7 +709,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 #pragma mark - NodeSearch Delegate
 
 -(void)nodeSelected:(Node*)node{
-    [self.nodeSearchPopover dismissPopoverAnimated:YES];
+    [self dismissNodeInfoPopover];
     [self updateTargetForIndex:node.index];
 }
 
@@ -790,6 +791,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 #pragma mark - NodeInfo delegate
 - (void)dismissNodeInfoPopover {
     [self.nodeInformationPopover dismissPopoverAnimated:YES];
+    self.tracerouteOutput.hidden = YES;
+    [self.tracer stop];
+    self.tracer = nil;
+    
 }
 
 #pragma mark - SCTraceroute Delegate
@@ -874,6 +879,16 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.tracerouteOutput.hidden = YES;
     [self.tracer stop];
     self.tracer = nil;
+}
+
+#pragma mark - WEPopover Delegate
+
+//Pretty sure these don't get called for NodeInfoPopover, but will get called for other popovers if we set delegates, yo
+- (void)popoverControllerDidDismissPopover:(WEPopoverController *)popoverController{
+    
+}
+- (BOOL)popoverControllerShouldDismissPopover:(WEPopoverController *)popoverController{
+    return YES;
 }
 
 @end
