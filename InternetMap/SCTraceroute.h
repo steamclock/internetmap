@@ -9,10 +9,13 @@
 #import <Foundation/Foundation.h>
 #import "SCPacketUtility.h"
 
+static const int MAX_HOPS = 30;
+
 @protocol SCTracerouteDelegate <NSObject>
 
 - (void)tracerouteDidFindHop:(NSString*)report;
 - (void)tracerouteDidComplete:(NSMutableArray*)hops;
+- (void)tracerouteDidTimeout;
 
 @end
 
@@ -20,8 +23,8 @@
 
 @property (weak, nonatomic) id<SCTracerouteDelegate> delegate;
 
-+(SCTraceroute*)tracerouteWithHostName:(NSString*)hostname;
-+(SCTraceroute*)tracerouteWithAddress:(NSString*)address; //Pass me an IP as a string
++(SCTraceroute*)tracerouteWithHostName:(NSString*)hostname ofType:(packetType)type;
++(SCTraceroute*)tracerouteWithAddress:(NSString*)address ofType:(packetType)type; //Pass me an IP as a string
 
 -(void)start;
 -(void)stop;

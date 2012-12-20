@@ -12,8 +12,6 @@
 #include <netinet/in.h>
 #include <errno.h>
 
-#pragma - ICMP packet format
-
 static uint16_t in_cksum(const void *buffer, size_t bufferLen)
 // This is the standard BSD checksum code, modified to use modern types.
 {
@@ -62,6 +60,7 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
 
 @property (nonatomic, copy,   readwrite) NSData*    hostAddress;
 @property (nonatomic, assign, readwrite) uint16_t   nextSequenceNumber;
+@property (nonatomic, strong) NSMutableDictionary*    packetDepartureTimes;
 
 - (void)_stopHostResolution;
 - (void)_stopDataTransfer;
@@ -79,6 +78,7 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
         self->_hostName    = [hostName copy];
         self->_hostAddress = [hostAddress copy];
         self->_identifier  = (uint16_t) arc4random();
+        self.packetDepartureTimes = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -127,9 +127,21 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
     [self _didFailWithError:error];
 }
 
-- (void)sendPacketWithData:(NSData *)data withTTL:(int)ttl
-// See comment in header.
-{
+- (void)sendPacketOfType:(packetType)type withData:(NSData *)data withTTL:(int)ttl{
+    switch (type) {
+        case kUDP:
+            [self sendUDPPacket:data withTTL:ttl];
+            break;
+        case kICMP:
+            [self sendICMPPacket:data withTTL:ttl];
+            break;
+        default:
+            break;
+    }
+}
+
+-(void)sendICMPPacket:(NSData *)data withTTL:(int)ttl{
+    
     int             err;
     NSData *        payload;
     NSMutableData * packet;
@@ -154,6 +166,7 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
     icmpPtr->checksum = 0;
     icmpPtr->identifier     = OSSwapHostToBigInt16(self.identifier);
     icmpPtr->sequenceNumber = OSSwapHostToBigInt16(self.nextSequenceNumber);
+
     memcpy(&icmpPtr[1], [payload bytes], [payload length]);
     
     // The IP checksum returns a 16-bit number that's already in correct byte order
@@ -164,14 +177,12 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
     
     // Send the packet.
     
-    
     if (self->_socket == NULL) {
         bytesSent = -1;
         err = EBADF;
     } else {
         
         if (!ttl) {
-            //If no TTL is specified for our packet, we default to 1
             ttl = 1;
         }
         
@@ -180,6 +191,10 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
             err = errno;
             NSLog(@"%s", strerror(err));
         }
+        
+        // Store departure time for packet sequence number to calculate RTT if desired
+        NSDate* now = [NSDate date];
+        [self.packetDepartureTimes setValue:now forKey:[NSString stringWithFormat:@"%d", self.nextSequenceNumber]];
         
         bytesSent = sendto(
                            CFSocketGetNative(self->_socket),
@@ -221,6 +236,10 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
     self.nextSequenceNumber += 1;
 }
 
+-(void)sendUDPPacket:(NSData *)data withTTL:(int)ttl{
+    NSLog(@"I should send a UDP packet nao.");
+}
+
 + (NSUInteger)_icmpHeaderOffsetInPacket:(NSData *)packet
 // Returns the offset of the ICMPHeader within an IP packet.
 {
@@ -252,6 +271,8 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
     if (icmpHeaderOffset != NSNotFound) {
         result = (const struct ICMPHeader *) (((const uint8_t *)[packet bytes]) + icmpHeaderOffset);
     }
+    
+    
     return result;
 }
 
@@ -262,39 +283,44 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
 //    BOOL                result;
 //    NSUInteger          icmpHeaderOffset;
 //    ICMPHeader *        icmpPtr;
+//    ICMPErrorPacket *   errorPtr;
 //    uint16_t            receivedChecksum;
 //    uint16_t            calculatedChecksum;
 //    
 //    result = NO;
 //    
 //    icmpHeaderOffset = [[self class] _icmpHeaderOffsetInPacket:packet];
+//    
 //    if (icmpHeaderOffset != NSNotFound) {
+//        
 //        icmpPtr = (struct ICMPHeader *) (((uint8_t *)[packet mutableBytes]) + icmpHeaderOffset);
 //        
-//        receivedChecksum   = icmpPtr->checksum;
-//        icmpPtr->checksum  = 0;
-//        calculatedChecksum = in_cksum(icmpPtr, [packet length] - icmpHeaderOffset);
-//        icmpPtr->checksum  = receivedChecksum;
+//        
+//        if (icmpPtr->type == kICMPTimeExceeded) {
+//            errorPtr = (struct ICMPErrorPacket *)((uint8_t *)[packet bytes]);
+//            receivedChecksum = errorPtr->checksum;
+//            errorPtr->checksum = 0;
+//            calculatedChecksum = in_cksum(errorPtr, [packet length] - icmpHeaderOffset);
+//            errorPtr->checksum = receivedChecksum;
+//            
+//        } else {
+//            receivedChecksum   = icmpPtr->checksum;
+//            icmpPtr->checksum  = 0;
+//            calculatedChecksum = in_cksum(icmpPtr, [packet length] - icmpHeaderOffset);
+//            icmpPtr->checksum  = receivedChecksum;
+//        }
 //        
 //        if (receivedChecksum == calculatedChecksum) {
-//            if ( OSSwapBigToHostInt16(icmpPtr->identifier) == self.identifier ) {
-//                if ( OSSwapBigToHostInt16(icmpPtr->sequenceNumber) < self.nextSequenceNumber ) {
-//                    result = YES;
-//                }
-//            }
+//            NSLog(@"YAY");
 //            result = YES;
 //        }
 //    }
-//    
-//    return result;
     
     return YES;
 }
 
-- (void)_readData
-// Called by the socket handling code (SocketReadCallback) to process an ICMP
-// messages waiting on the socket.
-{
+- (void)_readData{
+// Called by the socket handling code (SocketReadCallback) to process a message waiting on the socket
     int                     err;
     struct sockaddr_storage addr;
     socklen_t               addrLen;
@@ -465,7 +491,7 @@ static void SocketReadCallback(CFSocketRef s, CFSocketCallBackType type, CFDataR
     
     [self _stopHostResolution];
     
-    // If all is OK, start pinging, otherwise shut down the pinger completely.
+    // If all is OK, start sending, otherwise shut it down
     
     if (resolved) {
         [self _startWithHostAddress];

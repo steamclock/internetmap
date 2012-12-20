@@ -71,6 +71,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (weak, nonatomic) IBOutlet UIButton* visualizationsButton;
 @property (weak, nonatomic) IBOutlet UIButton* timelineButton;
 @property (weak, nonatomic) IBOutlet UISlider* timelineSlider;
+@property (weak, nonatomic) IBOutlet UIImageView* logo;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* searchActivityIndicator;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* youAreHereActivityIndicator;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* visualizationsActivityIndicator;
@@ -589,24 +590,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self displayInformationPopoverForCurrentNode];
 }
 
-//-(void)updateTargetforNode:(Node*)node {
-//    
-//    GLKVector3 target;
-//    
-//    NSLog(@"Node Index: %u", node.index);
-//    
-//    if (node) {
-//        target = [self.data.visualization nodePosition:node];
-//        [[self.display displayNodeAtIndex:node.index] setColor:[UIColor redColor]];
-//    } else {
-//        target = GLKVector3Make(0, 0, 0);
-//    }
-//    
-//    self.display.camera.target = target;
-//    [self displayInformationPopoverForCurrentNode];
-//    
-//}
-
 -(CGPoint)getCoordinatesForNode{
     Node* node = [self.data nodeAtIndex:self.targetNode];
     
@@ -732,6 +715,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 // Get a set of IP addresses for a given host name
 // Originally pulled from here: http://www.bdunagan.com/2009/11/28/iphone-tip-no-nshost/
 // MIT License
+
 + (NSArray *)addressesForHostname:(NSString *)hostname {
     // Get the addresses for the given hostname.
     CFHostRef hostRef = CFHostCreateWithName(kCFAllocatorDefault, (__bridge CFStringRef)hostname);
@@ -840,6 +824,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }];
 }
 
+-(void)tracerouteDidTimeout {
+    [self.tracer stop];
+    self.tracer = nil;
+    self.tracerouteOutput.text = [NSString stringWithFormat:@"%@\nTraceroute could not be completed; reached maximum number of hops (max 30).", self.tracerouteOutput.text];
+}
+
 #pragma mark - Node Info View Delegate
 
 -(void)tracerouteButtonTapped{
@@ -848,7 +838,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.tracerouteOutput.hidden = NO;
         
         if(self.lastSearchIP) {
-            self.tracer = [SCTraceroute tracerouteWithAddress:self.lastSearchIP]; //we need ip for node!
+            self.tracer = [SCTraceroute tracerouteWithAddress:self.lastSearchIP ofType:kICMP]; //we need ip for node!
             self.tracer.delegate = self;
             [self.tracer start];
         }
@@ -858,7 +848,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                 [ASNRequest fetchForASN:[node.asn intValue] responseBlock:^(NSArray *asn) {
                     if (asn[0] != [NSNull null]) {
                         NSLog(@"starting tracerout with IP: %@", asn[0]);
-                        self.tracer = [SCTraceroute tracerouteWithAddress:asn[0]];
+                        self.tracer = [SCTraceroute tracerouteWithAddress:asn[0] ofType:kICMP];
                         self.tracer.delegate = self;
                         [self.tracer start];
                     }else {
