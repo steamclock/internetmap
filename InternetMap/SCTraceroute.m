@@ -108,100 +108,125 @@
     NSInteger type = (NSInteger)header->type;
     NSInteger code = (NSInteger)header->code;
     
+    //NSLog(@"ICMP Type: %d and Code: %d with sequenceNumber: %d", type, code, (NSInteger)sequenceNumber);
+    
     //Store last IP
     self.lastIP = [NSString stringWithFormat:@"%d.%d.%d.%d", IPHeader->sourceAddress[0], IPHeader->sourceAddress[1], IPHeader->sourceAddress[3], IPHeader->sourceAddress[4]];
 
-    if (type == kICMPTimeExceeded) { //TTL Expired
+    if (type == kICMPTimeExceeded) {
+        //TTL Expired, error packet friend
+        [self processErrorICMPPacket:packet];
         
-        
-    } else if (type == kICMPTypeEchoReply) { //ECHO Response
-        // If we have an echo response, then we should be done, let's check:
-        if (![self reachedTargetAddress]) {
-            NSLog(@"Error, if we have a type 0 then our IPs should match - something is derped.");
-        } else {
-            [self.ipsForCurrentRequest addObject:self.lastIP];
-            self.totalResponsesForHop++;
-            if (self.totalResponsesForHop == 1) {
-                //We only need to call this once even though there are three packets coming back
-                if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:)]) {
-                    [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: %@", self.ttlCount, self.lastIP]];
-                }
-                if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidComplete:)]) {
-                    [self.delegate tracerouteDidComplete:self.ipsForCurrentRequest];
-                }
-            } else if (self.totalResponsesForHop == 3) {
-                // Check average RTT of all three packets?
-            }
-        }
-    } else {
+    } else if (type == kICMPTypeEchoReply) {
+        //ECHO Response - final hop
+        [self processValidICMPPacket:packet];
+
+     } else {
         //Everything else we don't want
+         // TODO handle type 3 code 1 better (machine unreachable)
         
         NSLog(@"Something is wrong, and we can't continue.");
         NSLog(@"ICMP Type: %d and Code: %d", type, code);
     }
 }
 
--(void)processValidICMPPacket:(NSData *)packet{
+-(void)processErrorICMPPacket:(NSData *)packet{
     //Use ICMP error packet structure rather than valid response structure
-    
     const ICMPErrorPacket* errorPacket = (const struct ICMPErrorPacket *)[packet bytes];
     
     //Get sequence number to calculate RTT
     NSInteger sequenceNumber = CFSwapInt16BigToHost(errorPacket->sequenceNumberOriginal);
-    
-    NSDate* departureTimeDate = [self.packetUtility.packetDepartureTimes objectForKey:[NSString stringWithFormat:@"%d", sequenceNumber]];
-    if (departureTimeDate) {
-        // If we sent a packet with a corresponding sequence number, let's calculate the RTT
-        
-        NSDate*  nowDate = [NSDate date];
-        double rtt = [nowDate timeIntervalSinceDate:departureTimeDate];
-        
-        NSLog(@"Packet sequence %d took %f", sequenceNumber, rtt);
-    }
-    // Debug bug bug
-    NSLog(@"ICMP Type: %d and Code: %d with sequenceNumber: %d", type, code, (NSInteger)sequenceNumber);
+    double rtt = [self getResponseTimeForSequence:sequenceNumber];
     
     if (self.ipsForCurrentRequest.count < 1) {
         // First address/hop case, empty array
         [self.ipsForCurrentRequest addObject:self.lastIP];
         self.totalResponsesForHop++;
         if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:)]) {
-            [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: %@", self.ttlCount, self.lastIP]];
+            [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: %@  %.2fms", self.ttlCount, self.lastIP, rtt]];
         }
     } else {
+        // Check if we've received an error packet for this address before
+        [self checkForResponseAddressWithErrorPacket:packet];
+    }
+}
+
+-(void)processValidICMPPacket:(NSData*)packet{
+    // If we have an echo response, then we should be done, let's check:
+    const ICMPHeader* header = [SCPacketUtility icmpInPacket:packet];
+    NSInteger sequenceNumber = CFSwapInt16BigToHost(header->sequenceNumber);
+    double rtt = [self getResponseTimeForSequence:sequenceNumber];
+    
+    if (![self reachedTargetAddress]) {
+        NSLog(@"Error, if we have a type 0 then our IPs should match - something is derped.");
+    } else {
+        [self.ipsForCurrentRequest addObject:self.lastIP];
+        self.totalResponsesForHop++;
         
-        // Check if we've received a packet for this IP before
-        BOOL haveIP = NO;
-        
-        for (NSString* item in self.ipsForCurrentRequest)
-        {
-            if ([item isEqualToString:self.lastIP]){
-                haveIP = YES;
-                self.totalResponsesForHop++;
-            } else {
-                haveIP = NO;
-            }
-        }
-        
-        //We check against count and THEN modify the array to avoid issues modifying array while it is being enumerated
-        
-        if (haveIP) {
-            if (self.totalResponsesForHop == 3) {
-                // We have three responses, move on to the next hop
-                // TODO: This is fragile - What if we get one packet and two bad?
-                self.ttlCount++;
-                [self sendPackets:nil];
-                self.totalResponsesForHop = 0;
-            }
-        } else {
-            // We've found a new hop address
-            [self.ipsForCurrentRequest addObject:self.lastIP];
-            self.totalResponsesForHop++;
+        if (self.totalResponsesForHop == 1) {
+            //We only need to call this once even though there are three packets coming back
             if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:)]) {
-                [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: %@", self.ttlCount, self.lastIP]];
+                [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: %@  %.2f", self.ttlCount, self.lastIP, rtt]];
             }
+            if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidComplete:)]) {
+                [self.delegate tracerouteDidComplete:self.ipsForCurrentRequest];
+            }
+        } else if (self.totalResponsesForHop == 3) {
+            // Check average RTT of all three packets?
         }
     }
+}
+
+-(void)checkForResponseAddressWithErrorPacket:(NSData*)packet{
+    // Check if we've received a packet for this IP before
+    BOOL haveIP = NO;
+    
+    for (NSString* item in self.ipsForCurrentRequest)
+    {
+        if ([item isEqualToString:self.lastIP]){
+            haveIP = YES;
+            self.totalResponsesForHop++;
+        } else {
+            haveIP = NO;
+        }
+    }
+    //Use ICMP error packet structure rather than valid response structure
+    const ICMPErrorPacket* errorPacket = (const struct ICMPErrorPacket *)[packet bytes];
+    
+    //Get sequence number to calculate RTT
+    NSInteger sequenceNumber = CFSwapInt16BigToHost(errorPacket->sequenceNumberOriginal);
+    double rtt = [self getResponseTimeForSequence:sequenceNumber];
+    
+    //We check against count and THEN modify the array to avoid issues modifying array while it is being enumerated
+    if (haveIP) {
+        if (self.totalResponsesForHop == 3) {
+            // We have three responses, move on to the next hop
+            // TODO: This is fragile - What if we get one packet and two bad?
+            self.ttlCount++;
+            [self sendPackets:nil];
+            self.totalResponsesForHop = 0;
+        }
+    } else {
+        // We've found a new hop address
+        [self.ipsForCurrentRequest addObject:self.lastIP];
+        self.totalResponsesForHop++;
+        if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:)]) {
+            [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: %@  %.2fms", self.ttlCount, self.lastIP, rtt]];
+        }
+    }
+}
+
+-(double)getResponseTimeForSequence:(NSInteger)sequenceNumber{
+    NSDate*  nowDate = [NSDate date];
+    double rtt = 0;
+    NSDate* departureTimeDate = [self.packetUtility.packetDepartureTimes objectForKey:[NSString stringWithFormat:@"%d", sequenceNumber]];
+    if (departureTimeDate) {
+        // If we sent a packet with a corresponding sequence number, let's calculate the RTT
+        rtt = [nowDate timeIntervalSinceDate:departureTimeDate] * 1000;
+        NSLog(@"Packet sequence %d took %.2fms", sequenceNumber, rtt);
+    }
+    
+    return rtt;
 }
 
 - (void)sendPackets:(NSData*)data{
