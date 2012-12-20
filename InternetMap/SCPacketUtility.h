@@ -164,6 +164,44 @@ check_compile_time(offsetof(ICMPHeader, checksum) == 2);
 check_compile_time(offsetof(ICMPHeader, identifier) == 4);
 check_compile_time(offsetof(ICMPHeader, sequenceNumber) == 6);
 
+struct ICMPErrorPacket {
+    // IP Header
+    uint8_t     versionAndHeaderLength;
+    uint8_t     differentiatedServices;
+    uint16_t    totalLength;
+    uint16_t    identification;
+    uint16_t    flagsAndFragmentOffset;
+    uint8_t     timeToLive;
+    uint8_t     protocol;
+    uint16_t    headerChecksum;
+    uint8_t     sourceAddress[4];
+    uint8_t     destinationAddress[4];
+    // ICMP error
+    uint8_t type;
+    uint8_t code;
+    uint16_t checksum;
+    uint32_t unused;
+    //Original IP header
+    uint8_t     versionAndHeaderLengthOriginal;
+    uint8_t     differentiatedServicesOriginal;
+    uint16_t    totalLengthOriginal;
+    uint16_t    identificationOriginal;
+    uint16_t    flagsAndFragmentOffsetOriginal;
+    uint8_t     timeToLiveOriginal;
+    uint8_t     protocolOriginal;
+    uint16_t    headerChecksumOriginal;
+    uint8_t     sourceAddressOriginal[4];
+    uint8_t     destinationAddressOriginal[4];
+    //Original ICMP header
+    uint8_t     typeOriginal;
+    uint8_t     codeOriginal;
+    uint16_t    checksumOriginal;
+    uint16_t    identifierOriginal;
+    uint16_t    sequenceNumberOriginal;
+};
+
+typedef struct ICMPErrorPacket ICMPErrorPacket;
+
 // UDP:
 
 struct UDPHeader {
