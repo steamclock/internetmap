@@ -17,6 +17,7 @@
 @property (strong, nonatomic) EAGLContext *context;
 
 @property (strong, nonatomic) Program* nodeProgram;
+@property (strong, nonatomic) Program* selectedNodeProgram;
 @property (strong, nonatomic) Program* connectionProgram;
 
 @property (strong, nonatomic, readwrite) Camera* camera;
@@ -54,6 +55,7 @@
     [lineVertexComponents addIndex:ATTRIB_COLOR];
     
     self.nodeProgram = [[Program alloc] initWithName:@"node" activeAttributes:nodeVertexComponents];
+    self.selectedNodeProgram = [[Program alloc] initWithFragmentShaderName:@"selectedNode" vertexShaderName:@"node" activeAttributes:nodeVertexComponents];
     self.connectionProgram = [[Program alloc] initWithName:@"line" activeAttributes:lineVertexComponents];
     
     
@@ -90,19 +92,25 @@
     glClearColor(0.05882f, 0.09411f, 0.25098f, 1.0f); //Visualization background color
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-
-    [self.nodeProgram use];
-    glUniformMatrix4fv([self.nodeProgram uniformForName:@"modelViewMatrix"], 1, 0, mv.m);
-    glUniformMatrix4fv([self.nodeProgram uniformForName:@"projectionMatrix"], 1, 0, p.m);
-    glUniform1f([self.nodeProgram uniformForName:@"maxSize"], ([[UIScreen mainScreen] scale] == 2.00) ? 150.0f : 75.0f);
-    glUniform1f([self.nodeProgram uniformForName:@"screenWidth"], ([[UIScreen mainScreen] scale] == 2.00) ? self.camera.displaySize.width*2 : self.camera.displaySize.width);
-    glUniform1f([self.nodeProgram uniformForName:@"screenHeight"], ([[UIScreen mainScreen] scale] == 2.00) ? self.camera.displaySize.height*2 : self.camera.displaySize.height);
+    [self.selectedNodeProgram use];
+    glUniformMatrix4fv([self.selectedNodeProgram uniformForName:@"modelViewMatrix"], 1, 0, mv.m);
+    glUniformMatrix4fv([self.selectedNodeProgram uniformForName:@"projectionMatrix"], 1, 0, p.m);
+    glUniform1f([self.selectedNodeProgram uniformForName:@"maxSize"], ([[UIScreen mainScreen] scale] == 2.00) ? 150.0f : 75.0f);
+    glUniform1f([self.selectedNodeProgram uniformForName:@"screenWidth"], ([[UIScreen mainScreen] scale] == 2.00) ? self.camera.displaySize.width*2 : self.camera.displaySize.width);
+    glUniform1f([self.selectedNodeProgram uniformForName:@"screenHeight"], ([[UIScreen mainScreen] scale] == 2.00) ? self.camera.displaySize.height*2 : self.camera.displaySize.height);
     
     glEnable(GL_DEPTH_TEST); //enable z testing and writing
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     if (self.selectedNodes) {
         [self.selectedNodes display];
     }
+    
+    [self.nodeProgram use];
+    glUniformMatrix4fv([self.nodeProgram uniformForName:@"modelViewMatrix"], 1, 0, mv.m);
+    glUniformMatrix4fv([self.nodeProgram uniformForName:@"projectionMatrix"], 1, 0, p.m);
+    glUniform1f([self.nodeProgram uniformForName:@"maxSize"], ([[UIScreen mainScreen] scale] == 2.00) ? 150.0f : 75.0f);
+    glUniform1f([self.nodeProgram uniformForName:@"screenWidth"], ([[UIScreen mainScreen] scale] == 2.00) ? self.camera.displaySize.width*2 : self.camera.displaySize.width);
+    glUniform1f([self.nodeProgram uniformForName:@"screenHeight"], ([[UIScreen mainScreen] scale] == 2.00) ? self.camera.displaySize.height*2 : self.camera.displaySize.height);
     
     glBlendFunc(GL_ONE, GL_ONE);
     glDepthMask(GL_FALSE); //disable z writing only

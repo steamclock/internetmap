@@ -16,10 +16,15 @@
 
 @implementation Program
 
--(id)initWithName:(NSString*)name activeAttributes:(NSIndexSet*)attribs {
+
+-(id)initWithName:(NSString*)name activeAttributes:(NSIndexSet*)attribs{
+    return [self initWithFragmentShaderName:name vertexShaderName:name activeAttributes:attribs];
+}
+
+-(id)initWithFragmentShaderName:(NSString*)fragmentName vertexShaderName:(NSString*)vertexName activeAttributes:(NSIndexSet*)attribs {
     if((self = [super init])) {
         self.activeAttributes = attribs;
-        [self loadShaders:name];
+        [self loadShadersWithFragmentShaderName:fragmentName vertexShaderName:vertexName];
     }
     return self;
 }
@@ -41,7 +46,7 @@
 
 #pragma mark -  OpenGL ES 2 shader compilation
 
-- (BOOL)loadShaders:(NSString*)name
+- (BOOL)loadShadersWithFragmentShaderName:(NSString*)fragment vertexShaderName:(NSString*)vertex
 {
     GLuint vertShader, fragShader;
     NSString *vertShaderPathname, *fragShaderPathname;
@@ -50,14 +55,14 @@
     self.program = glCreateProgram();
     
     // Create and compile vertex shader.
-    vertShaderPathname = [[NSBundle mainBundle] pathForResource:name ofType:@"vsh"];
+    vertShaderPathname = [[NSBundle mainBundle] pathForResource:vertex ofType:@"vsh"];
     if (![self compileShader:&vertShader type:GL_VERTEX_SHADER file:vertShaderPathname]) {
         NSLog(@"Failed to compile vertex shader");
         return NO;
     }
     
     // Create and compile fragment shader.
-    fragShaderPathname = [[NSBundle mainBundle] pathForResource:name ofType:@"fsh"];
+    fragShaderPathname = [[NSBundle mainBundle] pathForResource:fragment ofType:@"fsh"];
     if (![self compileShader:&fragShader type:GL_FRAGMENT_SHADER file:fragShaderPathname]) {
         NSLog(@"Failed to compile fragment shader");
         return NO;
@@ -123,7 +128,7 @@
     
     source = (GLchar *)[[NSString stringWithContentsOfFile:file encoding:NSUTF8StringEncoding error:nil] UTF8String];
     if (!source) {
-        NSLog(@"Failed to load vertex shader");
+        NSLog(@"Failed to load vertex shader: %@", file);
         return NO;
     }
     
