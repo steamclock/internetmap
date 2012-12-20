@@ -22,9 +22,8 @@
 #import <arpa/inet.h>
 #import "WEPopoverController.h"
 #import "ErrorInfoView.h"
+#import "Nodes.h"
 
-#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
-#define SELECTED_NODE_COLOR UIColorFromRGB(0xffa300)
 BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     return state == UIGestureRecognizerStateBegan || state == UIGestureRecognizerStateChanged || state == UIGestureRecognizerStateRecognized;
 }
@@ -367,7 +366,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         int i = [self indexForNodeAtPoint:[gestureRecognizer locationInView:self.view]];
         if (i != NSNotFound) {
             self.hoveredNodeIndex = i;
-            [[self.display displayNodeAtIndex:i] setColor:SELECTED_NODE_COLOR];
+            [self.display.nodes beginUpdate];
+            [self.display.nodes updateNode:i color:SELECTED_NODE_COLOR];
+            [self.display.nodes endUpdate];
         }
     }
 }
@@ -572,7 +573,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.targetNode = index;
         Node* node = [self.data nodeAtIndex:self.targetNode];
         target = [self.data.visualization nodePosition:node];
-        [[self.display displayNodeAtIndex:node.index] setColor:SELECTED_NODE_COLOR];
+
+        [self.display.nodes beginUpdate];
+        [self.display.nodes updateNode:node.index color:[UIColor clearColor]];
+        [self.display.nodes endUpdate];
+        
+        [self.data.visualization resetDisplay:self.display forSelectedNodes:@[node]];
         
     } else {
         target = GLKVector3Make(0, 0, 0);

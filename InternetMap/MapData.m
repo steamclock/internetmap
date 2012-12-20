@@ -175,8 +175,7 @@
 
 -(void)updateDisplay:(MapDisplay*)display {
     NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
-    display.numNodes = self.nodes.count;
-    [self.visualization updateDisplay:display forNodes:self.nodes];
+    [self.visualization resetDisplay:display forNodes:self.nodes];
     [self.visualization updateLineDisplay:display forConnections:self.connections];
         
     NSLog(@"update display : %.2fms", ([NSDate timeIntervalSinceReferenceDate] - start) * 1000.0f);

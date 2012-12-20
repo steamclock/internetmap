@@ -8,8 +8,7 @@
 #import "Node.h"
 #import "Lines.h"
 #import "Connection.h"
-
-#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+#import "Nodes.h"
 
 @implementation DefaultVisualization
 
@@ -22,8 +21,9 @@
 
 }
 
--(void)updateDisplay:(MapDisplay*)display forNodes:(NSArray*)nodes {
 
+-(void)updateDisplay:(MapDisplay*)display forNodes:(NSArray*)arrNodes {    
+    //    UIColor* nodeColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
     
 //    UIColor* t1Color = UIColorFromRGB(0x36a3e6);
 //    UIColor* t2Color = UIColorFromRGB(0x2246a7);
@@ -44,41 +44,77 @@
 
 
     
-    for(Node* node in nodes) {
-        DisplayNode* point = [display displayNodeAtIndex:node.index]; // use index from node, not in array, so that partiual updates can work
+    [display.nodes beginUpdate];
+    
+    for(int i = 0; i < arrNodes.count; i++) {
+        Node* node = arrNodes[i];
         
-        GLKVector3 position = [self nodePosition:node];
-        point.x = position.x;
-        point.y = position.y;
-        point.z = position.z;
-
-        point.size = [self nodeSize:node];
-        
+        UIColor* color;
         switch(node.type) {
             case AS_T1:
-                point.color = t1Color;
+                color = t1Color;
                 break;
             case AS_T2:
-                point.color = t2Color;
+                color = t2Color;
                 break;
             case AS_COMP:
-                point.color = compColor;
+                color = compColor;
                 break;
             case AS_EDU:
-                point.color = eduColor;
+                color = eduColor;
                 break;
             case AS_IX:
-                point.color = ixColor;
+                color = ixColor;
                 break;
             case AS_NIC:
-                point.color = nicColor;
+                color = nicColor;
                 break;
             default:
-                point.color = unknownColor;
+                color = unknownColor;
                 break;
         }
-    };
+        
+        
+        [display.nodes updateNode:node.index position:[self nodePosition:node] size:[self nodeSize:node] color:color]; // use index from node, not in array, so that partiual updates can work
+        
+    }
+    
+    [display.nodes endUpdate];
+    
+}
 
+-(void)updateDisplay:(MapDisplay*)display forSelectedNodes:(NSArray*)arrNodes {
+    [display.selectedNodes beginUpdate];
+    for(int i = 0; i < arrNodes.count; i++) {
+        Node* node = arrNodes[i];
+        
+        
+        [display.selectedNodes updateNode:i position:[self nodePosition:node] size:[self nodeSize:node] color:SELECTED_NODE_COLOR]; // use index from node, not in array, so that partiual updates can work
+        
+    }
+    [display.selectedNodes endUpdate];
+    
+}
+
+- (void)resetDisplay:(MapDisplay*)display forNodes:(NSArray*)arrNodes {
+    if (display.nodes) {
+        NSAssert([display.nodes count] == [arrNodes count], @"Display.nodes has already been allocated and you just tried to recreate it with a different count");
+    }else {
+        display.nodes = [[Nodes alloc] initWithNodeCount:[arrNodes count]];
+    }
+
+    
+    [self updateDisplay:display forNodes:arrNodes];
+}
+
+- (void)resetDisplay:(MapDisplay *)display forSelectedNodes:(NSArray*)arrNodes {
+    if (display.selectedNodes) {
+        NSAssert([display.selectedNodes count] == [arrNodes count], @"Display.selectedNodes has already been allocated and you just tried to recreate it with a different count");
+    }else {
+        display.selectedNodes = [[Nodes alloc] initWithNodeCount:[arrNodes count]];
+    }
+    
+    [self updateDisplay:display forSelectedNodes:arrNodes];
 }
 
 -(void)updateLineDisplay:(MapDisplay*)display forConnections:(NSArray*)connections {
