@@ -13,8 +13,8 @@ static const int MAX_HOPS = 30;
 
 @protocol SCTracerouteDelegate <NSObject>
 
-- (void)tracerouteDidFindHop:(NSString*)report;
-- (void)tracerouteDidComplete:(NSMutableArray*)hops;
+- (void)tracerouteDidFindHop:(NSString*)report withHops:(NSArray*)hops;
+- (void)tracerouteDidComplete:(NSArray*)hops;
 - (void)tracerouteDidTimeout;
 
 @end

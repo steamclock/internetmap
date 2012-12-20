@@ -143,7 +143,8 @@
         [self.ipsForCurrentRequest addObject:self.lastIP];
         self.totalResponsesForHop++;
         if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:)]) {
-            [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: %@  %.2fms", self.ttlCount, self.lastIP, rtt]];
+            NSArray* hops = self.ipsForCurrentRequest;
+            [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: %@  %.2fms", self.ttlCount, self.lastIP, rtt] withHops:hops];
         }
     } else {
         // Check if we've received an error packet for this address before
@@ -166,7 +167,8 @@
         if (self.totalResponsesForHop == 1) {
             //We only need to call this once even though there are three packets coming back
             if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:)]) {
-                [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: %@  %.2f", self.ttlCount, self.lastIP, rtt]];
+                NSArray* hops = self.ipsForCurrentRequest;
+                [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: %@  %.2f", self.ttlCount, self.lastIP, rtt] withHops:hops];
             }
             if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidComplete:)]) {
                 [self.delegate tracerouteDidComplete:self.ipsForCurrentRequest];
@@ -211,7 +213,8 @@
         [self.ipsForCurrentRequest addObject:self.lastIP];
         self.totalResponsesForHop++;
         if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:)]) {
-            [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: %@  %.2fms", self.ttlCount, self.lastIP, rtt]];
+            NSArray* hops = self.ipsForCurrentRequest;
+            [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: %@  %.2fms", self.ttlCount, self.lastIP, rtt] withHops:hops];
         }
     }
 }
@@ -257,7 +260,8 @@
     self.timeExceededCount++;
     if (self.timeExceededCount == 3) {
         if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:)]) {
-            [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: * * * Hop did not reply or timed out.", self.ttlCount]];
+            NSArray* hops = self.ipsForCurrentRequest;
+            [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: * * * Hop did not reply or timed out.", self.ttlCount] withHops:hops];
         }
         self.ttlCount++;
         [self sendPackets:nil];
