@@ -12,6 +12,8 @@ extern void SCLogRect(CGRect rect);
 @interface HelperMethods : NSObject
 
 + (BOOL)deviceIsiPad;
++ (BOOL)deviceIsRetina;
++ (BOOL)deviceIsOld;
 + (UIImage *)imageWithColor:(UIColor *)color size:(CGSize)size;
 + (UIImage*)imageFromView:(UIView*)view;
 + (BOOL)deviceHasInternetConnection;
