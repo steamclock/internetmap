@@ -95,13 +95,23 @@
 }
 
 - (void)resetDisplay:(MapDisplay*)display forNodes:(NSArray*)arrNodes {
-    display.nodes = [[Nodes alloc] initWithNodeCount:[arrNodes count]];
+    if (display.nodes) {
+        NSAssert([display.nodes count] == [arrNodes count], @"Display.nodes has already been allocated and you just tried to recreate it with a different count");
+    }else {
+        display.nodes = [[Nodes alloc] initWithNodeCount:[arrNodes count]];
+    }
+
     
     [self updateDisplay:display forNodes:arrNodes];
 }
 
 - (void)resetDisplay:(MapDisplay *)display forSelectedNodes:(NSArray*)arrNodes {
-    display.selectedNodes = [[Nodes alloc] initWithNodeCount:[arrNodes count]];
+    if (display.selectedNodes) {
+        NSAssert([display.selectedNodes count] == [arrNodes count], @"Display.selectedNodes has already been allocated and you just tried to recreate it with a different count");
+    }else {
+        display.selectedNodes = [[Nodes alloc] initWithNodeCount:[arrNodes count]];
+    }
+    
     [self updateDisplay:display forSelectedNodes:arrNodes];
 }
 
