@@ -129,9 +129,7 @@
     }
 
     if(self.highlightLines) {
-        glLineWidth([HelperMethods deviceIsRetina] ? 6.0 : 3.0);
         [self.highlightLines display];
-        glLineWidth(1.0f);
     }
     
     glDisable(GL_DEPTH_TEST);

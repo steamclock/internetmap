@@ -127,19 +127,28 @@
         }
     }
     
-    Lines* lines = [[Lines alloc] initWithLineCount:filteredConnections.count];
+    int skipLines = 10;
+    
+    Lines* lines = [[Lines alloc] initWithLineCount:filteredConnections.count / skipLines];
     
     [lines beginUpdate];
     
     int currentIndex = 0;
+    int count = 0;
     for(Connection* connection in filteredConnections) {
+        count++;
+        
+        if((count % skipLines) != 0) {
+            continue;
+        }
+        
         Node* a = connection.first;
         Node* b = connection.second;
         
-        float lineImportanceA = MAX(a.importance - 0.01f, 0.0f) * 0.5f;
+        float lineImportanceA = MAX(a.importance - 0.01f, 0.0f) * 1.5f;
         UIColor* lineColorA = [UIColor colorWithRed:lineImportanceA green:lineImportanceA blue:lineImportanceA alpha:1.0];
         
-        float lineImportanceB = MAX(b.importance - 0.01f, 0.0f) * 0.5f;
+        float lineImportanceB = MAX(b.importance - 0.01f, 0.0f) * 1.5f;
         UIColor* lineColorB = [UIColor colorWithRed:lineImportanceB green:lineImportanceB blue:lineImportanceB alpha:1.0];
         
         [lines updateLine:currentIndex withStart:[self nodePosition:a] startColor:lineColorA end:[self nodePosition:b] endColor:lineColorB];

@@ -8,6 +8,7 @@
 #import "MapData.h"
 #import "Camera.h"
 #import "Node.h"
+#import "Connection.h"
 #import "DefaultVisualization.h"
 #import "VisualizationsTableViewController.h"
 #import "NodeSearchViewController.h"
@@ -553,6 +554,52 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     [lines endUpdate];
     
+    lines.width = [HelperMethods deviceIsRetina] ? 6.0 : 3.0;
+
+    self.display.highlightLines = lines;
+}
+
+-(void)highlightConnections:(Node*)node {
+    if(node == nil) {
+        self.display.highlightLines = nil;
+        return;
+    }
+    
+    NSMutableArray* filteredConnections = [NSMutableArray new];
+    
+    for(Connection* connection in self.data.connections) {
+        if ((connection.first == node) || (connection.second == node) ) {
+            [filteredConnections addObject:connection];
+        }
+    }
+
+    if(filteredConnections.count == 0) {
+        self.display.highlightLines = nil;
+        return;
+    }
+    
+    Lines* lines = [[Lines alloc] initWithLineCount:filteredConnections.count];
+    
+    [lines beginUpdate];
+    
+    UIColor* brightColour = SELECTED_CONNECTION_COLOR_BRIGHT;
+    UIColor* dimColour = SELECTED_CONNECTION_COLOR_DIM;
+    
+    for(int i = 0; i < filteredConnections.count; i++) {
+        Connection* connection = filteredConnections[i];
+        Node* a = connection.first;
+        Node* b = connection.second;
+        
+        if(node == a) {
+            [lines updateLine:i withStart:[self.data.visualization nodePosition:a] startColor:brightColour end:[self.data.visualization nodePosition:b] endColor:dimColour];
+        }
+        else {
+            [lines updateLine:i withStart:[self.data.visualization nodePosition:a] startColor:dimColour end:[self.data.visualization nodePosition:b] endColor:brightColour];
+        }
+    }
+    
+    [lines endUpdate];
+    lines.width = ((filteredConnections.count < 20) ? 2 : 1) * ([HelperMethods deviceIsRetina] ? 2 : 1);
     self.display.highlightLines = lines;
 }
 
@@ -579,6 +626,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         [self.display.nodes endUpdate];
         
         [self.data.visualization resetDisplay:self.display forSelectedNodes:@[node]];
+        
+        [self highlightConnections:node];
         
     } else {
         target = GLKVector3Make(0, 0, 0);
