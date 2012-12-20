@@ -646,11 +646,9 @@
     NodeInformationViewController *nodeInfo = [[NodeInformationViewController alloc] initWithNibName:@"NodeInformationViewController" bundle:nil node:node];
     nodeInfo.delegate = self;
     //NSLog(@"ASN:%@, Text Desc: %@", node.asn, node.textDescription);
-    
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:nodeInfo];
-    
+        
     [self.nodeInformationPopover dismissPopoverAnimated:YES]; //this line is important, in case the popover for another node is already visible
-    self.nodeInformationPopover = [[WEPopoverController alloc] initWithContentViewController:navController];
+    self.nodeInformationPopover = [[WEPopoverController alloc] initWithContentViewController:nodeInfo];
     self.nodeInformationPopover.passthroughViews = @[self.view];
     
     // TODO: This should be called as a part of a camera object callback when the camera has finished zooming, not by 'waiting'
@@ -659,7 +657,7 @@
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void)
     {
         CGPoint center = [self getCoordinatesForNode];
-       [self.nodeInformationPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+       [self.nodeInformationPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
     });
     
 }

@@ -13,4 +13,5 @@
     #import <Foundation/Foundation.h>
     #import "HelperMethods.h"
     #import "SCDispatchQueue.h"
+    #import "UIView+Convenience.h"
 #endif
