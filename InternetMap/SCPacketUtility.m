@@ -60,6 +60,7 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
 
 @property (nonatomic, copy,   readwrite) NSData*    hostAddress;
 @property (nonatomic, assign, readwrite) uint16_t   nextSequenceNumber;
+@property (nonatomic, strong) NSMutableDictionary*    packetDepartureTimes;
 
 - (void)_stopHostResolution;
 - (void)_stopDataTransfer;
@@ -77,6 +78,7 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
         self->_hostName    = [hostName copy];
         self->_hostAddress = [hostAddress copy];
         self->_identifier  = (uint16_t) arc4random();
+        self.packetDepartureTimes = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -175,14 +177,12 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
     
     // Send the packet.
     
-    
     if (self->_socket == NULL) {
         bytesSent = -1;
         err = EBADF;
     } else {
         
         if (!ttl) {
-            //If no TTL is specified for our packet, we default to 1
             ttl = 1;
         }
         
@@ -191,6 +191,10 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
             err = errno;
             NSLog(@"%s", strerror(err));
         }
+        
+        // Store departure time for packet sequence number to calculate RTT if desired
+        NSDate* now = [NSDate date];
+        [self.packetDepartureTimes setValue:now forKey:[NSString stringWithFormat:@"%d", self.nextSequenceNumber]];
         
         bytesSent = sendto(
                            CFSocketGetNative(self->_socket),
@@ -488,7 +492,7 @@ static void SocketReadCallback(CFSocketRef s, CFSocketCallBackType type, CFDataR
     
     [self _stopHostResolution];
     
-    // If all is OK, start pinging, otherwise shut down the pinger completely.
+    // If all is OK, start sending, otherwise shut it down
     
     if (resolved) {
         [self _startWithHostAddress];

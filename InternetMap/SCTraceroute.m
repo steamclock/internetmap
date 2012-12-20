@@ -22,6 +22,7 @@
 @property (nonatomic, strong )NSMutableArray *ipsForCurrentRequest;
 @property packetType currentTracerouteType;
 
+
 @end
 
 @implementation SCTraceroute
@@ -119,6 +120,15 @@
         //Get sequence number to calculate RTT
         NSInteger sequenceNumber = CFSwapInt16BigToHost(errorPacket->sequenceNumberOriginal);
         
+        NSDate* departureTimeDate = [self.packetUtility.packetDepartureTimes objectForKey:[NSString stringWithFormat:@"%d", sequenceNumber]];
+        if (departureTimeDate) {
+            // If we sent a packet with a corresponding sequence number, let's calculate the RTT
+            
+            NSDate*  nowDate = [NSDate date];
+            double rtt = [nowDate timeIntervalSinceDate:departureTimeDate];
+            
+            NSLog(@"Packet sequence %d took %f", sequenceNumber, rtt);
+        }
         // Debug bug bug
         NSLog(@"ICMP Type: %d and Code: %d with sequenceNumber: %d", type, code, (NSInteger)sequenceNumber);
         

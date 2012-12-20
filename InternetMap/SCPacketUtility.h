@@ -49,6 +49,7 @@ typedef enum {
 @property (nonatomic, copy,   readonly)  NSData*               hostAddress;
 @property (nonatomic, assign, readonly)  uint16_t               identifier;
 @property (nonatomic, assign, readonly)  uint16_t               nextSequenceNumber;
+@property (nonatomic, strong, readonly)   NSMutableDictionary*         packetDepartureTimes;
 
 // Packet types
 
