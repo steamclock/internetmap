@@ -8,6 +8,8 @@
 #import "HelperMethods.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Reachability.h"
+#import <sys/types.h>
+#import <sys/sysctl.h>
 
 void SCLogRect(CGRect rect) {
 
@@ -20,6 +22,39 @@ void SCLogRect(CGRect rect) {
 +(BOOL)deviceIsiPad{
     return [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad;
 }
+
++ (BOOL)deviceIsRetina {
+    return [[UIScreen mainScreen] scale] == 2.00;
+}
+
++ (NSString *) platform{
+    size_t size;
+    sysctlbyname("hw.machine", NULL, &size, NULL, 0);
+    char *machine = malloc(size);
+    sysctlbyname("hw.machine", machine, &size, NULL, 0);
+    NSString *platform = [NSString stringWithUTF8String:machine];
+    free(machine);
+    return platform;
+}
+
++ (BOOL)deviceIsOld {
+    NSString *systemName = [[self platform] componentsSeparatedByString:@","][0];
+    
+    if([systemName isEqualToString:@"iPad1"]) {
+        return YES;
+    }
+    
+    if([systemName isEqualToString:@"iPhone2"]) {
+        return YES;
+    }
+    
+    if([systemName isEqualToString:@"iPod3"]) {
+        return YES;
+    }
+    
+    return NO;
+}
+
 + (UIImage *)imageWithColor:(UIColor *)color size:(CGSize)size{
     
     // Create a 1 by 1 pixel context

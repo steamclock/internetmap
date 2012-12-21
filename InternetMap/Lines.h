@@ -8,6 +8,8 @@
 
 @interface Lines : NSObject
 
+@property float width;
+
 -(id)initWithLineCount:(NSUInteger)count;
 
 // Note: Must bracket calls to updateLine with beginUpdate/endUpdate

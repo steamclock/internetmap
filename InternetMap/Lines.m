@@ -30,6 +30,7 @@ typedef struct {
 -(id)initWithLineCount:(NSUInteger)count {
     if((self = [super init])) {
         self.count = count;
+        self.width = 1.0f;
         
         glGenVertexArraysOES(1, &_vertexArray);
         glBindVertexArrayOES(_vertexArray);
@@ -99,6 +100,7 @@ typedef struct {
 }
 
 -(void)display {
+    glLineWidth(self.width);
     glBindVertexArrayOES(_vertexArray);
     glDrawArrays(GL_LINES, 0, self.count * 2);
 }
