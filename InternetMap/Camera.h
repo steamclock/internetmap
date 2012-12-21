@@ -14,6 +14,7 @@
 @property (nonatomic) BOOL isMovingToTarget;
 -(void)rotateRadiansX:(float)rotate;
 -(void)rotateRadiansY:(float)rotate;
+-(void)rotateRadiansZ:(float)rotate;
 -(void)zoom:(float)zoom;
 
 -(void)update;

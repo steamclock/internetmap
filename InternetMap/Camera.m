@@ -47,6 +47,10 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
     _rotationMatrix = GLKMatrix4Multiply(GLKMatrix4MakeRotation(rotate, 1.0f, 0.0f, 0.0f), _rotationMatrix);
 }
 
+-(void) rotateRadiansZ:(float)rotate {
+    _rotationMatrix = GLKMatrix4Multiply(GLKMatrix4MakeRotation(rotate, 0.0f, 0.0f, 1.0f), _rotationMatrix);
+}
+
 -(void) zoom:(float)zoom {
     _zoom += zoom * -_zoom;
     if(_zoom > -0.2) {

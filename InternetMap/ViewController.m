@@ -42,9 +42,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (strong, nonatomic) UITapGestureRecognizer* doubleTapRecognizer;
 @property (strong, nonatomic) UIPanGestureRecognizer* panRecognizer;
 @property (strong, nonatomic) UIPinchGestureRecognizer* pinchRecognizer;
+@property (strong, nonatomic) UIRotationGestureRecognizer* rotationGestureRecognizer;
 
 @property (nonatomic) CGPoint lastPanPosition;
 @property (nonatomic) float lastScale;
+@property (nonatomic) float lastRotation;
 
 @property (nonatomic) NSUInteger targetNode;
 @property (nonatomic) int isCurrentlyFetchingASN;
@@ -55,11 +57,14 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 @property (nonatomic) NSTimeInterval idleStartTime; // For "attract" mode
 
-@property (nonatomic) CGPoint rotationVelocity;
-@property (nonatomic) NSTimeInterval rotationEndTime;
+@property (nonatomic) CGPoint panVelocity;
+@property (nonatomic) NSTimeInterval panEndTime;
 
 @property (nonatomic) CGFloat zoomVelocity;
 @property (nonatomic) NSTimeInterval zoomEndTime;
+
+@property (nonatomic) CGFloat rotationVelocity;
+@property (nonatomic) NSTimeInterval rotationEndTime;
 
 @property (nonatomic) NSTimeInterval updateTime;
 
@@ -207,6 +212,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.touchDownGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleTouchDown:)];
     self.touchDownGestureRecognizer.minimumPressDuration = 0;
     
+    self.rotationGestureRecognizer = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(handleRotation:)];
+    
     self.tapRecognizer.delegate = self;
     self.doubleTapRecognizer.delegate = self;
     self.twoFingerTapRecognizer.delegate = self;
@@ -214,6 +221,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.pinchRecognizer.delegate = self;
     self.longPressGestureRecognizer.delegate = self;
     self.touchDownGestureRecognizer.delegate = self;
+    self.rotationGestureRecognizer.delegate = self;
     
     [self.view addGestureRecognizer:self.tapRecognizer];
     [self.view addGestureRecognizer:self.doubleTapRecognizer];
@@ -222,6 +230,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.view addGestureRecognizer:self.pinchRecognizer];
     [self.view addGestureRecognizer:self.longPressGestureRecognizer];
     [self.view addGestureRecognizer:self.touchDownGestureRecognizer];
+    [self.view addGestureRecognizer:self.rotationGestureRecognizer];
     
     self.searchActivityIndicator.frame = CGRectMake(self.searchActivityIndicator.frame.origin.x, self.searchActivityIndicator.frame.origin.y, 30, 30);
     self.youAreHereActivityIndicator.frame = CGRectMake(self.youAreHereActivityIndicator.frame.origin.x, self.youAreHereActivityIndicator.frame.origin.y, 30, 30);
@@ -272,22 +281,21 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
     
     //momentum panning    
-    if (self.rotationVelocity.x != 0 && self.rotationVelocity.y != 0) {
+    if (self.panVelocity.x != 0 && self.panVelocity.y != 0) {
         
-        NSTimeInterval rotationTime = now-self.rotationEndTime;
+        NSTimeInterval rotationTime = now-self.panEndTime;
         static NSTimeInterval totalTime = 1.0;
         float timeT = rotationTime / totalTime;
         if(timeT > 1.0f) {
-            self.rotationVelocity = CGPointZero;
+            self.panVelocity = CGPointZero;
         }
         else {
             //quadratic ease out
             float positionT = 1+(timeT*timeT-2.0f*timeT);
             
-            [self.display.camera rotateRadiansX:self.rotationVelocity.x*delta*positionT];
-            [self.display.camera rotateRadiansY:self.rotationVelocity.y*delta*positionT];
+            [self.display.camera rotateRadiansX:self.panVelocity.x*delta*positionT];
+            [self.display.camera rotateRadiansY:self.panVelocity.y*delta*positionT];
         }
-
     }
 
     //momentum zooming
@@ -304,6 +312,23 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             float positionT = 1+(timeT*timeT-2.0f*timeT);
             
             [self.display.camera zoom:self.zoomVelocity*delta*positionT];
+        }
+    }
+    
+    //momentum rotation
+    if (self.rotationVelocity != 0) {
+        
+        NSTimeInterval rotationTime = now-self.rotationEndTime;
+        static NSTimeInterval totalTime = 1.0;
+        float timeT = rotationTime / totalTime;
+        if(timeT > 1.0f) {
+            self.rotationVelocity = 0;
+        }
+        else {
+            //quadratic ease out
+            float positionT = 1+(timeT*timeT-2.0f*timeT);
+            
+            [self.display.camera rotateRadiansZ:self.rotationVelocity*delta*positionT];
         }
     }
     
@@ -341,7 +366,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
         CGPoint translation = [gestureRecognizer translationInView:self.view];
         self.lastPanPosition = translation;
-        self.rotationVelocity = CGPointZero;
+        self.panVelocity = CGPointZero;
         [self unhoverNode];
     }else if([gestureRecognizer state] == UIGestureRecognizerStateChanged) {
         
@@ -353,8 +378,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         [self.display.camera rotateRadiansY:delta.y * 0.01];
     } else if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
         CGPoint velocity = [gestureRecognizer velocityInView:self.view];
-        self.rotationVelocity = CGPointMake(velocity.x*0.002, velocity.y*0.002);
-        self.rotationEndTime = [NSDate timeIntervalSinceReferenceDate];
+        self.panVelocity = CGPointMake(velocity.x*0.002, velocity.y*0.002);
+        self.panEndTime = [NSDate timeIntervalSinceReferenceDate];
     
     }
 }
@@ -364,8 +389,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
             
             //cancel panning/zooming momentum
-            self.rotationVelocity = CGPointZero;
+            self.panVelocity = CGPointZero;
             self.zoomVelocity = 0;
+            self.rotationVelocity = 0;
             
             int i = [self indexForNodeAtPoint:[gestureRecognizer locationInView:self.view]];
             if (i != NSNotFound) {
@@ -378,6 +404,24 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
 }
 
+- (void)handleRotation:(UIRotationGestureRecognizer*)gestureRecognizer {
+    [self resetIdleTimer];
+    if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
+        [self unhoverNode];
+        self.lastRotation = gestureRecognizer.rotation;
+        self.rotationVelocity = 0;
+    }else if([gestureRecognizer state] == UIGestureRecognizerStateChanged)
+    {
+        float deltaRotation = -gestureRecognizer.rotation - self.lastRotation;
+        self.lastRotation = -gestureRecognizer.rotation;
+        [self.display.camera rotateRadiansZ:deltaRotation];
+    } else if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
+        CGFloat velocity = -gestureRecognizer.velocity;
+        self.rotationVelocity = velocity;
+        self.rotationEndTime = [NSDate timeIntervalSinceReferenceDate];
+        
+    }
+}
 
 -(void)handlePinch:(UIPinchGestureRecognizer *)gestureRecognizer
 {
@@ -738,7 +782,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         return YES;
     }
     
-    if ((gestureRecognizer == self.panRecognizer && otherGestureRecognizer == self.pinchRecognizer) || (otherGestureRecognizer == self.panRecognizer && gestureRecognizer == self.pinchRecognizer)) {
+    NSArray* simultaneous = @[self.panRecognizer, self.pinchRecognizer, self.rotationGestureRecognizer];
+    if ([simultaneous containsObject:gestureRecognizer] && [simultaneous containsObject:otherGestureRecognizer]) {
         return YES;
     }
     
