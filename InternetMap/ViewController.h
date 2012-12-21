@@ -11,7 +11,4 @@
 
 @interface ViewController : GLKViewController <NodeSearchDelegate, SCTracerouteDelegate, UIGestureRecognizerDelegate, WEPopoverControllerDelegate>
 
-- (void)finishedFetchingCurrentASN:(int)asn;
-- (void)failedFetchingCurrentASN:(NSString*)error;
-
 @end

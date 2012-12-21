@@ -55,6 +55,8 @@
         Connection* connection = [Connection new];
         connection.first = [self.nodesByAsn valueForKey:[connectionDesc objectAtIndex:0]];
         connection.second = [self.nodesByAsn valueForKey:[connectionDesc objectAtIndex:1]];
+        [connection.first.connections addObject:connection];
+        [connection.second.connections addObject:connection];
         [self.connections addObject:connection];
     }
     

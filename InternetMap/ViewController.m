@@ -101,53 +101,54 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     return ip;
 }
 
-- (void)startFetchingCurrentASN {
+- (void)startFetchingCurrentASNForYouAreHereButton {
     if (!self.isCurrentlyFetchingASN) {
         self.isCurrentlyFetchingASN = YES;
         self.youAreHereActivityIndicator.hidden = NO;
         [self.youAreHereActivityIndicator startAnimating];
         self.youAreHereButton.hidden = YES;
         
-        [[SCDispatchQueue defaultPriorityQueue] dispatchAsync:^{
-            NSString* ip = [self fetchGlobalIP];
-            if (!ip || [ip isEqualToString:@""]) {
-                [[SCDispatchQueue mainQueue] dispatchAsync:^{
-                    [self failedFetchingCurrentASN:@"Couldn't get global IP address"];
-                }];
-            } else {
-                [ASNRequest fetchForAddresses:@[ip] responseBlock:^(NSArray *asn) {
-                    NSNumber* myASN = asn[0];
-                    if([myASN isEqual:[NSNull null]]) {
-                        [self failedFetchingCurrentASN:@"ASN lookup failed"];
-                    }
-                    else {
-                        [self finishedFetchingCurrentASN:[myASN intValue]];
-                    }
-                }];
+        void (^error)(void) = ^{
+            NSString* error = @"ASN lookup failed";
+            NSLog(@"ASN fetching failed with error: %@", error);
+            self.isCurrentlyFetchingASN = NO;
+            [self.youAreHereActivityIndicator stopAnimating];
+            self.youAreHereActivityIndicator.hidden = YES;
+            self.youAreHereButton.hidden = NO;
+            
+            UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error locating your node", nil) message:error delegate:nil cancelButtonTitle:nil otherButtonTitles:@"ok", nil];
+            [alert show];
+        };
+        
+        [self fetchCurrentASNWithResponseBlock:^(NSArray *asn) {
+            NSNumber* myASN = asn[0];
+            if([myASN isEqual:[NSNull null]]) {
+                error();
             }
-        }];
+            else {
+                int asn = [myASN intValue];
+                NSLog(@"ASN fetched: %i", asn);
+                self.isCurrentlyFetchingASN = NO;
+                [self.youAreHereActivityIndicator stopAnimating];
+                self.youAreHereActivityIndicator.hidden = YES;
+                self.youAreHereButton.hidden = NO;
+                [self selectNodeForASN:asn];
+            }
+        } errorBlock:error];
     }
 }
 
-- (void)finishedFetchingCurrentASN:(int)asn {
-    NSLog(@"ASN fetched: %i", asn);
-    self.isCurrentlyFetchingASN = NO;
-    [self.youAreHereActivityIndicator stopAnimating];
-    self.youAreHereActivityIndicator.hidden = YES;
-    self.youAreHereButton.hidden = NO;
-    [self selectNodeForASN:asn];
+- (void)fetchCurrentASNWithResponseBlock:(ASNResponseBlock)response errorBlock:(void(^)(void))error{
+    [[SCDispatchQueue defaultPriorityQueue] dispatchAsync:^{
+        NSString* ip = [self fetchGlobalIP];
+        if (!ip || [ip isEqualToString:@""]) {
+            error();
+        } else {
+            [ASNRequest fetchForAddresses:@[ip] responseBlock:response];
+        }
+    }];
 }
 
-- (void)failedFetchingCurrentASN:(NSString*)error {
-    NSLog(@"ASN fetching failed with error: %@", error);
-    self.isCurrentlyFetchingASN = NO;
-    [self.youAreHereActivityIndicator stopAnimating];
-    self.youAreHereActivityIndicator.hidden = YES;
-    self.youAreHereButton.hidden = NO;
-    
-    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error locating your node", nil) message:error delegate:nil cancelButtonTitle:nil otherButtonTitles:@"ok", nil];
-    [alert show];
-}
 
 - (void)selectNodeForASN:(int)asn {
     Node* node = [self.data.nodesByAsn objectForKey:[NSString stringWithFormat:@"%i", asn]];
@@ -714,7 +715,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(IBAction)youAreHereButtonPressed:(id)sender {
     if ([HelperMethods deviceHasInternetConnection]) {
-        [self startFetchingCurrentASN];
+        [self startFetchingCurrentASNForYouAreHereButton];
     }else {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No Internet connection" message:@"Please connect to the internet." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
         [alert show];
