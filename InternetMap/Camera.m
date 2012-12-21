@@ -33,6 +33,7 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
         self.target = GLKVector3Make(0.0f, 0.0f, 0.0f);
         self.targetMoveStartPosition = GLKVector3Make(0.0f, 0.0f, 0.0f);
         self.targetMoveStart = [[NSDate distantFuture] timeIntervalSinceReferenceDate];
+        self.isMovingToTarget = NO;
     }
     
     return self;
@@ -64,6 +65,7 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
     _target = target;
     _targetZoomStart = _zoom;
     _targetMoveStart = [NSDate timeIntervalSinceReferenceDate];
+    _isMovingToTarget = YES;
 }
 
 -(GLKVector3)target {
@@ -80,6 +82,8 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
         if(timeT > 1.0f) {
             currentTarget = self.target;
             self.targetMoveStart = [[NSDate distantFuture] timeIntervalSinceReferenceDate];
+            self.isMovingToTarget = NO;
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"cameraMovementFinished" object:nil];
         }
         else {
             float positionT;

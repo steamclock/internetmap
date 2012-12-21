@@ -236,6 +236,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     self.hoveredNodeIndex = NSNotFound;
 
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayInformationPopoverForCurrentNode) name:@"cameraMovementFinished" object:nil];
+    
     [self resetIdleTimer];
 }
 
@@ -358,18 +360,20 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 - (void)handleTouchDown:(UILongPressGestureRecognizer*)gestureRecognizer {
-    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-        
-        //cancel panning/zooming momentum
-        self.rotationVelocity = CGPointZero;
-        self.zoomVelocity = 0;
-        
-        int i = [self indexForNodeAtPoint:[gestureRecognizer locationInView:self.view]];
-        if (i != NSNotFound) {
-            self.hoveredNodeIndex = i;
-            [self.display.nodes beginUpdate];
-            [self.display.nodes updateNode:i color:SELECTED_NODE_COLOR];
-            [self.display.nodes endUpdate];
+    if (!self.display.camera.isMovingToTarget) {
+        if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+            
+            //cancel panning/zooming momentum
+            self.rotationVelocity = CGPointZero;
+            self.zoomVelocity = 0;
+            
+            int i = [self indexForNodeAtPoint:[gestureRecognizer locationInView:self.view]];
+            if (i != NSNotFound) {
+                self.hoveredNodeIndex = i;
+                [self.display.nodes beginUpdate];
+                [self.display.nodes updateNode:i color:SELECTED_NODE_COLOR];
+                [self.display.nodes endUpdate];
+            }
         }
     }
 }
@@ -395,12 +399,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)handleTap:(UITapGestureRecognizer*)gestureRecognizer {
     [self resetIdleTimer];
-    
-    [self handleSelectionAtPoint:[gestureRecognizer locationInView:self.view]];
-    
+    [self selectHoveredNode];
 }
 
-- (void)handleSelectionAtPoint:(CGPoint)pointInView {
+- (void)selectHoveredNode {
     if (self.hoveredNodeIndex != NSNotFound) {
         self.lastSearchIP = nil;
         [self updateTargetForIndex:self.hoveredNodeIndex];
@@ -488,12 +490,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (void)handleLongPress:(UILongPressGestureRecognizer *)gesture
 {
-    if(gesture.state == UIGestureRecognizerStateBegan || gesture.state == UIGestureRecognizerStateChanged) {
-        if (!self.lastIntersectionDate || fabs([self.lastIntersectionDate timeIntervalSinceNow]) > 0.1) {
-            [self handleSelectionAtPoint:[gesture locationInView:self.view]];
-            self.lastIntersectionDate = [NSDate date];
-        }
-    }
+//    if(gesture.state == UIGestureRecognizerStateBegan || gesture.state == UIGestureRecognizerStateChanged) {
+//        if (!self.lastIntersectionDate || fabs([self.lastIntersectionDate timeIntervalSinceNow]) > 0.1) {
+//            [self handleSelectionAtPoint:[gesture locationInView:self.view]];
+//            self.lastIntersectionDate = [NSDate date];
+//        }
+//    }
 }
 
 
@@ -502,7 +504,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if (gestureRecognizer.numberOfTouches == 2) {
         float deltaZoom = -0.3;
         self.lastScale = self.lastScale+deltaZoom;
-        
+        [self unhoverNode];
         [self.display.camera zoom:deltaZoom];
     }
 }
@@ -511,7 +513,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     NSLog(@"Zoomed in");
     float deltaZoom = 0.3;
     self.lastScale = self.lastScale+deltaZoom;
-    
+    [self unhoverNode];
     [self.display.camera zoom:deltaZoom];
 }
 
@@ -600,6 +602,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (void)updateTargetForIndex:(int)index {
     GLKVector3 target;
+    [self dismissNodeInfoPopover];
 
     // update current node to default state
     if (self.targetNode != NSNotFound) {
@@ -628,8 +631,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
     
     self.display.camera.target = target;
-    
-    [self displayInformationPopoverForCurrentNode];
 }
 
 -(CGPoint)getCoordinatesForNode{
@@ -717,12 +718,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     // TODO: This should be called as a part of a camera object callback when the camera has finished zooming, not by 'waiting'
     
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 1.0f * NSEC_PER_SEC);
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void)
-    {
-        CGPoint center = [self getCoordinatesForNode];
-       [self.nodeInformationPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
-    });
+    CGPoint center = [self getCoordinatesForNode];
+   [self.nodeInformationPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
     
 }
 

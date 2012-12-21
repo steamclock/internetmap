@@ -11,6 +11,7 @@
 @property (nonatomic) CGSize displaySize;
 
 @property (nonatomic) GLKVector3 target;
+@property (nonatomic) BOOL isMovingToTarget;
 -(void)rotateRadiansX:(float)rotate;
 -(void)rotateRadiansY:(float)rotate;
 -(void)zoom:(float)zoom;
