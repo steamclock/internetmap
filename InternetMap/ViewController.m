@@ -404,14 +404,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if (self.hoveredNodeIndex != NSNotFound) {
         self.lastSearchIP = nil;
         [self updateTargetForIndex:self.hoveredNodeIndex];
-    } else {
-        int i = [self indexForNodeAtPoint:pointInView];
-        if (i != NSNotFound) {
-            self.lastSearchIP = nil;
-            [self updateTargetForIndex:i];
-        }
+        self.hoveredNodeIndex = NSNotFound;
     }
-
 }
 
 - (int)indexForNodeAtPoint:(CGPoint)pointInView {
