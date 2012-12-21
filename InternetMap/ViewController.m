@@ -786,7 +786,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
     Node* node = [self.data nodeAtIndex:self.targetNode];
     
-    NodeInformationViewController *nodeInfo = [[NodeInformationViewController alloc] initWithNibName:@"NodeInformationViewController" bundle:nil node:node];
+    NodeInformationViewController *nodeInfo = [[NodeInformationViewController alloc] initWithNode:node isCurrentNode:isSelectingCurrentNode];
     nodeInfo.delegate = self;
     //NSLog(@"ASN:%@, Text Desc: %@", node.asn, node.textDescription);
         

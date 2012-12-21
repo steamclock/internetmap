@@ -88,7 +88,6 @@
 		D4CEA33516694E65004B8E8A /* youarehere@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D4CEA32B16694E65004B8E8A /* youarehere@2x.png */; };
 		D4CEA338166962F8004B8E8A /* VisualizationsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CEA337166962F8004B8E8A /* VisualizationsTableViewController.m */; };
 		D4D17D1E166EA613003A489C /* NodeInformationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D4D17D1C166EA612003A489C /* NodeInformationViewController.m */; };
-		D4D17D1F166EA613003A489C /* NodeInformationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D4D17D1D166EA613003A489C /* NodeInformationViewController.xib */; };
 		D4F65E02166D6D530077BF5A /* NodeSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D4F65E01166D6D530077BF5A /* NodeSearchViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -217,7 +216,6 @@
 		D4CEA337166962F8004B8E8A /* VisualizationsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VisualizationsTableViewController.m; sourceTree = "<group>"; };
 		D4D17D1B166EA612003A489C /* NodeInformationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeInformationViewController.h; sourceTree = "<group>"; };
 		D4D17D1C166EA612003A489C /* NodeInformationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NodeInformationViewController.m; sourceTree = "<group>"; };
-		D4D17D1D166EA613003A489C /* NodeInformationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NodeInformationViewController.xib; sourceTree = "<group>"; };
 		D4F65E00166D6D530077BF5A /* NodeSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeSearchViewController.h; sourceTree = "<group>"; };
 		D4F65E01166D6D530077BF5A /* NodeSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NodeSearchViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -470,7 +468,6 @@
 		D4D17D20166EA621003A489C /* XIBs */ = {
 			isa = PBXGroup;
 			children = (
-				D4D17D1D166EA613003A489C /* NodeInformationViewController.xib */,
 				A6F3F5881640F1FB0070E6AE /* ViewController_iPad.xib */,
 				A6F3F5851640F1FB0070E6AE /* ViewController_iPhone.xib */,
 			);
@@ -558,7 +555,6 @@
 				D4CEA33316694E65004B8E8A /* travelback@2x.png in Resources */,
 				D4CEA33416694E65004B8E8A /* youarehere.png in Resources */,
 				D4CEA33516694E65004B8E8A /* youarehere@2x.png in Resources */,
-				D4D17D1F166EA613003A489C /* NodeInformationViewController.xib in Resources */,
 				1FA5962E167931F800C7E703 /* asinfo.json in Resources */,
 				110F6B05167BD1C400D5907E /* popoverArrowDownSimple.png in Resources */,
 				110F6B08167BD1C400D5907E /* popoverArrowLeftSimple.png in Resources */,

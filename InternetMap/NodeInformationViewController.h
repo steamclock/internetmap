@@ -17,13 +17,10 @@
 @interface NodeInformationViewController : UIViewController
 
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil node:(Node*)node;
+- (id)initWithNode:(Node*)node isCurrentNode:(BOOL)isCurrent;
 
-
-@property (weak, nonatomic) IBOutlet UILabel* topLabel;
-@property (weak, nonatomic) IBOutlet UILabel* textDescriptionLabel;
-@property (weak, nonatomic) IBOutlet UILabel* nodeTypeLabel;
-@property (weak, nonatomic) IBOutlet UIButton* tracerouteButton;
+@property (strong, nonatomic) UILabel* topLabel;
+@property (strong, nonatomic) UIButton* tracerouteButton;
 
 @property (weak, nonatomic) id delegate;
 
