@@ -799,7 +799,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 #pragma mark - SCTraceroute Delegate
 
-- (void)tracerouteDidFindHop:(NSString*)report{
+- (void)tracerouteDidFindHop:(NSString*)report withHops:(NSArray *)hops{
     
     NSLog(@"%@", report);
     
