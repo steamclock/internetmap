@@ -142,7 +142,7 @@
         // First address/hop case, empty array
         [self.ipsForCurrentRequest addObject:self.lastIP];
         self.totalResponsesForHop++;
-        if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:)]) {
+        if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:withHops:)]) {
             NSArray* hops = self.ipsForCurrentRequest;
             [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: %@  %.2fms", self.ttlCount, self.lastIP, rtt] withHops:hops];
         }
@@ -166,7 +166,7 @@
         
         if (self.totalResponsesForHop == 1) {
             //We only need to call this once even though there are three packets coming back
-            if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:)]) {
+            if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:withHops:)]) {
                 NSArray* hops = self.ipsForCurrentRequest;
                 [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: %@  %.2f", self.ttlCount, self.lastIP, rtt] withHops:hops];
             }
@@ -212,7 +212,7 @@
         // We've found a new hop address
         [self.ipsForCurrentRequest addObject:self.lastIP];
         self.totalResponsesForHop++;
-        if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:)]) {
+        if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:withHops:)]) {
             NSArray* hops = self.ipsForCurrentRequest;
             [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: %@  %.2fms", self.ttlCount, self.lastIP, rtt] withHops:hops];
         }
@@ -226,7 +226,7 @@
     if (departureTimeDate) {
         // If we sent a packet with a corresponding sequence number, let's calculate the RTT
         rtt = [nowDate timeIntervalSinceDate:departureTimeDate] * 1000;
-        NSLog(@"Packet sequence %d took %.2fms", sequenceNumber, rtt);
+        //NSLog(@"Packet sequence %d took %.2fms", sequenceNumber, rtt);
     }
     
     return rtt;
@@ -259,7 +259,7 @@
 -(void)timeExceededForPacket {
     self.timeExceededCount++;
     if (self.timeExceededCount == 3) {
-        if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:)]) {
+        if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:withHops:)]) {
             NSArray* hops = self.ipsForCurrentRequest;
             [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: * * * Hop did not reply or timed out.", self.ttlCount] withHops:hops];
         }

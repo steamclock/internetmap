@@ -950,7 +950,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                         [self.errorInfoView setErrorString:@"ASN couldn't be resolved into IP"];
                     }
                 }];
-            }else {
+            } else {
                 NSLog(@"asn is not an int");
                 //TODO: this error should be displayed in the actual traceroute interface
                 [self.errorInfoView setErrorString:@"The ASN associated with this node couln't be resolved into an integer."];
