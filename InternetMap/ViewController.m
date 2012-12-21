@@ -70,6 +70,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 @property (nonatomic) int hoveredNodeIndex;
 
+@property (nonatomic) int cachedCurrentASN;
+
 /* UIKit Overlay */
 @property (weak, nonatomic) IBOutlet UIButton* searchButton;
 @property (weak, nonatomic) IBOutlet UIButton* youAreHereButton;
@@ -132,6 +134,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                 [self.youAreHereActivityIndicator stopAnimating];
                 self.youAreHereActivityIndicator.hidden = YES;
                 self.youAreHereButton.hidden = NO;
+                self.cachedCurrentASN = asn;
                 [self selectNodeForASN:asn];
             }
         } errorBlock:error];
@@ -147,6 +150,25 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             [ASNRequest fetchForAddresses:@[ip] responseBlock:response];
         }
     }];
+}
+
+- (void)startPrecachingCurrentASN {
+    
+    void (^error)(void) = ^{
+        //do nothing when precaching fails
+    };
+    
+    
+    [self fetchCurrentASNWithResponseBlock:^(NSArray *asn) {
+        NSNumber* myASN = asn[0];
+        if([myASN isEqual:[NSNull null]]) {
+            error();
+        }
+        else {
+            int asn = [myASN intValue];
+            self.cachedCurrentASN = asn;
+        }
+    } errorBlock:error];
 }
 
 
@@ -249,6 +271,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayInformationPopoverForCurrentNode) name:@"cameraMovementFinished" object:nil];
     
     [self resetIdleTimer];
+    
+    self.cachedCurrentASN = NSNotFound;
+    [self startPrecachingCurrentASN];
 }
 
 -(void)resetIdleTimer {
@@ -646,6 +671,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 
 - (void)updateTargetForIndex:(int)index {
+   
     GLKVector3 target;
     [self dismissNodeInfoPopover];
 
@@ -749,6 +775,15 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(void)displayInformationPopoverForCurrentNode {
+    //check if node is the current node
+    BOOL isSelectingCurrentNode = NO;
+    if (self.cachedCurrentASN != NSNotFound) {
+        Node* node = [self.data.nodesByAsn objectForKey:[NSString stringWithFormat:@"%i", self.cachedCurrentASN]];
+        if (node.index == self.targetNode) {
+            isSelectingCurrentNode = YES;
+        }
+    }
+
     Node* node = [self.data nodeAtIndex:self.targetNode];
     
     NodeInformationViewController *nodeInfo = [[NodeInformationViewController alloc] initWithNibName:@"NodeInformationViewController" bundle:nil node:node];
@@ -760,9 +795,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.nodeInformationPopover = [[WEPopoverController alloc] initWithContentViewController:nodeInfo];
     self.nodeInformationPopover.delegate = self;
     self.nodeInformationPopover.passthroughViews = @[self.view];
-    
-    // TODO: This should be called as a part of a camera object callback when the camera has finished zooming, not by 'waiting'
-    
+        
     CGPoint center = [self getCoordinatesForNode];
    [self.nodeInformationPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
     
