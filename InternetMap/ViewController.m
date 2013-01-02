@@ -333,7 +333,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         else {
             //quadratic ease out
             float positionT = 1+(timeT*timeT-2.0f*timeT);
-            
             [self.display.camera zoom:self.zoomVelocity*delta*positionT];
         }
     }
@@ -420,8 +419,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             [self.display.camera rotateRadiansX:delta.x * 0.01];
             [self.display.camera rotateRadiansY:delta.y * 0.01];
         } else if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-            CGPoint velocity = [gestureRecognizer velocityInView:self.view];
-            self.panVelocity = CGPointMake(velocity.x*0.002, velocity.y*0.002);
+            if (isnan([gestureRecognizer velocityInView:self.view].x) || isnan([gestureRecognizer velocityInView:self.view].y)) {
+                self.panVelocity = CGPointZero;
+            }else {
+                CGPoint velocity = [gestureRecognizer velocityInView:self.view];
+                self.panVelocity = CGPointMake(velocity.x*0.002, velocity.y*0.002);
+            }
             self.panEndTime = [NSDate timeIntervalSinceReferenceDate];
         
         }
@@ -460,10 +463,13 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             self.lastRotation = -gestureRecognizer.rotation;
             [self.display.camera rotateRadiansZ:deltaRotation];
         } else if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-            CGFloat velocity = -gestureRecognizer.velocity;
-            self.rotationVelocity = velocity;
+            if (isnan(gestureRecognizer.velocity)) {
+                self.rotationVelocity = 0;
+            }else {
+                CGFloat velocity = -gestureRecognizer.velocity;
+                self.rotationVelocity = velocity;
+            }
             self.rotationEndTime = [NSDate timeIntervalSinceReferenceDate];
-            
         }
     }
 }
@@ -481,7 +487,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             self.lastScale = gestureRecognizer.scale;
             [self.display.camera zoom:deltaZoom];
         }else if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-            self.zoomVelocity = gestureRecognizer.velocity*0.5;
+            if (isnan(gestureRecognizer.velocity)) {
+                self.zoomVelocity = 0;
+            }else {
+                self.zoomVelocity = gestureRecognizer.velocity*0.5;
+            }
             self.zoomEndTime = [NSDate timeIntervalSinceReferenceDate];
         }
     }
