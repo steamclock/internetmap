@@ -135,6 +135,7 @@
         [self.tracerouteButton.titleLabel setShadowOffset:CGSizeMake(0, -1)];
         UIColor* tracerouteButtonColor = [UIColor colorWithRed:252.0/255.0 green:161.0/255.0 blue:0 alpha:1];
         [self.tracerouteButton setBackgroundImage:[[HelperMethods imageWithColor:tracerouteButtonColor size:CGSizeMake(1, 1)] resizableImageWithCapInsets:UIEdgeInsetsZero] forState:UIControlStateNormal];
+        [self.tracerouteButton addTarget:self action:@selector(tracerouteButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:self.tracerouteButton];
     }
 }
