@@ -122,7 +122,8 @@
     connectionsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
     connectionsLabel.textColor = [UIColor whiteColor];
     connectionsLabel.backgroundColor = [UIColor clearColor];
-    connectionsLabel.text = [NSString stringWithFormat:@"%i Connections", [self.node.connections count]];
+    NSString* conn = [self.node.connections count] == 1 ? @"Connection" : @"Connections";
+    connectionsLabel.text = [NSString stringWithFormat:@"%i %@", [self.node.connections count], conn];
     [self.view addSubview:connectionsLabel];
     
     if (!self.isDisplayingCurrentNode) {

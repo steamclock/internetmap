@@ -39,6 +39,7 @@
 		116E597C168283D400F653BC /* x-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 116E597A168283D400F653BC /* x-icon.png */; };
 		116E597D168283D400F653BC /* x-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 116E597B168283D400F653BC /* x-icon@2x.png */; };
 		116E598116828AC300F653BC /* UIView+Convenience.m in Sources */ = {isa = PBXBuildFile; fileRef = 116E598016828AC300F653BC /* UIView+Convenience.m */; };
+		1186ACE816851DBE0061FA49 /* NodeTooltipViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1186ACE716851DBE0061FA49 /* NodeTooltipViewController.m */; };
 		11B99E751683AFB6005A8454 /* selectedNode.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 11B99E731683AEBC005A8454 /* selectedNode.fsh */; };
 		11D4CFBC1677B67200ED328D /* SCDispatchQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 11D4CFBB1677B67200ED328D /* SCDispatchQueue.m */; };
 		11D4CFC41677DAE400ED328D /* IndexBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 11D4CFC31677DAE400ED328D /* IndexBox.m */; };
@@ -148,6 +149,8 @@
 		116E597B168283D400F653BC /* x-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "x-icon@2x.png"; path = "Images/x-icon@2x.png"; sourceTree = "<group>"; };
 		116E597F16828AC300F653BC /* UIView+Convenience.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Convenience.h"; sourceTree = "<group>"; };
 		116E598016828AC300F653BC /* UIView+Convenience.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Convenience.m"; sourceTree = "<group>"; };
+		1186ACE616851DBE0061FA49 /* NodeTooltipViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeTooltipViewController.h; sourceTree = "<group>"; };
+		1186ACE716851DBE0061FA49 /* NodeTooltipViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NodeTooltipViewController.m; sourceTree = "<group>"; };
 		11B99E731683AEBC005A8454 /* selectedNode.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = selectedNode.fsh; path = Shaders/selectedNode.fsh; sourceTree = "<group>"; };
 		11D4CFBA1677B67200ED328D /* SCDispatchQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCDispatchQueue.h; sourceTree = "<group>"; };
 		11D4CFBB1677B67200ED328D /* SCDispatchQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCDispatchQueue.m; sourceTree = "<group>"; };
@@ -420,6 +423,8 @@
 				110F6B1C167BE1F900D5907E /* ErrorInfoView.m */,
 				D4D17D1B166EA612003A489C /* NodeInformationViewController.h */,
 				D4D17D1C166EA612003A489C /* NodeInformationViewController.m */,
+				1186ACE616851DBE0061FA49 /* NodeTooltipViewController.h */,
+				1186ACE716851DBE0061FA49 /* NodeTooltipViewController.m */,
 				D4F65E00166D6D530077BF5A /* NodeSearchViewController.h */,
 				D4F65E01166D6D530077BF5A /* NodeSearchViewController.m */,
 				A6F3F5821640F1FB0070E6AE /* ViewController.h */,
@@ -622,6 +627,7 @@
 				110F6B1D167BE1F900D5907E /* ErrorInfoView.m in Sources */,
 				116E598116828AC300F653BC /* UIView+Convenience.m in Sources */,
 				11FFB390167FC3CE00309545 /* Nodes.m in Sources */,
+				1186ACE816851DBE0061FA49 /* NodeTooltipViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -19,9 +19,9 @@ static const float lengthX = -IndexBoxMinX + IndexBoxMaxX;
 static const float lengthY = -IndexBoxMinY + IndexBoxMaxY;
 static const float lengthZ = -IndexBoxMinZ + IndexBoxMaxZ;
 
-static const int numberOfCellsX = 40;
-static const int numberOfCellsY = 10;
-static const int numberOfCellsZ = 10;
+static const int numberOfCellsX = 32;
+static const int numberOfCellsY = 4;
+static const int numberOfCellsZ = 4;
 static const float boxSizeXWithoutOverlap = lengthX/numberOfCellsX;
 static const float boxSizeYWithoutOverlap = lengthY/numberOfCellsY;
 static const float boxSizeZWithoutOverlap = lengthZ/numberOfCellsZ;
