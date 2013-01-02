@@ -40,7 +40,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (strong, nonatomic) UITapGestureRecognizer* tapRecognizer;
 @property (strong, nonatomic) UITapGestureRecognizer* twoFingerTapRecognizer;
 @property (strong, nonatomic) UILongPressGestureRecognizer* longPressGestureRecognizer;
-@property (strong, nonatomic) UILongPressGestureRecognizer* touchDownGestureRecognizer;
 @property (strong, nonatomic) UITapGestureRecognizer* doubleTapRecognizer;
 @property (strong, nonatomic) UIPanGestureRecognizer* panRecognizer;
 @property (strong, nonatomic) UIPinchGestureRecognizer* pinchRecognizer;
@@ -235,9 +234,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinch:)];
     self.longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
     
-    self.touchDownGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleTouchDown:)];
-    self.touchDownGestureRecognizer.minimumPressDuration = 0;
-    
     self.rotationGestureRecognizer = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(handleRotation:)];
     
     self.tapRecognizer.delegate = self;
@@ -246,7 +242,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.panRecognizer.delegate = self;
     self.pinchRecognizer.delegate = self;
     self.longPressGestureRecognizer.delegate = self;
-    self.touchDownGestureRecognizer.delegate = self;
     self.rotationGestureRecognizer.delegate = self;
     
     [self.view addGestureRecognizer:self.tapRecognizer];
@@ -255,7 +250,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.view addGestureRecognizer:self.panRecognizer];
     [self.view addGestureRecognizer:self.pinchRecognizer];
     [self.view addGestureRecognizer:self.longPressGestureRecognizer];
-    [self.view addGestureRecognizer:self.touchDownGestureRecognizer];
     [self.view addGestureRecognizer:self.rotationGestureRecognizer];
     
     self.searchActivityIndicator.frame = CGRectMake(self.searchActivityIndicator.frame.origin.x, self.searchActivityIndicator.frame.origin.y, 30, 30);
@@ -301,7 +295,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     NSTimeInterval idleTime = now - self.idleStartTime;
     float idleDelay = 0.1;
     
-    if (!UIGestureRecognizerStateIsActive(self.longPressGestureRecognizer.state) && !UIGestureRecognizerStateIsActive(self.pinchRecognizer.state) && !UIGestureRecognizerStateIsActive(self.panRecognizer.state) && !UIGestureRecognizerStateIsActive(self.touchDownGestureRecognizer.state) && idleTime > idleDelay) {
+    if (!UIGestureRecognizerStateIsActive(self.longPressGestureRecognizer.state) && !UIGestureRecognizerStateIsActive(self.pinchRecognizer.state) && !UIGestureRecognizerStateIsActive(self.panRecognizer.state) && idleTime > idleDelay) {
         // Ease in
         float spinupFactor = fminf(1.0, (idleTime - idleDelay) / 2);
         
@@ -385,6 +379,26 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         
         [self.data.visualization updateDisplay:self.display forNodes:@[node]];
         self.hoveredNodeIndex = NSNotFound;
+    }
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [super touchesBegan:touches withEvent:event];
+    
+    if (!self.display.camera.isMovingToTarget) {
+            //cancel panning/zooming momentum
+        self.panVelocity = CGPointZero;
+        self.zoomVelocity = 0;
+        self.rotationVelocity = 0;
+        self.isHandlingLongPress = NO;
+
+        int i = [self indexForNodeAtPoint:[[touches anyObject] locationInView:self.view]];
+        if (i != NSNotFound) {
+            self.hoveredNodeIndex = i;
+            [self.display.nodes beginUpdate];
+            [self.display.nodes updateNode:i color:SELECTED_NODE_COLOR];
+            [self.display.nodes endUpdate];
+        }
     }
 }
 
@@ -842,9 +856,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-    if (gestureRecognizer == self.touchDownGestureRecognizer || otherGestureRecognizer == self.touchDownGestureRecognizer) {
-        return YES;
-    }
+
     
     NSArray* simultaneous = @[self.panRecognizer, self.pinchRecognizer, self.rotationGestureRecognizer, self.longPressGestureRecognizer];
     if ([simultaneous containsObject:gestureRecognizer] && [simultaneous containsObject:otherGestureRecognizer]) {
