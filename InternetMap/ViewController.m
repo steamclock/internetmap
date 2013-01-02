@@ -67,6 +67,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (nonatomic) CGFloat rotationVelocity;
 @property (nonatomic) NSTimeInterval rotationEndTime;
 
+@property (nonatomic) CGFloat zoomChange;
+@property (nonatomic) NSTimeInterval zoomTapTime;
+
 @property (nonatomic) NSTimeInterval updateTime;
 
 @property (nonatomic) int hoveredNodeIndex;
@@ -309,7 +312,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         NSTimeInterval rotationTime = now-self.panEndTime;
         static NSTimeInterval totalTime = 1.0;
         float timeT = rotationTime / totalTime;
-        if(timeT > 1.0f) {
+        if(timeT > 1.0) {
             self.panVelocity = CGPointZero;
         }
         else {
@@ -322,12 +325,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
 
     //momentum zooming
-    
     if (self.zoomVelocity != 0) {
         static NSTimeInterval totalTime = 0.5;
         NSTimeInterval zoomTime = now-self.zoomEndTime;
         float timeT = zoomTime / totalTime;
-        if(timeT > 1.0f) {
+        if(timeT > 1.0) {
             self.zoomVelocity = 0;
         }
         else {
@@ -343,7 +345,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         NSTimeInterval rotationTime = now-self.rotationEndTime;
         static NSTimeInterval totalTime = 1.0;
         float timeT = rotationTime / totalTime;
-        if(timeT > 1.0f) {
+        if(timeT > 1.0) {
             self.rotationVelocity = 0;
         }
         else {
@@ -351,6 +353,29 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             float positionT = 1+(timeT*timeT-2.0f*timeT);
             
             [self.display.camera rotateRadiansZ:self.rotationVelocity*delta*positionT];
+        }
+    }
+    
+    //smooth zoom (on double tap or two finger tap)
+    if (self.zoomChange != 0) {
+        NSTimeInterval rotationTime = now-self.zoomTapTime;
+        static NSTimeInterval totalTime = 0.6;
+        float timeT = rotationTime / totalTime;
+        if(timeT > 1.0) {
+            self.zoomChange = 0;
+        }
+        else {
+            //quadratic ease out
+            float positionT;
+            if (timeT < 0.5f)
+            {
+                positionT = timeT * timeT * 2;
+            }
+            else {
+                positionT = 1.0f - ((timeT - 1.0f) * (timeT - 1.0f) * 2.0f);
+            }
+            
+            [self.display.camera zoom:self.zoomChange*delta*positionT];
         }
     }
     
@@ -624,21 +649,21 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 
 - (void)handleTwoFingerTap:(UIGestureRecognizer*)gestureRecognizer {
-    NSLog(@"Zoomed out");
     if (gestureRecognizer.numberOfTouches == 2) {
-        float deltaZoom = -0.3;
+        float deltaZoom = -2.5;
         self.lastScale = self.lastScale+deltaZoom;
         [self unhoverNode];
-        [self.display.camera zoom:deltaZoom];
+        self.zoomChange = deltaZoom;
+        self.zoomTapTime = [NSDate timeIntervalSinceReferenceDate];
     }
 }
 
 - (void)handleDoubleTap:(UIGestureRecognizer*)gestureRecongizer {
-    NSLog(@"Zoomed in");
-    float deltaZoom = 0.3;
+    float deltaZoom = 2.5;
     self.lastScale = self.lastScale+deltaZoom;
     [self unhoverNode];
-    [self.display.camera zoom:deltaZoom];
+    self.zoomChange = deltaZoom;
+    self.zoomTapTime = [NSDate timeIntervalSinceReferenceDate];
 }
 
 #pragma mark - Update selected/active node
