@@ -36,5 +36,6 @@ enum
 @property (strong, nonatomic) NSString* postalCode;
 @property (strong, nonatomic) NSString* country;
 
+@property (strong, nonatomic) NSMutableArray* connections;
 
 @end

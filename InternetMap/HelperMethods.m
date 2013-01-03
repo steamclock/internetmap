@@ -82,4 +82,8 @@ void SCLogRect(CGRect rect) {
 
 }
 
++ (BOOL)isStringEmptyOrNil:(NSString*)string {
+    return !string || [string isEqualToString:@""];
+}
+
 @end

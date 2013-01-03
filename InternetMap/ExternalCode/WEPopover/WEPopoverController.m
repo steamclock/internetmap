@@ -10,7 +10,7 @@
 #import "WEPopoverParentView.h"
 #import "UIBarButtonItem+WEPopover.h"
 
-#define FADE_DURATION 0.3
+#define FADE_DURATION 0.8
 
 @interface WEPopoverController(Private)
 

@@ -110,12 +110,11 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
     }
     
     float aspect = fabsf(self.displaySize.width / self.displaySize.height);
-    GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0f), aspect, 0.1f, 100.0f);
-    
     GLKMatrix4 model = GLKMatrix4Multiply(_rotationMatrix, GLKMatrix4MakeTranslation(-currentTarget.x, -currentTarget.y, -currentTarget.z));
-    GLKMatrix4 zoom = GLKMatrix4MakeTranslation(0.0f, 0.0f, _zoom);
-    GLKMatrix4 modelView = GLKMatrix4Multiply(zoom, model);
-    
+    GLKMatrix4 view = GLKMatrix4MakeTranslation(0.0f, 0.0f, _zoom);
+    GLKMatrix4 modelView = GLKMatrix4Multiply(view, model);
+    GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0f), aspect, 0.1f, 100.0f);
+
     _projectionMatrix = projectionMatrix;
     _modelViewMatrix = modelView;
     _modelViewProjectionMatrix = GLKMatrix4Multiply(projectionMatrix, modelView);

@@ -17,5 +17,6 @@ extern void SCLogRect(CGRect rect);
 + (UIImage *)imageWithColor:(UIColor *)color size:(CGSize)size;
 + (UIImage*)imageFromView:(UIView*)view;
 + (BOOL)deviceHasInternetConnection;
++ (BOOL)isStringEmptyOrNil:(NSString*)string;
 
 @end
