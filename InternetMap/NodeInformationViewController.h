@@ -21,6 +21,7 @@
 
 @property (strong, nonatomic) UILabel* topLabel;
 @property (strong, nonatomic) UIButton* tracerouteButton;
+@property (nonatomic, strong) UITextView* tracerouteTextView;
 
 @property (weak, nonatomic) id delegate;
 

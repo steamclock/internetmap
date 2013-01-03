@@ -14,9 +14,9 @@
 @property (nonatomic, strong) Node* node;
 @property (nonatomic, strong) UIButton* doneButton;
 @property (nonatomic, assign) BOOL isDisplayingCurrentNode;
-@property (nonatomic, strong) NSMutableArray* firstGroup;
-@property (nonatomic, strong) NSMutableArray* secondGroup;
-
+@property (nonatomic, strong) NSMutableArray* firstGroupOfStrings;
+@property (nonatomic, strong) NSMutableArray* secondGroupOfStrings;
+@property (nonatomic, strong) NSMutableArray* infoLabels;
 @end
 
 @implementation NodeInformationViewController
@@ -29,17 +29,17 @@
         
         self.node = node;
         self.isDisplayingCurrentNode = isCurrent;
-        
+        self.infoLabels = [[NSMutableArray alloc] init];
         
         CGFloat height = 0;
         
         //create the first group of strings, like ASN and text description
         NSString* asnText = [NSString stringWithFormat:@"AS%@", self.node.asn];
-        self.firstGroup = [NSMutableArray array];
+        self.firstGroupOfStrings = [NSMutableArray array];
         if (self.isDisplayingCurrentNode) {
             self.title = @"You are here.";
             if (![HelperMethods isStringEmptyOrNil:self.node.textDescription]) {
-                [self.firstGroup addObject:self.node.textDescription];
+                [self.firstGroupOfStrings addObject:self.node.textDescription];
             }
         }else {
             if (![HelperMethods isStringEmptyOrNil:self.node.textDescription]) {
@@ -52,18 +52,18 @@
         height += 20+55; //top margin and topLabel and white line
                 
         if (![self.title isEqualToString:asnText]) {
-            [self.firstGroup addObject:asnText];
+            [self.firstGroupOfStrings addObject:asnText];
         }
         
         if (![HelperMethods isStringEmptyOrNil:self.node.typeString]) {
-            [self.firstGroup addObject:self.node.typeString];
+            [self.firstGroupOfStrings addObject:self.node.typeString];
         }
         
-        if ([self.firstGroup count] == 0) {
-            [self.firstGroup addObject:@"No additional data."];
+        if ([self.firstGroupOfStrings count] == 0) {
+            [self.firstGroupOfStrings addObject:@"No additional data."];
         }
         
-        height += 25*[self.firstGroup count]; //all labels + margins
+        height += 25*[self.firstGroupOfStrings count]; //all labels + margins
         
         
         height += 20+20; //number of connections label
@@ -103,19 +103,19 @@
     whiteLine.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:whiteLine];
     
-        
     float lastLabelBottom = 0;
     //create first group of labels
-    for (int i = 0; i < [self.firstGroup count]; i++) {
+    for (int i = 0; i < [self.firstGroupOfStrings count]; i++) {
         UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(20, whiteLine.y+whiteLine.height+10+25*i, 280, 20)];
         label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
         label.textColor = [UIColor whiteColor];
         label.backgroundColor = [UIColor clearColor];
-        label.text = self.firstGroup[i];
+        label.text = self.firstGroupOfStrings[i];
         [self.view addSubview:label];
-        if (i == [self.firstGroup count]-1) {
+        if (i == [self.firstGroupOfStrings count]-1) {
             lastLabelBottom = label.y+label.height;
         }
+        [self.infoLabels addObject:label];
     }
     
     UILabel* connectionsLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, lastLabelBottom+25, 280, 20)];
@@ -125,6 +125,18 @@
     NSString* conn = [self.node.connections count] == 1 ? @"Connection" : @"Connections";
     connectionsLabel.text = [NSString stringWithFormat:@"%i %@", [self.node.connections count], conn];
     [self.view addSubview:connectionsLabel];
+    [self.infoLabels addObject:connectionsLabel];
+    
+    self.tracerouteTextView = [[UITextView alloc] initWithFrame:CGRectMake(whiteLine.x, whiteLine.y+15, whiteLine.width, 500                                 )];
+    self.tracerouteTextView.backgroundColor = [UIColor clearColor];
+    self.tracerouteTextView.textColor = [UIColor whiteColor];
+    self.tracerouteTextView.editable = NO;
+    self.tracerouteTextView.userInteractionEnabled = YES;
+    self.tracerouteTextView.scrollEnabled = YES;
+    self.tracerouteTextView.hidden = YES;
+    self.tracerouteTextView.font = [UIFont fontWithName:@"CourierNewPSMT" size:12];
+    [self.view addSubview:self.tracerouteTextView];
+
     
     if (!self.isDisplayingCurrentNode) {
         self.tracerouteButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -148,6 +160,20 @@
 }
 
 -(IBAction)tracerouteButtonTapped:(id)sender{
+    //UI setup
+    self.contentSizeForViewInPopover = CGSizeMake(340, 595);
+    self.tracerouteTextView.alpha = 0;
+    self.tracerouteTextView.hidden = NO;
+
+    [UIView animateWithDuration:1 animations:^{
+        self.tracerouteTextView.alpha = 1;
+        for (UILabel* label in self.infoLabels) {
+            label.alpha = 0;
+        }
+        self.tracerouteButton.alpha = 0;
+    }];
+    
+    //tell delegate to perform actual traceroute
     if ([self.delegate respondsToSelector:@selector(tracerouteButtonTapped)]) {
         [self.delegate performSelector:@selector(tracerouteButtonTapped)];
     }

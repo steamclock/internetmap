@@ -88,10 +88,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* visualizationsActivityIndicator;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* timelineActivityIndicator;
 
-@property (strong, nonatomic) IBOutlet UITextView* tracerouteOutput;
+
 @property (strong, nonatomic) WEPopoverController* visualizationSelectionPopover;
 @property (strong, nonatomic) WEPopoverController* nodeSearchPopover;
 @property (strong, nonatomic) WEPopoverController* nodeInformationPopover;
+@property (unsafe_unretained, nonatomic) NodeInformationViewController* nodeInformationViewController; //this is weak because it's enough for us that the popover retains the controller. this is only a reference to update the ui of the infoViewController on traceroute callbacks, not to signify ownership
 @property (strong, nonatomic) WEPopoverController* nodeTooltipPopover;
 @property (strong, nonatomic) NodeTooltipViewController* nodeTooltipViewController;
 
@@ -865,13 +866,15 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
     Node* node = [self.data nodeAtIndex:self.targetNode];
     
-    NodeInformationViewController *nodeInfo = [[NodeInformationViewController alloc] initWithNode:node isCurrentNode:isSelectingCurrentNode];
-    nodeInfo.delegate = self;
+    //careful, the local assignment first is necessary, because the property is a weak reference
+    NodeInformationViewController* controller = [[NodeInformationViewController alloc] initWithNode:node isCurrentNode:isSelectingCurrentNode];
+    self.nodeInformationViewController = controller;
+    self.nodeInformationViewController.delegate = self;
     //NSLog(@"ASN:%@, Text Desc: %@", node.asn, node.textDescription);
-        
+    
     [self dismissNodeInfoPopover];
     //this line is important, in case the popover for another node is already visible and traceroute could be being performed
-    self.nodeInformationPopover = [[WEPopoverController alloc] initWithContentViewController:nodeInfo];
+    self.nodeInformationPopover = [[WEPopoverController alloc] initWithContentViewController:self.nodeInformationViewController];
     self.nodeInformationPopover.delegate = self;
     self.nodeInformationPopover.passthroughViews = @[self.view];
         
@@ -990,7 +993,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 #pragma mark - NodeInfo delegate
 - (void)dismissNodeInfoPopover {
     [self.nodeInformationPopover dismissPopoverAnimated:YES];
-    self.tracerouteOutput.hidden = YES;
     [self.tracer stop];
     self.tracer = nil;
     
@@ -1002,13 +1004,13 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     NSLog(@"%@", report);
     
-    self.tracerouteOutput.text = [NSString stringWithFormat:@"%@\n%@", self.tracerouteOutput.text, report];
+    self.nodeInformationViewController.tracerouteTextView.text = [NSString stringWithFormat:@"%@\n%@", self.nodeInformationViewController.tracerouteTextView.text, report];
     
 }
 - (void)tracerouteDidComplete:(NSMutableArray*)hops{
     [self.tracer stop];
     self.tracer = nil;
-    self.tracerouteOutput.text = [NSString stringWithFormat:@"%@\nTraceroute complete.", self.tracerouteOutput.text];
+    self.nodeInformationViewController.tracerouteTextView.text = [NSString stringWithFormat:@"%@\nTraceroute complete.", self.nodeInformationViewController.tracerouteTextView.text];
     
     [ASNRequest fetchForAddresses:hops responseBlock:^(NSArray *asns) {
         NSMutableArray* nodes = [NSMutableArray new];
@@ -1031,15 +1033,17 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 -(void)tracerouteDidTimeout {
     [self.tracer stop];
     self.tracer = nil;
-    self.tracerouteOutput.text = [NSString stringWithFormat:@"%@\nTraceroute could not be completed; reached maximum number of hops (max 30).", self.tracerouteOutput.text];
+    self.nodeInformationViewController.tracerouteTextView.text = [NSString stringWithFormat:@"%@\nTraceroute could not be completed; reached maximum number of hops (max 30).", self.nodeInformationViewController.tracerouteTextView.text];
 }
 
 #pragma mark - Node Info View Delegate
 
 -(void)tracerouteButtonTapped{
     if ([HelperMethods deviceHasInternetConnection]) {
-        self.tracerouteOutput.text = @"";
-        self.tracerouteOutput.hidden = NO;
+        CGPoint center = [self getCoordinatesForNodeAtIndex:self.targetNode];
+        self.nodeInformationPopover.popoverContentSize = CGSizeZero;
+        [self.nodeInformationPopover repositionPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
+        
         
         if(self.lastSearchIP) {
             self.tracer = [SCTraceroute tracerouteWithAddress:self.lastSearchIP ofType:kICMP]; //we need ip for node!
@@ -1075,7 +1079,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)doneTapped{
     [self.nodeInformationPopover dismissPopoverAnimated:YES];
-    self.tracerouteOutput.hidden = YES;
     [self.tracer stop];
     self.tracer = nil;
 }

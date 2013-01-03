@@ -237,7 +237,6 @@
 						<string key="NSFrame">{{10, 293}, {545, 23}}</string>
 						<reference key="NSSuperview" ref="184854543"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -566,18 +565,22 @@
 						</object>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="logo">UIImageView</string>
 						<string key="searchActivityIndicator">UIActivityIndicatorView</string>
 						<string key="searchButton">UIButton</string>
 						<string key="timelineActivityIndicator">UIActivityIndicatorView</string>
 						<string key="timelineButton">UIButton</string>
 						<string key="timelineSlider">UISlider</string>
-						<string key="tracerouteOutput">UITextView</string>
 						<string key="visualizationsActivityIndicator">UIActivityIndicatorView</string>
 						<string key="visualizationsButton">UIButton</string>
 						<string key="youAreHereActivityIndicator">UIActivityIndicatorView</string>
 						<string key="youAreHereButton">UIButton</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="logo">
+							<string key="name">logo</string>
+							<string key="candidateClassName">UIImageView</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="searchActivityIndicator">
 							<string key="name">searchActivityIndicator</string>
 							<string key="candidateClassName">UIActivityIndicatorView</string>
@@ -597,10 +600,6 @@
 						<object class="IBToOneOutletInfo" key="timelineSlider">
 							<string key="name">timelineSlider</string>
 							<string key="candidateClassName">UISlider</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="tracerouteOutput">
-							<string key="name">tracerouteOutput</string>
-							<string key="candidateClassName">UITextView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="visualizationsActivityIndicator">
 							<string key="name">visualizationsActivityIndicator</string>
