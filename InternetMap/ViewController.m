@@ -653,21 +653,24 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (void)handleTwoFingerTap:(UIGestureRecognizer*)gestureRecognizer {
     if (gestureRecognizer.numberOfTouches == 2) {
-        float deltaZoom = -2.5;
-        self.lastScale = self.lastScale+deltaZoom;
+        [self zoomAnimatedByScale:-2.5];
         [self unhoverNode];
-        self.zoomChange = deltaZoom;
-        self.zoomTapTime = [NSDate timeIntervalSinceReferenceDate];
     }
 }
 
 - (void)handleDoubleTap:(UIGestureRecognizer*)gestureRecongizer {
-    float deltaZoom = 2.5;
-    self.lastScale = self.lastScale+deltaZoom;
+    [self zoomAnimatedByScale:2.5];
     [self unhoverNode];
+}
+
+- (void)zoomAnimatedByScale:(float)scale {
+
+    float deltaZoom = scale;
+    self.lastScale = self.lastScale+deltaZoom;
     self.zoomChange = deltaZoom;
     self.zoomTapTime = [NSDate timeIntervalSinceReferenceDate];
 }
+
 
 #pragma mark - Update selected/active node
 
@@ -1067,8 +1070,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     CGPoint center = [self getCoordinatesForNodeAtIndex:self.targetNode];
     self.nodeInformationPopover.popoverContentSize = CGSizeZero;
     [self.nodeInformationPopover repositionPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
-
     self.tracerouteHops = [NSMutableArray array];
+    NSLog(@"zoomTo: %f", (-5)-self.display.camera.currentZoom);
+    [self zoomAnimatedByScale:(-5)-self.display.camera.currentZoom];
+    
 
     if(self.lastSearchIP) {
         self.tracer = [SCTraceroute tracerouteWithAddress:self.lastSearchIP ofType:kICMP]; //we need ip for node!

@@ -12,6 +12,7 @@
 
 @property (nonatomic) GLKVector3 target;
 @property (nonatomic) BOOL isMovingToTarget;
+
 -(void)rotateRadiansX:(float)rotate;
 -(void)rotateRadiansY:(float)rotate;
 -(void)rotateRadiansZ:(float)rotate;
@@ -22,6 +23,7 @@
 -(GLKMatrix4)currentModelViewProjection;
 -(GLKMatrix4)currentModelView;
 -(GLKMatrix4)currentProjection;
+-(float)currentZoom;
 
 -(GLKVector3)applyModelViewToPoint:(CGPoint)point;
 -(GLKVector3)cameraInObjectSpace;

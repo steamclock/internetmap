@@ -76,6 +76,10 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
     return _target;
 }
 
+-(float)currentZoom {
+    return _zoom;
+}
+
 - (void)update
 {
     NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
