@@ -48,9 +48,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (strong, nonatomic) UIRotationGestureRecognizer* rotationGestureRecognizer;
 
 @property (nonatomic) CGPoint lastPanPosition;
-@property (nonatomic) float lastScale;
 @property (nonatomic) float lastRotation;
 
+@property (nonatomic) float lastScale;
 @property (nonatomic) NSUInteger targetNode;
 @property (nonatomic) int isCurrentlyFetchingASN;
 
@@ -68,9 +68,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 @property (nonatomic) CGFloat rotationVelocity;
 @property (nonatomic) NSTimeInterval rotationEndTime;
-
-@property (nonatomic) CGFloat zoomChange;
-@property (nonatomic) NSTimeInterval zoomTapTime;
 
 @property (nonatomic) NSTimeInterval updateTime;
 
@@ -301,7 +298,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     NSTimeInterval idleTime = now - self.idleStartTime;
     float idleDelay = 0.1;
     
-    if (!UIGestureRecognizerStateIsActive(self.longPressGestureRecognizer.state) && !UIGestureRecognizerStateIsActive(self.pinchRecognizer.state) && !UIGestureRecognizerStateIsActive(self.panRecognizer.state) && idleTime > idleDelay) {
+    if (!self.tracerouteHops && !UIGestureRecognizerStateIsActive(self.longPressGestureRecognizer.state) && !UIGestureRecognizerStateIsActive(self.pinchRecognizer.state) && !UIGestureRecognizerStateIsActive(self.panRecognizer.state) && idleTime > idleDelay) {
         // Ease in
         float spinupFactor = fminf(1.0, (idleTime - idleDelay) / 2);
         
@@ -356,29 +353,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             float positionT = 1+(timeT*timeT-2.0f*timeT);
             
             [self.display.camera rotateRadiansZ:self.rotationVelocity*delta*positionT];
-        }
-    }
-    
-    //smooth zoom (on double tap or two finger tap)
-    if (self.zoomChange != 0) {
-        NSTimeInterval rotationTime = now-self.zoomTapTime;
-        static NSTimeInterval totalTime = 0.6;
-        float timeT = rotationTime / totalTime;
-        if(timeT > 1.0) {
-            self.zoomChange = 0;
-        }
-        else {
-            //quadratic ease out
-            float positionT;
-            if (timeT < 0.5f)
-            {
-                positionT = timeT * timeT * 2;
-            }
-            else {
-                positionT = 1.0f - ((timeT - 1.0f) * (timeT - 1.0f) * 2.0f);
-            }
-            
-            [self.display.camera zoom:self.zoomChange*delta*positionT];
         }
     }
     
@@ -653,22 +627,14 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (void)handleTwoFingerTap:(UIGestureRecognizer*)gestureRecognizer {
     if (gestureRecognizer.numberOfTouches == 2) {
-        [self zoomAnimatedByScale:-2.5];
+        [self.display.camera zoomAnimatedTo:self.display.camera.currentZoom-1.5 duration:1];
         [self unhoverNode];
     }
 }
 
 - (void)handleDoubleTap:(UIGestureRecognizer*)gestureRecongizer {
-    [self zoomAnimatedByScale:2.5];
+    [self.display.camera zoomAnimatedTo:self.display.camera.currentZoom+1.5 duration:1];
     [self unhoverNode];
-}
-
-- (void)zoomAnimatedByScale:(float)scale {
-
-    float deltaZoom = scale;
-    self.lastScale = self.lastScale+deltaZoom;
-    self.zoomChange = deltaZoom;
-    self.zoomTapTime = [NSDate timeIntervalSinceReferenceDate];
 }
 
 
@@ -1071,9 +1037,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.nodeInformationPopover.popoverContentSize = CGSizeZero;
     [self.nodeInformationPopover repositionPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
     self.tracerouteHops = [NSMutableArray array];
-    NSLog(@"zoomTo: %f", (-5)-self.display.camera.currentZoom);
-    [self zoomAnimatedByScale:(-5)-self.display.camera.currentZoom];
-    
+    [self.display.camera zoomAnimatedTo:-3 duration:3];
+    [self.display.camera rotateAnimatedTo:GLKMatrix4Identity duration:3];
 
     if(self.lastSearchIP) {
         self.tracer = [SCTraceroute tracerouteWithAddress:self.lastSearchIP ofType:kICMP]; //we need ip for node!

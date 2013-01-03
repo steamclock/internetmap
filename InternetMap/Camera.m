@@ -19,9 +19,20 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
     GLKVector3 _target;
 }
 
-@property (nonatomic) NSTimeInterval targetMoveStart;
+@property (nonatomic) NSTimeInterval targetMoveStartTime;
 @property (nonatomic) GLKVector3 targetMoveStartPosition;
-@property (nonatomic) float targetZoomStart;
+
+@property (nonatomic) float zoomStart;
+@property (nonatomic) float zoomTarget;
+@property (nonatomic) NSTimeInterval zoomStartTime;
+@property (nonatomic) NSTimeInterval zoomDuration;
+
+
+@property (nonatomic) GLKQuaternion rotationStart;
+@property (nonatomic) GLKQuaternion rotationTarget;
+@property (nonatomic) NSTimeInterval rotationStartTime;
+@property (nonatomic) NSTimeInterval rotationDuration;
+
 @end
 
 @implementation Camera
@@ -32,7 +43,7 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
         _zoom = -3.0f;
         self.target = GLKVector3Make(0.0f, 0.0f, 0.0f);
         self.targetMoveStartPosition = GLKVector3Make(0.0f, 0.0f, 0.0f);
-        self.targetMoveStart = [[NSDate distantFuture] timeIntervalSinceReferenceDate];
+        self.targetMoveStartTime = [[NSDate distantFuture] timeIntervalSinceReferenceDate];
         self.isMovingToTarget = NO;
     }
     
@@ -51,6 +62,27 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
     _rotationMatrix = GLKMatrix4Multiply(GLKMatrix4MakeRotation(rotate, 0.0f, 0.0f, 1.0f), _rotationMatrix);
 }
 
+- (void)rotateAnimatedTo:(GLKMatrix4)rotation duration:(NSTimeInterval)duration{
+    self.rotationStart = GLKQuaternionMakeWithMatrix4(_rotationMatrix);
+    self.rotationTarget = GLKQuaternionMakeWithMatrix4(rotation);
+    self.rotationStartTime = [NSDate timeIntervalSinceReferenceDate];
+    self.rotationDuration = duration;
+}
+
+- (void)zoomAnimatedTo:(float)zoom duration:(NSTimeInterval)duration {
+    if(zoom > -0.2) {
+        zoom = -0.2;
+    }
+    
+    if(zoom < -10.0f) {
+        zoom = -10.0f;
+    }
+    self.zoomStart = _zoom;
+    self.zoomTarget = zoom;
+    self.zoomStartTime = [NSDate timeIntervalSinceReferenceDate];
+    self.zoomDuration = duration;
+}
+
 -(void) zoom:(float)zoom {
     _zoom += zoom * -_zoom;
     if(_zoom > -0.2) {
@@ -67,9 +99,9 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
 -(void)setTarget:(GLKVector3)target {
     _targetMoveStartPosition = _target;
     _target = target;
-    _targetZoomStart = _zoom;
-    _targetMoveStart = [NSDate timeIntervalSinceReferenceDate];
+    _targetMoveStartTime = [NSDate timeIntervalSinceReferenceDate];
     _isMovingToTarget = YES;
+    [self zoomAnimatedTo:FINAL_ZOOM_ON_SELECTION duration:MOVE_TIME];
 }
 
 -(GLKVector3)target {
@@ -85,11 +117,12 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
     NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
     
     GLKVector3 currentTarget;
-    if(self.targetMoveStart < now) {
-        float timeT = (now - self.targetMoveStart) / MOVE_TIME;
+    //animated move to target
+    if(self.targetMoveStartTime < now) {
+        float timeT = (now - self.targetMoveStartTime) / MOVE_TIME;
         if(timeT > 1.0f) {
             currentTarget = self.target;
-            self.targetMoveStart = [[NSDate distantFuture] timeIntervalSinceReferenceDate];
+            self.targetMoveStartTime = [[NSDate distantFuture] timeIntervalSinceReferenceDate];
             self.isMovingToTarget = NO;
             [[NSNotificationCenter defaultCenter] postNotificationName:@"cameraMovementFinished" object:nil];
         }
@@ -106,11 +139,52 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
             }
             
             currentTarget = GLKVector3Add(self.targetMoveStartPosition, GLKVector3MultiplyScalar(GLKVector3Subtract(self.target, self.targetMoveStartPosition), positionT));
-            _zoom = self.targetZoomStart + (FINAL_ZOOM_ON_SELECTION-self.targetZoomStart)*positionT;
         }
     }
     else {
         currentTarget = self.target;
+    }
+    
+    //animated zoom
+    if(self.zoomStartTime < now) {
+        float timeT = (now - self.zoomStartTime) / self.zoomDuration;
+        if(timeT > 1.0f) {
+            self.zoomStartTime = [[NSDate distantFuture] timeIntervalSinceReferenceDate];
+        }
+        else {
+            float positionT;
+            
+            // Quadratic ease-in / ease-out
+            if (timeT < 0.5f)
+            {
+                positionT = timeT * timeT * 2;
+            }
+            else {
+                positionT = 1.0f - ((timeT - 1.0f) * (timeT - 1.0f) * 2.0f);
+            }
+            _zoom = self.zoomStart + (self.zoomTarget-self.zoomStart)*positionT;
+        }
+    }
+    
+    //animated rotation
+    if (self.rotationStartTime < now) {
+        float timeT = (now - self.rotationStartTime) / self.rotationDuration;
+        if(timeT > 1.0f) {
+            self.rotationStartTime = [[NSDate distantFuture] timeIntervalSinceReferenceDate];
+        }
+        else {
+            float positionT;
+            
+            // Quadratic ease-in / ease-out
+            if (timeT < 0.5f)
+            {
+                positionT = timeT * timeT * 2;
+            }
+            else {
+                positionT = 1.0f - ((timeT - 1.0f) * (timeT - 1.0f) * 2.0f);
+            }
+            _rotationMatrix = GLKMatrix4MakeWithQuaternion(GLKQuaternionSlerp(self.rotationStart, self.rotationTarget, positionT));
+        }
     }
     
     float aspect = fabsf(self.displaySize.width / self.displaySize.height);
