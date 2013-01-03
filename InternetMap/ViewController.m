@@ -34,6 +34,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (strong, nonatomic) MapDisplay* display;
 @property (strong, nonatomic) MapData* data;
 
+@property (strong, nonatomic) NSMutableArray* tracerouteHops;
+
 @property (strong, nonatomic) NSDate* lastIntersectionDate;
 @property (assign, nonatomic) BOOL isHandlingLongPress;
 
@@ -683,7 +685,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 -(void)highlightRoute:(NSArray*)nodeList {
     if(nodeList.count <= 1) {
         self.display.highlightLines = nil;
-        
+        return;
     }
     Lines* lines = [[Lines alloc] initWithLineCount:nodeList.count - 1];
     
@@ -995,6 +997,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.nodeInformationPopover dismissPopoverAnimated:YES];
     [self.tracer stop];
     self.tracer = nil;
+    if (self.tracerouteHops) {
+        self.tracerouteHops = nil;
+        self.display.highlightLines = nil;
+    }
     
 }
 
@@ -1005,29 +1011,48 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     NSLog(@"%@", report);
     
     self.nodeInformationViewController.tracerouteTextView.text = [NSString stringWithFormat:@"%@\n%@", self.nodeInformationViewController.tracerouteTextView.text, report];
-    
-}
-- (void)tracerouteDidComplete:(NSMutableArray*)hops{
-    [self.tracer stop];
-    self.tracer = nil;
-    self.nodeInformationViewController.tracerouteTextView.text = [NSString stringWithFormat:@"%@\nTraceroute complete.", self.nodeInformationViewController.tracerouteTextView.text];
-    
-    [ASNRequest fetchForAddresses:hops responseBlock:^(NSArray *asns) {
-        NSMutableArray* nodes = [NSMutableArray new];
+//    NSLog(@"%@", hops);
+
+    [ASNRequest fetchForAddresses:@[[hops lastObject]] responseBlock:^(NSArray *asns) {
         Node* last = nil;
         
         for(NSNumber* asn in asns) {
             if(![asn isEqual:[NSNull null]]) {
                 Node* current = [self.data.nodesByAsn objectForKey:[NSString stringWithFormat:@"%i", [asn intValue]]];
                 if(current && (current != last)) {
-                    [nodes addObject:current];
+                    [self.tracerouteHops addObject:current];
                 }
-                
             }
         }
         
-        [self highlightRoute:nodes];
+        if ([self.tracerouteHops count] >= 2) {
+            [self highlightRoute:self.tracerouteHops];
+        }
+        
     }];
+}
+
+- (void)tracerouteDidComplete:(NSMutableArray*)hops{
+    [self.tracer stop];
+    self.tracer = nil;
+    self.nodeInformationViewController.tracerouteTextView.text = [NSString stringWithFormat:@"%@\nTraceroute complete.", self.nodeInformationViewController.tracerouteTextView.text];
+    
+//    [ASNRequest fetchForAddresses:hops responseBlock:^(NSArray *asns) {
+//        NSMutableArray* nodes = [NSMutableArray new];
+//        Node* last = nil;
+//        
+//        for(NSNumber* asn in asns) {
+//            if(![asn isEqual:[NSNull null]]) {
+//                Node* current = [self.data.nodesByAsn objectForKey:[NSString stringWithFormat:@"%i", [asn intValue]]];
+//                if(current && (current != last)) {
+//                    [nodes addObject:current];
+//                }
+//                
+//            }
+//        }
+//        
+//        [self highlightRoute:nodes];
+//    }];
 }
 
 -(void)tracerouteDidTimeout {
@@ -1039,43 +1064,48 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 #pragma mark - Node Info View Delegate
 
 -(void)tracerouteButtonTapped{
-        CGPoint center = [self getCoordinatesForNodeAtIndex:self.targetNode];
-        self.nodeInformationPopover.popoverContentSize = CGSizeZero;
-        [self.nodeInformationPopover repositionPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
-        
-        
-        if(self.lastSearchIP) {
-            self.tracer = [SCTraceroute tracerouteWithAddress:self.lastSearchIP ofType:kICMP]; //we need ip for node!
-            self.tracer.delegate = self;
-            [self.tracer start];
+    CGPoint center = [self getCoordinatesForNodeAtIndex:self.targetNode];
+    self.nodeInformationPopover.popoverContentSize = CGSizeZero;
+    [self.nodeInformationPopover repositionPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
+
+    self.tracerouteHops = [NSMutableArray array];
+
+    if(self.lastSearchIP) {
+        self.tracer = [SCTraceroute tracerouteWithAddress:self.lastSearchIP ofType:kICMP]; //we need ip for node!
+        self.tracer.delegate = self;
+        [self.tracer start];
+    }
+    else {
+        Node* node = [self.data nodeAtIndex:self.targetNode];
+        if ([node.asn intValue]) {
+            [ASNRequest fetchForASN:[node.asn intValue] responseBlock:^(NSArray *asn) {
+                if (asn[0] != [NSNull null]) {
+                    NSLog(@"starting tracerout with IP: %@", asn[0]);
+                    self.tracer = [SCTraceroute tracerouteWithAddress:asn[0] ofType:kICMP];
+                    self.tracer.delegate = self;
+                    [self.tracer start];
+                }else {
+                    NSLog(@"asn couldn't be resolved to IP");
+                    self.nodeInformationViewController.tracerouteTextView.textColor = [UIColor redColor];
+                    self.nodeInformationViewController.tracerouteTextView.text = @"Error: ASN couldn't be resolved into IP.";
+                }
+            }];
+        } else {
+            NSLog(@"asn is not an int");
+            self.nodeInformationViewController.tracerouteTextView.textColor = [UIColor redColor];
+            self.nodeInformationViewController.tracerouteTextView.text = @"Error: ASN couldn't be resolved into IP.";
         }
-        else {
-            Node* node = [self.data nodeAtIndex:self.targetNode];
-            if ([node.asn intValue]) {
-                [ASNRequest fetchForASN:[node.asn intValue] responseBlock:^(NSArray *asn) {
-                    if (asn[0] != [NSNull null]) {
-                        NSLog(@"starting tracerout with IP: %@", asn[0]);
-                        self.tracer = [SCTraceroute tracerouteWithAddress:asn[0] ofType:kICMP];
-                        self.tracer.delegate = self;
-                        [self.tracer start];
-                    }else {
-                        NSLog(@"asn couldn't be resolved to IP");
-                        self.nodeInformationViewController.tracerouteTextView.textColor = [UIColor redColor];
-                        self.nodeInformationViewController.tracerouteTextView.text = @"Error: ASN couldn't be resolved into IP.";
-                    }
-                }];
-            } else {
-                NSLog(@"asn is not an int");
-                self.nodeInformationViewController.tracerouteTextView.textColor = [UIColor redColor];
-                self.nodeInformationViewController.tracerouteTextView.text = @"Error: ASN couldn't be resolved into IP.";
-            }
-        }
+    }
 }
 
 -(void)doneTapped{
     [self.nodeInformationPopover dismissPopoverAnimated:YES];
     [self.tracer stop];
     self.tracer = nil;
+    if (self.tracerouteHops) {
+        self.tracerouteHops = nil;
+        self.display.highlightLines = nil;
+    }
 }
 
 #pragma mark - WEPopover Delegate
