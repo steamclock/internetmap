@@ -17,6 +17,7 @@
 @property int ttlCount;
 @property int timeExceededCount;
 @property int totalResponsesForHop;
+@property int totalHopsTimedOut; // If we hit 4, bail, otherwise it's boring for the user.
 @property (nonatomic, strong) NSString *targetIP;
 @property (nonatomic, strong) NSString *lastIP;
 @property (nonatomic, strong )NSMutableArray *ipsForCurrentRequest;
@@ -262,9 +263,19 @@
         if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:withHops:)]) {
             NSArray* hops = self.ipsForCurrentRequest;
             [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: * * * Hop did not reply or timed out.", self.ttlCount] withHops:hops];
+            self.totalHopsTimedOut++;
         }
-        self.ttlCount++;
-        [self sendPackets:nil];
+        
+        if (self.totalHopsTimedOut > 3) {
+            //SHUT. DOWN. EVERYTHING.
+            if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidTimeout)]) {
+                [self.delegate tracerouteDidTimeout];
+            }
+        } else {
+            self.ttlCount++;
+            [self sendPackets:nil];
+        }
+
     }
 }
 
