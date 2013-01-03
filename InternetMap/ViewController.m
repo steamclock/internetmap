@@ -1039,7 +1039,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 #pragma mark - Node Info View Delegate
 
 -(void)tracerouteButtonTapped{
-    if ([HelperMethods deviceHasInternetConnection]) {
         CGPoint center = [self getCoordinatesForNodeAtIndex:self.targetNode];
         self.nodeInformationPopover.popoverContentSize = CGSizeZero;
         [self.nodeInformationPopover repositionPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
@@ -1061,20 +1060,16 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                         [self.tracer start];
                     }else {
                         NSLog(@"asn couldn't be resolved to IP");
-                        //TODO: this error should be displayed in the actual traceroute interface
-                        [self.errorInfoView setErrorString:@"ASN couldn't be resolved into IP"];
+                        self.nodeInformationViewController.tracerouteTextView.textColor = [UIColor redColor];
+                        self.nodeInformationViewController.tracerouteTextView.text = @"Error: ASN couldn't be resolved into IP.";
                     }
                 }];
             } else {
                 NSLog(@"asn is not an int");
-                //TODO: this error should be displayed in the actual traceroute interface
-                [self.errorInfoView setErrorString:@"The ASN associated with this node couln't be resolved into an integer."];
+                self.nodeInformationViewController.tracerouteTextView.textColor = [UIColor redColor];
+                self.nodeInformationViewController.tracerouteTextView.text = @"Error: ASN couldn't be resolved into IP.";
             }
         }
-    }else {
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No Internet connection" message:@"Please connect to the internet." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-        [alert show];
-    }
 }
 
 -(void)doneTapped{

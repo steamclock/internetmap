@@ -160,22 +160,27 @@
 }
 
 -(IBAction)tracerouteButtonTapped:(id)sender{
-    //UI setup
-    self.contentSizeForViewInPopover = CGSizeMake(340, 595);
-    self.tracerouteTextView.alpha = 0;
-    self.tracerouteTextView.hidden = NO;
-
-    [UIView animateWithDuration:1 animations:^{
-        self.tracerouteTextView.alpha = 1;
-        for (UILabel* label in self.infoLabels) {
-            label.alpha = 0;
+    if ([HelperMethods deviceHasInternetConnection]) {
+        //UI setup
+        self.contentSizeForViewInPopover = CGSizeMake(340, 595);
+        self.tracerouteTextView.alpha = 0;
+        self.tracerouteTextView.hidden = NO;
+        
+        [UIView animateWithDuration:1 animations:^{
+            self.tracerouteTextView.alpha = 1;
+            for (UILabel* label in self.infoLabels) {
+                label.alpha = 0;
+            }
+            self.tracerouteButton.alpha = 0;
+        }];
+        
+        //tell delegate to perform actual traceroute
+        if ([self.delegate respondsToSelector:@selector(tracerouteButtonTapped)]) {
+            [self.delegate performSelector:@selector(tracerouteButtonTapped)];
         }
-        self.tracerouteButton.alpha = 0;
-    }];
-    
-    //tell delegate to perform actual traceroute
-    if ([self.delegate respondsToSelector:@selector(tracerouteButtonTapped)]) {
-        [self.delegate performSelector:@selector(tracerouteButtonTapped)];
+    }else {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No Internet connection" message:@"Please connect to the internet." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+        [alert show];
     }
 }
 
