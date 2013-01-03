@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "SCPacketUtility.h"
 
-static const int MAX_HOPS = 30;
+static const int MAX_HOPS = 64;
 
 @protocol SCTracerouteDelegate <NSObject>
 

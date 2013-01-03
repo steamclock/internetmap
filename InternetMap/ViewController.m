@@ -920,7 +920,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 -(void)tracerouteDidTimeout {
     [self.tracer stop];
     self.tracer = nil;
-    self.tracerouteOutput.text = [NSString stringWithFormat:@"%@\nTraceroute could not be completed; reached maximum number of hops (max 30).", self.tracerouteOutput.text];
+    self.tracerouteOutput.text = [NSString stringWithFormat:@"%@\nTraceroute could not be completed; reached maximum number of hops (max %d).", self.tracerouteOutput.text, MAX_HOPS];
 }
 
 #pragma mark - Node Info View Delegate
