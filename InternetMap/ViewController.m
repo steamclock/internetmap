@@ -58,9 +58,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 @property (strong) NSString* lastSearchIP;
 
-@property (nonatomic) CGFloat rotationVelocity;
-@property (nonatomic) NSTimeInterval rotationEndTime;
-
 @property (nonatomic) NSTimeInterval updateTime;
 
 @property (nonatomic) int hoveredNodeIndex;
@@ -280,28 +277,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 #pragma mark - GLKView and GLKViewController delegate methods
 - (void)update
 {
-    
-    NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
-    NSTimeInterval delta = now - self.updateTime;
-    self.updateTime = now;
-    
-    //momentum rotation
-    if (self.rotationVelocity != 0) {
-        
-        NSTimeInterval rotationTime = now-self.rotationEndTime;
-        static NSTimeInterval totalTime = 1.0;
-        float timeT = rotationTime / totalTime;
-        if(timeT > 1.0) {
-            self.rotationVelocity = 0;
-        }
-        else {
-            //quadratic ease out
-            float positionT = 1+(timeT*timeT-2.0f*timeT);
-            
-            [self.display.camera rotateRadiansZ:self.rotationVelocity*delta*positionT];
-        }
-    }
-    
     [self.display update];
 }
 
@@ -336,7 +311,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             //cancel panning/zooming momentum
         [self.display.camera stopMomentumPan];
         [self.display.camera stopMomentumZoom];
-        self.rotationVelocity = 0;
+        [self.display.camera stopMomentumRotation];
         self.isHandlingLongPress = NO;
 
         int i = [self indexForNodeAtPoint:[[touches anyObject] locationInView:self.view]];
@@ -387,7 +362,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             //cancel panning/zooming momentum
             [self.display.camera stopMomentumPan];
             [self.display.camera stopMomentumZoom];
-            self.rotationVelocity = 0;
+            [self.display.camera stopMomentumRotation];
             
             int i = [self indexForNodeAtPoint:[gestureRecognizer locationInView:self.view]];
             if (i != NSNotFound) {
@@ -406,7 +381,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
             [self unhoverNode];
             self.lastRotation = gestureRecognizer.rotation;
-            self.rotationVelocity = 0;
+            [self.display.camera stopMomentumRotation];
         }else if([gestureRecognizer state] == UIGestureRecognizerStateChanged)
         {
             float deltaRotation = -gestureRecognizer.rotation - self.lastRotation;
@@ -414,12 +389,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             [self.display.camera rotateRadiansZ:deltaRotation];
         } else if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
             if (isnan(gestureRecognizer.velocity)) {
-                self.rotationVelocity = 0;
+                [self.display.camera stopMomentumRotation];
             }else {
-                CGFloat velocity = -gestureRecognizer.velocity;
-                self.rotationVelocity = velocity;
+                [self.display.camera startMomentumRotationWithVelocity:-gestureRecognizer.velocity*0.5];
             }
-            self.rotationEndTime = [NSDate timeIntervalSinceReferenceDate];
+
         }
     }
 }

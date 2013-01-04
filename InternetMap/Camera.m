@@ -36,6 +36,10 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
 @property (nonatomic) CGFloat zoomVelocity;
 @property (nonatomic) NSTimeInterval zoomEndTime;
 
+@property (nonatomic) CGFloat rotationVelocity;
+@property (nonatomic) NSTimeInterval rotationEndTime;
+
+
 @property (nonatomic) GLKQuaternion rotationStart;
 @property (nonatomic) GLKQuaternion rotationTarget;
 @property (nonatomic) NSTimeInterval rotationStartTime;
@@ -142,6 +146,15 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
     self.zoomVelocity = 0;
 }
 
+- (void)startMomentumRotationWithVelocity:(CGFloat)velocity {
+    self.rotationVelocity = velocity;
+    self.rotationEndTime = [NSDate timeIntervalSinceReferenceDate];
+}
+
+- (void)stopMomentumRotation {
+    self.rotationVelocity = 0;
+}
+
 - (void)update
 {
     NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
@@ -168,7 +181,7 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
     
     [self handleMomentumPanAtTime:now delta:delta];
     [self handleMomentumZoomAtTime:now delta:delta];
-    
+    [self handleMomentumRotationAtTime:now delta:delta];
 
     
     GLKVector3 currentTarget;
@@ -291,6 +304,28 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
     }
 }
 
+-(void)handleMomentumRotationAtTime:(NSTimeInterval)now delta:(NSTimeInterval)delta {
+
+
+    //momentum rotation
+    if (self.rotationVelocity != 0) {
+        
+        NSTimeInterval rotationTime = now-self.rotationEndTime;
+        static NSTimeInterval totalTime = 1.0;
+        float timeT = rotationTime / totalTime;
+        if(timeT > 1.0) {
+            self.rotationVelocity = 0;
+        }
+        else {
+            //quadratic ease out
+            float positionT = 1+(timeT*timeT-2.0f*timeT);
+            
+            [self rotateRadiansZ:self.rotationVelocity*delta*positionT];
+        }
+    }
+
+
+}
 
 -(GLKMatrix4)currentModelViewProjection {
     return _modelViewProjectionMatrix;

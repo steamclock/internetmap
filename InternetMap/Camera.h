@@ -45,4 +45,7 @@
 - (void)startMomentumZoomWithVelocity:(CGFloat)velocity;
 - (void)stopMomentumZoom;
 
+- (void)startMomentumRotationWithVelocity:(CGFloat)velocity;
+- (void)stopMomentumRotation;
+
 @end
