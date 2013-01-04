@@ -15,31 +15,26 @@
 #import <CoreServices/CoreServices.h>
 #endif
 
-#include <AssertMacros.h> //Where are these used? Derp derp.
-
 #pragma mark - SCIcmpPacketUtility
 
 // SCPacketUtility is a simple class for sending and receiving ICMP packets.
 
-@protocol SCPacketUtilityDelegate;
+@protocol SCIcmpPacketUtilityDelegate;
 
-@interface SCPacketUtility : NSObject
+@interface SCIcmpPacketUtility : NSObject
 {
     NSString*   hostName;
-    NSData*     hostAddress;
+    NSData*     targetAddress;
     CFHostRef   host;
     CFSocketRef socket;
-    __unsafe_unretained id<SCPacketUtilityDelegate>  delegate;
-    uint16_t    identifier; // host byte order
+    __unsafe_unretained id<SCIcmpPacketUtilityDelegate>  delegate;
     uint16_t    nextSequenceNumber; // host byte order
 }
 
-@property (nonatomic, assign, readwrite) id<SCPacketUtilityDelegate> delegate;
-@property (nonatomic, copy,   readonly)  NSString*             hostName;
-@property (nonatomic, copy,   readonly)  NSData*               hostAddress;
-@property (nonatomic, assign, readonly)  uint16_t               identifier;
-@property (nonatomic, assign, readonly)  uint16_t               nextSequenceNumber;
-@property (nonatomic, strong, readonly)   NSMutableDictionary*         packetDepartureTimes;
+@property (nonatomic, assign, readwrite) id<SCIcmpPacketUtilityDelegate> delegate;
+@property (nonatomic, copy,   readonly) NSData*               targetAddress;
+@property (nonatomic, assign, readonly) uint16_t              nextSequenceNumber;
+@property (strong, nonatomic, readonly) NSMutableArray*       packetRecords;
 
 - (void)start;
 // Starts the packet utility object doing it's thing.  You should call this after you've setup the delegate.
@@ -61,26 +56,26 @@
 
 @optional
 
-- (void)SCPacketUtility:(SCPacketUtility*)packetUtility didStartWithAddress:(NSData *)address;
+- (void)SCPacketUtility:(SCIcmpPacketUtility*)packetUtility didStartWithAddress:(NSData *)address;
 // Called after the SCPacketUtility has successfully started up.  After this callback, you can start sending packets via -sendPacketWithData:
 
-- (void)SCPacketUtility:(SCPacketUtility*)packetUtility didFailWithError:(NSError *)error;
+- (void)SCPacketUtility:(SCIcmpPacketUtility*)packetUtility didFailWithError:(NSError *)error;
 // If this is called, the SCPacketUtility object has failed.  By the time this callback is called, the object has stopped (that is, you don't need to call -stop yourself).
 
 // IMPORTANT: On the send side the packet does not include an IP header.
 // On the receive side, it does.  In that case, use +[SCPacketUtility icmpInPacket:]
 // to find the ICMP header within the packet.
 
-- (void)SCPacketUtility:(SCPacketUtility*)packetUtility didSendPacket:(NSData *)packet;
+- (void)SCPacketUtility:(SCIcmpPacketUtility*)packetUtility didSendPacket:(NSData *)packet;
 // Called whenever the SCPacketUtility object has successfully sent a packet.
 
-- (void)SCPacketUtility:(SCPacketUtility*)packetUtility didFailToSendPacket:(NSData *)packet error:(NSError *)error;
+- (void)SCPacketUtility:(SCIcmpPacketUtility*)packetUtility didFailToSendPacket:(NSData *)packet error:(NSError *)error;
 // Called whenever the SCPacketUtility object tries and fails to send a packet.
 
-- (void)SCPacketUtility:(SCPacketUtility*)packetUtility didReceiveResponsePacket:(NSData *)packet;
+- (void)SCPacketUtility:(SCIcmpPacketUtility*)packetUtility didReceiveResponsePacket:(NSData *)packet;
 // Called whenever the SCPacketUtility object receives an ICMP packet that looks like a response to one of our packets
 
-- (void)SCPacketUtility:(SCPacketUtility*)packetUtility didReceiveUnexpectedPacket:(NSData *)packet;
+- (void)SCPacketUtility:(SCIcmpPacketUtility*)packetUtility didReceiveUnexpectedPacket:(NSData *)packet;
 // Called whenever the SCPacketUtility object receives an ICMP packet that does not look like a response to one of our packets.
 
 @end

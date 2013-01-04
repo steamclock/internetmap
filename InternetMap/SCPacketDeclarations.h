@@ -9,6 +9,8 @@
 #ifndef InternetMap_SCPacketDeclarations_h
 #define InternetMap_SCPacketDeclarations_h
 
+#include <AssertMacros.h>
+
 struct IPHeader {
     uint8_t     versionAndHeaderLength;
     uint8_t     differentiatedServices;
@@ -68,7 +70,6 @@ check_compile_time(offsetof(ICMPHeader, identifier) == 4);
 check_compile_time(offsetof(ICMPHeader, sequenceNumber) == 6);
 
 struct ICMPErrorPacket {
-    // TODO: Actually find the originall ICMP header by looking by some offset. But hey, at least we have ALL THE THINGS, hey? You might care about those?
     // IP Header
     uint8_t     versionAndHeaderLength;
     uint8_t     differentiatedServices;

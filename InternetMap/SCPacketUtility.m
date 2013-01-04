@@ -127,17 +127,8 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
     [self _didFailWithError:error];
 }
 
-- (void)sendPacketOfType:(packetType)type withData:(NSData *)data withTTL:(int)ttl{
-    switch (type) {
-        case kUDP:
-            [self sendUDPPacket:data withTTL:ttl];
-            break;
-        case kICMP:
-            [self sendICMPPacket:data withTTL:ttl];
-            break;
-        default:
-            break;
-    }
+- (void)sendPacketWithData:(NSData *)data withTTL:(int)ttl{
+    [self sendICMPPacket:data withTTL:ttl];
 }
 
 -(void)sendICMPPacket:(NSData *)data withTTL:(int)ttl{

@@ -18,12 +18,7 @@
 
 #pragma mark - SCPacketUtility
 
-// Packet types
-// TODO:could expand to support TCP maybe?
-typedef enum {
-    kUDP   = 0,           // code is always 0
-    kICMP   = 1,
-}packetType;
+
 
 // SCPacketUtility is a simple class for sending and receiving ICMP packets.
 
