@@ -27,8 +27,11 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
 @property (nonatomic) NSTimeInterval zoomStartTime;
 @property (nonatomic) NSTimeInterval zoomDuration;
 
+@property (nonatomic) NSTimeInterval updateTime;
 @property (nonatomic) NSTimeInterval idleStartTime; // For "attract" mode
 
+@property (nonatomic) CGPoint panVelocity;
+@property (nonatomic) NSTimeInterval panEndTime;
 
 @property (nonatomic) GLKQuaternion rotationStart;
 @property (nonatomic) GLKQuaternion rotationTarget;
@@ -118,10 +121,21 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
     return _zoom;
 }
 
+- (void)startMomentumPanWithVelocity:(CGPoint)velocity {
+    self.panEndTime = [NSDate timeIntervalSinceReferenceDate];
+    self.panVelocity = velocity;
+}
+
+- (void)stopMomentumPan {
+    self.panVelocity = CGPointZero;
+}
+
 - (void)update
 {
     NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
     
+    NSTimeInterval delta = now - self.updateTime;
+    self.updateTime = now;
     
     // Rotate camera if idle
     NSTimeInterval idleTime = now - self.idleStartTime;
@@ -139,6 +153,24 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
         [self rotateRadiansY:0.0001 * spinupFactor];
     }
     
+    
+    //momentum panning
+    if (self.panVelocity.x != 0 && self.panVelocity.y != 0) {
+        
+        NSTimeInterval rotationTime = now-self.panEndTime;
+        static NSTimeInterval totalTime = 1.0;
+        float timeT = rotationTime / totalTime;
+        if(timeT > 1.0) {
+            self.panVelocity = CGPointZero;
+        }
+        else {
+            //quadratic ease out
+            float positionT = 1+(timeT*timeT-2.0f*timeT);
+            
+            [self rotateRadiansX:self.panVelocity.x*delta*positionT];
+            [self rotateRadiansY:self.panVelocity.y*delta*positionT];
+        }
+    }
     
     GLKVector3 currentTarget;
     //animated move to target

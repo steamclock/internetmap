@@ -58,10 +58,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 @property (strong) NSString* lastSearchIP;
 
-
-@property (nonatomic) CGPoint panVelocity;
-@property (nonatomic) NSTimeInterval panEndTime;
-
 @property (nonatomic) CGFloat zoomVelocity;
 @property (nonatomic) NSTimeInterval zoomEndTime;
 
@@ -292,23 +288,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     NSTimeInterval delta = now - self.updateTime;
     self.updateTime = now;
     
-    //momentum panning    
-    if (self.panVelocity.x != 0 && self.panVelocity.y != 0) {
-        
-        NSTimeInterval rotationTime = now-self.panEndTime;
-        static NSTimeInterval totalTime = 1.0;
-        float timeT = rotationTime / totalTime;
-        if(timeT > 1.0) {
-            self.panVelocity = CGPointZero;
-        }
-        else {
-            //quadratic ease out
-            float positionT = 1+(timeT*timeT-2.0f*timeT);
-            
-            [self.display.camera rotateRadiansX:self.panVelocity.x*delta*positionT];
-            [self.display.camera rotateRadiansY:self.panVelocity.y*delta*positionT];
-        }
-    }
+
 
     //momentum zooming
     if (self.zoomVelocity != 0) {
@@ -374,7 +354,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     if (!self.display.camera.isMovingToTarget) {
             //cancel panning/zooming momentum
-        self.panVelocity = CGPointZero;
+        [self.display.camera stopMomentumPan];
         self.zoomVelocity = 0;
         self.rotationVelocity = 0;
         self.isHandlingLongPress = NO;
@@ -396,7 +376,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
             CGPoint translation = [gestureRecognizer translationInView:self.view];
             self.lastPanPosition = translation;
-            self.panVelocity = CGPointZero;
+            [self.display.camera stopMomentumPan];
             [self unhoverNode];
         }else if([gestureRecognizer state] == UIGestureRecognizerStateChanged) {
             
@@ -408,13 +388,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             [self.display.camera rotateRadiansY:delta.y * 0.01];
         } else if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
             if (isnan([gestureRecognizer velocityInView:self.view].x) || isnan([gestureRecognizer velocityInView:self.view].y)) {
-                self.panVelocity = CGPointZero;
+                [self.display.camera stopMomentumPan];
             }else {
                 CGPoint velocity = [gestureRecognizer velocityInView:self.view];
-                self.panVelocity = CGPointMake(velocity.x*0.002, velocity.y*0.002);
-            }
-            self.panEndTime = [NSDate timeIntervalSinceReferenceDate];
-        
+                [self.display.camera startMomentumPanWithVelocity:CGPointMake(velocity.x*0.002, velocity.y*0.002)];
+            }        
         }
     }
 }
@@ -427,7 +405,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if (!self.display.camera.isMovingToTarget) {
         if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
             //cancel panning/zooming momentum
-            self.panVelocity = CGPointZero;
+            [self.display.camera stopMomentumPan];
             self.zoomVelocity = 0;
             self.rotationVelocity = 0;
             

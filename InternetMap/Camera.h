@@ -39,4 +39,7 @@
 -(GLKVector3)applyModelViewToPoint:(CGPoint)point;
 -(GLKVector3)cameraInObjectSpace;
 
+- (void)startMomentumPanWithVelocity:(CGPoint)velocity;
+- (void)stopMomentumPan;
+
 @end
