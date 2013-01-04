@@ -231,4 +231,26 @@ void callbackCurrent (
 }
 
 
++ (void)fetchGlobalIPWithCompletionBlock:(void (^)(NSString* ip))completion failedBlock:(void(^)(void))failedBlock {
+    __weak ASIHTTPRequest* request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:@"http://stage.steamclocksw.com/ip.php"]];
+    [request setCompletionBlock:^{
+        completion([request responseString]);
+    }];
+    [request setFailedBlock:failedBlock];
+    [request startAsynchronous];
+}
+
++ (void)fetchCurrentASNWithResponseBlock:(ASNResponseBlock)response errorBlock:(void(^)(void))error{
+    [[SCDispatchQueue defaultPriorityQueue] dispatchAsync:^{
+        [self fetchGlobalIPWithCompletionBlock:^(NSString * ip) {
+            if (!ip || [ip isEqualToString:@""]) {
+                error();
+            } else {
+                [ASNRequest fetchForAddresses:@[ip] responseBlock:response];
+            }
+        } failedBlock:error];
+
+    }];
+}
+
 @end

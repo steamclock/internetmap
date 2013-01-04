@@ -95,94 +95,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
 }
 
-- (NSString*)fetchGlobalIP {
-    NSString* address = @"http://stage.steamclocksw.com/ip.php";
-    NSURL *url = [[NSURL alloc] initWithString:address];
-    NSError* error;
-    NSString *ip = [NSString stringWithContentsOfURL:url encoding:NSASCIIStringEncoding error:&error];
-    return ip;
-}
-
-- (void)startFetchingCurrentASNForYouAreHereButton {
-    if (!self.isCurrentlyFetchingASN) {
-        self.isCurrentlyFetchingASN = YES;
-        self.youAreHereActivityIndicator.hidden = NO;
-        [self.youAreHereActivityIndicator startAnimating];
-        self.youAreHereButton.hidden = YES;
-        
-        void (^error)(void) = ^{
-            NSString* error = @"ASN lookup failed";
-            NSLog(@"ASN fetching failed with error: %@", error);
-            self.isCurrentlyFetchingASN = NO;
-            [self.youAreHereActivityIndicator stopAnimating];
-            self.youAreHereActivityIndicator.hidden = YES;
-            self.youAreHereButton.hidden = NO;
-            
-            UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error locating your node", nil) message:error delegate:nil cancelButtonTitle:nil otherButtonTitles:@"ok", nil];
-            [alert show];
-        };
-        
-        [self fetchCurrentASNWithResponseBlock:^(NSArray *asn) {
-            NSNumber* myASN = asn[0];
-            if([myASN isEqual:[NSNull null]]) {
-                error();
-            }
-            else {
-                int asn = [myASN intValue];
-                NSLog(@"ASN fetched: %i", asn);
-                self.isCurrentlyFetchingASN = NO;
-                [self.youAreHereActivityIndicator stopAnimating];
-                self.youAreHereActivityIndicator.hidden = YES;
-                self.youAreHereButton.hidden = NO;
-                self.cachedCurrentASN = asn;
-                [self selectNodeForASN:asn];
-            }
-        } errorBlock:error];
-    }
-}
-
-- (void)fetchCurrentASNWithResponseBlock:(ASNResponseBlock)response errorBlock:(void(^)(void))error{
-    [[SCDispatchQueue defaultPriorityQueue] dispatchAsync:^{
-        NSString* ip = [self fetchGlobalIP];
-        if (!ip || [ip isEqualToString:@""]) {
-            error();
-        } else {
-            [ASNRequest fetchForAddresses:@[ip] responseBlock:response];
-        }
-    }];
-}
-
-- (void)startPrecachingCurrentASN {
-    
-    void (^error)(void) = ^{
-        //do nothing when precaching fails
-    };
-    
-    
-    [self fetchCurrentASNWithResponseBlock:^(NSArray *asn) {
-        NSNumber* myASN = asn[0];
-        if([myASN isEqual:[NSNull null]]) {
-            error();
-        }
-        else {
-            int asn = [myASN intValue];
-            self.cachedCurrentASN = asn;
-        }
-    } errorBlock:error];
-}
-
-
-- (void)selectNodeForASN:(int)asn {
-    Node* node = [self.data.nodesByAsn objectForKey:[NSString stringWithFormat:@"%i", asn]];
-    if (node) {
-        [self updateTargetForIndex:node.index];
-    }else {
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error locating your node", nil) message:@"Couldn't finde a node associated with your IP." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"ok", nil];
-        [alert show];
-    }
-}
-
-
 #pragma mark - View Setup
 
 - (void)viewDidLoad
@@ -266,7 +178,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.display.camera resetIdleTimer];
     
     self.cachedCurrentASN = NSNotFound;
-    [self startPrecachingCurrentASN];
+    [self precacheCurrentASN];
 }
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -467,7 +379,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 
-
+#pragma mark - Update selected/active node
 
 - (void)unhoverNode {
     
@@ -479,9 +391,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
 }
 
-
-
-
 - (void)selectHoveredNode {
     if (self.hoveredNodeIndex != NSNotFound) {
         self.lastSearchIP = nil;
@@ -490,89 +399,15 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
 }
 
-- (int)indexForNodeAtPoint:(CGPoint)pointInView {
-    NSDate* date = [NSDate date];
-    date = date;
-    //get point in view and adjust it for viewport
-    float xOld = pointInView.x;
-    CGFloat xLoOld = 0;
-    CGFloat xHiOld = self.display.camera.displaySize.width;
-    CGFloat xLoNew = -1;
-    CGFloat xHiNew = 1;
-    
-    pointInView.x = (xOld-xLoOld) / (xHiOld-xLoOld) * (xHiNew-xLoNew) + xLoNew;
-    
-    float yOld = pointInView.y;
-    CGFloat yLoOld = 0;
-    CGFloat yHiOld = self.display.camera.displaySize.height;
-    CGFloat yLoNew = 1;
-    CGFloat yHiNew = -1;
-    
-    pointInView.y = (yOld-yLoOld) / (yHiOld-yLoOld) * (yHiNew-yLoNew) + yLoNew;
-    //transform point from screen- to object-space
-    GLKVector3 cameraInObjectSpace = [self.display.camera cameraInObjectSpace]; //A
-    GLKVector3 pointOnClipPlaneInObjectSpace = [self.display.camera applyModelViewToPoint:pointInView]; //B
-    
-    //do actual line-sphere intersection
-    float xA, yA, zA;
-    __block float xC, yC, zC;
-    __block float r;
-    __block float maxDelta = -1;
-    __block int foundI = NSNotFound;
-    
-    xA = cameraInObjectSpace.x;
-    yA = cameraInObjectSpace.y;
-    zA = cameraInObjectSpace.z;
-    
-    GLKVector3 direction = GLKVector3Subtract(pointOnClipPlaneInObjectSpace, cameraInObjectSpace); //direction = B - A
-    GLKVector3 invertedDirection = GLKVector3Make(1.0f/direction.x, 1.0f/direction.y, 1.0f/direction.z);
-    int sign[3];
-    sign[0] = (invertedDirection.x < 0);
-    sign[1] = (invertedDirection.y < 0);
-    sign[2] = (invertedDirection.z < 0);
-    
-    float a = powf((direction.x), 2)+powf((direction.y), 2)+powf((direction.z), 2);
-    
-    IndexBox* box;
-    for (int j = 0; j<[self.data.boxesForNodes count]; j++) {
-        box = [self.data.boxesForNodes objectAtIndex:j];
-        if ([box doesLineIntersectOptimized:cameraInObjectSpace invertedDirection:invertedDirection sign:sign]) {
-            //            NSLog(@"intersects box %i at pos %@", j, NSStringFromGLKVector3(box.center));
-            [box.indices enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
-                int i = idx;
-                Node* node = [self.data nodeAtIndex:i];
-                
-                GLKVector3 nodePosition = [self.data.visualization nodePosition:node];
-                xC = nodePosition.x;
-                yC = nodePosition.y;
-                zC = nodePosition.z;
-                
-                r = [self.data.visualization nodeSize:node]/2;
-                r = MAX(r, 0.02);
-                
-                float b = 2*((direction.x)*(xA-xC)+(direction.y)*(yA-yC)+(direction.z)*(zA-zC));
-                float c = powf((xA-xC), 2)+powf((yA-yC), 2)+powf((zA-zC), 2)-powf(r, 2);
-                float delta = powf(b, 2)-4*a*c;
-                if (delta >= 0) {
-//                    NSLog(@"intersected node %i: %@, delta: %f", i, NSStringFromGLKVector3(nodePosition), delta);
-                    GLKVector4 transformedNodePosition = GLKMatrix4MultiplyVector4(self.display.camera.currentModelView, GLKVector4MakeWithVector3(nodePosition, 1));
-                    if ((delta > maxDelta) && (transformedNodePosition.z < -0.1)) {
-                        maxDelta = delta;
-                        foundI = i;
-                    }
-                }
-                
-            }];
-        }
+- (void)selectNodeForASN:(int)asn {
+    Node* node = [self.data.nodesByAsn objectForKey:[NSString stringWithFormat:@"%i", asn]];
+    if (node) {
+        [self updateTargetForIndex:node.index];
+    }else {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error locating your node", nil) message:@"Couldn't finde a node associated with your IP." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"ok", nil];
+        [alert show];
     }
-    
-//    NSLog(@"time for intersect: %f", [date timeIntervalSinceNow]);
-    return foundI;
 }
-
-
-
-#pragma mark - Update selected/active node
 
 - (void)clearHighlightLines {
     [self.highlightedNodes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
@@ -722,6 +557,86 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
 }
 
+- (int)indexForNodeAtPoint:(CGPoint)pointInView {
+    NSDate* date = [NSDate date];
+    date = date;
+    //get point in view and adjust it for viewport
+    float xOld = pointInView.x;
+    CGFloat xLoOld = 0;
+    CGFloat xHiOld = self.display.camera.displaySize.width;
+    CGFloat xLoNew = -1;
+    CGFloat xHiNew = 1;
+    
+    pointInView.x = (xOld-xLoOld) / (xHiOld-xLoOld) * (xHiNew-xLoNew) + xLoNew;
+    
+    float yOld = pointInView.y;
+    CGFloat yLoOld = 0;
+    CGFloat yHiOld = self.display.camera.displaySize.height;
+    CGFloat yLoNew = 1;
+    CGFloat yHiNew = -1;
+    
+    pointInView.y = (yOld-yLoOld) / (yHiOld-yLoOld) * (yHiNew-yLoNew) + yLoNew;
+    //transform point from screen- to object-space
+    GLKVector3 cameraInObjectSpace = [self.display.camera cameraInObjectSpace]; //A
+    GLKVector3 pointOnClipPlaneInObjectSpace = [self.display.camera applyModelViewToPoint:pointInView]; //B
+    
+    //do actual line-sphere intersection
+    float xA, yA, zA;
+    __block float xC, yC, zC;
+    __block float r;
+    __block float maxDelta = -1;
+    __block int foundI = NSNotFound;
+    
+    xA = cameraInObjectSpace.x;
+    yA = cameraInObjectSpace.y;
+    zA = cameraInObjectSpace.z;
+    
+    GLKVector3 direction = GLKVector3Subtract(pointOnClipPlaneInObjectSpace, cameraInObjectSpace); //direction = B - A
+    GLKVector3 invertedDirection = GLKVector3Make(1.0f/direction.x, 1.0f/direction.y, 1.0f/direction.z);
+    int sign[3];
+    sign[0] = (invertedDirection.x < 0);
+    sign[1] = (invertedDirection.y < 0);
+    sign[2] = (invertedDirection.z < 0);
+    
+    float a = powf((direction.x), 2)+powf((direction.y), 2)+powf((direction.z), 2);
+    
+    IndexBox* box;
+    for (int j = 0; j<[self.data.boxesForNodes count]; j++) {
+        box = [self.data.boxesForNodes objectAtIndex:j];
+        if ([box doesLineIntersectOptimized:cameraInObjectSpace invertedDirection:invertedDirection sign:sign]) {
+            //            NSLog(@"intersects box %i at pos %@", j, NSStringFromGLKVector3(box.center));
+            [box.indices enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+                int i = idx;
+                Node* node = [self.data nodeAtIndex:i];
+                
+                GLKVector3 nodePosition = [self.data.visualization nodePosition:node];
+                xC = nodePosition.x;
+                yC = nodePosition.y;
+                zC = nodePosition.z;
+                
+                r = [self.data.visualization nodeSize:node]/2;
+                r = MAX(r, 0.02);
+                
+                float b = 2*((direction.x)*(xA-xC)+(direction.y)*(yA-yC)+(direction.z)*(zA-zC));
+                float c = powf((xA-xC), 2)+powf((yA-yC), 2)+powf((zA-zC), 2)-powf(r, 2);
+                float delta = powf(b, 2)-4*a*c;
+                if (delta >= 0) {
+                    //                    NSLog(@"intersected node %i: %@, delta: %f", i, NSStringFromGLKVector3(nodePosition), delta);
+                    GLKVector4 transformedNodePosition = GLKMatrix4MultiplyVector4(self.display.camera.currentModelView, GLKVector4MakeWithVector3(nodePosition, 1));
+                    if ((delta > maxDelta) && (transformedNodePosition.z < -0.1)) {
+                        maxDelta = delta;
+                        foundI = i;
+                    }
+                }
+                
+            }];
+        }
+    }
+    
+    //    NSLog(@"time for intersect: %f", [date timeIntervalSinceNow]);
+    return foundI;
+}
+
 #pragma mark - Action methods
 
 -(IBAction)searchButtonPressed:(id)sender {
@@ -738,7 +653,42 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(IBAction)youAreHereButtonPressed:(id)sender {
     if ([HelperMethods deviceHasInternetConnection]) {
-        [self startFetchingCurrentASNForYouAreHereButton];
+        //fetch current ASN and select node
+        if (!self.isCurrentlyFetchingASN) {
+            self.isCurrentlyFetchingASN = YES;
+            self.youAreHereActivityIndicator.hidden = NO;
+            [self.youAreHereActivityIndicator startAnimating];
+            self.youAreHereButton.hidden = YES;
+            
+            void (^error)(void) = ^{
+                NSString* error = @"ASN lookup failed";
+                NSLog(@"ASN fetching failed with error: %@", error);
+                self.isCurrentlyFetchingASN = NO;
+                [self.youAreHereActivityIndicator stopAnimating];
+                self.youAreHereActivityIndicator.hidden = YES;
+                self.youAreHereButton.hidden = NO;
+                
+                UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error locating your node", nil) message:error delegate:nil cancelButtonTitle:nil otherButtonTitles:@"ok", nil];
+                [alert show];
+            };
+            
+            [ASNRequest fetchCurrentASNWithResponseBlock:^(NSArray *asn) {
+                NSNumber* myASN = asn[0];
+                if([myASN isEqual:[NSNull null]]) {
+                    error();
+                }
+                else {
+                    int asn = [myASN intValue];
+                    NSLog(@"ASN fetched: %i", asn);
+                    self.isCurrentlyFetchingASN = NO;
+                    [self.youAreHereActivityIndicator stopAnimating];
+                    self.youAreHereActivityIndicator.hidden = YES;
+                    self.youAreHereButton.hidden = NO;
+                    self.cachedCurrentASN = asn;
+                    [self selectNodeForASN:asn];
+                }
+            } errorBlock:error];
+        }
     }else {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No Internet connection" message:@"Please connect to the internet." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
         [alert show];
@@ -799,6 +749,28 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.nodeInformationPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
     
 }
+
+#pragma mark - Helper Methods: Current ASN precaching
+
+- (void)precacheCurrentASN {
+    
+    void (^error)(void) = ^{
+        //do nothing when precaching fails
+    };
+    
+    
+    [ASNRequest fetchCurrentASNWithResponseBlock:^(NSArray *asn) {
+        NSNumber* myASN = asn[0];
+        if([myASN isEqual:[NSNull null]]) {
+            error();
+        }
+        else {
+            int asn = [myASN intValue];
+            self.cachedCurrentASN = asn;
+        }
+    } errorBlock:error];
+}
+
 
 #pragma mark - NodeSearch Delegate
 
