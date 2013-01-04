@@ -14,6 +14,7 @@ typedef void (^ASNResponseBlock)(NSArray* asn);
 
 +(void)fetchForAddresses:(NSArray*)addresses responseBlock:(ASNResponseBlock)result;
 +(void)fetchForASN:(int)asn responseBlock:(ASNResponseBlock)result;
++(NSArray *)addressesForHostname:(NSString *)hostname;
 
 @end
 

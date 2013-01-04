@@ -17,9 +17,7 @@
 #import "Lines.h"
 #import "IndexBox.h"
 #import <sys/socket.h>
-#import <netdb.h>
 #import <ifaddrs.h>
-#import <arpa/inet.h>
 #import "ErrorInfoView.h"
 #import "Nodes.h"
 #import "NodeTooltipViewController.h"
@@ -89,6 +87,13 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @end
 
 @implementation ViewController
+
+- (void)dealloc
+{
+    if ([EAGLContext currentContext] == self.context) {
+        [EAGLContext setCurrentContext:nil];
+    }
+}
 
 - (NSString*)fetchGlobalIP {
     NSString* address = @"http://stage.steamclocksw.com/ip.php";
@@ -178,12 +183,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 
-- (void)dealloc
-{
-    if ([EAGLContext currentContext] == self.context) {
-        [EAGLContext setCurrentContext:nil];
-    }
-}
+#pragma mark - View Setup
 
 - (void)viewDidLoad
 {
@@ -247,6 +247,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.view addGestureRecognizer:self.longPressGestureRecognizer];
     [self.view addGestureRecognizer:self.rotationGestureRecognizer];
     
+    //setting activityIndicator sizes (positions are set in IB, but sizes can only be set in code)
     self.searchActivityIndicator.frame = CGRectMake(self.searchActivityIndicator.frame.origin.x, self.searchActivityIndicator.frame.origin.y, 30, 30);
     self.youAreHereActivityIndicator.frame = CGRectMake(self.youAreHereActivityIndicator.frame.origin.x, self.youAreHereActivityIndicator.frame.origin.y, 30, 30);
     self.visualizationsActivityIndicator.frame = CGRectMake(self.visualizationsActivityIndicator.frame.origin.x, self.visualizationsActivityIndicator.frame.origin.y, 30, 30);
@@ -268,13 +269,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self startPrecachingCurrentASN];
 }
 
-
-
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return UIInterfaceOrientationIsLandscape(interfaceOrientation);
 }
 
 #pragma mark - GLKView and GLKViewController delegate methods
+
 - (void)update
 {
     [self.display update];
@@ -294,26 +294,18 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.display draw];
 }
 
-- (void)unhoverNode {
-    
-    if (self.hoveredNodeIndex != NSNotFound && self.hoveredNodeIndex != self.targetNode) {
-        Node* node = [self.data nodeAtIndex:self.hoveredNodeIndex];
-        
-        [self.data.visualization updateDisplay:self.display forNodes:@[node]];
-        self.hoveredNodeIndex = NSNotFound;
-    }
-}
+#pragma mark - Touch and GestureRecognizer handlers
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
     
     if (!self.display.camera.isMovingToTarget) {
-            //cancel panning/zooming momentum
+        //cancel panning/zooming momentum
         [self.display.camera stopMomentumPan];
         [self.display.camera stopMomentumZoom];
         [self.display.camera stopMomentumRotation];
         self.isHandlingLongPress = NO;
-
+        
         int i = [self indexForNodeAtPoint:[[touches anyObject] locationInView:self.view]];
         if (i != NSNotFound) {
             self.hoveredNodeIndex = i;
@@ -321,6 +313,55 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             [self.display.nodes updateNode:i color:SELECTED_NODE_COLOR];
             [self.display.nodes endUpdate];
         }
+    }
+}
+
+-(void)handleTap:(UITapGestureRecognizer*)gestureRecognizer {
+    [self.display.camera resetIdleTimer];
+    [self selectHoveredNode];
+}
+
+- (void)handleDoubleTap:(UIGestureRecognizer*)gestureRecongizer {
+    [self.display.camera zoomAnimatedTo:self.display.camera.currentZoom+1.5 duration:1];
+    [self unhoverNode];
+}
+
+- (void)handleTwoFingerTap:(UIGestureRecognizer*)gestureRecognizer {
+    if (gestureRecognizer.numberOfTouches == 2) {
+        [self.display.camera zoomAnimatedTo:self.display.camera.currentZoom-1.5 duration:1];
+        [self unhoverNode];
+    }
+}
+
+- (void)handleLongPress:(UILongPressGestureRecognizer *)gesture
+{
+    if(gesture.state == UIGestureRecognizerStateBegan || gesture.state == UIGestureRecognizerStateChanged) {
+        if ((!self.lastIntersectionDate || fabs([self.lastIntersectionDate timeIntervalSinceNow]) > 0.01)) {
+            self.isHandlingLongPress = YES;
+            int i = [self indexForNodeAtPoint:[gesture locationInView:self.view]];
+            self.lastIntersectionDate = [NSDate date];
+            if (i != NSNotFound) {
+                
+                Node* node = [self.data.nodes objectAtIndex:i];
+                if (self.nodeTooltipViewController.node != node) {
+                    self.nodeTooltipViewController = [[NodeTooltipViewController alloc] initWithNode:node];
+                    
+                    [self.nodeTooltipPopover dismissPopoverAnimated:NO];
+                    self.nodeTooltipPopover = [[WEPopoverController alloc] initWithContentViewController:self.nodeTooltipViewController];
+                    self.nodeTooltipPopover.passthroughViews = @[self.view];
+                    CGPoint center = [self getCoordinatesForNodeAtIndex:i];
+                    [self.nodeTooltipPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];
+                    [self unhoverNode];
+                    self.hoveredNodeIndex = i;
+                    [self.display.nodes beginUpdate];
+                    [self.display.nodes updateNode:i color:SELECTED_NODE_COLOR];
+                    [self.display.nodes endUpdate];
+                }
+            }
+        }
+    }else if(gesture.state == UIGestureRecognizerStateEnded) {
+        [self.nodeTooltipPopover dismissPopoverAnimated:NO];
+        [self selectHoveredNode];
     }
 }
 
@@ -347,29 +388,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             }else {
                 CGPoint velocity = [gestureRecognizer velocityInView:self.view];
                 [self.display.camera startMomentumPanWithVelocity:CGPointMake(velocity.x*0.002, velocity.y*0.002)];
-            }        
-        }
-    }
-}
-
-- (BOOL)shouldDoIdleAnimation{
-    return !self.tracerouteHops && !UIGestureRecognizerStateIsActive(self.longPressGestureRecognizer.state) && !UIGestureRecognizerStateIsActive(self.pinchRecognizer.state) && !UIGestureRecognizerStateIsActive(self.panRecognizer.state);
-}
-
-- (void)handleTouchDown:(UILongPressGestureRecognizer*)gestureRecognizer {
-    if (!self.display.camera.isMovingToTarget) {
-        if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-            //cancel panning/zooming momentum
-            [self.display.camera stopMomentumPan];
-            [self.display.camera stopMomentumZoom];
-            [self.display.camera stopMomentumRotation];
-            
-            int i = [self indexForNodeAtPoint:[gestureRecognizer locationInView:self.view]];
-            if (i != NSNotFound) {
-                self.hoveredNodeIndex = i;
-                [self.display.nodes beginUpdate];
-                [self.display.nodes updateNode:i color:SELECTED_NODE_COLOR];
-                [self.display.nodes endUpdate];
             }
         }
     }
@@ -420,10 +438,49 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
 }
 
--(void)handleTap:(UITapGestureRecognizer*)gestureRecognizer {
-    [self.display.camera resetIdleTimer];
-    [self selectHoveredNode];
+#pragma mark - UIGestureRecognizerDelegate methods
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    if (touch.view != self.view) {
+        return NO;
+    }
+    
+    return YES;
 }
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    
+    
+    NSArray* simultaneous = @[self.panRecognizer, self.pinchRecognizer, self.rotationGestureRecognizer, self.longPressGestureRecognizer];
+    if ([simultaneous containsObject:gestureRecognizer] && [simultaneous containsObject:otherGestureRecognizer]) {
+        return YES;
+    }
+    
+    return NO;
+}
+
+
+#pragma mark - CameraDelegate methods
+
+- (BOOL)shouldDoIdleAnimation{
+    return !self.tracerouteHops && !UIGestureRecognizerStateIsActive(self.longPressGestureRecognizer.state) && !UIGestureRecognizerStateIsActive(self.pinchRecognizer.state) && !UIGestureRecognizerStateIsActive(self.panRecognizer.state);
+}
+
+
+
+
+- (void)unhoverNode {
+    
+    if (self.hoveredNodeIndex != NSNotFound && self.hoveredNodeIndex != self.targetNode) {
+        Node* node = [self.data nodeAtIndex:self.hoveredNodeIndex];
+        
+        [self.data.visualization updateDisplay:self.display forNodes:@[node]];
+        self.hoveredNodeIndex = NSNotFound;
+    }
+}
+
+
+
 
 - (void)selectHoveredNode {
     if (self.hoveredNodeIndex != NSNotFound) {
@@ -513,64 +570,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     return foundI;
 }
 
-- (void)handleLongPress:(UILongPressGestureRecognizer *)gesture
-{
-    if(gesture.state == UIGestureRecognizerStateBegan || gesture.state == UIGestureRecognizerStateChanged) {
-        if ((!self.lastIntersectionDate || fabs([self.lastIntersectionDate timeIntervalSinceNow]) > 0.01)) {
-            self.isHandlingLongPress = YES;
-            int i = [self indexForNodeAtPoint:[gesture locationInView:self.view]];
-            self.lastIntersectionDate = [NSDate date];
-            if (i != NSNotFound) {
-
-                Node* node = [self.data.nodes objectAtIndex:i];
-                if (self.nodeTooltipViewController.node != node) {
-                    self.nodeTooltipViewController = [[NodeTooltipViewController alloc] initWithNode:node];
-                    
-                    [self.nodeTooltipPopover dismissPopoverAnimated:NO];
-                    self.nodeTooltipPopover = [[WEPopoverController alloc] initWithContentViewController:self.nodeTooltipViewController];
-                    self.nodeTooltipPopover.passthroughViews = @[self.view];
-                    CGPoint center = [self getCoordinatesForNodeAtIndex:i];
-                    [self.nodeTooltipPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];
-                    [self unhoverNode];
-                    self.hoveredNodeIndex = i;
-                    [self.display.nodes beginUpdate];
-                    [self.display.nodes updateNode:i color:SELECTED_NODE_COLOR];
-                    [self.display.nodes endUpdate];
-                }
-            }
-        }
-    }else if(gesture.state == UIGestureRecognizerStateEnded) {
-        [self.nodeTooltipPopover dismissPopoverAnimated:NO];
-        [self selectHoveredNode];
-    }
-}
-
-
-- (void)handleTwoFingerTap:(UIGestureRecognizer*)gestureRecognizer {
-    if (gestureRecognizer.numberOfTouches == 2) {
-        [self.display.camera zoomAnimatedTo:self.display.camera.currentZoom-1.5 duration:1];
-        [self unhoverNode];
-    }
-}
-
-- (void)handleDoubleTap:(UIGestureRecognizer*)gestureRecongizer {
-    [self.display.camera zoomAnimatedTo:self.display.camera.currentZoom+1.5 duration:1];
-    [self unhoverNode];
-}
 
 
 #pragma mark - Update selected/active node
-
-
-
--(IBAction)nextTarget:(id)sender {
-    if(self.targetNode == NSNotFound) {
-        [self updateTargetForIndex:0];
-    }
-    else {
-        [self updateTargetForIndex:self.targetNode+1];
-    }
-}
 
 - (void)clearHighlightLines {
     [self.highlightedNodes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
@@ -720,9 +722,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
 }
 
-#pragma mark - UIKit Controls Overlay
+#pragma mark - Action methods
 
--(IBAction)searchNodes:(id)sender {
+-(IBAction)searchButtonPressed:(id)sender {
     if (!self.nodeSearchPopover) {
         NodeSearchViewController *searchController = [[NodeSearchViewController alloc] init];
         searchController.delegate = self;
@@ -743,7 +745,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
 }
 
--(IBAction)selectVisualization:(id)sender {
+-(IBAction)visualizationsButtonPressed:(id)sender {
     if (!self.visualizationSelectionPopover) {
         VisualizationsTableViewController *tableforPopover = [[VisualizationsTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:tableforPopover];
@@ -753,7 +755,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.visualizationSelectionPopover presentPopoverFromRect:self.visualizationsButton.bounds inView:self.visualizationsButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 }
 
--(IBAction)toggleTimelineMode:(id)sender {
+-(IBAction)timelineButtonPressed:(id)sender {
     if (self.timelineSlider.hidden) {
         self.timelineSlider.hidden = NO;
         
@@ -798,80 +800,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
 }
 
-#pragma mark UIGestureRecognizerDelegate
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    if (touch.view != self.view) {
-        return NO;
-    }
-    
-    return YES;
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-
-    
-    NSArray* simultaneous = @[self.panRecognizer, self.pinchRecognizer, self.rotationGestureRecognizer, self.longPressGestureRecognizer];
-    if ([simultaneous containsObject:gestureRecognizer] && [simultaneous containsObject:otherGestureRecognizer]) {
-        return YES;
-    }
-    
-    return NO;
-}
-
 #pragma mark - NodeSearch Delegate
 
 -(void)nodeSelected:(Node*)node{
     [self dismissNodeInfoPopover];
     [self updateTargetForIndex:node.index];
-}
-
--(void)nodeSearchDelegateDone {
-    [self.nodeSearchPopover dismissPopoverAnimated:YES];
-}
-
-// Get a set of IP addresses for a given host name
-// Originally pulled from here: http://www.bdunagan.com/2009/11/28/iphone-tip-no-nshost/
-// MIT License
-
-+ (NSArray *)addressesForHostname:(NSString *)hostname {
-    // Get the addresses for the given hostname.
-    CFHostRef hostRef = CFHostCreateWithName(kCFAllocatorDefault, (__bridge CFStringRef)hostname);
-    
-    BOOL isSuccess = CFHostStartInfoResolution(hostRef, kCFHostAddresses, nil);
-    if (!isSuccess) {
-        CFRelease(hostRef);
-        return nil;
-    }
-    CFArrayRef addressesRef = CFHostGetAddressing(hostRef, nil);
-    if (addressesRef == nil)  {
-        CFRelease(hostRef);
-        return nil;
-    }
-    // Convert these addresses into strings.
-    char ipAddress[INET6_ADDRSTRLEN];
-    NSMutableArray *addresses = [NSMutableArray array];
-    CFIndex numAddresses = CFArrayGetCount(addressesRef);
-    for (CFIndex currentIndex = 0; currentIndex < numAddresses; currentIndex++) {
-        struct sockaddr *address = (struct sockaddr *)CFDataGetBytePtr(CFArrayGetValueAtIndex(addressesRef, currentIndex));
-        
-        if (address == nil) {
-            CFRelease(hostRef);
-            return nil;
-        }
-
-        getnameinfo(address, address->sa_len, ipAddress, INET6_ADDRSTRLEN, nil, 0, NI_NUMERICHOST);
-        
-        if (ipAddress == nil) {
-            CFRelease(hostRef);
-            return nil;
-        }
-        
-        [addresses addObject:[NSString stringWithCString:ipAddress encoding:NSASCIIStringEncoding]];
-    }
-    
-    CFRelease(hostRef);
-    return addresses;
 }
 
 -(void)selectNodeByHostLookup:(NSString*)host {
@@ -882,7 +815,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         [self.searchActivityIndicator startAnimating];
         self.searchButton.hidden = YES;
         [[SCDispatchQueue defaultPriorityQueue] dispatchAsync:^{
-            NSArray* addresses = [ViewController addressesForHostname:host];
+            NSArray* addresses = [ASNRequest addressesForHostname:host];
             if(addresses.count != 0) {
                 self.lastSearchIP = addresses[0];
                 [ASNRequest fetchForAddresses:@[addresses[0]] responseBlock:^(NSArray *asn) {
@@ -902,10 +835,14 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No Internet connection" message:@"Please connect to the internet." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
         [alert show];
     }
-    
+}
+
+-(void)nodeSearchDelegateDone {
+    [self.nodeSearchPopover dismissPopoverAnimated:YES];
 }
 
 #pragma mark - NodeInfo delegate
+
 - (void)dismissNodeInfoPopover {
     [self.nodeInformationPopover dismissPopoverAnimated:YES];
     [self.tracer stop];
@@ -914,7 +851,65 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.tracerouteHops = nil;
         [self clearHighlightLines];
     }
+}
+
+#pragma mark - Node Info View Delegate
+
+-(void)tracerouteButtonTapped{
+    CGPoint center = [self getCoordinatesForNodeAtIndex:self.targetNode];
+    self.nodeInformationPopover.popoverContentSize = CGSizeZero;
+    [self.nodeInformationPopover repositionPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
+    self.tracerouteHops = [NSMutableArray array];
+    self.highlightedNodes = [[NSMutableIndexSet alloc] init];
+    [self.display.camera zoomAnimatedTo:-3 duration:3];
+    [self.display.camera setRotationAnimatedTo:GLKMatrix4MakeRotation(M_PI, 0, 1, 0) duration:3];
     
+    if(self.lastSearchIP) {
+        self.tracer = [SCTraceroute tracerouteWithAddress:self.lastSearchIP ofType:kICMP]; //we need ip for node!
+        self.tracer.delegate = self;
+        [self.tracer start];
+    }
+    else {
+        Node* node = [self.data nodeAtIndex:self.targetNode];
+        if ([node.asn intValue]) {
+            [ASNRequest fetchForASN:[node.asn intValue] responseBlock:^(NSArray *asn) {
+                if (asn[0] != [NSNull null]) {
+                    NSLog(@"starting tracerout with IP: %@", asn[0]);
+                    self.tracer = [SCTraceroute tracerouteWithAddress:asn[0] ofType:kICMP];
+                    self.tracer.delegate = self;
+                    [self.tracer start];
+                }else {
+                    NSLog(@"asn couldn't be resolved to IP");
+                    self.nodeInformationViewController.tracerouteTextView.textColor = [UIColor redColor];
+                    self.nodeInformationViewController.tracerouteTextView.text = @"Error: ASN couldn't be resolved into IP.";
+                }
+            }];
+        } else {
+            NSLog(@"asn is not an int");
+            self.nodeInformationViewController.tracerouteTextView.textColor = [UIColor redColor];
+            self.nodeInformationViewController.tracerouteTextView.text = @"Error: ASN couldn't be resolved into IP.";
+        }
+    }
+}
+
+-(void)doneTapped{
+    [self.nodeInformationPopover dismissPopoverAnimated:YES];
+    [self.tracer stop];
+    self.tracer = nil;
+    if (self.tracerouteHops) {
+        self.tracerouteHops = nil;
+        [self clearHighlightLines];
+    }
+}
+
+#pragma mark - WEPopover Delegate
+
+//Pretty sure these don't get called for NodeInfoPopover, but will get called for other popovers if we set delegates, yo
+- (void)popoverControllerDidDismissPopover:(WEPopoverController *)popoverController{
+    
+}
+- (BOOL)popoverControllerShouldDismissPopover:(WEPopoverController *)popoverController{
+    return YES;
 }
 
 #pragma mark - SCTraceroute Delegate
@@ -971,65 +966,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         [self.tracerouteHops addObject:targetNode];
         [self highlightRoute:self.tracerouteHops];
     }
-}
-
-#pragma mark - Node Info View Delegate
-
--(void)tracerouteButtonTapped{
-    CGPoint center = [self getCoordinatesForNodeAtIndex:self.targetNode];
-    self.nodeInformationPopover.popoverContentSize = CGSizeZero;
-    [self.nodeInformationPopover repositionPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
-    self.tracerouteHops = [NSMutableArray array];
-    self.highlightedNodes = [[NSMutableIndexSet alloc] init];
-    [self.display.camera zoomAnimatedTo:-3 duration:3];
-    [self.display.camera setRotationAnimatedTo:GLKMatrix4MakeRotation(M_PI, 0, 1, 0) duration:3];
-
-    if(self.lastSearchIP) {
-        self.tracer = [SCTraceroute tracerouteWithAddress:self.lastSearchIP ofType:kICMP]; //we need ip for node!
-        self.tracer.delegate = self;
-        [self.tracer start];
-    }
-    else {
-        Node* node = [self.data nodeAtIndex:self.targetNode];
-        if ([node.asn intValue]) {
-            [ASNRequest fetchForASN:[node.asn intValue] responseBlock:^(NSArray *asn) {
-                if (asn[0] != [NSNull null]) {
-                    NSLog(@"starting tracerout with IP: %@", asn[0]);
-                    self.tracer = [SCTraceroute tracerouteWithAddress:asn[0] ofType:kICMP];
-                    self.tracer.delegate = self;
-                    [self.tracer start];
-                }else {
-                    NSLog(@"asn couldn't be resolved to IP");
-                    self.nodeInformationViewController.tracerouteTextView.textColor = [UIColor redColor];
-                    self.nodeInformationViewController.tracerouteTextView.text = @"Error: ASN couldn't be resolved into IP.";
-                }
-            }];
-        } else {
-            NSLog(@"asn is not an int");
-            self.nodeInformationViewController.tracerouteTextView.textColor = [UIColor redColor];
-            self.nodeInformationViewController.tracerouteTextView.text = @"Error: ASN couldn't be resolved into IP.";
-        }
-    }
-}
-
--(void)doneTapped{
-    [self.nodeInformationPopover dismissPopoverAnimated:YES];
-    [self.tracer stop];
-    self.tracer = nil;
-    if (self.tracerouteHops) {
-        self.tracerouteHops = nil;
-        [self clearHighlightLines];
-    }
-}
-
-#pragma mark - WEPopover Delegate
-
-//Pretty sure these don't get called for NodeInfoPopover, but will get called for other popovers if we set delegates, yo
-- (void)popoverControllerDidDismissPopover:(WEPopoverController *)popoverController{
-    
-}
-- (BOOL)popoverControllerShouldDismissPopover:(WEPopoverController *)popoverController{
-    return YES;
 }
 
 @end
