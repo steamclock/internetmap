@@ -75,6 +75,9 @@
 		A6F3F5871640F1FB0070E6AE /* ViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6F3F5851640F1FB0070E6AE /* ViewController_iPhone.xib */; };
 		A6F3F58A1640F1FB0070E6AE /* ViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6F3F5881640F1FB0070E6AE /* ViewController_iPad.xib */; };
 		A6F3F5911640F7080070E6AE /* data.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6F3F5901640F7080070E6AE /* data.txt */; };
+		D414E21A1697839000C41CFC /* SCIcmpPacketUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = D414E2191697839000C41CFC /* SCIcmpPacketUtility.m */; };
+		D414E21D169783C300C41CFC /* SCTracerouteUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = D414E21C169783C300C41CFC /* SCTracerouteUtility.m */; };
+		D414E220169783F200C41CFC /* SCPacketRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = D414E21F169783F200C41CFC /* SCPacketRecord.m */; };
 		D46808FD1679560A00A2C1CC /* SCPacketUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = D46808FA1679560A00A2C1CC /* SCPacketUtility.m */; };
 		D46808FE1679560A00A2C1CC /* SCTraceroute.m in Sources */ = {isa = PBXBuildFile; fileRef = D46808FC1679560A00A2C1CC /* SCTraceroute.m */; };
 		D468090416795D4600A2C1CC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D468090216795CC200A2C1CC /* SystemConfiguration.framework */; };
@@ -203,6 +206,13 @@
 		A6F3F5861640F1FB0070E6AE /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPhone.xib; sourceTree = "<group>"; };
 		A6F3F5891640F1FB0070E6AE /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPad.xib; sourceTree = "<group>"; };
 		A6F3F5901640F7080070E6AE /* data.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = data.txt; path = InternetMap/data.txt; sourceTree = "<group>"; };
+		D414E2181697839000C41CFC /* SCIcmpPacketUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCIcmpPacketUtility.h; sourceTree = "<group>"; };
+		D414E2191697839000C41CFC /* SCIcmpPacketUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCIcmpPacketUtility.m; sourceTree = "<group>"; };
+		D414E21B169783C300C41CFC /* SCTracerouteUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCTracerouteUtility.h; sourceTree = "<group>"; };
+		D414E21C169783C300C41CFC /* SCTracerouteUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCTracerouteUtility.m; sourceTree = "<group>"; };
+		D414E21E169783F200C41CFC /* SCPacketRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPacketRecord.h; sourceTree = "<group>"; };
+		D414E21F169783F200C41CFC /* SCPacketRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPacketRecord.m; sourceTree = "<group>"; };
+		D414E2211697923A00C41CFC /* SCPacketDeclarations.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCPacketDeclarations.h; sourceTree = "<group>"; };
 		D46808F91679560A00A2C1CC /* SCPacketUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPacketUtility.h; sourceTree = "<group>"; };
 		D46808FA1679560A00A2C1CC /* SCPacketUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPacketUtility.m; sourceTree = "<group>"; };
 		D46808FB1679560A00A2C1CC /* SCTraceroute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCTraceroute.h; sourceTree = "<group>"; };
@@ -407,6 +417,7 @@
 		A6F3F56C1640F1FB0070E6AE /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				D414E21616977D2300C41CFC /* SCNetworkingUtility */,
 				D46808F91679560A00A2C1CC /* SCPacketUtility.h */,
 				D46808FA1679560A00A2C1CC /* SCPacketUtility.m */,
 				D46808FB1679560A00A2C1CC /* SCTraceroute.h */,
@@ -454,6 +465,20 @@
 			);
 			name = "Supporting Files";
 			path = InternetMap;
+			sourceTree = "<group>";
+		};
+		D414E21616977D2300C41CFC /* SCNetworkingUtility */ = {
+			isa = PBXGroup;
+			children = (
+				D414E2181697839000C41CFC /* SCIcmpPacketUtility.h */,
+				D414E2191697839000C41CFC /* SCIcmpPacketUtility.m */,
+				D414E21B169783C300C41CFC /* SCTracerouteUtility.h */,
+				D414E21C169783C300C41CFC /* SCTracerouteUtility.m */,
+				D414E21E169783F200C41CFC /* SCPacketRecord.h */,
+				D414E21F169783F200C41CFC /* SCPacketRecord.m */,
+				D414E2211697923A00C41CFC /* SCPacketDeclarations.h */,
+			);
+			name = SCNetworkingUtility;
 			sourceTree = "<group>";
 		};
 		D4CEA32016694E53004B8E8A /* Images */ = {
@@ -628,6 +653,9 @@
 				116E598116828AC300F653BC /* UIView+Convenience.m in Sources */,
 				11FFB390167FC3CE00309545 /* Nodes.m in Sources */,
 				1186ACE816851DBE0061FA49 /* NodeTooltipViewController.m in Sources */,
+				D414E21A1697839000C41CFC /* SCIcmpPacketUtility.m in Sources */,
+				D414E21D169783C300C41CFC /* SCTracerouteUtility.m in Sources */,
+				D414E220169783F200C41CFC /* SCPacketRecord.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
