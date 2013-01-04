@@ -27,6 +27,8 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
 @property (nonatomic) NSTimeInterval zoomStartTime;
 @property (nonatomic) NSTimeInterval zoomDuration;
 
+@property (nonatomic) NSTimeInterval idleStartTime; // For "attract" mode
+
 
 @property (nonatomic) GLKQuaternion rotationStart;
 @property (nonatomic) GLKQuaternion rotationTarget;
@@ -67,6 +69,10 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
     self.rotationTarget = GLKQuaternionMakeWithMatrix4(rotation);
     self.rotationStartTime = [NSDate timeIntervalSinceReferenceDate];
     self.rotationDuration = duration;
+}
+
+-(void)resetIdleTimer {
+    self.idleStartTime = [NSDate timeIntervalSinceReferenceDate];
 }
 
 - (void)zoomAnimatedTo:(float)zoom duration:(NSTimeInterval)duration {
@@ -115,6 +121,24 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
 - (void)update
 {
     NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
+    
+    
+    // Rotate camera if idle
+    NSTimeInterval idleTime = now - self.idleStartTime;
+    float idleDelay = 0.1;
+    
+    BOOL shouldDoIdle = YES;
+    if (self.delegate && [self.delegate respondsToSelector:@selector(shouldDoIdleAnimation)]) {
+        shouldDoIdle = [self.delegate shouldDoIdleAnimation];
+    }
+    if (shouldDoIdle && idleTime > idleDelay) {
+        // Ease in
+        float spinupFactor = fminf(1.0, (idleTime - idleDelay) / 2);
+        
+        [self rotateRadiansX:0.0006 * spinupFactor];
+        [self rotateRadiansY:0.0001 * spinupFactor];
+    }
+    
     
     GLKVector3 currentTarget;
     //animated move to target

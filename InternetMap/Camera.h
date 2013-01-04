@@ -6,12 +6,20 @@
 #import <Foundation/Foundation.h>
 #import "GLKit/GLKit.h"
 
+@protocol CameraDelegate <NSObject>
+
+- (BOOL)shouldDoIdleAnimation;
+
+@end
+
+
 @interface Camera : NSObject
 
 @property (nonatomic) CGSize displaySize;
 
 @property (nonatomic) GLKVector3 target;
 @property (nonatomic) BOOL isMovingToTarget;
+@property (nonatomic, weak) id<CameraDelegate> delegate;
 
 -(void)rotateRadiansX:(float)rotate;
 -(void)rotateRadiansY:(float)rotate;
@@ -19,6 +27,7 @@
 -(void)rotateAnimatedTo:(GLKMatrix4)rotation duration:(NSTimeInterval)duration;
 -(void)zoomAnimatedTo:(float)zoom duration:(NSTimeInterval)duration;
 -(void)zoom:(float)zoom;
+-(void)resetIdleTimer;
 
 -(void)update;
 

@@ -6,7 +6,6 @@
 #import "ViewController.h"
 #import "MapDisplay.h"
 #import "MapData.h"
-#import "Camera.h"
 #import "Node.h"
 #import "Connection.h"
 #import "DefaultVisualization.h"
@@ -59,7 +58,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 @property (strong) NSString* lastSearchIP;
 
-@property (nonatomic) NSTimeInterval idleStartTime; // For "attract" mode
 
 @property (nonatomic) CGPoint panVelocity;
 @property (nonatomic) NSTimeInterval panEndTime;
@@ -216,6 +214,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [EAGLContext setCurrentContext:self.context];
     
     self.display = [MapDisplay new];
+    self.display.camera.displaySize = self.view.bounds.size;
+    self.display.camera.delegate = self;
+    
     self.data = [MapData new];
     self.data.visualization = [DefaultVisualization new];
     
@@ -271,15 +272,13 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayInformationPopoverForCurrentNode) name:@"cameraMovementFinished" object:nil];
     
-    [self resetIdleTimer];
+    [self.display.camera resetIdleTimer];
     
     self.cachedCurrentASN = NSNotFound;
     [self startPrecachingCurrentASN];
 }
 
--(void)resetIdleTimer {
-    self.idleStartTime = [NSDate timeIntervalSinceReferenceDate];
-}
+
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return UIInterfaceOrientationIsLandscape(interfaceOrientation);
@@ -292,20 +291,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
     NSTimeInterval delta = now - self.updateTime;
     self.updateTime = now;
-    
-    self.display.camera.displaySize = self.view.bounds.size;
-    
-    // Rotate camera if idle
-    NSTimeInterval idleTime = now - self.idleStartTime;
-    float idleDelay = 0.1;
-    
-    if (!self.tracerouteHops && !UIGestureRecognizerStateIsActive(self.longPressGestureRecognizer.state) && !UIGestureRecognizerStateIsActive(self.pinchRecognizer.state) && !UIGestureRecognizerStateIsActive(self.panRecognizer.state) && idleTime > idleDelay) {
-        // Ease in
-        float spinupFactor = fminf(1.0, (idleTime - idleDelay) / 2);
-        
-        [self.display.camera rotateRadiansX:0.0006 * spinupFactor];
-        [self.display.camera rotateRadiansY:0.0001 * spinupFactor];
-    }
     
     //momentum panning    
     if (self.panVelocity.x != 0 && self.panVelocity.y != 0) {
@@ -406,7 +391,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)handlePan:(UIPanGestureRecognizer *)gestureRecognizer
 {
-    [self resetIdleTimer];
+    [self.display.camera resetIdleTimer];
     if (!self.isHandlingLongPress) {
         if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
             CGPoint translation = [gestureRecognizer translationInView:self.view];
@@ -434,6 +419,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
 }
 
+- (BOOL)shouldDoIdleAnimation{
+    return !self.tracerouteHops && !UIGestureRecognizerStateIsActive(self.longPressGestureRecognizer.state) && !UIGestureRecognizerStateIsActive(self.pinchRecognizer.state) && !UIGestureRecognizerStateIsActive(self.panRecognizer.state);
+}
+
 - (void)handleTouchDown:(UILongPressGestureRecognizer*)gestureRecognizer {
     if (!self.display.camera.isMovingToTarget) {
         if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
@@ -454,7 +443,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 - (void)handleRotation:(UIRotationGestureRecognizer*)gestureRecognizer {
-    [self resetIdleTimer];
+    [self.display.camera resetIdleTimer];
     if (!self.isHandlingLongPress) {
         if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
             [self unhoverNode];
@@ -479,7 +468,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)handlePinch:(UIPinchGestureRecognizer *)gestureRecognizer
 {
-    [self resetIdleTimer];
+    [self.display.camera resetIdleTimer];
     if (!self.isHandlingLongPress) {
         if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
             [self unhoverNode];
@@ -501,7 +490,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(void)handleTap:(UITapGestureRecognizer*)gestureRecognizer {
-    [self resetIdleTimer];
+    [self.display.camera resetIdleTimer];
     [self selectHoveredNode];
 }
 
