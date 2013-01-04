@@ -70,24 +70,8 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
     
     NSTimeInterval delta = now - self.updateTime;
     self.updateTime = now;
-    
-    // Rotate camera if idle
-    NSTimeInterval idleTime = now - self.idleStartTime;
-    float idleDelay = 0.1;
-    
-    BOOL shouldDoIdle = YES;
-    if (self.delegate && [self.delegate respondsToSelector:@selector(shouldDoIdleAnimation)]) {
-        shouldDoIdle = [self.delegate shouldDoIdleAnimation];
-    }
-    if (shouldDoIdle && idleTime > idleDelay) {
-        // Ease in
-        float spinupFactor = fminf(1.0, (idleTime - idleDelay) / 2);
-        
-        [self rotateRadiansX:0.0006 * spinupFactor];
-        [self rotateRadiansY:0.0001 * spinupFactor];
-    }
-    
-    
+
+    [self handleIdleMovementAtTime:now delta:delta];
     [self handleMomentumPanAtTime:now delta:delta];
     [self handleMomentumZoomAtTime:now delta:delta];
     [self handleMomentumRotationAtTime:now delta:delta];
@@ -108,6 +92,24 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
 }
 
 #pragma mark - Update loop helpers
+
+- (void)handleIdleMovementAtTime:(NSTimeInterval)now delta:(NSTimeInterval)delta {
+    // Rotate camera if idle
+    NSTimeInterval idleTime = now - self.idleStartTime;
+    float idleDelay = 0.1;
+    
+    BOOL shouldDoIdle = YES;
+    if (self.delegate && [self.delegate respondsToSelector:@selector(shouldDoIdleAnimation)]) {
+        shouldDoIdle = [self.delegate shouldDoIdleAnimation];
+    }
+    if (shouldDoIdle && idleTime > idleDelay) {
+        // Ease in
+        float spinupFactor = fminf(1.0, (idleTime - idleDelay) / 2);
+        
+        [self rotateRadiansX:0.0006 * spinupFactor];
+        [self rotateRadiansY:0.0001 * spinupFactor];
+    }
+}
 
 - (void)handleMomentumPanAtTime:(NSTimeInterval)now delta:(NSTimeInterval)delta {
     //momentum panning
