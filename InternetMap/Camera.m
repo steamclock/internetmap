@@ -62,98 +62,7 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
     return self;
 }
 
--(void) rotateRadiansX:(float)rotate {
-    _rotationMatrix = GLKMatrix4Multiply(GLKMatrix4MakeRotation(rotate, 0.0f, 1.0f, 0.0f), _rotationMatrix);
-}
-
--(void) rotateRadiansY:(float)rotate {
-    _rotationMatrix = GLKMatrix4Multiply(GLKMatrix4MakeRotation(rotate, 1.0f, 0.0f, 0.0f), _rotationMatrix);
-}
-
--(void) rotateRadiansZ:(float)rotate {
-    _rotationMatrix = GLKMatrix4Multiply(GLKMatrix4MakeRotation(rotate, 0.0f, 0.0f, 1.0f), _rotationMatrix);
-}
-
-- (void)rotateAnimatedTo:(GLKMatrix4)rotation duration:(NSTimeInterval)duration{
-    self.rotationStart = GLKQuaternionMakeWithMatrix4(_rotationMatrix);
-    self.rotationTarget = GLKQuaternionMakeWithMatrix4(rotation);
-    self.rotationStartTime = [NSDate timeIntervalSinceReferenceDate];
-    self.rotationDuration = duration;
-}
-
--(void)resetIdleTimer {
-    self.idleStartTime = [NSDate timeIntervalSinceReferenceDate];
-}
-
-- (void)zoomAnimatedTo:(float)zoom duration:(NSTimeInterval)duration {
-    if(zoom > -0.2) {
-        zoom = -0.2;
-    }
-    
-    if(zoom < -10.0f) {
-        zoom = -10.0f;
-    }
-    self.zoomStart = _zoom;
-    self.zoomTarget = zoom;
-    self.zoomStartTime = [NSDate timeIntervalSinceReferenceDate];
-    self.zoomDuration = duration;
-}
-
--(void) zoom:(float)zoom {
-    _zoom += zoom * -_zoom;
-    if(_zoom > -0.2) {
-        _zoom = -0.2;
-    }
-    
-    if(_zoom < -10.0f) {
-        _zoom = -10.0f;
-    }
-    
-
-}
-
--(void)setTarget:(GLKVector3)target {
-    _targetMoveStartPosition = _target;
-    _target = target;
-    _targetMoveStartTime = [NSDate timeIntervalSinceReferenceDate];
-    _isMovingToTarget = YES;
-    [self zoomAnimatedTo:FINAL_ZOOM_ON_SELECTION duration:MOVE_TIME];
-}
-
--(GLKVector3)target {
-    return _target;
-}
-
--(float)currentZoom {
-    return _zoom;
-}
-
-- (void)startMomentumPanWithVelocity:(CGPoint)velocity {
-    self.panEndTime = [NSDate timeIntervalSinceReferenceDate];
-    self.panVelocity = velocity;
-}
-
-- (void)stopMomentumPan {
-    self.panVelocity = CGPointZero;
-}
-
-- (void)startMomentumZoomWithVelocity:(CGFloat)velocity {
-    self.zoomEndTime = [NSDate timeIntervalSinceReferenceDate];
-    self.zoomVelocity = velocity*0.5;
-}
-
-- (void)stopMomentumZoom {
-    self.zoomVelocity = 0;
-}
-
-- (void)startMomentumRotationWithVelocity:(CGFloat)velocity {
-    self.rotationVelocity = velocity;
-    self.rotationEndTime = [NSDate timeIntervalSinceReferenceDate];
-}
-
-- (void)stopMomentumRotation {
-    self.rotationVelocity = 0;
-}
+#pragma mark - Main update loop
 
 - (void)update
 {
@@ -182,89 +91,23 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
     [self handleMomentumPanAtTime:now delta:delta];
     [self handleMomentumZoomAtTime:now delta:delta];
     [self handleMomentumRotationAtTime:now delta:delta];
-
+    GLKVector3 currentTarget = [self calculateMoveTargetAtTime:now delta:delta];
+    [self handleAnimatedZoomAtTime:now delta:delta];
+    [self handleAnimatedRotationAtTime:now delta:delta];
     
-    GLKVector3 currentTarget;
-    //animated move to target
-    if(self.targetMoveStartTime < now) {
-        float timeT = (now - self.targetMoveStartTime) / MOVE_TIME;
-        if(timeT > 1.0f) {
-            currentTarget = self.target;
-            self.targetMoveStartTime = [[NSDate distantFuture] timeIntervalSinceReferenceDate];
-            self.isMovingToTarget = NO;
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"cameraMovementFinished" object:nil];
-        }
-        else {
-            float positionT;
-            
-            // Quadratic ease-in / ease-out
-            if (timeT < 0.5f)
-            {
-                positionT = timeT * timeT * 2;
-            }
-            else {
-                positionT = 1.0f - ((timeT - 1.0f) * (timeT - 1.0f) * 2.0f);
-            }
-            
-            currentTarget = GLKVector3Add(self.targetMoveStartPosition, GLKVector3MultiplyScalar(GLKVector3Subtract(self.target, self.targetMoveStartPosition), positionT));
-        }
-    }
-    else {
-        currentTarget = self.target;
-    }
-    
-    //animated zoom
-    if(self.zoomStartTime < now) {
-        float timeT = (now - self.zoomStartTime) / self.zoomDuration;
-        if(timeT > 1.0f) {
-            self.zoomStartTime = [[NSDate distantFuture] timeIntervalSinceReferenceDate];
-        }
-        else {
-            float positionT;
-            
-            // Quadratic ease-in / ease-out
-            if (timeT < 0.5f)
-            {
-                positionT = timeT * timeT * 2;
-            }
-            else {
-                positionT = 1.0f - ((timeT - 1.0f) * (timeT - 1.0f) * 2.0f);
-            }
-            _zoom = self.zoomStart + (self.zoomTarget-self.zoomStart)*positionT;
-        }
-    }
-    
-    //animated rotation
-    if (self.rotationStartTime < now) {
-        float timeT = (now - self.rotationStartTime) / self.rotationDuration;
-        if(timeT > 1.0f) {
-            self.rotationStartTime = [[NSDate distantFuture] timeIntervalSinceReferenceDate];
-        }
-        else {
-            float positionT;
-            
-            // Quadratic ease-in / ease-out
-            if (timeT < 0.5f)
-            {
-                positionT = timeT * timeT * 2;
-            }
-            else {
-                positionT = 1.0f - ((timeT - 1.0f) * (timeT - 1.0f) * 2.0f);
-            }
-            _rotationMatrix = GLKMatrix4MakeWithQuaternion(GLKQuaternionSlerp(self.rotationStart, self.rotationTarget, positionT));
-        }
-    }
     
     float aspect = fabsf(self.displaySize.width / self.displaySize.height);
     GLKMatrix4 model = GLKMatrix4Multiply(_rotationMatrix, GLKMatrix4MakeTranslation(-currentTarget.x, -currentTarget.y, -currentTarget.z));
     GLKMatrix4 view = GLKMatrix4MakeTranslation(0.0f, 0.0f, _zoom);
     GLKMatrix4 modelView = GLKMatrix4Multiply(view, model);
     GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0f), aspect, 0.1f, 100.0f);
-
+    
     _projectionMatrix = projectionMatrix;
     _modelViewMatrix = modelView;
     _modelViewProjectionMatrix = GLKMatrix4Multiply(projectionMatrix, modelView);
 }
+
+#pragma mark - Update loop helpers
 
 - (void)handleMomentumPanAtTime:(NSTimeInterval)now delta:(NSTimeInterval)delta {
     //momentum panning
@@ -299,14 +142,14 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
         else {
             //quadratic ease out
             float positionT = 1+(timeT*timeT-2.0f*timeT);
-            [self zoom:self.zoomVelocity*delta*positionT];
+            [self zoomByScale:self.zoomVelocity*delta*positionT];
         }
     }
 }
 
 -(void)handleMomentumRotationAtTime:(NSTimeInterval)now delta:(NSTimeInterval)delta {
-
-
+    
+    
     //momentum rotation
     if (self.rotationVelocity != 0) {
         
@@ -323,8 +166,96 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
             [self rotateRadiansZ:self.rotationVelocity*delta*positionT];
         }
     }
+}
+
+- (void)handleAnimatedZoomAtTime:(NSTimeInterval)now delta:(NSTimeInterval)delta {
+    //animated zoom
+    if(self.zoomStartTime < now) {
+        float timeT = (now - self.zoomStartTime) / self.zoomDuration;
+        if(timeT > 1.0f) {
+            self.zoomStartTime = [[NSDate distantFuture] timeIntervalSinceReferenceDate];
+        }
+        else {
+            float positionT;
+            
+            // Quadratic ease-in / ease-out
+            if (timeT < 0.5f)
+            {
+                positionT = timeT * timeT * 2;
+            }
+            else {
+                positionT = 1.0f - ((timeT - 1.0f) * (timeT - 1.0f) * 2.0f);
+            }
+            _zoom = self.zoomStart + (self.zoomTarget-self.zoomStart)*positionT;
+        }
+    }
+}
+
+- (void)handleAnimatedRotationAtTime:(NSTimeInterval)now delta:(NSTimeInterval)delta {
+    //animated rotation
+    if (self.rotationStartTime < now) {
+        float timeT = (now - self.rotationStartTime) / self.rotationDuration;
+        if(timeT > 1.0f) {
+            self.rotationStartTime = [[NSDate distantFuture] timeIntervalSinceReferenceDate];
+        }
+        else {
+            float positionT;
+            
+            // Quadratic ease-in / ease-out
+            if (timeT < 0.5f)
+            {
+                positionT = timeT * timeT * 2;
+            }
+            else {
+                positionT = 1.0f - ((timeT - 1.0f) * (timeT - 1.0f) * 2.0f);
+            }
+            _rotationMatrix = GLKMatrix4MakeWithQuaternion(GLKQuaternionSlerp(self.rotationStart, self.rotationTarget, positionT));
+        }
+    }
+}
+
+- (GLKVector3)calculateMoveTargetAtTime:(NSTimeInterval)now delta:(NSTimeInterval)delta {
+    
+    GLKVector3 currentTarget;
+    //animated move to target
+    if(self.targetMoveStartTime < now) {
+        float timeT = (now - self.targetMoveStartTime) / MOVE_TIME;
+        if(timeT > 1.0f) {
+            currentTarget = self.target;
+            self.targetMoveStartTime = [[NSDate distantFuture] timeIntervalSinceReferenceDate];
+            self.isMovingToTarget = NO;
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"cameraMovementFinished" object:nil];
+        }
+        else {
+            float positionT;
+            
+            // Quadratic ease-in / ease-out
+            if (timeT < 0.5f)
+            {
+                positionT = timeT * timeT * 2;
+            }
+            else {
+                positionT = 1.0f - ((timeT - 1.0f) * (timeT - 1.0f) * 2.0f);
+            }
+            
+            currentTarget = GLKVector3Add(self.targetMoveStartPosition, GLKVector3MultiplyScalar(GLKVector3Subtract(self.target, self.targetMoveStartPosition), positionT));
+        }
+    }
+    else {
+        currentTarget = self.target;
+    }
+    return currentTarget;
+}
 
 
+#pragma mark - Information retrieval
+
+-(GLKVector3)target {
+    return _target;
+}
+
+-(float)currentZoom {
+    return _zoom;
 }
 
 -(GLKMatrix4)currentModelViewProjection {
@@ -340,11 +271,10 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
     return _projectionMatrix;
 }
 
-
 - (GLKVector3)cameraInObjectSpace {
     GLKMatrix4 invertedModelViewMatrix = GLKMatrix4Invert(_modelViewMatrix, NULL);
     return GLKVector3Make(invertedModelViewMatrix.m30, invertedModelViewMatrix.m31, invertedModelViewMatrix.m32);
-
+    
 }
 
 -(GLKVector3)applyModelViewToPoint:(CGPoint)point {
@@ -352,9 +282,102 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
     GLKMatrix4 invertedModelViewProjectionMatrix = GLKMatrix4Invert(_modelViewProjectionMatrix, NULL);
     vec4FromPoint = GLKMatrix4MultiplyVector4(invertedModelViewProjectionMatrix, vec4FromPoint);
     vec4FromPoint = GLKVector4DivideScalar(vec4FromPoint, vec4FromPoint.w);
-
+    
     return GLKVector3Make(vec4FromPoint.x, vec4FromPoint.y, vec4FromPoint.z);
-
+    
 }
+
+#pragma mark - View manipulation
+
+-(void) rotateRadiansX:(float)rotate {
+    _rotationMatrix = GLKMatrix4Multiply(GLKMatrix4MakeRotation(rotate, 0.0f, 1.0f, 0.0f), _rotationMatrix);
+}
+
+-(void) rotateRadiansY:(float)rotate {
+    _rotationMatrix = GLKMatrix4Multiply(GLKMatrix4MakeRotation(rotate, 1.0f, 0.0f, 0.0f), _rotationMatrix);
+}
+
+-(void) rotateRadiansZ:(float)rotate {
+    _rotationMatrix = GLKMatrix4Multiply(GLKMatrix4MakeRotation(rotate, 0.0f, 0.0f, 1.0f), _rotationMatrix);
+}
+
+- (void)setRotationAnimatedTo:(GLKMatrix4)rotation duration:(NSTimeInterval)duration{
+    self.rotationStart = GLKQuaternionMakeWithMatrix4(_rotationMatrix);
+    self.rotationTarget = GLKQuaternionMakeWithMatrix4(rotation);
+    self.rotationStartTime = [NSDate timeIntervalSinceReferenceDate];
+    self.rotationDuration = duration;
+}
+
+-(void) zoomByScale:(float)zoom {
+    _zoom += zoom * -_zoom;
+    if(_zoom > -0.2) {
+        _zoom = -0.2;
+    }
+    
+    if(_zoom < -10.0f) {
+        _zoom = -10.0f;
+    }
+}
+
+- (void)zoomAnimatedTo:(float)zoom duration:(NSTimeInterval)duration {
+    if(zoom > -0.2) {
+        zoom = -0.2;
+    }
+    
+    if(zoom < -10.0f) {
+        zoom = -10.0f;
+    }
+    self.zoomStart = _zoom;
+    self.zoomTarget = zoom;
+    self.zoomStartTime = [NSDate timeIntervalSinceReferenceDate];
+    self.zoomDuration = duration;
+}
+
+-(void)setTarget:(GLKVector3)target {
+    _targetMoveStartPosition = _target;
+    _target = target;
+    _targetMoveStartTime = [NSDate timeIntervalSinceReferenceDate];
+    _isMovingToTarget = YES;
+    [self zoomAnimatedTo:FINAL_ZOOM_ON_SELECTION duration:MOVE_TIME];
+}
+
+#pragma mark - Momentum Panning/Zooming/Rotation
+
+- (void)startMomentumPanWithVelocity:(CGPoint)velocity {
+    self.panEndTime = [NSDate timeIntervalSinceReferenceDate];
+    self.panVelocity = velocity;
+}
+
+- (void)stopMomentumPan {
+    self.panVelocity = CGPointZero;
+}
+
+- (void)startMomentumZoomWithVelocity:(CGFloat)velocity {
+    self.zoomEndTime = [NSDate timeIntervalSinceReferenceDate];
+    self.zoomVelocity = velocity*0.5;
+}
+
+- (void)stopMomentumZoom {
+    self.zoomVelocity = 0;
+}
+
+- (void)startMomentumRotationWithVelocity:(CGFloat)velocity {
+    self.rotationVelocity = velocity;
+    self.rotationEndTime = [NSDate timeIntervalSinceReferenceDate];
+}
+
+- (void)stopMomentumRotation {
+    self.rotationVelocity = 0;
+}
+
+
+#pragma mark - Idle Timer
+
+-(void)resetIdleTimer {
+    self.idleStartTime = [NSDate timeIntervalSinceReferenceDate];
+}
+
+
+
 
 @end

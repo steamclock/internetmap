@@ -24,9 +24,9 @@
 -(void)rotateRadiansX:(float)rotate;
 -(void)rotateRadiansY:(float)rotate;
 -(void)rotateRadiansZ:(float)rotate;
--(void)rotateAnimatedTo:(GLKMatrix4)rotation duration:(NSTimeInterval)duration;
+-(void)setRotationAnimatedTo:(GLKMatrix4)rotation duration:(NSTimeInterval)duration;
 -(void)zoomAnimatedTo:(float)zoom duration:(NSTimeInterval)duration;
--(void)zoom:(float)zoom;
+-(void)zoomByScale:(float)zoom;
 -(void)resetIdleTimer;
 
 -(void)update;

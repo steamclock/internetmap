@@ -409,7 +409,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         {
             float deltaZoom = gestureRecognizer.scale - self.lastScale;
             self.lastScale = gestureRecognizer.scale;
-            [self.display.camera zoom:deltaZoom];
+            [self.display.camera zoomByScale:deltaZoom];
         }else if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
             if (isnan(gestureRecognizer.velocity)) {
                 [self.display.camera stopMomentumZoom];
@@ -982,7 +982,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.tracerouteHops = [NSMutableArray array];
     self.highlightedNodes = [[NSMutableIndexSet alloc] init];
     [self.display.camera zoomAnimatedTo:-3 duration:3];
-    [self.display.camera rotateAnimatedTo:GLKMatrix4MakeRotation(M_PI, 0, 1, 0) duration:3];
+    [self.display.camera setRotationAnimatedTo:GLKMatrix4MakeRotation(M_PI, 0, 1, 0) duration:3];
 
     if(self.lastSearchIP) {
         self.tracer = [SCTraceroute tracerouteWithAddress:self.lastSearchIP ofType:kICMP]; //we need ip for node!
