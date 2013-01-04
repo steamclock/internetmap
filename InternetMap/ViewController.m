@@ -35,6 +35,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (strong, nonatomic) MapData* data;
 
 @property (strong, nonatomic) NSMutableArray* tracerouteHops;
+@property (strong, nonatomic) NSMutableIndexSet* highlightedNodes;
 
 @property (strong, nonatomic) NSDate* lastIntersectionDate;
 @property (assign, nonatomic) BOOL isHandlingLongPress;
@@ -651,34 +652,57 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
 }
 
+- (void)clearHighlightLines {
+    [self.highlightedNodes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+        NSMutableArray* array = [NSMutableArray arrayWithCapacity:[self.highlightedNodes count]];
+        if (idx != self.targetNode) {
+            Node* node = [self.data nodeAtIndex:idx];
+            [array addObject:node];
+        }
+        [self.data.visualization updateDisplay:self.display forNodes:array];
+    }];
+    self.display.highlightLines = nil;
+}
+
 -(void)highlightRoute:(NSArray*)nodeList {
     if(nodeList.count <= 1) {
-        self.display.highlightLines = nil;
+        [self clearHighlightLines];
         return;
     }
     Lines* lines = [[Lines alloc] initWithLineCount:nodeList.count - 1];
     
     [lines beginUpdate];
     
-    UIColor* lineColor = [UIColor redColor];
+    UIColor* lineColor = UIColorFromRGB(0xffa300);
     
-    for(int i = 0; i < nodeList.count - 2; i++) {
+    [self.display.nodes beginUpdate];
+    for(int i = 0; i < nodeList.count - 1; i++) {
         Node* a = nodeList[i];
         Node* b = nodeList[i+1];
-        
+        [self.display.nodes updateNode:a.index color:SELECTED_NODE_COLOR];
+        [self.display.nodes updateNode:b.index color:SELECTED_NODE_COLOR];
+        [self.highlightedNodes addIndex:a.index];
+        [self.highlightedNodes addIndex:b.index];
         [lines updateLine:i withStart:[self.data.visualization nodePosition:a] startColor:lineColor end:[self.data.visualization nodePosition:b] endColor:lineColor];
     }
     
+    [self.display.nodes endUpdate];
+
+    
     [lines endUpdate];
     
-    lines.width = [HelperMethods deviceIsRetina] ? 6.0 : 3.0;
+    lines.width = [HelperMethods deviceIsRetina] ? 10.0 : 5.0;
 
     self.display.highlightLines = lines;
+    
+    //highlight nodes
+    
+
 }
 
 -(void)highlightConnections:(Node*)node {
     if(node == nil) {
-        self.display.highlightLines = nil;
+        [self clearHighlightLines];
         return;
     }
     
@@ -690,8 +714,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         }
     }
 
-    if(filteredConnections.count == 0) {
-        self.display.highlightLines = nil;
+    if(filteredConnections.count == 0 || filteredConnections.count > 100) {
+        [self clearHighlightLines];
         return;
     }
     
@@ -968,7 +992,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.tracer = nil;
     if (self.tracerouteHops) {
         self.tracerouteHops = nil;
-        self.display.highlightLines = nil;
+        [self clearHighlightLines];
     }
     
 }
@@ -1006,28 +1030,27 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.tracer = nil;
     self.nodeInformationViewController.tracerouteTextView.text = [NSString stringWithFormat:@"%@\nTraceroute complete.", self.nodeInformationViewController.tracerouteTextView.text];
     
-//    [ASNRequest fetchForAddresses:hops responseBlock:^(NSArray *asns) {
-//        NSMutableArray* nodes = [NSMutableArray new];
-//        Node* last = nil;
-//        
-//        for(NSNumber* asn in asns) {
-//            if(![asn isEqual:[NSNull null]]) {
-//                Node* current = [self.data.nodesByAsn objectForKey:[NSString stringWithFormat:@"%i", [asn intValue]]];
-//                if(current && (current != last)) {
-//                    [nodes addObject:current];
-//                }
-//                
-//            }
-//        }
-//        
-//        [self highlightRoute:nodes];
-//    }];
+    //highlight last node if not already highlighted
+    Node* node = [self.tracerouteHops lastObject];
+    if (node.index != self.targetNode) {
+        [self.tracerouteHops addObject:[self.data nodeAtIndex:self.targetNode]];
+        [self highlightRoute:self.tracerouteHops];
+    }
+
 }
 
 -(void)tracerouteDidTimeout{
     [self.tracer stop];
     self.tracer = nil;
     self.nodeInformationViewController.tracerouteTextView.text = [NSString stringWithFormat:@"%@\nTraceroute completed with as many hops as we could contact.", self.nodeInformationViewController.tracerouteTextView.text];
+    
+    //highlight last node if not already highlighted
+    Node* node = [self.tracerouteHops lastObject];    
+    if (node.index != self.targetNode) {
+        Node* targetNode = [self.data nodeAtIndex:self.targetNode];
+        [self.tracerouteHops addObject:targetNode];
+        [self highlightRoute:self.tracerouteHops];
+    }
 }
 
 #pragma mark - Node Info View Delegate
@@ -1037,8 +1060,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.nodeInformationPopover.popoverContentSize = CGSizeZero;
     [self.nodeInformationPopover repositionPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
     self.tracerouteHops = [NSMutableArray array];
+    self.highlightedNodes = [[NSMutableIndexSet alloc] init];
     [self.display.camera zoomAnimatedTo:-3 duration:3];
-    [self.display.camera rotateAnimatedTo:GLKMatrix4Identity duration:3];
+    [self.display.camera rotateAnimatedTo:GLKMatrix4MakeRotation(M_PI, 0, 1, 0) duration:3];
 
     if(self.lastSearchIP) {
         self.tracer = [SCTraceroute tracerouteWithAddress:self.lastSearchIP ofType:kICMP]; //we need ip for node!
@@ -1074,7 +1098,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.tracer = nil;
     if (self.tracerouteHops) {
         self.tracerouteHops = nil;
-        self.display.highlightLines = nil;
+        [self clearHighlightLines];
     }
 }
 
