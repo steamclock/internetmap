@@ -35,7 +35,7 @@
 				<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 			</object>
 			<object class="IBUIView" id="191373211">
-				<reference key="NSNextResponder"/>
+				<nil key="NSNextResponder"/>
 				<int key="NSvFlags">319</int>
 				<array class="NSMutableArray" key="NSSubviews">
 					<object class="IBUIImageView" id="958763738">
@@ -43,8 +43,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{914, 14}, {100, 44}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
-						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<int key="IBUIContentMode">4</int>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -63,7 +61,6 @@
 								<int key="NSvFlags">301</int>
 								<string key="NSFrame">{{20, 20}, {55, 55}}</string>
 								<reference key="NSSuperview" ref="580833300"/>
-								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="354409866"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -102,7 +99,6 @@
 								<int key="NSvFlags">-2147483356</int>
 								<string key="NSFrame">{{38, 35}, {20, 20}}</string>
 								<reference key="NSSuperview" ref="580833300"/>
-								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="586805203"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -113,7 +109,6 @@
 								<int key="NSvFlags">301</int>
 								<string key="NSFrame">{{79, 20}, {55, 55}}</string>
 								<reference key="NSSuperview" ref="580833300"/>
-								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="135839533"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -139,7 +134,6 @@
 								<int key="NSvFlags">-2147483356</int>
 								<string key="NSFrame">{{93, 33}, {20, 20}}</string>
 								<reference key="NSSuperview" ref="580833300"/>
-								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="341091275"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -150,7 +144,6 @@
 								<int key="NSvFlags">301</int>
 								<string key="NSFrame">{{138, 20}, {55, 55}}</string>
 								<reference key="NSSuperview" ref="580833300"/>
-								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="178017470"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -176,7 +169,6 @@
 								<int key="NSvFlags">-2147483356</int>
 								<string key="NSFrame">{{156, 38}, {20, 20}}</string>
 								<reference key="NSSuperview" ref="580833300"/>
-								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="747164839"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -187,7 +179,6 @@
 								<int key="NSvFlags">301</int>
 								<string key="NSFrame">{{197, 20}, {55, 55}}</string>
 								<reference key="NSSuperview" ref="580833300"/>
-								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="931664156"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -213,7 +204,6 @@
 								<int key="NSvFlags">-2147483356</int>
 								<string key="NSFrame">{{215, 37}, {20, 20}}</string>
 								<reference key="NSSuperview" ref="580833300"/>
-								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="958763738"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -222,7 +212,6 @@
 						</array>
 						<string key="NSFrame">{{-20, -20}, {252, 75}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="724447255"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
@@ -236,8 +225,6 @@
 						<int key="NSvFlags">-2147483356</int>
 						<string key="NSFrame">{{18, 720}, {988, 23}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
-						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -247,8 +234,6 @@
 					</object>
 				</array>
 				<string key="NSFrame">{{0, 20}, {1024, 748}}</string>
-				<reference key="NSSuperview"/>
-				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="580833300"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
@@ -359,12 +344,12 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">searchNodes:</string>
+						<string key="label">searchButtonPressed:</string>
 						<reference key="source" ref="724447255"/>
 						<reference key="destination" ref="372490531"/>
 						<int key="IBEventType">7</int>
 					</object>
-					<int key="connectionID">27</int>
+					<int key="connectionID">47</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -377,21 +362,21 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">selectVisualization:</string>
+						<string key="label">visualizationsButtonPressed:</string>
 						<reference key="source" ref="341091275"/>
 						<reference key="destination" ref="372490531"/>
 						<int key="IBEventType">7</int>
 					</object>
-					<int key="connectionID">25</int>
+					<int key="connectionID">48</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">toggleTimelineMode:</string>
+						<string key="label">timelineButtonPressed:</string>
 						<reference key="source" ref="747164839"/>
 						<reference key="destination" ref="372490531"/>
 						<int key="IBEventType">7</int>
 					</object>
-					<int key="connectionID">33</int>
+					<int key="connectionID">49</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -518,7 +503,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">46</int>
+			<int key="maxID">49</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
