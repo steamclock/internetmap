@@ -58,9 +58,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 @property (strong) NSString* lastSearchIP;
 
-@property (nonatomic) CGFloat zoomVelocity;
-@property (nonatomic) NSTimeInterval zoomEndTime;
-
 @property (nonatomic) CGFloat rotationVelocity;
 @property (nonatomic) NSTimeInterval rotationEndTime;
 
@@ -288,23 +285,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     NSTimeInterval delta = now - self.updateTime;
     self.updateTime = now;
     
-
-
-    //momentum zooming
-    if (self.zoomVelocity != 0) {
-        static NSTimeInterval totalTime = 0.5;
-        NSTimeInterval zoomTime = now-self.zoomEndTime;
-        float timeT = zoomTime / totalTime;
-        if(timeT > 1.0) {
-            self.zoomVelocity = 0;
-        }
-        else {
-            //quadratic ease out
-            float positionT = 1+(timeT*timeT-2.0f*timeT);
-            [self.display.camera zoom:self.zoomVelocity*delta*positionT];
-        }
-    }
-    
     //momentum rotation
     if (self.rotationVelocity != 0) {
         
@@ -355,7 +335,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if (!self.display.camera.isMovingToTarget) {
             //cancel panning/zooming momentum
         [self.display.camera stopMomentumPan];
-        self.zoomVelocity = 0;
+        [self.display.camera stopMomentumZoom];
         self.rotationVelocity = 0;
         self.isHandlingLongPress = NO;
 
@@ -406,7 +386,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
             //cancel panning/zooming momentum
             [self.display.camera stopMomentumPan];
-            self.zoomVelocity = 0;
+            [self.display.camera stopMomentumZoom];
             self.rotationVelocity = 0;
             
             int i = [self indexForNodeAtPoint:[gestureRecognizer locationInView:self.view]];
@@ -458,11 +438,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             [self.display.camera zoom:deltaZoom];
         }else if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
             if (isnan(gestureRecognizer.velocity)) {
-                self.zoomVelocity = 0;
+                [self.display.camera stopMomentumZoom];
             }else {
-                self.zoomVelocity = gestureRecognizer.velocity*0.5;
+                [self.display.camera startMomentumZoomWithVelocity:gestureRecognizer.velocity*0.5];
             }
-            self.zoomEndTime = [NSDate timeIntervalSinceReferenceDate];
         }
     }
 }

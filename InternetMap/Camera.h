@@ -42,4 +42,7 @@
 - (void)startMomentumPanWithVelocity:(CGPoint)velocity;
 - (void)stopMomentumPan;
 
+- (void)startMomentumZoomWithVelocity:(CGFloat)velocity;
+- (void)stopMomentumZoom;
+
 @end

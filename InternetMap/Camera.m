@@ -33,6 +33,9 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
 @property (nonatomic) CGPoint panVelocity;
 @property (nonatomic) NSTimeInterval panEndTime;
 
+@property (nonatomic) CGFloat zoomVelocity;
+@property (nonatomic) NSTimeInterval zoomEndTime;
+
 @property (nonatomic) GLKQuaternion rotationStart;
 @property (nonatomic) GLKQuaternion rotationTarget;
 @property (nonatomic) NSTimeInterval rotationStartTime;
@@ -130,6 +133,15 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
     self.panVelocity = CGPointZero;
 }
 
+- (void)startMomentumZoomWithVelocity:(CGFloat)velocity {
+    self.zoomEndTime = [NSDate timeIntervalSinceReferenceDate];
+    self.zoomVelocity = velocity*0.5;
+}
+
+- (void)stopMomentumZoom {
+    self.zoomVelocity = 0;
+}
+
 - (void)update
 {
     NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
@@ -154,23 +166,10 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
     }
     
     
-    //momentum panning
-    if (self.panVelocity.x != 0 && self.panVelocity.y != 0) {
-        
-        NSTimeInterval rotationTime = now-self.panEndTime;
-        static NSTimeInterval totalTime = 1.0;
-        float timeT = rotationTime / totalTime;
-        if(timeT > 1.0) {
-            self.panVelocity = CGPointZero;
-        }
-        else {
-            //quadratic ease out
-            float positionT = 1+(timeT*timeT-2.0f*timeT);
-            
-            [self rotateRadiansX:self.panVelocity.x*delta*positionT];
-            [self rotateRadiansY:self.panVelocity.y*delta*positionT];
-        }
-    }
+    [self handleMomentumPanAtTime:now delta:delta];
+    [self handleMomentumZoomAtTime:now delta:delta];
+    
+
     
     GLKVector3 currentTarget;
     //animated move to target
@@ -253,6 +252,45 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
     _modelViewMatrix = modelView;
     _modelViewProjectionMatrix = GLKMatrix4Multiply(projectionMatrix, modelView);
 }
+
+- (void)handleMomentumPanAtTime:(NSTimeInterval)now delta:(NSTimeInterval)delta {
+    //momentum panning
+    if (self.panVelocity.x != 0 && self.panVelocity.y != 0) {
+        
+        NSTimeInterval rotationTime = now-self.panEndTime;
+        static NSTimeInterval totalTime = 1.0;
+        float timeT = rotationTime / totalTime;
+        if(timeT > 1.0) {
+            self.panVelocity = CGPointZero;
+        }
+        else {
+            //quadratic ease out
+            float positionT = 1+(timeT*timeT-2.0f*timeT);
+            
+            [self rotateRadiansX:self.panVelocity.x*delta*positionT];
+            [self rotateRadiansY:self.panVelocity.y*delta*positionT];
+        }
+    }
+}
+
+
+- (void)handleMomentumZoomAtTime:(NSTimeInterval)now delta:(NSTimeInterval)delta {
+    //momentum zooming
+    if (self.zoomVelocity != 0) {
+        static NSTimeInterval totalTime = 0.5;
+        NSTimeInterval zoomTime = now-self.zoomEndTime;
+        float timeT = zoomTime / totalTime;
+        if(timeT > 1.0) {
+            self.zoomVelocity = 0;
+        }
+        else {
+            //quadratic ease out
+            float positionT = 1+(timeT*timeT-2.0f*timeT);
+            [self zoom:self.zoomVelocity*delta*positionT];
+        }
+    }
+}
+
 
 -(GLKMatrix4)currentModelViewProjection {
     return _modelViewProjectionMatrix;
