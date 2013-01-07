@@ -9,6 +9,8 @@
 
 #define UI_ORANGE_COLOR [UIColor colorWithRed:252.0/255.0 green:161.0/255.0 blue:0 alpha:1]
 #define FONT_NAME_LIGHT @"ARSMaquettePro-Light"
+#define FONT_NAME_MEDIUM @"ARSMaquettePro-Medium"
+#define FONT_COLOR_GRAY [UIColor colorWithRed:235.0/255.0 green:235.0/255.0 blue:235.0/255.0 alpha:1.0]
 
 extern void SCLogRect(CGRect rect);
 

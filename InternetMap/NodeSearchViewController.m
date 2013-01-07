@@ -42,7 +42,7 @@
     orangeBackground.backgroundColor = UI_ORANGE_COLOR;
     [self.view addSubview:orangeBackground];
     
-    UIImage* doneImage = [UIImage imageNamed:@"x-icon-black"];
+    UIImage* doneImage = [UIImage imageNamed:@"x-icon"];
     self.textField = [[UITextField alloc] initWithFrame:CGRectMake(10, 5, self.contentSizeForViewInPopover.width-doneImage.size.width-22, 44)];
     [self.textField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     self.textField.backgroundColor = [UIColor clearColor];

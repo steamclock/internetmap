@@ -32,7 +32,6 @@
         self.infoLabels = [[NSMutableArray alloc] init];
         
         CGFloat height = 0;
-        
         //create the first group of strings, like ASN and text description
         NSString* asnText = [NSString stringWithFormat:@"AS%@", self.node.asn];
         self.firstGroupOfStrings = [NSMutableArray array];
@@ -49,7 +48,7 @@
             }
         }
         
-        height += 20+55; //top margin and topLabel and white line
+        height += 20+35; //top margin and topLabel and white line
                 
         if (![self.title isEqualToString:asnText]) {
             [self.firstGroupOfStrings addObject:asnText];
@@ -75,7 +74,7 @@
         
         height += 20; //bottom margin
         
-        [self setContentSizeForViewInPopover:CGSizeMake(320, height)];
+        [self setContentSizeForViewInPopover:CGSizeMake(475, height)];
 
 
     }
@@ -85,30 +84,31 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.topLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 20, 240, 27)];
-    self.topLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:25];
-    self.topLabel.textColor = [UIColor whiteColor];
+    UIImage* xImage = [UIImage imageNamed:@"x-icon"];
+
+    UIView* orangeBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.contentSizeForViewInPopover.width, 44)];
+    orangeBackgroundView.backgroundColor = UI_ORANGE_COLOR;
+    [self.view addSubview:orangeBackgroundView];
+    
+    self.topLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, -2, self.contentSizeForViewInPopover.width-xImage.size.width-24, 44)];
+    self.topLabel.font = [UIFont fontWithName:FONT_NAME_MEDIUM size:24];
+    self.topLabel.textColor = [UIColor blackColor];
     self.topLabel.backgroundColor = [UIColor clearColor];
     self.topLabel.text = self.title;
     [self.view addSubview:self.topLabel];
     
-    UIImage* xImage = [UIImage imageNamed:@"x-icon"];
     self.doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.doneButton.frame = CGRectMake(self.topLabel.x+self.topLabel.width+10, 20, xImage.size.width, xImage.size.height);
+    self.doneButton.frame = CGRectMake(self.topLabel.x+self.topLabel.width+5, 12, xImage.size.width, xImage.size.height);
     [self.doneButton setImage:xImage forState:UIControlStateNormal];
     [self.doneButton addTarget:self action:@selector(doneTapped) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.doneButton];
     
-    UIView* whiteLine = [[UIView alloc] initWithFrame:CGRectMake(self.topLabel.x, self.topLabel.y+self.topLabel.height+12, 280, 1)];
-    whiteLine.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:whiteLine];
-    
     float lastLabelBottom = 0;
     //create first group of labels
     for (int i = 0; i < [self.firstGroupOfStrings count]; i++) {
-        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(20, whiteLine.y+whiteLine.height+10+25*i, 280, 20)];
+        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(10, orangeBackgroundView.y+orangeBackgroundView.height+10+25*i, 280, 20)];
         label.font = [UIFont fontWithName:FONT_NAME_LIGHT size:18];
-        label.textColor = [UIColor whiteColor];
+        label.textColor = FONT_COLOR_GRAY;
         label.backgroundColor = [UIColor clearColor];
         label.text = self.firstGroupOfStrings[i];
         [self.view addSubview:label];
@@ -118,16 +118,16 @@
         [self.infoLabels addObject:label];
     }
     
-    UILabel* connectionsLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, lastLabelBottom+25, 280, 20)];
+    UILabel* connectionsLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, lastLabelBottom+25, 280, 20)];
     connectionsLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:18];
-    connectionsLabel.textColor = [UIColor whiteColor];
+    connectionsLabel.textColor = FONT_COLOR_GRAY;
     connectionsLabel.backgroundColor = [UIColor clearColor];
     NSString* conn = [self.node.connections count] == 1 ? @"Connection" : @"Connections";
     connectionsLabel.text = [NSString stringWithFormat:@"%i %@", [self.node.connections count], conn];
     [self.view addSubview:connectionsLabel];
     [self.infoLabels addObject:connectionsLabel];
     
-    self.tracerouteTextView = [[UITextView alloc] initWithFrame:CGRectMake(whiteLine.x, whiteLine.y+15, whiteLine.width, 500                                 )];
+    self.tracerouteTextView = [[UITextView alloc] initWithFrame:CGRectMake(orangeBackgroundView.x, orangeBackgroundView.y+15, orangeBackgroundView.width, 500                                 )];
     self.tracerouteTextView.backgroundColor = [UIColor clearColor];
     self.tracerouteTextView.textColor = [UIColor whiteColor];
     self.tracerouteTextView.editable = NO;
