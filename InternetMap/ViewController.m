@@ -76,7 +76,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (strong, nonatomic) WEPopoverController* visualizationSelectionPopover;
 @property (strong, nonatomic) WEPopoverController* nodeSearchPopover;
 @property (strong, nonatomic) WEPopoverController* nodeInformationPopover;
-@property (unsafe_unretained, nonatomic) NodeInformationViewController* nodeInformationViewController; //this is weak because it's enough for us that the popover retains the controller. this is only a reference to update the ui of the infoViewController on traceroute callbacks, not to signify ownership
+@property (weak, nonatomic) NodeInformationViewController* nodeInformationViewController; //this is weak because it's enough for us that the popover retains the controller. this is only a reference to update the ui of the infoViewController on traceroute callbacks, not to signify ownership
 @property (strong, nonatomic) WEPopoverController* nodeTooltipPopover;
 @property (strong, nonatomic) NodeTooltipViewController* nodeTooltipViewController;
 
