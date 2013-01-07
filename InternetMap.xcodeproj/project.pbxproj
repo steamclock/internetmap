@@ -48,6 +48,12 @@
 		1180CF4C169B71A800F1FB73 /* travelback_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1180CF44169B71A800F1FB73 /* travelback_selected@2x.png */; };
 		1180CF4D169B71A800F1FB73 /* youarehere_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 1180CF45169B71A800F1FB73 /* youarehere_selected.png */; };
 		1180CF4E169B71A800F1FB73 /* youarehere_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1180CF46169B71A800F1FB73 /* youarehere_selected@2x.png */; };
+		1180CF52169B7DA600F1FB73 /* x-icon-black.png in Resources */ = {isa = PBXBuildFile; fileRef = 1180CF50169B7DA600F1FB73 /* x-icon-black.png */; };
+		1180CF53169B7DA600F1FB73 /* x-icon-black@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1180CF51169B7DA600F1FB73 /* x-icon-black@2x.png */; };
+		1180CF5A169B80E300F1FB73 /* ARSMaquettePro-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1180CF56169B80E300F1FB73 /* ARSMaquettePro-Bold.otf */; };
+		1180CF5B169B80E300F1FB73 /* ARSMaquettePro-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1180CF57169B80E300F1FB73 /* ARSMaquettePro-Light.otf */; };
+		1180CF5C169B80E300F1FB73 /* ARSMaquettePro-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1180CF58169B80E300F1FB73 /* ARSMaquettePro-Medium.otf */; };
+		1180CF5D169B80E300F1FB73 /* ARSMaquettePro-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1180CF59169B80E300F1FB73 /* ARSMaquettePro-Regular.otf */; };
 		1186ACE816851DBE0061FA49 /* NodeTooltipViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1186ACE716851DBE0061FA49 /* NodeTooltipViewController.m */; };
 		11B99E751683AFB6005A8454 /* selectedNode.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 11B99E731683AEBC005A8454 /* selectedNode.fsh */; };
 		11D4CFBC1677B67200ED328D /* SCDispatchQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 11D4CFBB1677B67200ED328D /* SCDispatchQueue.m */; };
@@ -168,6 +174,12 @@
 		1180CF44169B71A800F1FB73 /* travelback_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "travelback_selected@2x.png"; path = "Images/travelback_selected@2x.png"; sourceTree = "<group>"; };
 		1180CF45169B71A800F1FB73 /* youarehere_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = youarehere_selected.png; path = Images/youarehere_selected.png; sourceTree = "<group>"; };
 		1180CF46169B71A800F1FB73 /* youarehere_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "youarehere_selected@2x.png"; path = "Images/youarehere_selected@2x.png"; sourceTree = "<group>"; };
+		1180CF50169B7DA600F1FB73 /* x-icon-black.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "x-icon-black.png"; path = "Images/x-icon-black.png"; sourceTree = "<group>"; };
+		1180CF51169B7DA600F1FB73 /* x-icon-black@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "x-icon-black@2x.png"; path = "Images/x-icon-black@2x.png"; sourceTree = "<group>"; };
+		1180CF56169B80E300F1FB73 /* ARSMaquettePro-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ARSMaquettePro-Bold.otf"; sourceTree = "<group>"; };
+		1180CF57169B80E300F1FB73 /* ARSMaquettePro-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ARSMaquettePro-Light.otf"; sourceTree = "<group>"; };
+		1180CF58169B80E300F1FB73 /* ARSMaquettePro-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ARSMaquettePro-Medium.otf"; sourceTree = "<group>"; };
+		1180CF59169B80E300F1FB73 /* ARSMaquettePro-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ARSMaquettePro-Regular.otf"; sourceTree = "<group>"; };
 		1186ACE616851DBE0061FA49 /* NodeTooltipViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeTooltipViewController.h; sourceTree = "<group>"; };
 		1186ACE716851DBE0061FA49 /* NodeTooltipViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NodeTooltipViewController.m; sourceTree = "<group>"; };
 		11B99E731683AEBC005A8454 /* selectedNode.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = selectedNode.fsh; path = Shaders/selectedNode.fsh; sourceTree = "<group>"; };
@@ -370,6 +382,25 @@
 			name = Buttons;
 			sourceTree = "<group>";
 		};
+		1180CF54169B80E300F1FB73 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				1180CF55169B80E300F1FB73 /* ARSMaquettePro */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		1180CF55169B80E300F1FB73 /* ARSMaquettePro */ = {
+			isa = PBXGroup;
+			children = (
+				1180CF56169B80E300F1FB73 /* ARSMaquettePro-Bold.otf */,
+				1180CF57169B80E300F1FB73 /* ARSMaquettePro-Light.otf */,
+				1180CF58169B80E300F1FB73 /* ARSMaquettePro-Medium.otf */,
+				1180CF59169B80E300F1FB73 /* ARSMaquettePro-Regular.otf */,
+			);
+			path = ARSMaquettePro;
+			sourceTree = "<group>";
+		};
 		A6D54A8616544B3000028B51 /* Map */ = {
 			isa = PBXGroup;
 			children = (
@@ -451,6 +482,7 @@
 		A6F3F56C1640F1FB0070E6AE /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				1180CF54169B80E300F1FB73 /* Fonts */,
 				D46808F91679560A00A2C1CC /* SCPacketUtility.h */,
 				D46808FA1679560A00A2C1CC /* SCPacketUtility.m */,
 				D46808FB1679560A00A2C1CC /* SCTraceroute.h */,
@@ -507,6 +539,8 @@
 				110F6B12167BD1CC00D5907E /* WEPopover */,
 				116E597A168283D400F653BC /* x-icon.png */,
 				116E597B168283D400F653BC /* x-icon@2x.png */,
+				1180CF50169B7DA600F1FB73 /* x-icon-black.png */,
+				1180CF51169B7DA600F1FB73 /* x-icon-black@2x.png */,
 				D4CEA32416694E65004B8E8A /* peer1logo.png */,
 				D4CEA32516694E65004B8E8A /* peer1logo@2x.png */,
 			);
@@ -626,6 +660,12 @@
 				1180CF4C169B71A800F1FB73 /* travelback_selected@2x.png in Resources */,
 				1180CF4D169B71A800F1FB73 /* youarehere_selected.png in Resources */,
 				1180CF4E169B71A800F1FB73 /* youarehere_selected@2x.png in Resources */,
+				1180CF52169B7DA600F1FB73 /* x-icon-black.png in Resources */,
+				1180CF53169B7DA600F1FB73 /* x-icon-black@2x.png in Resources */,
+				1180CF5A169B80E300F1FB73 /* ARSMaquettePro-Bold.otf in Resources */,
+				1180CF5B169B80E300F1FB73 /* ARSMaquettePro-Light.otf in Resources */,
+				1180CF5C169B80E300F1FB73 /* ARSMaquettePro-Medium.otf in Resources */,
+				1180CF5D169B80E300F1FB73 /* ARSMaquettePro-Regular.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

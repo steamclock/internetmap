@@ -86,7 +86,7 @@
     [super viewDidLoad];
     
     self.topLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 20, 240, 27)];
-    self.topLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:25];
+    self.topLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:25];
     self.topLabel.textColor = [UIColor whiteColor];
     self.topLabel.backgroundColor = [UIColor clearColor];
     self.topLabel.text = self.title;
@@ -107,7 +107,7 @@
     //create first group of labels
     for (int i = 0; i < [self.firstGroupOfStrings count]; i++) {
         UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(20, whiteLine.y+whiteLine.height+10+25*i, 280, 20)];
-        label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
+        label.font = [UIFont fontWithName:FONT_NAME_LIGHT size:18];
         label.textColor = [UIColor whiteColor];
         label.backgroundColor = [UIColor clearColor];
         label.text = self.firstGroupOfStrings[i];
@@ -119,7 +119,7 @@
     }
     
     UILabel* connectionsLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, lastLabelBottom+25, 280, 20)];
-    connectionsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
+    connectionsLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:18];
     connectionsLabel.textColor = [UIColor whiteColor];
     connectionsLabel.backgroundColor = [UIColor clearColor];
     NSString* conn = [self.node.connections count] == 1 ? @"Connection" : @"Connections";
@@ -145,8 +145,7 @@
         [self.tracerouteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [self.tracerouteButton setTitleShadowColor:[UIColor grayColor] forState:UIControlStateNormal];
         [self.tracerouteButton.titleLabel setShadowOffset:CGSizeMake(0, -1)];
-        UIColor* tracerouteButtonColor = [UIColor colorWithRed:252.0/255.0 green:161.0/255.0 blue:0 alpha:1];
-        [self.tracerouteButton setBackgroundImage:[[HelperMethods imageWithColor:tracerouteButtonColor size:CGSizeMake(1, 1)] resizableImageWithCapInsets:UIEdgeInsetsZero] forState:UIControlStateNormal];
+        [self.tracerouteButton setBackgroundImage:[[HelperMethods imageWithColor:UI_ORANGE_COLOR size:CGSizeMake(1, 1)] resizableImageWithCapInsets:UIEdgeInsetsZero] forState:UIControlStateNormal];
         [self.tracerouteButton addTarget:self action:@selector(tracerouteButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:self.tracerouteButton];
     }
