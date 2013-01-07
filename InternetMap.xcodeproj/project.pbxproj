@@ -347,6 +347,29 @@
 			path = Reachability;
 			sourceTree = "<group>";
 		};
+		1180CF4F169B731800F1FB73 /* Buttons */ = {
+			isa = PBXGroup;
+			children = (
+				D4CEA32616694E65004B8E8A /* search.png */,
+				D4CEA32716694E65004B8E8A /* search@2x.png */,
+				D4CEA32816694E65004B8E8A /* travelback.png */,
+				D4CEA32916694E65004B8E8A /* travelback@2x.png */,
+				D4CEA32A16694E65004B8E8A /* youarehere.png */,
+				D4CEA32B16694E65004B8E8A /* youarehere@2x.png */,
+				1180CF3F169B71A800F1FB73 /* eye_selected.png */,
+				1180CF40169B71A800F1FB73 /* eye_selected@2x.png */,
+				1180CF41169B71A800F1FB73 /* search_selected.png */,
+				1180CF42169B71A800F1FB73 /* search_selected@2x.png */,
+				1180CF43169B71A800F1FB73 /* travelback_selected.png */,
+				1180CF44169B71A800F1FB73 /* travelback_selected@2x.png */,
+				1180CF45169B71A800F1FB73 /* youarehere_selected.png */,
+				1180CF46169B71A800F1FB73 /* youarehere_selected@2x.png */,
+				D4CEA32216694E65004B8E8A /* eye.png */,
+				D4CEA32316694E65004B8E8A /* eye@2x.png */,
+			);
+			name = Buttons;
+			sourceTree = "<group>";
+		};
 		A6D54A8616544B3000028B51 /* Map */ = {
 			isa = PBXGroup;
 			children = (
@@ -480,27 +503,12 @@
 		D4CEA32016694E53004B8E8A /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				1180CF4F169B731800F1FB73 /* Buttons */,
 				110F6B12167BD1CC00D5907E /* WEPopover */,
-				1180CF3F169B71A800F1FB73 /* eye_selected.png */,
-				1180CF40169B71A800F1FB73 /* eye_selected@2x.png */,
-				1180CF41169B71A800F1FB73 /* search_selected.png */,
-				1180CF42169B71A800F1FB73 /* search_selected@2x.png */,
-				1180CF43169B71A800F1FB73 /* travelback_selected.png */,
-				1180CF44169B71A800F1FB73 /* travelback_selected@2x.png */,
-				1180CF45169B71A800F1FB73 /* youarehere_selected.png */,
-				1180CF46169B71A800F1FB73 /* youarehere_selected@2x.png */,
-				D4CEA32216694E65004B8E8A /* eye.png */,
-				D4CEA32316694E65004B8E8A /* eye@2x.png */,
 				116E597A168283D400F653BC /* x-icon.png */,
 				116E597B168283D400F653BC /* x-icon@2x.png */,
 				D4CEA32416694E65004B8E8A /* peer1logo.png */,
 				D4CEA32516694E65004B8E8A /* peer1logo@2x.png */,
-				D4CEA32616694E65004B8E8A /* search.png */,
-				D4CEA32716694E65004B8E8A /* search@2x.png */,
-				D4CEA32816694E65004B8E8A /* travelback.png */,
-				D4CEA32916694E65004B8E8A /* travelback@2x.png */,
-				D4CEA32A16694E65004B8E8A /* youarehere.png */,
-				D4CEA32B16694E65004B8E8A /* youarehere@2x.png */,
 			);
 			name = Images;
 			sourceTree = "<group>";
