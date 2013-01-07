@@ -489,6 +489,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     CGPoint center = [self.controller getCoordinatesForNodeAtIndex:self.controller.targetNode];
     [self.nodeInformationPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
     
+    if(isSelectingCurrentNode) {
+        self.youAreHereButton.selected = YES;
+    }
 }
 
 #pragma mark - Helper Methods: Current ASN precaching
@@ -556,6 +559,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 #pragma mark - NodeInfo delegate
 
 - (void)dismissNodeInfoPopover {
+    self.youAreHereButton.selected = NO;
     [self.nodeInformationPopover dismissPopoverAnimated:YES];
     [self.tracer stop];
     self.tracer = nil;
@@ -605,13 +609,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(void)doneTapped{
-    [self.nodeInformationPopover dismissPopoverAnimated:YES];
-    [self.tracer stop];
-    self.tracer = nil;
-    if (self.tracerouteHops) {
-        self.tracerouteHops = nil;
-        [self.controller clearHighlightLines];
-    }
+    [self dismissNodeInfoPopover];
 }
 
 #pragma mark - WEPopover Delegate
