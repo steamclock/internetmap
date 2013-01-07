@@ -387,9 +387,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         
         self.nodeSearchPopover = [[WEPopoverController alloc] initWithContentViewController:searchController];
         [self.nodeSearchPopover setPopoverContentSize:searchController.contentSizeForViewInPopover];
+        self.nodeSearchPopover.delegate = self;
         searchController.allItems = self.data.nodes;
     }
     [self.nodeSearchPopover presentPopoverFromRect:self.searchButton.bounds inView:self.searchButton permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+    self.searchButton.selected = YES;
 }
 
 -(IBAction)youAreHereButtonPressed:(id)sender {
@@ -441,21 +443,25 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         VisualizationsTableViewController *tableforPopover = [[VisualizationsTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:tableforPopover];
         self.visualizationSelectionPopover = [[WEPopoverController alloc] initWithContentViewController:navController];
+        self.visualizationSelectionPopover.delegate = self;
         [self.visualizationSelectionPopover setPopoverContentSize:tableforPopover.contentSizeForViewInPopover];
     }
     [self.visualizationSelectionPopover presentPopoverFromRect:self.visualizationsButton.bounds inView:self.visualizationsButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    self.visualizationsButton.selected = YES;
 }
 
 -(IBAction)timelineButtonPressed:(id)sender {
     if (self.timelineSlider.hidden) {
         self.timelineSlider.hidden = NO;
-        
+        self.timelineButton.selected = YES;
+
         self.searchButton.enabled = NO;
         self.youAreHereButton.enabled = NO;
         self.visualizationsButton.enabled = NO;
     } else {
         self.timelineSlider.hidden = YES;
-        
+        self.timelineButton.selected = NO;
+
         self.searchButton.enabled = YES;
         self.youAreHereButton.enabled = YES;
         self.visualizationsButton.enabled = YES;
@@ -524,6 +530,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)selectNodeByHostLookup:(NSString*)host {
     [self.nodeSearchPopover dismissPopoverAnimated:YES];
+    self.searchButton.selected = NO;
 
     if ([HelperMethods deviceHasInternetConnection]) {
         // TODO :detect an IP address and call fetchASNForIP directly rather than doing no-op lookup
@@ -554,6 +561,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)nodeSearchDelegateDone {
     [self.nodeSearchPopover dismissPopoverAnimated:YES];
+    self.searchButton.selected = NO;
 }
 
 #pragma mark - NodeInfo delegate
@@ -616,9 +624,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 //Pretty sure these don't get called for NodeInfoPopover, but will get called for other popovers if we set delegates, yo
 - (void)popoverControllerDidDismissPopover:(WEPopoverController *)popoverController{
-    
+
 }
+
 - (BOOL)popoverControllerShouldDismissPopover:(WEPopoverController *)popoverController{
+    self.visualizationsButton.selected = NO;
+    self.searchButton.selected = NO;
     return YES;
 }
 
