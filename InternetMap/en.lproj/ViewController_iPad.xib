@@ -44,7 +44,7 @@
 						<string key="NSFrame">{{914, 14}, {100, 44}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
+						<reference key="NSNextKeyView" ref="812170113"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<int key="IBUIContentMode">4</int>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -83,6 +83,11 @@
 									<int key="NSColorSpace">3</int>
 									<bytes key="NSWhite">MC41AA</bytes>
 								</object>
+								<object class="NSCustomResource" key="IBUIHighlightedImage" id="835314457">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">search_selected.png</string>
+								</object>
+								<reference key="IBUISelectedImage" ref="835314457"/>
 								<object class="NSCustomResource" key="IBUINormalImage">
 									<string key="NSClassName">NSImage</string>
 									<string key="NSResourceName">search.png</string>
@@ -127,6 +132,11 @@
 									<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 								</object>
 								<reference key="IBUINormalTitleShadowColor" ref="179841405"/>
+								<object class="NSCustomResource" key="IBUIHighlightedImage" id="493655801">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">youarehere_selected.png</string>
+								</object>
+								<reference key="IBUISelectedImage" ref="493655801"/>
 								<object class="NSCustomResource" key="IBUINormalImage">
 									<string key="NSClassName">NSImage</string>
 									<string key="NSResourceName">youarehere.png</string>
@@ -164,6 +174,11 @@
 									<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 								</object>
 								<reference key="IBUINormalTitleShadowColor" ref="179841405"/>
+								<object class="NSCustomResource" key="IBUIHighlightedImage" id="519068788">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">eye_selected.png</string>
+								</object>
+								<reference key="IBUISelectedImage" ref="519068788"/>
 								<object class="NSCustomResource" key="IBUINormalImage">
 									<string key="NSClassName">NSImage</string>
 									<string key="NSResourceName">eye.png</string>
@@ -201,6 +216,11 @@
 									<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 								</object>
 								<reference key="IBUINormalTitleShadowColor" ref="179841405"/>
+								<object class="NSCustomResource" key="IBUIHighlightedImage" id="1012927685">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">travelback_selected.png</string>
+								</object>
+								<reference key="IBUISelectedImage" ref="1012927685"/>
 								<object class="NSCustomResource" key="IBUINormalImage">
 									<string key="NSClassName">NSImage</string>
 									<string key="NSResourceName">travelback.png</string>
@@ -359,12 +379,12 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">searchNodes:</string>
+						<string key="label">searchButtonPressed:</string>
 						<reference key="source" ref="724447255"/>
 						<reference key="destination" ref="372490531"/>
 						<int key="IBEventType">7</int>
 					</object>
-					<int key="connectionID">27</int>
+					<int key="connectionID">47</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -377,21 +397,21 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">selectVisualization:</string>
+						<string key="label">visualizationsButtonPressed:</string>
 						<reference key="source" ref="341091275"/>
 						<reference key="destination" ref="372490531"/>
 						<int key="IBEventType">7</int>
 					</object>
-					<int key="connectionID">25</int>
+					<int key="connectionID">48</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">toggleTimelineMode:</string>
+						<string key="label">timelineButtonPressed:</string>
 						<reference key="source" ref="747164839"/>
 						<reference key="destination" ref="372490531"/>
 						<int key="IBEventType">7</int>
 					</object>
-					<int key="connectionID">33</int>
+					<int key="connectionID">49</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -503,9 +523,13 @@
 				<string key="1.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="14.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<real value="0.0" key="14.IBUIButtonInspectorSelectedEdgeInsetMetadataKey"/>
+				<real value="1" key="14.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="15.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<real value="2" key="15.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="16.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<real value="0.0" key="16.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="17.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<real value="2" key="17.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="24.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="26.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="28.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -518,7 +542,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">46</int>
+			<int key="maxID">49</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -526,27 +550,17 @@
 					<string key="className">ViewController</string>
 					<string key="superclassName">GLKViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="nextTarget:">id</string>
-						<string key="searchNodes:">id</string>
-						<string key="selectVisualization:">id</string>
-						<string key="toggleTimelineMode:">id</string>
+						<string key="searchButtonPressed:">id</string>
+						<string key="visualizationsButtonPressed:">id</string>
 						<string key="youAreHereButtonPressed:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="nextTarget:">
-							<string key="name">nextTarget:</string>
+						<object class="IBActionInfo" key="searchButtonPressed:">
+							<string key="name">searchButtonPressed:</string>
 							<string key="candidateClassName">id</string>
 						</object>
-						<object class="IBActionInfo" key="searchNodes:">
-							<string key="name">searchNodes:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="selectVisualization:">
-							<string key="name">selectVisualization:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="toggleTimelineMode:">
-							<string key="name">toggleTimelineMode:</string>
+						<object class="IBActionInfo" key="visualizationsButtonPressed:">
+							<string key="name">visualizationsButtonPressed:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="youAreHereButtonPressed:">
@@ -620,11 +634,15 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="eye.png">{33, 25}</string>
+			<string key="eye.png">{46, 34}</string>
+			<string key="eye_selected.png">{46, 34}</string>
 			<string key="peer1logo.png">{90, 35}</string>
-			<string key="search.png">{33, 33}</string>
-			<string key="travelback.png">{32, 33}</string>
-			<string key="youarehere.png">{25, 35}</string>
+			<string key="search.png">{40, 40}</string>
+			<string key="search_selected.png">{40, 40}</string>
+			<string key="travelback.png">{38, 37}</string>
+			<string key="travelback_selected.png">{38, 37}</string>
+			<string key="youarehere.png">{36, 41}</string>
+			<string key="youarehere_selected.png">{36, 41}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">1930</string>
 	</data>

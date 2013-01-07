@@ -9,6 +9,8 @@
 #import "ASNRequest.h"
 #import <dns_sd.h>
 #import "ASIHTTPRequest.h"
+#import <arpa/inet.h>
+#import <netdb.h>
 
 @interface ASNRequest()
 
@@ -182,6 +184,73 @@ void callbackCurrent (
 
     }];
     [request startAsynchronous];
+}
+
+// Get a set of IP addresses for a given host name
+// Originally pulled from here: http://www.bdunagan.com/2009/11/28/iphone-tip-no-nshost/
+// MIT License
+
++ (NSArray *)addressesForHostname:(NSString *)hostname {
+    // Get the addresses for the given hostname.
+    CFHostRef hostRef = CFHostCreateWithName(kCFAllocatorDefault, (__bridge CFStringRef)hostname);
+    
+    BOOL isSuccess = CFHostStartInfoResolution(hostRef, kCFHostAddresses, nil);
+    if (!isSuccess) {
+        CFRelease(hostRef);
+        return nil;
+    }
+    CFArrayRef addressesRef = CFHostGetAddressing(hostRef, nil);
+    if (addressesRef == nil)  {
+        CFRelease(hostRef);
+        return nil;
+    }
+    // Convert these addresses into strings.
+    char ipAddress[INET6_ADDRSTRLEN];
+    NSMutableArray *addresses = [NSMutableArray array];
+    CFIndex numAddresses = CFArrayGetCount(addressesRef);
+    for (CFIndex currentIndex = 0; currentIndex < numAddresses; currentIndex++) {
+        struct sockaddr *address = (struct sockaddr *)CFDataGetBytePtr(CFArrayGetValueAtIndex(addressesRef, currentIndex));
+        
+        if (address == nil) {
+            CFRelease(hostRef);
+            return nil;
+        }
+        
+        getnameinfo(address, address->sa_len, ipAddress, INET6_ADDRSTRLEN, nil, 0, NI_NUMERICHOST);
+        
+        if (ipAddress == nil) {
+            CFRelease(hostRef);
+            return nil;
+        }
+        
+        [addresses addObject:[NSString stringWithCString:ipAddress encoding:NSASCIIStringEncoding]];
+    }
+    
+    CFRelease(hostRef);
+    return addresses;
+}
+
+
++ (void)fetchGlobalIPWithCompletionBlock:(void (^)(NSString* ip))completion failedBlock:(void(^)(void))failedBlock {
+    __weak ASIHTTPRequest* request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:@"http://stage.steamclocksw.com/ip.php"]];
+    [request setCompletionBlock:^{
+        completion([request responseString]);
+    }];
+    [request setFailedBlock:failedBlock];
+    [request startAsynchronous];
+}
+
++ (void)fetchCurrentASNWithResponseBlock:(ASNResponseBlock)response errorBlock:(void(^)(void))error{
+    [[SCDispatchQueue defaultPriorityQueue] dispatchAsync:^{
+        [self fetchGlobalIPWithCompletionBlock:^(NSString * ip) {
+            if (!ip || [ip isEqualToString:@""]) {
+                error();
+            } else {
+                [ASNRequest fetchForAddresses:@[ip] responseBlock:response];
+            }
+        } failedBlock:error];
+
+    }];
 }
 
 @end

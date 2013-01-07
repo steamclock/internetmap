@@ -365,21 +365,21 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">toggleTimelineMode:</string>
+						<string key="label">timelineButtonPressed:</string>
 						<reference key="source" ref="1063531004"/>
 						<reference key="destination" ref="841351856"/>
 						<int key="IBEventType">7</int>
 					</object>
-					<int key="connectionID">13</int>
+					<int key="connectionID">34</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">selectVisualization:</string>
+						<string key="label">visualizationsButtonPressed:</string>
 						<reference key="source" ref="862161693"/>
 						<reference key="destination" ref="841351856"/>
 						<int key="IBEventType">7</int>
 					</object>
-					<int key="connectionID">14</int>
+					<int key="connectionID">33</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -392,12 +392,12 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">searchNodes:</string>
+						<string key="label">searchButtonPressed:</string>
 						<reference key="source" ref="8295848"/>
 						<reference key="destination" ref="841351856"/>
 						<int key="IBEventType">7</int>
 					</object>
-					<int key="connectionID">18</int>
+					<int key="connectionID">32</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -528,42 +528,24 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">31</int>
+			<int key="maxID">34</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<object class="IBPartialClassDescription">
 					<string key="className">ViewController</string>
 					<string key="superclassName">GLKViewController</string>
-					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="nextTarget:">id</string>
-						<string key="searchNodes:">id</string>
-						<string key="selectVisualization:">id</string>
-						<string key="toggleTimelineMode:">id</string>
-						<string key="youAreHereButtonPressed:">id</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="nextTarget:">
-							<string key="name">nextTarget:</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">searchButtonPressed:</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">searchButtonPressed:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">searchButtonPressed:</string>
 							<string key="candidateClassName">id</string>
 						</object>
-						<object class="IBActionInfo" key="searchNodes:">
-							<string key="name">searchNodes:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="selectVisualization:">
-							<string key="name">selectVisualization:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="toggleTimelineMode:">
-							<string key="name">toggleTimelineMode:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="youAreHereButtonPressed:">
-							<string key="name">youAreHereButtonPressed:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</dictionary>
+					</object>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="logo">UIImageView</string>
 						<string key="searchActivityIndicator">UIActivityIndicatorView</string>
@@ -630,11 +612,11 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="eye.png">{33, 25}</string>
+			<string key="eye.png">{46, 34}</string>
 			<string key="peer1logo.png">{90, 35}</string>
-			<string key="search.png">{33, 33}</string>
-			<string key="travelback.png">{32, 33}</string>
-			<string key="youarehere.png">{25, 35}</string>
+			<string key="search.png">{40, 40}</string>
+			<string key="travelback.png">{38, 37}</string>
+			<string key="youarehere.png">{36, 41}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">1930</string>
 	</data>
