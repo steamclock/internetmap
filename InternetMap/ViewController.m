@@ -21,6 +21,7 @@
 #import "ErrorInfoView.h"
 #import "Nodes.h"
 #import "NodeTooltipViewController.h"
+#import "MapController.h"
 
 BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     return state == UIGestureRecognizerStateBegan || state == UIGestureRecognizerStateChanged || state == UIGestureRecognizerStateRecognized;
@@ -28,11 +29,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @interface ViewController ()
 @property (strong, nonatomic) ASNRequest* request;
 @property (strong, nonatomic) EAGLContext *context;
+@property (strong, nonatomic) MapController* controller;
 @property (strong, nonatomic) MapDisplay* display;
 @property (strong, nonatomic) MapData* data;
 
 @property (strong, nonatomic) NSMutableArray* tracerouteHops;
-@property (strong, nonatomic) NSMutableIndexSet* highlightedNodes;
 
 @property (strong, nonatomic) NSDate* lastIntersectionDate;
 @property (assign, nonatomic) BOOL isHandlingLongPress;
@@ -49,16 +50,13 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (nonatomic) float lastRotation;
 
 @property (nonatomic) float lastScale;
-@property (nonatomic) NSUInteger targetNode;
 @property (nonatomic) int isCurrentlyFetchingASN;
 
 @property (strong, nonatomic) SCTraceroute* tracer;
 
-@property (strong) NSString* lastSearchIP;
 
 @property (nonatomic) NSTimeInterval updateTime;
 
-@property (nonatomic) int hoveredNodeIndex;
 
 @property (nonatomic) int cachedCurrentASN;
 
@@ -115,18 +113,13 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
     [EAGLContext setCurrentContext:self.context];
     
-    self.display = [MapDisplay new];
+    self.controller = [MapController new];
+    
+    self.display = self.controller.display;
     self.display.camera.displaySize = self.view.bounds.size;
     self.display.camera.delegate = self;
     
-    self.data = [MapData new];
-    self.data.visualization = [DefaultVisualization new];
-    
-    [self.data loadFromFile:[[NSBundle mainBundle] pathForResource:@"data" ofType:@"txt"]];
-    [self.data loadFromAttrFile:[[NSBundle mainBundle] pathForResource:@"as2attr" ofType:@"txt"]];
-    [self.data loadAsInfo:[[NSBundle mainBundle] pathForResource:@"asinfo" ofType:@"json"]];
-    [self.data updateDisplay:self.display];
-    
+    self.data = self.controller.data;
     
     //add gesture recognizers
     self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
@@ -169,9 +162,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.errorInfoView = [[ErrorInfoView alloc] initWithFrame:CGRectMake(10, 40, 300, 40)];
     [self.view addSubview:self.errorInfoView];
     
-    self.targetNode = NSNotFound;
     
-    self.hoveredNodeIndex = NSNotFound;
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayInformationPopoverForCurrentNode) name:@"cameraMovementFinished" object:nil];
     
@@ -210,38 +201,26 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
-    
-    if (!self.display.camera.isMovingToTarget) {
-        //cancel panning/zooming momentum
-        [self.display.camera stopMomentumPan];
-        [self.display.camera stopMomentumZoom];
-        [self.display.camera stopMomentumRotation];
-        self.isHandlingLongPress = NO;
-        
-        int i = [self indexForNodeAtPoint:[[touches anyObject] locationInView:self.view]];
-        if (i != NSNotFound) {
-            self.hoveredNodeIndex = i;
-            [self.display.nodes beginUpdate];
-            [self.display.nodes updateNode:i color:SELECTED_NODE_COLOR];
-            [self.display.nodes endUpdate];
-        }
-    }
+    self.isHandlingLongPress = NO;
+
+    [self.controller handleTouchDownAtPoint:[[touches anyObject] locationInView:self.view]];
 }
 
 -(void)handleTap:(UITapGestureRecognizer*)gestureRecognizer {
     [self.display.camera resetIdleTimer];
-    [self selectHoveredNode];
+    [self dismissNodeInfoPopover];
+    [self.controller selectHoveredNode];
 }
 
 - (void)handleDoubleTap:(UIGestureRecognizer*)gestureRecongizer {
     [self.display.camera zoomAnimatedTo:self.display.camera.currentZoom+1.5 duration:1];
-    [self unhoverNode];
+    [self.controller unhoverNode];
 }
 
 - (void)handleTwoFingerTap:(UIGestureRecognizer*)gestureRecognizer {
     if (gestureRecognizer.numberOfTouches == 2) {
         [self.display.camera zoomAnimatedTo:self.display.camera.currentZoom-1.5 duration:1];
-        [self unhoverNode];
+        [self.controller unhoverNode];
     }
 }
 
@@ -250,7 +229,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if(gesture.state == UIGestureRecognizerStateBegan || gesture.state == UIGestureRecognizerStateChanged) {
         if ((!self.lastIntersectionDate || fabs([self.lastIntersectionDate timeIntervalSinceNow]) > 0.01)) {
             self.isHandlingLongPress = YES;
-            int i = [self indexForNodeAtPoint:[gesture locationInView:self.view]];
+            int i = [self.controller indexForNodeAtPoint:[gesture locationInView:self.view]];
             self.lastIntersectionDate = [NSDate date];
             if (i != NSNotFound) {
                 
@@ -261,10 +240,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                     [self.nodeTooltipPopover dismissPopoverAnimated:NO];
                     self.nodeTooltipPopover = [[WEPopoverController alloc] initWithContentViewController:self.nodeTooltipViewController];
                     self.nodeTooltipPopover.passthroughViews = @[self.view];
-                    CGPoint center = [self getCoordinatesForNodeAtIndex:i];
+                    CGPoint center = [self.controller getCoordinatesForNodeAtIndex:i];
                     [self.nodeTooltipPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];
-                    [self unhoverNode];
-                    self.hoveredNodeIndex = i;
+                    [self.controller unhoverNode];
+                    self.controller.hoveredNodeIndex = i;
                     [self.display.nodes beginUpdate];
                     [self.display.nodes updateNode:i color:SELECTED_NODE_COLOR];
                     [self.display.nodes endUpdate];
@@ -273,7 +252,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         }
     }else if(gesture.state == UIGestureRecognizerStateEnded) {
         [self.nodeTooltipPopover dismissPopoverAnimated:NO];
-        [self selectHoveredNode];
+        [self dismissNodeInfoPopover];
+        [self.controller selectHoveredNode];
     }
 }
 
@@ -285,7 +265,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             CGPoint translation = [gestureRecognizer translationInView:self.view];
             self.lastPanPosition = translation;
             [self.display.camera stopMomentumPan];
-            [self unhoverNode];
+            [self.controller unhoverNode];
         }else if([gestureRecognizer state] == UIGestureRecognizerStateChanged) {
             
             CGPoint translation = [gestureRecognizer translationInView:self.view];
@@ -309,7 +289,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.display.camera resetIdleTimer];
     if (!self.isHandlingLongPress) {
         if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
-            [self unhoverNode];
+            [self.controller unhoverNode];
             self.lastRotation = gestureRecognizer.rotation;
             [self.display.camera stopMomentumRotation];
         }else if([gestureRecognizer state] == UIGestureRecognizerStateChanged)
@@ -333,7 +313,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.display.camera resetIdleTimer];
     if (!self.isHandlingLongPress) {
         if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
-            [self unhoverNode];
+            [self.controller unhoverNode];
             self.lastScale = gestureRecognizer.scale;
         }else if([gestureRecognizer state] == UIGestureRecognizerStateChanged)
         {
@@ -381,23 +361,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 #pragma mark - Update selected/active node
 
-- (void)unhoverNode {
-    
-    if (self.hoveredNodeIndex != NSNotFound && self.hoveredNodeIndex != self.targetNode) {
-        Node* node = [self.data nodeAtIndex:self.hoveredNodeIndex];
-        
-        [self.data.visualization updateDisplay:self.display forNodes:@[node]];
-        self.hoveredNodeIndex = NSNotFound;
-    }
+- (void)updateTargetForIndex:(int)index {
+    [self dismissNodeInfoPopover];
+    [self.controller updateTargetForIndex:index];
 }
 
-- (void)selectHoveredNode {
-    if (self.hoveredNodeIndex != NSNotFound) {
-        self.lastSearchIP = nil;
-        [self updateTargetForIndex:self.hoveredNodeIndex];
-        self.hoveredNodeIndex = NSNotFound;
-    }
-}
 
 - (void)selectNodeForASN:(int)asn {
     Node* node = [self.data.nodesByAsn objectForKey:[NSString stringWithFormat:@"%i", asn]];
@@ -409,233 +377,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
 }
 
-- (void)clearHighlightLines {
-    [self.highlightedNodes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
-        NSMutableArray* array = [NSMutableArray arrayWithCapacity:[self.highlightedNodes count]];
-        if (idx != self.targetNode) {
-            Node* node = [self.data nodeAtIndex:idx];
-            [array addObject:node];
-        }
-        [self.data.visualization updateDisplay:self.display forNodes:array];
-    }];
-    self.display.highlightLines = nil;
-}
-
--(void)highlightRoute:(NSArray*)nodeList {
-    if(nodeList.count <= 1) {
-        [self clearHighlightLines];
-        return;
-    }
-    Lines* lines = [[Lines alloc] initWithLineCount:nodeList.count - 1];
-    
-    [lines beginUpdate];
-    
-    UIColor* lineColor = UIColorFromRGB(0xffa300);
-    
-    [self.display.nodes beginUpdate];
-    for(int i = 0; i < nodeList.count - 1; i++) {
-        Node* a = nodeList[i];
-        Node* b = nodeList[i+1];
-        [self.display.nodes updateNode:a.index color:SELECTED_NODE_COLOR];
-        [self.display.nodes updateNode:b.index color:SELECTED_NODE_COLOR];
-        [self.highlightedNodes addIndex:a.index];
-        [self.highlightedNodes addIndex:b.index];
-        [lines updateLine:i withStart:[self.data.visualization nodePosition:a] startColor:lineColor end:[self.data.visualization nodePosition:b] endColor:lineColor];
-    }
-    
-    [self.display.nodes endUpdate];
-
-    
-    [lines endUpdate];
-    
-    lines.width = [HelperMethods deviceIsRetina] ? 10.0 : 5.0;
-
-    self.display.highlightLines = lines;
-    
-    //highlight nodes
-    
-
-}
-
--(void)highlightConnections:(Node*)node {
-    if(node == nil) {
-        [self clearHighlightLines];
-        return;
-    }
-    
-    NSMutableArray* filteredConnections = [NSMutableArray new];
-    
-    for(Connection* connection in self.data.connections) {
-        if ((connection.first == node) || (connection.second == node) ) {
-            [filteredConnections addObject:connection];
-        }
-    }
-
-    if(filteredConnections.count == 0 || filteredConnections.count > 100) {
-        [self clearHighlightLines];
-        return;
-    }
-    
-    Lines* lines = [[Lines alloc] initWithLineCount:filteredConnections.count];
-    
-    [lines beginUpdate];
-    
-    UIColor* brightColour = SELECTED_CONNECTION_COLOR_BRIGHT;
-    UIColor* dimColour = SELECTED_CONNECTION_COLOR_DIM;
-    
-    for(int i = 0; i < filteredConnections.count; i++) {
-        Connection* connection = filteredConnections[i];
-        Node* a = connection.first;
-        Node* b = connection.second;
-        
-        if(node == a) {
-            [lines updateLine:i withStart:[self.data.visualization nodePosition:a] startColor:brightColour end:[self.data.visualization nodePosition:b] endColor:dimColour];
-        }
-        else {
-            [lines updateLine:i withStart:[self.data.visualization nodePosition:a] startColor:dimColour end:[self.data.visualization nodePosition:b] endColor:brightColour];
-        }
-    }
-    
-    [lines endUpdate];
-    lines.width = ((filteredConnections.count < 20) ? 2 : 1) * ([HelperMethods deviceIsRetina] ? 2 : 1);
-    self.display.highlightLines = lines;
-}
-
-
-- (void)updateTargetForIndex:(int)index {
-   
-    GLKVector3 target;
-    [self dismissNodeInfoPopover];
-
-    // update current node to default state
-    if (self.targetNode != NSNotFound) {
-        Node* node = [self.data nodeAtIndex:self.targetNode];
-        
-        [self.data.visualization updateDisplay:self.display forNodes:@[node]];
-    }
-    
-    //set new node as targeted and change camera anchor point
-    if (index != NSNotFound) {
-        
-        self.targetNode = index;
-        Node* node = [self.data nodeAtIndex:self.targetNode];
-        target = [self.data.visualization nodePosition:node];
-
-        [self.display.nodes beginUpdate];
-        [self.display.nodes updateNode:node.index color:[UIColor clearColor]];
-        [self.display.nodes endUpdate];
-        
-        [self.data.visualization resetDisplay:self.display forSelectedNodes:@[node]];
-        
-        [self highlightConnections:node];
-        
-    } else {
-        target = GLKVector3Make(0, 0, 0);
-    }
-    
-    self.display.camera.target = target;
-}
-
--(CGPoint)getCoordinatesForNodeAtIndex:(int)index {
-    Node* node = [self.data nodeAtIndex:index];
-    
-    int viewport[4] = {0, 0, self.display.camera.displaySize.width, self.display.camera.displaySize.height};
-    
-    GLKVector3 nodePosition = [self.data.visualization nodePosition:node];
-    
-    GLKMatrix4 model = [self.display.camera currentModelView];
-    
-    GLKMatrix4 projection = [self.display.camera currentProjection];
-    
-    GLKVector3 coordinates = GLKMathProject(nodePosition, model, projection, viewport);
-    
-    CGPoint point = CGPointMake(coordinates.x,self.display.camera.displaySize.height - coordinates.y);
-    
-    //NSLog(@"%@", NSStringFromCGPoint(point));
-    
-    return point;
-    
-}
-
-- (int)indexForNodeAtPoint:(CGPoint)pointInView {
-    NSDate* date = [NSDate date];
-    date = date;
-    //get point in view and adjust it for viewport
-    float xOld = pointInView.x;
-    CGFloat xLoOld = 0;
-    CGFloat xHiOld = self.display.camera.displaySize.width;
-    CGFloat xLoNew = -1;
-    CGFloat xHiNew = 1;
-    
-    pointInView.x = (xOld-xLoOld) / (xHiOld-xLoOld) * (xHiNew-xLoNew) + xLoNew;
-    
-    float yOld = pointInView.y;
-    CGFloat yLoOld = 0;
-    CGFloat yHiOld = self.display.camera.displaySize.height;
-    CGFloat yLoNew = 1;
-    CGFloat yHiNew = -1;
-    
-    pointInView.y = (yOld-yLoOld) / (yHiOld-yLoOld) * (yHiNew-yLoNew) + yLoNew;
-    //transform point from screen- to object-space
-    GLKVector3 cameraInObjectSpace = [self.display.camera cameraInObjectSpace]; //A
-    GLKVector3 pointOnClipPlaneInObjectSpace = [self.display.camera applyModelViewToPoint:pointInView]; //B
-    
-    //do actual line-sphere intersection
-    float xA, yA, zA;
-    __block float xC, yC, zC;
-    __block float r;
-    __block float maxDelta = -1;
-    __block int foundI = NSNotFound;
-    
-    xA = cameraInObjectSpace.x;
-    yA = cameraInObjectSpace.y;
-    zA = cameraInObjectSpace.z;
-    
-    GLKVector3 direction = GLKVector3Subtract(pointOnClipPlaneInObjectSpace, cameraInObjectSpace); //direction = B - A
-    GLKVector3 invertedDirection = GLKVector3Make(1.0f/direction.x, 1.0f/direction.y, 1.0f/direction.z);
-    int sign[3];
-    sign[0] = (invertedDirection.x < 0);
-    sign[1] = (invertedDirection.y < 0);
-    sign[2] = (invertedDirection.z < 0);
-    
-    float a = powf((direction.x), 2)+powf((direction.y), 2)+powf((direction.z), 2);
-    
-    IndexBox* box;
-    for (int j = 0; j<[self.data.boxesForNodes count]; j++) {
-        box = [self.data.boxesForNodes objectAtIndex:j];
-        if ([box doesLineIntersectOptimized:cameraInObjectSpace invertedDirection:invertedDirection sign:sign]) {
-            //            NSLog(@"intersects box %i at pos %@", j, NSStringFromGLKVector3(box.center));
-            [box.indices enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
-                int i = idx;
-                Node* node = [self.data nodeAtIndex:i];
-                
-                GLKVector3 nodePosition = [self.data.visualization nodePosition:node];
-                xC = nodePosition.x;
-                yC = nodePosition.y;
-                zC = nodePosition.z;
-                
-                r = [self.data.visualization nodeSize:node]/2;
-                r = MAX(r, 0.02);
-                
-                float b = 2*((direction.x)*(xA-xC)+(direction.y)*(yA-yC)+(direction.z)*(zA-zC));
-                float c = powf((xA-xC), 2)+powf((yA-yC), 2)+powf((zA-zC), 2)-powf(r, 2);
-                float delta = powf(b, 2)-4*a*c;
-                if (delta >= 0) {
-                    //                    NSLog(@"intersected node %i: %@, delta: %f", i, NSStringFromGLKVector3(nodePosition), delta);
-                    GLKVector4 transformedNodePosition = GLKMatrix4MultiplyVector4(self.display.camera.currentModelView, GLKVector4MakeWithVector3(nodePosition, 1));
-                    if ((delta > maxDelta) && (transformedNodePosition.z < -0.1)) {
-                        maxDelta = delta;
-                        foundI = i;
-                    }
-                }
-                
-            }];
-        }
-    }
-    
-    //    NSLog(@"time for intersect: %f", [date timeIntervalSinceNow]);
-    return foundI;
-}
 
 #pragma mark - Action methods
 
@@ -726,12 +467,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     BOOL isSelectingCurrentNode = NO;
     if (self.cachedCurrentASN != NSNotFound) {
         Node* node = [self.data.nodesByAsn objectForKey:[NSString stringWithFormat:@"%i", self.cachedCurrentASN]];
-        if (node.index == self.targetNode) {
+        if (node.index == self.controller.targetNode) {
             isSelectingCurrentNode = YES;
         }
     }
 
-    Node* node = [self.data nodeAtIndex:self.targetNode];
+    Node* node = [self.data nodeAtIndex:self.controller.targetNode];
     
     //careful, the local assignment first is necessary, because the property is a weak reference
     NodeInformationViewController* controller = [[NodeInformationViewController alloc] initWithNode:node isCurrentNode:isSelectingCurrentNode];
@@ -745,7 +486,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.nodeInformationPopover.delegate = self;
     self.nodeInformationPopover.passthroughViews = @[self.view];
         
-    CGPoint center = [self getCoordinatesForNodeAtIndex:self.targetNode];
+    CGPoint center = [self.controller getCoordinatesForNodeAtIndex:self.controller.targetNode];
     [self.nodeInformationPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
     
 }
@@ -775,7 +516,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 #pragma mark - NodeSearch Delegate
 
 -(void)nodeSelected:(Node*)node{
-    [self dismissNodeInfoPopover];
     [self updateTargetForIndex:node.index];
 }
 
@@ -789,7 +529,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         [[SCDispatchQueue defaultPriorityQueue] dispatchAsync:^{
             NSArray* addresses = [ASNRequest addressesForHostname:host];
             if(addresses.count != 0) {
-                self.lastSearchIP = addresses[0];
+                self.controller.lastSearchIP = addresses[0];
                 [ASNRequest fetchForAddresses:@[addresses[0]] responseBlock:^(NSArray *asn) {
                     [self.searchActivityIndicator stopAnimating];
                     self.searchButton.hidden = NO;
@@ -821,28 +561,28 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.tracer = nil;
     if (self.tracerouteHops) {
         self.tracerouteHops = nil;
-        [self clearHighlightLines];
+        [self.controller clearHighlightLines];
     }
 }
 
 #pragma mark - Node Info View Delegate
 
 -(void)tracerouteButtonTapped{
-    CGPoint center = [self getCoordinatesForNodeAtIndex:self.targetNode];
+    CGPoint center = [self.controller getCoordinatesForNodeAtIndex:self.controller.targetNode];
     self.nodeInformationPopover.popoverContentSize = CGSizeZero;
     [self.nodeInformationPopover repositionPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
     self.tracerouteHops = [NSMutableArray array];
-    self.highlightedNodes = [[NSMutableIndexSet alloc] init];
+    self.controller.highlightedNodes = [[NSMutableIndexSet alloc] init];
     [self.display.camera zoomAnimatedTo:-3 duration:3];
     [self.display.camera setRotationAnimatedTo:GLKMatrix4MakeRotation(M_PI, 0, 1, 0) duration:3];
     
-    if(self.lastSearchIP) {
-        self.tracer = [SCTraceroute tracerouteWithAddress:self.lastSearchIP ofType:kICMP]; //we need ip for node!
+    if(self.controller.lastSearchIP) {
+        self.tracer = [SCTraceroute tracerouteWithAddress:self.controller.lastSearchIP ofType:kICMP]; //we need ip for node!
         self.tracer.delegate = self;
         [self.tracer start];
     }
     else {
-        Node* node = [self.data nodeAtIndex:self.targetNode];
+        Node* node = [self.data nodeAtIndex:self.controller.targetNode];
         if ([node.asn intValue]) {
             [ASNRequest fetchForASN:[node.asn intValue] responseBlock:^(NSArray *asn) {
                 if (asn[0] != [NSNull null]) {
@@ -870,7 +610,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.tracer = nil;
     if (self.tracerouteHops) {
         self.tracerouteHops = nil;
-        [self clearHighlightLines];
+        [self.controller clearHighlightLines];
     }
 }
 
@@ -906,7 +646,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         }
         
         if ([self.tracerouteHops count] >= 2) {
-            [self highlightRoute:self.tracerouteHops];
+            [self.controller highlightRoute:self.tracerouteHops];
         }
         
     }];
@@ -919,9 +659,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     //highlight last node if not already highlighted
     Node* node = [self.tracerouteHops lastObject];
-    if (node.index != self.targetNode) {
-        [self.tracerouteHops addObject:[self.data nodeAtIndex:self.targetNode]];
-        [self highlightRoute:self.tracerouteHops];
+    if (node.index != self.controller.targetNode) {
+        [self.tracerouteHops addObject:[self.data nodeAtIndex:self.controller.targetNode]];
+        [self.controller highlightRoute:self.tracerouteHops];
     }
 
 }
@@ -933,10 +673,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     //highlight last node if not already highlighted
     Node* node = [self.tracerouteHops lastObject];    
-    if (node.index != self.targetNode) {
-        Node* targetNode = [self.data nodeAtIndex:self.targetNode];
+    if (node.index != self.controller.targetNode) {
+        Node* targetNode = [self.data nodeAtIndex:self.controller.targetNode];
         [self.tracerouteHops addObject:targetNode];
-        [self highlightRoute:self.tracerouteHops];
+        [self.controller highlightRoute:self.tracerouteHops];
     }
 }
 
