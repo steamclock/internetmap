@@ -67,6 +67,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (weak, nonatomic) IBOutlet UIButton* visualizationsButton;
 @property (weak, nonatomic) IBOutlet UIButton* timelineButton;
 @property (weak, nonatomic) IBOutlet UISlider* timelineSlider;
+@property (weak, nonatomic) IBOutlet UIButton* playButton;
+@property (weak, nonatomic) IBOutlet UILabel* timelineLabel;
 @property (weak, nonatomic) IBOutlet UIImageView* logo;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* searchActivityIndicator;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* youAreHereActivityIndicator;
@@ -169,6 +171,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.timelineSlider setMaximumTrackImage:[[UIImage imageNamed:@"timeline-barright"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 1, 0, 11)] forState:UIControlStateNormal];
     [self.timelineSlider setThumbImage:[UIImage imageNamed:@"timeline-handle"] forState:UIControlStateNormal];
 
+    //customize timeline label
+    self.timelineLabel.textColor = UI_ORANGE_COLOR;
+    self.timelineLabel.font = [UIFont fontWithName:FONT_NAME_REGULAR size:50];
+    self.timelineLabel.backgroundColor = [UIColor clearColor];
+    self.timelineLabel.textAlignment = UITextAlignmentRight;
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayInformationPopoverForCurrentNode) name:@"cameraMovementFinished" object:nil];
     
     [self.display.camera resetIdleTimer];
@@ -459,6 +467,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if (self.timelineSlider.hidden) {
         self.timelineSlider.hidden = NO;
         self.timelineButton.selected = YES;
+        self.playButton.hidden = NO;
+        self.timelineLabel.hidden = NO;
 
         self.searchButton.enabled = NO;
         self.youAreHereButton.enabled = NO;
@@ -466,6 +476,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     } else {
         self.timelineSlider.hidden = YES;
         self.timelineButton.selected = NO;
+        self.playButton.hidden = YES;
+        self.timelineLabel.hidden = YES;
 
         self.searchButton.enabled = YES;
         self.youAreHereButton.enabled = YES;
@@ -503,6 +515,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if(isSelectingCurrentNode) {
         self.youAreHereButton.selected = YES;
     }
+}
+
+- (IBAction)playButtonPressed:(id)sender{
+
 }
 
 #pragma mark - Helper Methods: Current ASN precaching
