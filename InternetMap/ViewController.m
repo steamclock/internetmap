@@ -25,6 +25,7 @@
 #import "LabelNumberBoxView.h"
 
 #define MIN_TIMELINE_YEAR 1993
+#define MAX_TIMELINE_YEAR 2012
 
 BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     return state == UIGestureRecognizerStateBegan || state == UIGestureRecognizerStateChanged || state == UIGestureRecognizerStateRecognized;
@@ -175,10 +176,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
     
     //setup timeline slider values
-    NSDateComponents *components = [[NSCalendar currentCalendar] components:NSYearCalendarUnit fromDate:[NSDate date]];
-    int currentYear = [components year];
-    float diff = currentYear-MIN_TIMELINE_YEAR;
-    NSAssert(diff < 100, @"The timeline length can not be more than 100 years!");
+    float diff = MAX_TIMELINE_YEAR-MIN_TIMELINE_YEAR;
     diff /= 10;
     self.timelineSlider.minimumValue = 0;
     self.timelineSlider.maximumValue = diff;
