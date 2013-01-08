@@ -24,6 +24,8 @@
 #import "MapController.h"
 #import "LabelNumberBoxView.h"
 
+#define MIN_TIMELINE_YEAR 1993
+
 BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     return state == UIGestureRecognizerStateBegan || state == UIGestureRecognizerStateChanged || state == UIGestureRecognizerStateRecognized;
 }
@@ -171,6 +173,17 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.timelineSlider setMaximumTrackImage:[[UIImage imageNamed:@"timeline-barright"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 1, 0, 11)] forState:UIControlStateNormal];
     [self.timelineSlider setThumbImage:[UIImage imageNamed:@"timeline-handle"] forState:UIControlStateNormal];
 
+    
+    //setup timeline slider values
+    NSDateComponents *components = [[NSCalendar currentCalendar] components:NSYearCalendarUnit fromDate:[NSDate date]];
+    int currentYear = [components year];
+    float diff = currentYear-MIN_TIMELINE_YEAR;
+    NSAssert(diff < 100, @"The timeline length can not be more than 100 years!");
+    diff /= 10;
+    self.timelineSlider.minimumValue = 0;
+    self.timelineSlider.maximumValue = diff;
+    self.timelineSlider.value = diff;
+    
     //customize timeline label
     self.timelineLabel.textColor = UI_ORANGE_COLOR;
     self.timelineLabel.font = [UIFont fontWithName:FONT_NAME_REGULAR size:50];
@@ -518,6 +531,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 - (IBAction)playButtonPressed:(id)sender{
+
+}
+
+- (IBAction)timelineSliderValueChanged:(id)sender {
+    self.timelineLabel.text = [NSString stringWithFormat:@"%i", (int)(MIN_TIMELINE_YEAR+self.timelineSlider.value*10)];
 
 }
 
