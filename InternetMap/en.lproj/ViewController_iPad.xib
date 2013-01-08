@@ -266,7 +266,7 @@
 						<float key="IBUIValue">0.5</float>
 					</object>
 				</array>
-				<string key="NSFrame">{{0, 20}, {1024, 748}}</string>
+				<string key="NSFrameSize">{1024, 768}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="580833300"/>
@@ -276,9 +276,6 @@
 					<object class="NSColorSpace" key="NSCustomColorSpace">
 						<int key="NSID">2</int>
 					</object>
-				</object>
-				<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics">
-					<int key="IBUIStatusBarStyle">2</int>
 				</object>
 				<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
 					<int key="IBUIInterfaceOrientation">3</int>
@@ -551,12 +548,17 @@
 					<string key="superclassName">GLKViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="searchButtonPressed:">id</string>
+						<string key="timelineButtonPressed:">id</string>
 						<string key="visualizationsButtonPressed:">id</string>
 						<string key="youAreHereButtonPressed:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
 						<object class="IBActionInfo" key="searchButtonPressed:">
 							<string key="name">searchButtonPressed:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="timelineButtonPressed:">
+							<string key="name">timelineButtonPressed:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="visualizationsButtonPressed:">
