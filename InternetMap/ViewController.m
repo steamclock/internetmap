@@ -464,13 +464,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(IBAction)visualizationsButtonPressed:(id)sender {
     if (!self.visualizationSelectionPopover) {
-        VisualizationsTableViewController *tableforPopover = [[VisualizationsTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
-        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:tableforPopover];
-        self.visualizationSelectionPopover = [[WEPopoverController alloc] initWithContentViewController:navController];
+        VisualizationsTableViewController *tableforPopover = [[VisualizationsTableViewController alloc] initWithStyle:UITableViewStylePlain];
+        self.visualizationSelectionPopover = [[WEPopoverController alloc] initWithContentViewController:tableforPopover];
         self.visualizationSelectionPopover.delegate = self;
         [self.visualizationSelectionPopover setPopoverContentSize:tableforPopover.contentSizeForViewInPopover];
     }
-    [self.visualizationSelectionPopover presentPopoverFromRect:self.visualizationsButton.bounds inView:self.visualizationsButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    [self.visualizationSelectionPopover presentPopoverFromRect:self.visualizationsButton.bounds inView:self.visualizationsButton permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
     self.visualizationsButton.selected = YES;
 }
 
