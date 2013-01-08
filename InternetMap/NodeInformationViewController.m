@@ -69,12 +69,12 @@
         
         if (!self.isDisplayingCurrentNode) {
             height += 44; //traceroute button
-            height += 10; //traceroute button top margin
+            height += 20; //traceroute button top margin
         }
         
         height += 20; //bottom margin
         
-        [self setContentSizeForViewInPopover:CGSizeMake(475, height)];
+        [self setContentSizeForViewInPopover:CGSizeMake(452, height)];
 
 
     }
@@ -90,7 +90,7 @@
     orangeBackgroundView.backgroundColor = UI_ORANGE_COLOR;
     [self.view addSubview:orangeBackgroundView];
     
-    self.topLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, -2, self.contentSizeForViewInPopover.width-xImage.size.width-24, 44)];
+    self.topLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, -2, self.contentSizeForViewInPopover.width-xImage.size.width-34, 44)];
     self.topLabel.font = [UIFont fontWithName:FONT_NAME_MEDIUM size:24];
     self.topLabel.textColor = [UIColor blackColor];
     self.topLabel.backgroundColor = [UIColor clearColor];
@@ -141,11 +141,10 @@
     if (!self.isDisplayingCurrentNode) {
         self.tracerouteButton = [UIButton buttonWithType:UIButtonTypeCustom];
         self.tracerouteButton.frame = CGRectMake(20, self.contentSizeForViewInPopover.height-44-20, 280, 44);
-        [self.tracerouteButton setTitle:@"PERFORM TRACEROUTE" forState:UIControlStateNormal];
-        [self.tracerouteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [self.tracerouteButton setTitleShadowColor:[UIColor grayColor] forState:UIControlStateNormal];
-        [self.tracerouteButton.titleLabel setShadowOffset:CGSizeMake(0, -1)];
-        [self.tracerouteButton setBackgroundImage:[[HelperMethods imageWithColor:UI_ORANGE_COLOR size:CGSizeMake(1, 1)] resizableImageWithCapInsets:UIEdgeInsetsZero] forState:UIControlStateNormal];
+        self.tracerouteButton.titleLabel.font = [UIFont fontWithName:FONT_NAME_REGULAR size:20];
+        [self.tracerouteButton setTitle:@"Perform Traceroute" forState:UIControlStateNormal];
+        [self.tracerouteButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [self.tracerouteButton setBackgroundImage:[[UIImage imageNamed:@"traceroute-button"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 22, 0, 22)] forState:UIControlStateNormal];
         [self.tracerouteButton addTarget:self action:@selector(tracerouteButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:self.tracerouteButton];
     }
