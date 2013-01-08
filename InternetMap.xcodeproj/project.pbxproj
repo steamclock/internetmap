@@ -47,6 +47,9 @@
 		117542ED169B9E08008150BB /* timeline-handle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 117542E7169B9E08008150BB /* timeline-handle@2x.png */; };
 		117542F2169BA0DA008150BB /* traceroute-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 117542F0169BA0DA008150BB /* traceroute-button.png */; };
 		117542F3169BA0DA008150BB /* traceroute-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 117542F1169BA0DA008150BB /* traceroute-button@2x.png */; };
+		11754302169BA790008150BB /* LabelNumberBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = 11754301169BA790008150BB /* LabelNumberBoxView.m */; };
+		11754306169BBCCD008150BB /* youarehere-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 11754304169BBCCC008150BB /* youarehere-icon.png */; };
+		11754307169BBCCD008150BB /* youarehere-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 11754305169BBCCD008150BB /* youarehere-icon@2x.png */; };
 		1180CF3D169B4D5500F1FB73 /* MapController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1180CF3C169B4D5500F1FB73 /* MapController.m */; };
 		1180CF47169B71A800F1FB73 /* eye_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 1180CF3F169B71A800F1FB73 /* eye_selected.png */; };
 		1180CF48169B71A800F1FB73 /* eye_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1180CF40169B71A800F1FB73 /* eye_selected@2x.png */; };
@@ -178,6 +181,10 @@
 		117542E7169B9E08008150BB /* timeline-handle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "timeline-handle@2x.png"; path = "Images/timeline-handle@2x.png"; sourceTree = "<group>"; };
 		117542F0169BA0DA008150BB /* traceroute-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "traceroute-button.png"; path = "Images/traceroute-button.png"; sourceTree = "<group>"; };
 		117542F1169BA0DA008150BB /* traceroute-button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "traceroute-button@2x.png"; path = "Images/traceroute-button@2x.png"; sourceTree = "<group>"; };
+		11754300169BA790008150BB /* LabelNumberBoxView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LabelNumberBoxView.h; sourceTree = "<group>"; };
+		11754301169BA790008150BB /* LabelNumberBoxView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LabelNumberBoxView.m; sourceTree = "<group>"; };
+		11754304169BBCCC008150BB /* youarehere-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "youarehere-icon.png"; path = "Images/youarehere-icon.png"; sourceTree = "<group>"; };
+		11754305169BBCCD008150BB /* youarehere-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "youarehere-icon@2x.png"; path = "Images/youarehere-icon@2x.png"; sourceTree = "<group>"; };
 		1180CF3B169B4D5500F1FB73 /* MapController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapController.h; sourceTree = "<group>"; };
 		1180CF3C169B4D5500F1FB73 /* MapController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapController.m; sourceTree = "<group>"; };
 		1180CF3F169B71A800F1FB73 /* eye_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = eye_selected.png; path = Images/eye_selected.png; sourceTree = "<group>"; };
@@ -530,6 +537,8 @@
 				D4F65E01166D6D530077BF5A /* NodeSearchViewController.m */,
 				A6F3F5821640F1FB0070E6AE /* ViewController.h */,
 				A6F3F5831640F1FB0070E6AE /* ViewController.m */,
+				11754300169BA790008150BB /* LabelNumberBoxView.h */,
+				11754301169BA790008150BB /* LabelNumberBoxView.m */,
 				D4CEA336166962F8004B8E8A /* VisualizationsTableViewController.h */,
 				D4CEA337166962F8004B8E8A /* VisualizationsTableViewController.m */,
 				11D4CFBA1677B67200ED328D /* SCDispatchQueue.h */,
@@ -567,6 +576,8 @@
 				116E597B168283D400F653BC /* x-icon@2x.png */,
 				117542F0169BA0DA008150BB /* traceroute-button.png */,
 				117542F1169BA0DA008150BB /* traceroute-button@2x.png */,
+				11754304169BBCCC008150BB /* youarehere-icon.png */,
+				11754305169BBCCD008150BB /* youarehere-icon@2x.png */,
 				D4CEA32416694E65004B8E8A /* peer1logo.png */,
 				D4CEA32516694E65004B8E8A /* peer1logo@2x.png */,
 			);
@@ -698,6 +709,8 @@
 				117542ED169B9E08008150BB /* timeline-handle@2x.png in Resources */,
 				117542F2169BA0DA008150BB /* traceroute-button.png in Resources */,
 				117542F3169BA0DA008150BB /* traceroute-button@2x.png in Resources */,
+				11754306169BBCCD008150BB /* youarehere-icon.png in Resources */,
+				11754307169BBCCD008150BB /* youarehere-icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -746,6 +759,7 @@
 				11FFB390167FC3CE00309545 /* Nodes.m in Sources */,
 				1186ACE816851DBE0061FA49 /* NodeTooltipViewController.m in Sources */,
 				1180CF3D169B4D5500F1FB73 /* MapController.m in Sources */,
+				11754302169BA790008150BB /* LabelNumberBoxView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

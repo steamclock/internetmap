@@ -22,6 +22,7 @@
 #import "Nodes.h"
 #import "NodeTooltipViewController.h"
 #import "MapController.h"
+#import "LabelNumberBoxView.h"
 
 BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     return state == UIGestureRecognizerStateBegan || state == UIGestureRecognizerStateChanged || state == UIGestureRecognizerStateRecognized;
@@ -575,6 +576,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.nodeInformationPopover dismissPopoverAnimated:YES];
     [self.tracer stop];
     self.tracer = nil;
+    [self.nodeInformationViewController.tracerouteTimer invalidate];
     if (self.tracerouteHops) {
         self.tracerouteHops = nil;
         [self.controller clearHighlightLines];
@@ -583,14 +585,25 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 #pragma mark - Node Info View Delegate
 
--(void)tracerouteButtonTapped{
+- (void)resizeNodeInfoPopover {
+
     CGPoint center = [self.controller getCoordinatesForNodeAtIndex:self.controller.targetNode];
     self.nodeInformationPopover.popoverContentSize = CGSizeZero;
     [self.nodeInformationPopover repositionPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
+}
+
+-(void)tracerouteButtonTapped{
+    [self resizeNodeInfoPopover];
+    
     self.tracerouteHops = [NSMutableArray array];
     self.controller.highlightedNodes = [[NSMutableIndexSet alloc] init];
     [self.display.camera zoomAnimatedTo:-3 duration:3];
-    [self.display.camera setRotationAnimatedTo:GLKMatrix4MakeRotation(M_PI, 0, 1, 0) duration:3];
+    Node* node = [self.data nodeAtIndex:self.controller.targetNode];
+    if (node.importance > 0.006) {
+        [self.display.camera setRotationAnimatedTo:GLKMatrix4Identity duration:3];
+    }else {
+        [self.display.camera setRotationAnimatedTo:GLKMatrix4MakeRotation(M_PI, 0, 1, 0) duration:3];
+    }
     
     if(self.controller.lastSearchIP) {
         self.tracer = [SCTraceroute tracerouteWithAddress:self.controller.lastSearchIP ofType:kICMP]; //we need ip for node!
@@ -643,8 +656,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     NSLog(@"%@", report);
     
-    self.nodeInformationViewController.tracerouteTextView.text = [NSString stringWithFormat:@"%@\n%@", self.nodeInformationViewController.tracerouteTextView.text, report];
-//    NSLog(@"%@", hops);
+    self.nodeInformationViewController.tracerouteTextView.text = [[NSString stringWithFormat:@"%@\n%@", self.nodeInformationViewController.tracerouteTextView.text, report] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    [self.nodeInformationViewController.box1 incrementNumber];
+    //    NSLog(@"%@", hops);
 
     [ASNRequest fetchForAddresses:@[[hops lastObject]] responseBlock:^(NSArray *asns) {
         Node* last = nil;
@@ -662,14 +676,24 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             [self.controller highlightRoute:self.tracerouteHops];
         }
         
+        //update node info label for number of unique ASN Hops
+        NSMutableSet* asnSet = [NSMutableSet set];
+        for (Node* node in self.tracerouteHops) {
+            [asnSet addObject:node.asn];
+        }
+        self.nodeInformationViewController.box2.numberLabel.text = [NSString stringWithFormat:@"%i", [asnSet count]];
+
     }];
 }
 
 - (void)tracerouteDidComplete:(NSMutableArray*)hops{
     [self.tracer stop];
     self.tracer = nil;
-    self.nodeInformationViewController.tracerouteTextView.text = [NSString stringWithFormat:@"%@\nTraceroute complete.", self.nodeInformationViewController.tracerouteTextView.text];
-    
+    self.nodeInformationViewController.tracerouteTextView.text = [[NSString stringWithFormat:@"%@\nTraceroute complete.", self.nodeInformationViewController.tracerouteTextView.text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    [self.nodeInformationViewController.tracerouteTimer invalidate];
+    [self.nodeInformationViewController tracerouteDone];
+    [self resizeNodeInfoPopover];
+
     //highlight last node if not already highlighted
     Node* node = [self.tracerouteHops lastObject];
     if (node.index != self.controller.targetNode) {
@@ -682,8 +706,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 -(void)tracerouteDidTimeout{
     [self.tracer stop];
     self.tracer = nil;
-    self.nodeInformationViewController.tracerouteTextView.text = [NSString stringWithFormat:@"%@\nTraceroute completed with as many hops as we could contact.", self.nodeInformationViewController.tracerouteTextView.text];
-    
+    self.nodeInformationViewController.tracerouteTextView.text = [[NSString stringWithFormat:@"%@\nTraceroute completed with as many hops as we could contact.", self.nodeInformationViewController.tracerouteTextView.text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    [self.nodeInformationViewController.tracerouteTimer invalidate];
+    [self.nodeInformationViewController tracerouteDone];
+    [self resizeNodeInfoPopover];
+
     //highlight last node if not already highlighted
     Node* node = [self.tracerouteHops lastObject];    
     if (node.index != self.controller.targetNode) {

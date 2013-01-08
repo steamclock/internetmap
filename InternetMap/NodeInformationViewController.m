@@ -8,6 +8,7 @@
 
 #import "NodeInformationViewController.h"
 #import "Node.h"
+#import "LabelNumberBoxView.h"
 
 @interface NodeInformationViewController ()
 
@@ -17,6 +18,10 @@
 @property (nonatomic, strong) NSMutableArray* firstGroupOfStrings;
 @property (nonatomic, strong) NSMutableArray* secondGroupOfStrings;
 @property (nonatomic, strong) NSMutableArray* infoLabels;
+
+@property (nonatomic, strong) UIView* tracerouteContainerView;
+@property (nonatomic, strong) UIView* yourLocationContainerView;
+
 @end
 
 @implementation NodeInformationViewController
@@ -127,16 +132,61 @@
     [self.view addSubview:connectionsLabel];
     [self.infoLabels addObject:connectionsLabel];
     
-    self.tracerouteTextView = [[UITextView alloc] initWithFrame:CGRectMake(orangeBackgroundView.x, orangeBackgroundView.y+15, orangeBackgroundView.width, 500                                 )];
+    self.tracerouteContainerView = [[UIView alloc] initWithFrame:CGRectMake(orangeBackgroundView.x, orangeBackgroundView.y+15, orangeBackgroundView.width, 500)];
+    self.tracerouteContainerView.hidden = YES;
+    [self.view addSubview:self.tracerouteContainerView];
+    
+    CGFloat boxWidth = (self.contentSizeForViewInPopover.width-20-30-30-20)/3.0; //total width subtracted by outer and inner margins and divided by three
+    CGFloat boxHeight = 75;
+    
+    self.box1 = [[LabelNumberBoxView alloc] initWithFrame:CGRectMake(20, orangeBackgroundView.y+orangeBackgroundView.height+6, boxWidth, boxHeight) labelText:@"IP Hops" numberText:@"0"];
+    [self.tracerouteContainerView addSubview:self.box1];
+
+    self.box2 = [[LabelNumberBoxView alloc] initWithFrame:CGRectMake(20+boxWidth+30, orangeBackgroundView.y+orangeBackgroundView.height+6, boxWidth, boxHeight) labelText:@"ASN Hops" numberText:@"0"];
+    [self.tracerouteContainerView addSubview:self.box2];
+    
+    self.box3 = [[LabelNumberBoxView alloc] initWithFrame:CGRectMake(20+boxWidth+30+boxWidth+30, orangeBackgroundView.y+orangeBackgroundView.height+6, boxWidth, boxHeight) labelText:@"Time (ms)" numberText:@"0"];
+    [self.tracerouteContainerView addSubview:self.box3];
+    
+    UILabel* detailsLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, self.box1.y+self.box1.height+8, self.tracerouteContainerView.width-20, 18)];
+    detailsLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:18];
+    detailsLabel.textColor = FONT_COLOR_GRAY;
+    detailsLabel.backgroundColor = [UIColor clearColor];
+    detailsLabel.text = @"Details of Traceroute";
+    [self.tracerouteContainerView addSubview:detailsLabel];
+
+    UIView* dividerView = [[UIView alloc] initWithFrame:CGRectMake(detailsLabel.x, detailsLabel.y+detailsLabel.height+10, detailsLabel.width, 1)];
+    dividerView.backgroundColor = [UIColor grayColor];
+    [self.tracerouteContainerView addSubview:dividerView];
+    
+    self.tracerouteTextView = [[UITextView alloc] initWithFrame:CGRectMake(5, dividerView.y+dividerView.height+5, self.tracerouteContainerView.width-5, 450)];
     self.tracerouteTextView.backgroundColor = [UIColor clearColor];
     self.tracerouteTextView.textColor = [UIColor whiteColor];
     self.tracerouteTextView.editable = NO;
     self.tracerouteTextView.userInteractionEnabled = YES;
     self.tracerouteTextView.scrollEnabled = YES;
-    self.tracerouteTextView.hidden = YES;
-    self.tracerouteTextView.font = [UIFont fontWithName:@"CourierNewPSMT" size:12];
-    [self.view addSubview:self.tracerouteTextView];
+    self.tracerouteTextView.font = [UIFont fontWithName:FONT_NAME_REGULAR size:12];
+    [self.tracerouteContainerView addSubview:self.tracerouteTextView];
 
+    
+    UIImage* yourLocationImage = [UIImage imageNamed:@"youarehere-icon"];
+    self.yourLocationContainerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.contentSizeForViewInPopover.width, 44)]; //position is not really set here, only size!
+    self.yourLocationContainerView.backgroundColor = UI_BLUE_COLOR;
+    self.yourLocationContainerView.alpha = 0;
+    [self.tracerouteContainerView addSubview:self.yourLocationContainerView];
+    
+    UILabel* yourLocationLabel = [[UILabel alloc] initWithFrame:CGRectMake(8, 0, self.yourLocationContainerView.width-yourLocationImage.size.width-8-20, self.yourLocationContainerView.height)];
+    yourLocationLabel.font = [UIFont fontWithName:FONT_NAME_MEDIUM size:28];
+    yourLocationLabel.textColor = [UIColor blackColor];
+    yourLocationLabel.backgroundColor = [UIColor clearColor];
+    yourLocationLabel.text = @"To Your Location";
+    [self.yourLocationContainerView addSubview:yourLocationLabel];
+    
+    UIImageView* yourLocationImageView = [[UIImageView alloc] initWithFrame:CGRectMake(self.yourLocationContainerView.width-yourLocationImage.size.width-25, 9, yourLocationImage.size.width, yourLocationImage.size.height)];
+    yourLocationImageView.image = yourLocationImage;
+    [self.yourLocationContainerView addSubview:yourLocationImageView];
+    
+    
     
     if (!self.isDisplayingCurrentNode) {
         self.tracerouteButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -148,6 +198,7 @@
         [self.tracerouteButton addTarget:self action:@selector(tracerouteButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:self.tracerouteButton];
     }
+    
 }
 
 - (IBAction)doneTapped {
@@ -160,12 +211,14 @@
 -(IBAction)tracerouteButtonTapped:(id)sender{
     if ([HelperMethods deviceHasInternetConnection]) {
         //UI setup
-        self.contentSizeForViewInPopover = CGSizeMake(340, 595);
-        self.tracerouteTextView.alpha = 0;
-        self.tracerouteTextView.hidden = NO;
+        self.contentSizeForViewInPopover = CGSizeMake(self.contentSizeForViewInPopover.width, 44+20+75+50+self.tracerouteTextView.height+20);
+        self.tracerouteContainerView.alpha = 0;
+        self.tracerouteContainerView.hidden = NO;
+        self.tracerouteTimer = [NSTimer scheduledTimerWithTimeInterval:0.001 target:self selector:@selector(tracerouteTimerFired) userInfo:nil repeats:YES];
+        self.topLabel.text = [NSString stringWithFormat:@"From %@", self.topLabel.text];
         
         [UIView animateWithDuration:1 animations:^{
-            self.tracerouteTextView.alpha = 1;
+            self.tracerouteContainerView.alpha = 1;
             for (UILabel* label in self.infoLabels) {
                 label.alpha = 0;
             }
@@ -180,6 +233,20 @@
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No Internet connection" message:@"Please connect to the internet." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
         [alert show];
     }
+}
+
+- (void)tracerouteTimerFired {
+    [self.box3 incrementNumber];
+}
+
+- (void)tracerouteDone {
+    CGSize size = [self.tracerouteTextView.text sizeWithFont:self.tracerouteTextView.font constrainedToSize:CGSizeMake(self.tracerouteTextView.width, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+    self.contentSizeForViewInPopover = CGSizeMake(self.contentSizeForViewInPopover.width, 44+20+75+43+MIN(self.tracerouteTextView.height, size.height)+self.yourLocationContainerView.height+20);
+    self.yourLocationContainerView.frame = CGRectMake(0, self.tracerouteTextView.y+MIN(self.tracerouteTextView.height, size.height)+20, self.yourLocationContainerView.width, self.yourLocationContainerView.height);
+    [UIView animateWithDuration:1 animations:^{
+        self.yourLocationContainerView.alpha = 1;
+    }];
+
 }
 
 @end
