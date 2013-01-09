@@ -121,7 +121,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.controller = [MapController new];
     
     self.display = self.controller.display;
-    self.display.camera.displaySize = self.view.bounds.size;
     self.display.camera.delegate = self;
     
     self.data = self.controller.data;
@@ -196,13 +195,15 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return UIInterfaceOrientationIsLandscape(interfaceOrientation);
+    
+    return [HelperMethods deviceIsiPad] ? UIInterfaceOrientationIsLandscape(interfaceOrientation) : UIInterfaceOrientationIsPortrait(interfaceOrientation);
 }
 
 #pragma mark - GLKView and GLKViewController delegate methods
 
 - (void)update
 {
+    self.display.camera.displaySize = self.view.bounds.size;
     [self.display update];
 }
 
