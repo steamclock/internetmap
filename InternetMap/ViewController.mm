@@ -524,9 +524,19 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.nodeInformationPopover = [[WEPopoverController alloc] initWithContentViewController:self.nodeInformationViewController];
     self.nodeInformationPopover.delegate = self;
     self.nodeInformationPopover.passthroughViews = @[self.view];
-        
+    UIPopoverArrowDirection dir = UIPopoverArrowDirectionLeft;
     CGPoint center = [self.controller getCoordinatesForNodeAtIndex:self.controller.targetNode];
-    [self.nodeInformationPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
+    CGRect displayRect = CGRectMake(center.x, center.y, 1, 1);
+    
+    if (![HelperMethods deviceIsiPad]) {
+        WEPopoverContainerViewProperties* prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
+        prop.upArrowImageName = nil;
+        self.nodeInformationPopover.containerViewProperties = prop;
+        dir = UIPopoverArrowDirectionUp;
+        displayRect.origin.y += 20;
+    }
+        
+    [self.nodeInformationPopover presentPopoverFromRect:displayRect inView:self.view permittedArrowDirections:dir animated:YES];
     
     if(isSelectingCurrentNode) {
         self.youAreHereButton.selected = YES;
@@ -624,9 +634,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (void)resizeNodeInfoPopover {
 
-    CGPoint center = [self.controller getCoordinatesForNodeAtIndex:self.controller.targetNode];
-    self.nodeInformationPopover.popoverContentSize = CGSizeZero;
-    [self.nodeInformationPopover repositionPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
+    if ([HelperMethods deviceIsiPad]) {
+        CGPoint center = [self.controller getCoordinatesForNodeAtIndex:self.controller.targetNode];
+        self.nodeInformationPopover.popoverContentSize = CGSizeZero;
+        [self.nodeInformationPopover repositionPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
+    }
 }
 
 -(void)tracerouteButtonTapped{

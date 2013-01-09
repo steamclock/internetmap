@@ -79,7 +79,9 @@
         
         height += 20; //bottom margin
         
-        [self setContentSizeForViewInPopover:CGSizeMake(452, height)];
+        float width = [HelperMethods deviceIsiPad] ? 452 : [[UIScreen mainScreen] bounds].size.width;
+        height = [HelperMethods deviceIsiPad] ? height : [[UIScreen mainScreen] bounds].size.height/2.0-20;
+        [self setContentSizeForViewInPopover:CGSizeMake(width, height)];
 
 
     }
@@ -211,7 +213,9 @@
 -(IBAction)tracerouteButtonTapped:(id)sender{
     if ([HelperMethods deviceHasInternetConnection]) {
         //UI setup
-        self.contentSizeForViewInPopover = CGSizeMake(self.contentSizeForViewInPopover.width, 44+20+75+50+self.tracerouteTextView.height+20);
+        if ([HelperMethods deviceIsiPad]) {
+            self.contentSizeForViewInPopover = CGSizeMake(self.contentSizeForViewInPopover.width, 44+20+75+50+self.tracerouteTextView.height+20);
+        }
         self.tracerouteContainerView.alpha = 0;
         self.tracerouteContainerView.hidden = NO;
         self.tracerouteTimer = [NSTimer scheduledTimerWithTimeInterval:0.001 target:self selector:@selector(tracerouteTimerFired) userInfo:nil repeats:YES];
@@ -240,9 +244,13 @@
 }
 
 - (void)tracerouteDone {
-    CGSize size = [self.tracerouteTextView.text sizeWithFont:self.tracerouteTextView.font constrainedToSize:CGSizeMake(self.tracerouteTextView.width, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-    self.contentSizeForViewInPopover = CGSizeMake(self.contentSizeForViewInPopover.width, 44+20+75+43+MIN(self.tracerouteTextView.height, size.height)+self.yourLocationContainerView.height+20);
-    self.yourLocationContainerView.frame = CGRectMake(0, self.tracerouteTextView.y+MIN(self.tracerouteTextView.height, size.height)+20, self.yourLocationContainerView.width, self.yourLocationContainerView.height);
+    if ([HelperMethods deviceIsiPad]) {
+        CGSize size = [self.tracerouteTextView.text sizeWithFont:self.tracerouteTextView.font constrainedToSize:CGSizeMake(self.tracerouteTextView.width, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+        self.contentSizeForViewInPopover = CGSizeMake(self.contentSizeForViewInPopover.width, 44+20+75+43+MIN(self.tracerouteTextView.height, size.height)+self.yourLocationContainerView.height+20);
+        self.yourLocationContainerView.frame = CGRectMake(0, self.tracerouteTextView.y+MIN(self.tracerouteTextView.height, size.height)+20, self.yourLocationContainerView.width, self.yourLocationContainerView.height);
+    }else {
+        self.yourLocationContainerView.frame = CGRectMake(0, self.contentSizeForViewInPopover.height-self.yourLocationContainerView.height, self.yourLocationContainerView.width, self.yourLocationContainerView.height);
+    }
     [UIView animateWithDuration:1 animations:^{
         self.yourLocationContainerView.alpha = 1;
     }];
