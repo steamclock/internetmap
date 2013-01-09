@@ -11,16 +11,23 @@
 #import "MapData.h"
 #import "DefaultVisualization.h"
 #import "Nodes.h"
-#import "Camera.h"
+#import "Camera.hpp"
 #import "Node.h"
 #import "Lines.hpp"
 #import "Connection.h"
 #import "IndexBox.h"
 
-// Temp conversion function while note everything is converted TODO: remove
+// Temp conversion functions while not everything is converted TODO: remove
+/// -----
 static Point3 GLKVec3ToPoint(const GLKVector3& in) {
     return Point3(in.x, in.y, in.z);
 };
+
+void cameraMoveFinishedCallback(void) {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"cameraMovementFinished" object:nil];
+}
+/// -----
+
 @implementation MapController
 
 
@@ -51,11 +58,11 @@ static Point3 GLKVec3ToPoint(const GLKVector3& in) {
 
 - (void)handleTouchDownAtPoint:(CGPoint)point {
     
-    if (!self.display.camera.isMovingToTarget) {
+    if (!self.display.camera->isMovingToTarget()) {
         //cancel panning/zooming momentum
-        [self.display.camera stopMomentumPan];
-        [self.display.camera stopMomentumZoom];
-        [self.display.camera stopMomentumRotation];
+        self.display.camera->stopMomentumPan();
+        self.display.camera->stopMomentumZoom();
+        self.display.camera->stopMomentumRotation();
         
         int i = [self indexForNodeAtPoint:point];
         if (i != NSNotFound) {
@@ -116,7 +123,7 @@ static Point3 GLKVec3ToPoint(const GLKVector3& in) {
         target = GLKVector3Make(0, 0, 0);
     }
     
-    self.display.camera.target = target;
+    self.display.camera->setTarget(target);
 }
 
 #pragma mark - Connection Highlighting
@@ -226,7 +233,7 @@ static Point3 GLKVec3ToPoint(const GLKVector3& in) {
     //get point in view and adjust it for viewport
     float xOld = pointInView.x;
     CGFloat xLoOld = 0;
-    CGFloat xHiOld = self.display.camera.displaySize.width;
+    CGFloat xHiOld = self.display.camera->displayWidth();
     CGFloat xLoNew = -1;
     CGFloat xHiNew = 1;
     
@@ -234,14 +241,14 @@ static Point3 GLKVec3ToPoint(const GLKVector3& in) {
     
     float yOld = pointInView.y;
     CGFloat yLoOld = 0;
-    CGFloat yHiOld = self.display.camera.displaySize.height;
+    CGFloat yHiOld = self.display.camera->displayHeight();
     CGFloat yLoNew = 1;
     CGFloat yHiNew = -1;
     
     pointInView.y = (yOld-yLoOld) / (yHiOld-yLoOld) * (yHiNew-yLoNew) + yLoNew;
     //transform point from screen- to object-space
-    GLKVector3 cameraInObjectSpace = [self.display.camera cameraInObjectSpace]; //A
-    GLKVector3 pointOnClipPlaneInObjectSpace = [self.display.camera applyModelViewToPoint:pointInView]; //B
+    GLKVector3 cameraInObjectSpace = self.display.camera->cameraInObjectSpace(); //A
+    GLKVector3 pointOnClipPlaneInObjectSpace = self.display.camera->applyModelViewToPoint(GLKVector2Make(pointInView.x, pointInView.y)); //B
     
     //do actual line-sphere intersection
     float xA, yA, zA;
@@ -285,7 +292,7 @@ static Point3 GLKVec3ToPoint(const GLKVector3& in) {
                 float delta = powf(b, 2)-4*a*c;
                 if (delta >= 0) {
                     //                    NSLog(@"intersected node %i: %@, delta: %f", i, NSStringFromGLKVector3(nodePosition), delta);
-                    GLKVector4 transformedNodePosition = GLKMatrix4MultiplyVector4(self.display.camera.currentModelView, GLKVector4MakeWithVector3(nodePosition, 1));
+                    GLKVector4 transformedNodePosition = GLKMatrix4MultiplyVector4(self.display.camera->currentModelView(), GLKVector4MakeWithVector3(nodePosition, 1));
                     if ((delta > maxDelta) && (transformedNodePosition.z < -0.1)) {
                         maxDelta = delta;
                         foundI = i;
@@ -304,17 +311,17 @@ static Point3 GLKVec3ToPoint(const GLKVector3& in) {
 -(CGPoint)getCoordinatesForNodeAtIndex:(int)index {
     Node* node = [self.data nodeAtIndex:index];
     
-    int viewport[4] = {0, 0, static_cast<int>(self.display.camera.displaySize.width), static_cast<int>(self.display.camera.displaySize.height)};
+    int viewport[4] = {0, 0, static_cast<int>(self.display.camera->displayWidth()), static_cast<int>(self.display.camera->displayHeight())};
     
     GLKVector3 nodePosition = [self.data.visualization nodePosition:node];
     
-    GLKMatrix4 model = [self.display.camera currentModelView];
+    GLKMatrix4 model = self.display.camera->currentModelView();
     
-    GLKMatrix4 projection = [self.display.camera currentProjection];
+    GLKMatrix4 projection = self.display.camera->currentProjection();
     
     GLKVector3 coordinates = GLKMathProject(nodePosition, model, projection, viewport);
     
-    CGPoint point = CGPointMake(coordinates.x,self.display.camera.displaySize.height - coordinates.y);
+    CGPoint point = CGPointMake(coordinates.x,self.display.camera->displayHeight() - coordinates.y);
     
     //NSLog(@"%@", NSStringFromCGPoint(point));
     

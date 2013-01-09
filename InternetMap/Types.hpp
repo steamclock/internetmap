@@ -8,6 +8,7 @@
 
 #include "ExternalCode/vectormath/vmInclude.h"
 
+typedef Vectormath::Aos::Matrix4 Matrix4;
 typedef vmVector3 Vector3;
 typedef vmPoint3 Point3;
 
@@ -60,6 +61,6 @@ struct ByteColour {
 
 
 // Time, stored in seconds so that it matches NSTimeInterval
-typedef double Time;
+typedef double TimeInterval;
 
 #endif

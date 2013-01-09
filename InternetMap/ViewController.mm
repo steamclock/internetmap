@@ -23,6 +23,8 @@
 #import "MapController.h"
 #import "LabelNumberBoxView.h"
 
+#include "Camera.hpp"
+
 #define MIN_TIMELINE_YEAR 1993
 #define MAX_TIMELINE_YEAR 2012
 
@@ -121,7 +123,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.controller = [MapController new];
     
     self.display = self.controller.display;
-    self.display.camera.displaySize = self.view.bounds.size;
+    self.display.camera->setDisplaySize(self.view.bounds.size.width, self.view.bounds.size.height);
     
     self.data = self.controller.data;
     
@@ -188,7 +190,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayInformationPopoverForCurrentNode) name:@"cameraMovementFinished" object:nil];
     
-    [self.display.camera resetIdleTimer];
+    self.display.camera->resetIdleTimer();
     
     self.cachedCurrentASN = NSNotFound;
     [self precacheCurrentASN];
@@ -202,7 +204,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (void)update
 {
-    self.display.camera.allowIdleAnimation = [self shouldDoIdleAnimation];
+    self.display.camera->setAllowIdleAnimation([self shouldDoIdleAnimation]);
     [self.display update];
 }
 
@@ -230,19 +232,19 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(void)handleTap:(UITapGestureRecognizer*)gestureRecognizer {
-    [self.display.camera resetIdleTimer];
+    self.display.camera->resetIdleTimer();
     [self dismissNodeInfoPopover];
     [self.controller selectHoveredNode];
 }
 
 - (void)handleDoubleTap:(UIGestureRecognizer*)gestureRecongizer {
-    [self.display.camera zoomAnimatedTo:self.display.camera.currentZoom+1.5 duration:1];
+    self.display.camera->zoomAnimated(self.display.camera->currentZoom()+1.5,1.0f);
     [self.controller unhoverNode];
 }
 
 - (void)handleTwoFingerTap:(UIGestureRecognizer*)gestureRecognizer {
     if (gestureRecognizer.numberOfTouches == 2) {
-        [self.display.camera zoomAnimatedTo:self.display.camera.currentZoom-1.5 duration:1];
+        self.display.camera->zoomAnimated(self.display.camera->currentZoom()-1.5, 1.0f);
         [self.controller unhoverNode];
     }
 }
@@ -282,12 +284,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)handlePan:(UIPanGestureRecognizer *)gestureRecognizer
 {
-    [self.display.camera resetIdleTimer];
+    self.display.camera->resetIdleTimer();
     if (!self.isHandlingLongPress) {
         if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
             CGPoint translation = [gestureRecognizer translationInView:self.view];
             self.lastPanPosition = translation;
-            [self.display.camera stopMomentumPan];
+            self.display.camera->stopMomentumPan();
             [self.controller unhoverNode];
         }else if([gestureRecognizer state] == UIGestureRecognizerStateChanged) {
             
@@ -295,36 +297,36 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             CGPoint delta = CGPointMake(translation.x - self.lastPanPosition.x, translation.y - self.lastPanPosition.y);
             self.lastPanPosition = translation;
             
-            [self.display.camera rotateRadiansX:delta.x * 0.01];
-            [self.display.camera rotateRadiansY:delta.y * 0.01];
+            self.display.camera->rotateRadiansX(delta.x * 0.01);
+            self.display.camera->rotateRadiansY(delta.y * 0.01);
         } else if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
             if (isnan([gestureRecognizer velocityInView:self.view].x) || isnan([gestureRecognizer velocityInView:self.view].y)) {
-                [self.display.camera stopMomentumPan];
+                self.display.camera->stopMomentumPan();;
             }else {
                 CGPoint velocity = [gestureRecognizer velocityInView:self.view];
-                [self.display.camera startMomentumPanWithVelocity:CGPointMake(velocity.x*0.002, velocity.y*0.002)];
+                self.display.camera->startMomentumPanWithVelocity(GLKVector2Make(velocity.x*0.002, velocity.y*0.002));
             }
         }
     }
 }
 
 - (void)handleRotation:(UIRotationGestureRecognizer*)gestureRecognizer {
-    [self.display.camera resetIdleTimer];
+    self.display.camera->resetIdleTimer();
     if (!self.isHandlingLongPress) {
         if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
             [self.controller unhoverNode];
             self.lastRotation = gestureRecognizer.rotation;
-            [self.display.camera stopMomentumRotation];
+            self.display.camera->stopMomentumRotation();
         }else if([gestureRecognizer state] == UIGestureRecognizerStateChanged)
         {
             float deltaRotation = -gestureRecognizer.rotation - self.lastRotation;
             self.lastRotation = -gestureRecognizer.rotation;
-            [self.display.camera rotateRadiansZ:deltaRotation];
+            self.display.camera->rotateRadiansZ(deltaRotation);
         } else if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
             if (isnan(gestureRecognizer.velocity)) {
-                [self.display.camera stopMomentumRotation];
+                self.display.camera->stopMomentumRotation();
             }else {
-                [self.display.camera startMomentumRotationWithVelocity:-gestureRecognizer.velocity*0.5];
+                self.display.camera->startMomentumRotationWithVelocity(-gestureRecognizer.velocity*0.5);
             }
 
         }
@@ -333,7 +335,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)handlePinch:(UIPinchGestureRecognizer *)gestureRecognizer
 {
-    [self.display.camera resetIdleTimer];
+    self.display.camera->resetIdleTimer();
     if (!self.isHandlingLongPress) {
         if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
             [self.controller unhoverNode];
@@ -342,12 +344,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         {
             float deltaZoom = gestureRecognizer.scale - self.lastScale;
             self.lastScale = gestureRecognizer.scale;
-            [self.display.camera zoomByScale:deltaZoom];
+            self.display.camera->zoomByScale(deltaZoom);
         }else if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
             if (isnan(gestureRecognizer.velocity)) {
-                [self.display.camera stopMomentumZoom];
+                self.display.camera->stopMomentumZoom();
             }else {
-                [self.display.camera startMomentumZoomWithVelocity:gestureRecognizer.velocity*0.5];
+                self.display.camera->startMomentumZoomWithVelocity(gestureRecognizer.velocity*0.5);
             }
         }
     }
@@ -625,12 +627,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     self.tracerouteHops = [NSMutableArray array];
     self.controller.highlightedNodes = [[NSMutableIndexSet alloc] init];
-    [self.display.camera zoomAnimatedTo:-3 duration:3];
+    self.display.camera->zoomAnimated(-3, 3.0f);
     Node* node = [self.data nodeAtIndex:self.controller.targetNode];
     if (node.importance > 0.006) {
-        [self.display.camera setRotationAnimatedTo:GLKMatrix4Identity duration:3];
+        self.display.camera->rotateAnimated(GLKMatrix4Identity, 3.0f);
     }else {
-        [self.display.camera setRotationAnimatedTo:GLKMatrix4MakeRotation(M_PI, 0, 1, 0) duration:3];
+        self.display.camera->rotateAnimated(GLKMatrix4MakeRotation(M_PI, 0, 1, 0), 3.0f);
     }
     
     if(self.controller.lastSearchIP) {

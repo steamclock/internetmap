@@ -80,7 +80,7 @@
 		A6B56BFB165AF98D00DDE753 /* line.vsh in Resources */ = {isa = PBXBuildFile; fileRef = A6B56BF4165AEDF700DDE753 /* line.vsh */; };
 		A6D54A8C16544DBF00028B51 /* MapDisplay.mm in Sources */ = {isa = PBXBuildFile; fileRef = A6D54A8B16544DBF00028B51 /* MapDisplay.mm */; };
 		A6D54A8F1654532100028B51 /* MapData.mm in Sources */ = {isa = PBXBuildFile; fileRef = A6D54A8E1654532100028B51 /* MapData.mm */; };
-		A6DC6610165E926100EDA4F6 /* Camera.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DC660F165E926100EDA4F6 /* Camera.m */; };
+		A6DC6610165E926100EDA4F6 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DC660F165E926100EDA4F6 /* Camera.cpp */; };
 		A6DC6614165EE8FA00EDA4F6 /* DefaultVisualization.mm in Sources */ = {isa = PBXBuildFile; fileRef = A6DC6613165EE8F900EDA4F6 /* DefaultVisualization.mm */; };
 		A6E6DB681676A0CE00B78F44 /* Lines.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6E6DB671676A0CD00B78F44 /* Lines.cpp */; };
 		A6E6DB6C1676B6C800B78F44 /* Connection.m in Sources */ = {isa = PBXBuildFile; fileRef = A6E6DB6B1676B6C700B78F44 /* Connection.m */; };
@@ -248,8 +248,8 @@
 		A6D54A8B16544DBF00028B51 /* MapDisplay.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MapDisplay.mm; sourceTree = "<group>"; };
 		A6D54A8D1654532100028B51 /* MapData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapData.h; sourceTree = "<group>"; };
 		A6D54A8E1654532100028B51 /* MapData.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MapData.mm; sourceTree = "<group>"; };
-		A6DC660E165E926100EDA4F6 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
-		A6DC660F165E926100EDA4F6 /* Camera.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Camera.m; sourceTree = "<group>"; };
+		A6DC660E165E926100EDA4F6 /* Camera.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Camera.hpp; sourceTree = "<group>"; };
+		A6DC660F165E926100EDA4F6 /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
 		A6DC6611165EE8D200EDA4F6 /* Visualization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Visualization.h; sourceTree = "<group>"; };
 		A6DC6612165EE8F900EDA4F6 /* DefaultVisualization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DefaultVisualization.h; sourceTree = "<group>"; };
 		A6DC6613165EE8F900EDA4F6 /* DefaultVisualization.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DefaultVisualization.mm; sourceTree = "<group>"; };
@@ -535,8 +535,8 @@
 				A6E6DB6B1676B6C700B78F44 /* Connection.m */,
 				A6B56BF7165AF53E00DDE753 /* Program.h */,
 				A6B56BF8165AF53F00DDE753 /* Program.m */,
-				A6DC660E165E926100EDA4F6 /* Camera.h */,
-				A6DC660F165E926100EDA4F6 /* Camera.m */,
+				A6DC660E165E926100EDA4F6 /* Camera.hpp */,
+				A6DC660F165E926100EDA4F6 /* Camera.cpp */,
 				A6DC6611165EE8D200EDA4F6 /* Visualization.h */,
 				A6DC6612165EE8F900EDA4F6 /* DefaultVisualization.h */,
 				A6DC6613165EE8F900EDA4F6 /* DefaultVisualization.mm */,
@@ -812,7 +812,7 @@
 				A6D54A8F1654532100028B51 /* MapData.mm in Sources */,
 				A6B56BF2165AE28A00DDE753 /* Node.m in Sources */,
 				A6B56BF9165AF53F00DDE753 /* Program.m in Sources */,
-				A6DC6610165E926100EDA4F6 /* Camera.m in Sources */,
+				A6DC6610165E926100EDA4F6 /* Camera.cpp in Sources */,
 				A6DC6614165EE8FA00EDA4F6 /* DefaultVisualization.mm in Sources */,
 				11134D2416695AD60061BDED /* HelperMethods.m in Sources */,
 				D4CEA338166962F8004B8E8A /* VisualizationsTableViewController.m in Sources */,

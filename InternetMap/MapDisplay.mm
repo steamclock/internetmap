@@ -6,7 +6,7 @@
 #import "MapDisplay.h"
 #import "Program.h"
 #import <GLKit/GLKit.h>
-#import "Camera.h"
+#import "Camera.hpp"
 #import "Lines.hpp"
 #import "Nodes.h"
 
@@ -20,7 +20,7 @@
 @property (strong, nonatomic) Program* selectedNodeProgram;
 @property (strong, nonatomic) Program* connectionProgram;
 
-@property (strong, nonatomic, readwrite) Camera* camera;
+@property (nonatomic, readwrite) std::shared_ptr<Camera> camera;
 
 - (void)setupGL;
 - (void)tearDownGL;
@@ -58,10 +58,7 @@
     self.selectedNodeProgram = [[Program alloc] initWithFragmentShaderName:@"selectedNode" vertexShaderName:@"node" activeAttributes:nodeVertexComponents];
     self.connectionProgram = [[Program alloc] initWithName:@"line" activeAttributes:lineVertexComponents];
     
-    
-
-    
-    self.camera = [Camera new];
+    self.camera = std::shared_ptr<Camera>(new Camera());
 }
 
 - (void)tearDownGL
@@ -78,16 +75,14 @@
 
 - (void)update
 {
-    [self.camera update];
+    self.camera->update([NSDate timeIntervalSinceReferenceDate]);
 }
 
 - (void)draw
 {
-
-
-    GLKMatrix4 mvp = [self.camera currentModelViewProjection];
-    GLKMatrix4 mv = [self.camera currentModelView];
-    GLKMatrix4 p = [self.camera currentProjection];
+    GLKMatrix4 mvp = self.camera->currentModelViewProjection();
+    GLKMatrix4 mv = self.camera->currentModelView();
+    GLKMatrix4 p = self.camera->currentProjection();
     
     glClearColor(0, 0, 0, 1.0f); //Visualization background color
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -96,8 +91,8 @@
     glUniformMatrix4fv([self.selectedNodeProgram uniformForName:@"modelViewMatrix"], 1, 0, mv.m);
     glUniformMatrix4fv([self.selectedNodeProgram uniformForName:@"projectionMatrix"], 1, 0, p.m);
     glUniform1f([self.selectedNodeProgram uniformForName:@"maxSize"], ([[UIScreen mainScreen] scale] == 2.00) ? 150.0f : 75.0f);
-    glUniform1f([self.selectedNodeProgram uniformForName:@"screenWidth"], ([[UIScreen mainScreen] scale] == 2.00) ? self.camera.displaySize.width*2 : self.camera.displaySize.width);
-    glUniform1f([self.selectedNodeProgram uniformForName:@"screenHeight"], ([[UIScreen mainScreen] scale] == 2.00) ? self.camera.displaySize.height*2 : self.camera.displaySize.height);
+    glUniform1f([self.selectedNodeProgram uniformForName:@"screenWidth"], [HelperMethods deviceIsRetina] ? self.camera->displayWidth()*2 : self.camera->displayWidth());
+    glUniform1f([self.selectedNodeProgram uniformForName:@"screenHeight"], [HelperMethods deviceIsRetina] ? self.camera->displayHeight()*2 : self.camera->displayHeight());
     
     glEnable(GL_DEPTH_TEST); //enable z testing and writing
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -110,8 +105,8 @@
     glUniformMatrix4fv([self.nodeProgram uniformForName:@"projectionMatrix"], 1, 0, p.m);
     glUniform1f([self.nodeProgram uniformForName:@"maxSize"], [HelperMethods deviceIsRetina] ? 150.0f : 75.0f);
     glUniform1f([self.nodeProgram uniformForName:@"minSize"], 2.0f);
-    glUniform1f([self.nodeProgram uniformForName:@"screenWidth"], [HelperMethods deviceIsRetina] ? self.camera.displaySize.width*2 : self.camera.displaySize.width);
-    glUniform1f([self.nodeProgram uniformForName:@"screenHeight"], [HelperMethods deviceIsRetina] ? self.camera.displaySize.height*2 : self.camera.displaySize.height);
+    glUniform1f([self.selectedNodeProgram uniformForName:@"screenWidth"], [HelperMethods deviceIsRetina] ? self.camera->displayWidth()*2 : self.camera->displayWidth());
+    glUniform1f([self.selectedNodeProgram uniformForName:@"screenHeight"], [HelperMethods deviceIsRetina] ? self.camera->displayHeight()*2 : self.camera->displayHeight());
     
     glBlendFunc(GL_ONE, GL_ONE);
     glDepthMask(GL_FALSE); //disable z writing only
