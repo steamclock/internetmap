@@ -25,7 +25,12 @@
 {
     self = [super init];
     if (self) {
-        self.contentSizeForViewInPopover = CGSizeMake(400, 290);
+        if ([HelperMethods deviceIsiPad]) {
+            self.contentSizeForViewInPopover = CGSizeMake(400, 290);
+        }else {
+            CGSize screenSize = [[UIScreen mainScreen] bounds].size;
+            self.contentSizeForViewInPopover = CGSizeMake(screenSize.width, screenSize.height-20-55-216); //status bar height, buttons, keyboard
+        }
     }
     return self;
 }
@@ -104,6 +109,11 @@
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     self.isSearching = NO;
     [self.tableView reloadData];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return YES;
 }
 
 #pragma mark - Table view data source

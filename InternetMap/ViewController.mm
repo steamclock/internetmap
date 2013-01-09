@@ -412,6 +412,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.nodeSearchPopover = [[WEPopoverController alloc] initWithContentViewController:searchController];
         [self.nodeSearchPopover setPopoverContentSize:searchController.contentSizeForViewInPopover];
         self.nodeSearchPopover.delegate = self;
+        
+        if (![HelperMethods deviceIsiPad]) {
+            WEPopoverContainerViewProperties *prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
+            prop.upArrowImageName = nil;
+            self.nodeSearchPopover.containerViewProperties = prop;
+        }
         searchController.allItems = self.data.nodes;
     }
     [self.nodeSearchPopover presentPopoverFromRect:self.searchButton.bounds inView:self.searchButton permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
