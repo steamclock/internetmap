@@ -5,6 +5,7 @@
 
 #include "OpenGL.hpp"
 #include "Lines.hpp"
+#include <stdlib.h>
 
 // TODO: Duplicated from Program.h during C++ conversion, should be able to remove once that's done
 enum
@@ -18,7 +19,7 @@ enum
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
 struct LineVertex {
-    Vector3 position;
+    RawVector3 position;
     ByteColour colour;
 };
 
@@ -64,7 +65,7 @@ void Lines::endUpdate(void) {
     glUnmapBufferOES(GL_ARRAY_BUFFER);
 }
 
-void Lines::updateLine(int index, const Vector3& start, const Colour& startColour, const Vector3& end, const Colour& endColour) {
+void Lines::updateLine(int index, const Point3& start, const Colour& startColour, const Point3& end, const Colour& endColour) {
     if(index >= _count) {
         return;
     }

@@ -10,6 +10,11 @@
 #import "Connection.h"
 #import "Nodes.h"
 
+// Temp conversion function while note everything is converted TODO: remove
+static Point3 GLKVec3ToPoint(const GLKVector3& in) {
+    return Point3(in.x, in.y, in.z);
+};
+
 @implementation DefaultVisualization
 
 -(GLKVector3)nodePosition:(Node*)node {
@@ -146,12 +151,12 @@
         Node* b = connection.second;
         
         float lineImportanceA = MAX(a.importance - 0.01f, 0.0f) * 1.5f;
-        GLKVector4 lineColorA = GLKVector4Make(lineImportanceA, lineImportanceA, lineImportanceA, 1.0);
+        Colour lineColorA = Colour(lineImportanceA, lineImportanceA, lineImportanceA, 1.0);
         
         float lineImportanceB = MAX(b.importance - 0.01f, 0.0f) * 1.5f;
-        GLKVector4 lineColorB = GLKVector4Make(lineImportanceB, lineImportanceB, lineImportanceB, 1.0);
+        Colour lineColorB = Colour(lineImportanceB, lineImportanceB, lineImportanceB, 1.0);
         
-        lines->updateLine(currentIndex, [self nodePosition:a], lineColorA, [self nodePosition:b], lineColorB);
+        lines->updateLine(currentIndex, GLKVec3ToPoint([self nodePosition:a]), lineColorA, GLKVec3ToPoint([self nodePosition:b]), lineColorB);
         currentIndex++;
     }
     

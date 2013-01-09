@@ -6,23 +6,55 @@
 #ifndef InternetMap_Types_hpp
 #define InternetMap_Types_hpp
 
-#include <GLKit/GLKMath.h>
+#include "ExternalCode/vectormath/vmInclude.h"
 
-typedef GLKVector4 Colour;
-typedef GLKVector3 Vector3;
+typedef vmVector3 Vector3;
+typedef vmPoint3 Point3;
+
+// Above classes are stored in 128 bytes for efficiency, so don't work as partof vertex structures,
+// where we need to guarantee 3 actual floats. Use this instead in those cases
+struct RawVector3 {
+    RawVector3() {
+        
+    }
+    
+    RawVector3(const Point3& in) {
+        x = in.getX();
+        y = in.getY();
+        z = in.getZ();
+    }
+    
+    RawVector3(const Vector3& in) {
+        x = in.getX();
+        y = in.getY();
+        z = in.getZ();
+    }
+    
+    float x, y, z;
+};
+
+struct Colour {
+    Colour() {
+        
+    }
+    
+    Colour(float R, float G, float B, float A) {
+        r = R= g = G; b = B; a = A;
+    }
+    
+    float r, g, b, a;
+};
 
 struct ByteColour {
     ByteColour(const Colour& colour) {
-        r = (int)(colour.x * 255.0f);
-        g = (int)(colour.y * 255.0f);
-        b = (int)(colour.z * 255.0f);
-        a = (int)(colour.w * 255.0f);
+        r = (int)(colour.r * 255.0f);
+        g = (int)(colour.g * 255.0f);
+        b = (int)(colour.b * 255.0f);
+        a = (int)(colour.a * 255.0f);
     }
     
-    unsigned char r;
-    unsigned char g;
-    unsigned char b;
-    unsigned char a;
+    unsigned char r, g, b, a;
 };
+
 
 #endif

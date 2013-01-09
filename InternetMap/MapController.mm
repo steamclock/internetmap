@@ -17,6 +17,10 @@
 #import "Connection.h"
 #import "IndexBox.h"
 
+// Temp conversion function while note everything is converted TODO: remove
+static Point3 GLKVec3ToPoint(const GLKVector3& in) {
+    return Point3(in.x, in.y, in.z);
+};
 @implementation MapController
 
 
@@ -141,9 +145,9 @@
         
     UIColor* brightColourUI = SELECTED_CONNECTION_COLOR_BRIGHT;
     UIColor* dimColourUI = SELECTED_CONNECTION_COLOR_DIM;
-    GLKVector4 brightColour;
+    Colour brightColour;
     [brightColourUI getRed:&brightColour.r green:&brightColour.g blue:&brightColour.b alpha:&brightColour.a];
-    GLKVector4 dimColour;
+    Colour dimColour;
     [dimColourUI getRed:&dimColour.r green:&dimColour.g blue:&dimColour.b alpha:&dimColour.a];
     
     for(int i = 0; i < filteredConnections.count; i++) {
@@ -152,10 +156,10 @@
         Node* b = connection.second;
         
         if(node == a) {
-            lines->updateLine(i, [self.data.visualization nodePosition:a], brightColour, [self.data.visualization nodePosition:b], dimColour);
+            lines->updateLine(i, GLKVec3ToPoint([self.data.visualization nodePosition:a]), brightColour, GLKVec3ToPoint([self.data.visualization nodePosition:b]), dimColour);
         }
         else {
-            lines->updateLine(i, [self.data.visualization nodePosition:a], dimColour, [self.data.visualization nodePosition:b], brightColour);
+            lines->updateLine(i, GLKVec3ToPoint([self.data.visualization nodePosition:a]), dimColour, GLKVec3ToPoint([self.data.visualization nodePosition:b]), brightColour);
         }
     }
     
@@ -187,7 +191,7 @@
     lines->beginUpdate();
     
     UIColor* lineColorUI = UIColorFromRGB(0xffa300);
-    GLKVector4 lineColor;
+    Colour lineColor;
     [lineColorUI getRed:&lineColor.r green:&lineColor.g blue:&lineColor.b alpha:&lineColor.a];
 
     [self.display.nodes beginUpdate];
@@ -198,7 +202,7 @@
         [self.display.nodes updateNode:b.index color:SELECTED_NODE_COLOR];
         [self.highlightedNodes addIndex:a.index];
         [self.highlightedNodes addIndex:b.index];
-        lines->updateLine(i, [self.data.visualization nodePosition:a], lineColor, [self.data.visualization nodePosition:b], lineColor);
+        lines->updateLine(i, GLKVec3ToPoint([self.data.visualization nodePosition:a]), lineColor, GLKVec3ToPoint([self.data.visualization nodePosition:b]), lineColor);
     }
     
     [self.display.nodes endUpdate];

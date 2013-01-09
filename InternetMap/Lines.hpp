@@ -27,7 +27,7 @@ public:
     
     void beginUpdate(void);
     void endUpdate(void);
-    void updateLine(int index, const Vector3& start, const Colour& startColour, const Vector3& end, const Colour& endColor);
+    void updateLine(int index, const Point3& start, const Colour& startColour, const Point3& end, const Colour& endColor);
     void display(void);
 };
 
