@@ -7,10 +7,19 @@
 #define InternetMap_Types_hpp
 
 #include "ExternalCode/vectormath/vmInclude.h"
+#include "ExternalCode/vectormath/vmInclude.h"
 
 typedef Vectormath::Aos::Matrix4 Matrix4;
 typedef vmVector3 Vector3;
+typedef Vectormath::Aos::Vector4 Vector4;
 typedef vmPoint3 Point3;
+typedef Vectormath::Aos::Quat Quaternion;
+
+struct Vector2 {
+    Vector2() { x = y = 0.0f; }
+    Vector2(float X, float Y) { x = X; y = Y; }
+    float x, y;
+};
 
 // Above classes are stored in 128 bytes for efficiency, so don't work as partof vertex structures,
 // where we need to guarantee 3 actual floats. Use this instead in those cases
@@ -62,5 +71,9 @@ struct ByteColour {
 
 // Time, stored in seconds so that it matches NSTimeInterval
 typedef double TimeInterval;
+
+static inline float DegreesToRadians(float degrees) {
+    return (degrees/360.0f) * 2.0f * M_PI;
+}
 
 #endif

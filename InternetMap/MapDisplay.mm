@@ -80,16 +80,16 @@
 
 - (void)draw
 {
-    GLKMatrix4 mvp = self.camera->currentModelViewProjection();
-    GLKMatrix4 mv = self.camera->currentModelView();
-    GLKMatrix4 p = self.camera->currentProjection();
+    Matrix4 mvp = self.camera->currentModelViewProjection();
+    Matrix4 mv = self.camera->currentModelView();
+    Matrix4 p = self.camera->currentProjection();
     
     glClearColor(0, 0, 0, 1.0f); //Visualization background color
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     [self.selectedNodeProgram use];
-    glUniformMatrix4fv([self.selectedNodeProgram uniformForName:@"modelViewMatrix"], 1, 0, mv.m);
-    glUniformMatrix4fv([self.selectedNodeProgram uniformForName:@"projectionMatrix"], 1, 0, p.m);
+    glUniformMatrix4fv([self.selectedNodeProgram uniformForName:@"modelViewMatrix"], 1, 0, reinterpret_cast<float*>(&mv));
+    glUniformMatrix4fv([self.selectedNodeProgram uniformForName:@"projectionMatrix"], 1, 0, reinterpret_cast<float*>(&p));
     glUniform1f([self.selectedNodeProgram uniformForName:@"maxSize"], ([[UIScreen mainScreen] scale] == 2.00) ? 150.0f : 75.0f);
     glUniform1f([self.selectedNodeProgram uniformForName:@"screenWidth"], [HelperMethods deviceIsRetina] ? self.camera->displayWidth()*2 : self.camera->displayWidth());
     glUniform1f([self.selectedNodeProgram uniformForName:@"screenHeight"], [HelperMethods deviceIsRetina] ? self.camera->displayHeight()*2 : self.camera->displayHeight());
@@ -101,8 +101,8 @@
     }
     
     [self.nodeProgram use];
-    glUniformMatrix4fv([self.nodeProgram uniformForName:@"modelViewMatrix"], 1, 0, mv.m);
-    glUniformMatrix4fv([self.nodeProgram uniformForName:@"projectionMatrix"], 1, 0, p.m);
+    glUniformMatrix4fv([self.selectedNodeProgram uniformForName:@"modelViewMatrix"], 1, 0, reinterpret_cast<float*>(&mv));
+    glUniformMatrix4fv([self.selectedNodeProgram uniformForName:@"projectionMatrix"], 1, 0, reinterpret_cast<float*>(&p));
     glUniform1f([self.nodeProgram uniformForName:@"maxSize"], [HelperMethods deviceIsRetina] ? 150.0f : 75.0f);
     glUniform1f([self.nodeProgram uniformForName:@"minSize"], 2.0f);
     glUniform1f([self.selectedNodeProgram uniformForName:@"screenWidth"], [HelperMethods deviceIsRetina] ? self.camera->displayWidth()*2 : self.camera->displayWidth());
@@ -116,7 +116,7 @@
     
     if(self.visualizationLines || self.highlightLines) {
         [self.connectionProgram use];
-        glUniformMatrix4fv([self.connectionProgram uniformForName:@"modelViewProjectionMatrix"], 1, 0, mvp.m);
+        glUniformMatrix4fv([self.connectionProgram uniformForName:@"modelViewProjectionMatrix"], 1, 0, reinterpret_cast<float*>(&mvp));
     }
     
     if(self.visualizationLines && ![HelperMethods deviceIsOld]) { // No lines on 3GS, iPod 3rd Gen or iPad 1

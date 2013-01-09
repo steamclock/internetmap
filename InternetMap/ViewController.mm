@@ -304,7 +304,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                 self.display.camera->stopMomentumPan();;
             }else {
                 CGPoint velocity = [gestureRecognizer velocityInView:self.view];
-                self.display.camera->startMomentumPanWithVelocity(GLKVector2Make(velocity.x*0.002, velocity.y*0.002));
+                self.display.camera->startMomentumPanWithVelocity(Vector2(velocity.x*0.002, velocity.y*0.002));
             }
         }
     }
@@ -630,9 +630,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.display.camera->zoomAnimated(-3, 3.0f);
     Node* node = [self.data nodeAtIndex:self.controller.targetNode];
     if (node.importance > 0.006) {
-        self.display.camera->rotateAnimated(GLKMatrix4Identity, 3.0f);
+        self.display.camera->rotateAnimated(Matrix4::identity(), 3.0f);
     }else {
-        self.display.camera->rotateAnimated(GLKMatrix4MakeRotation(M_PI, 0, 1, 0), 3.0f);
+        self.display.camera->rotateAnimated(Matrix4::rotation(M_PI, Vector3(0, 1, 0)), 3.0f);
     }
     
     if(self.controller.lastSearchIP) {

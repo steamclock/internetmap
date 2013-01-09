@@ -23,6 +23,10 @@ static Point3 GLKVec3ToPoint(const GLKVector3& in) {
     return Point3(in.x, in.y, in.z);
 };
 
+static GLKVector3 Vec3ToGLK(const Vector3& in) {
+    return GLKVector3Make(in.getX(), in.getY(), in.getZ());
+};
+
 void cameraMoveFinishedCallback(void) {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"cameraMovementFinished" object:nil];
 }
@@ -96,7 +100,7 @@ void cameraMoveFinishedCallback(void) {
 
 - (void)updateTargetForIndex:(int)index {
     
-    GLKVector3 target;
+    Vector3 target;
     // update current node to default state
     if (self.targetNode != NSNotFound) {
         Node* node = [self.data nodeAtIndex:self.targetNode];
@@ -109,7 +113,8 @@ void cameraMoveFinishedCallback(void) {
         
         self.targetNode = index;
         Node* node = [self.data nodeAtIndex:self.targetNode];
-        target = [self.data.visualization nodePosition:node];
+        GLKVector3 origTarget = [self.data.visualization nodePosition:node];
+        target = Vector3(origTarget.x, origTarget.y, origTarget.z);
         
         [self.display.nodes beginUpdate];
         [self.display.nodes updateNode:node.index color:[UIColor clearColor]];
@@ -120,7 +125,7 @@ void cameraMoveFinishedCallback(void) {
         [self highlightConnections:node];
         
     } else {
-        target = GLKVector3Make(0, 0, 0);
+        target = Vector3(0, 0, 0);
     }
     
     self.display.camera->setTarget(target);
@@ -247,8 +252,8 @@ void cameraMoveFinishedCallback(void) {
     
     pointInView.y = (yOld-yLoOld) / (yHiOld-yLoOld) * (yHiNew-yLoNew) + yLoNew;
     //transform point from screen- to object-space
-    GLKVector3 cameraInObjectSpace = self.display.camera->cameraInObjectSpace(); //A
-    GLKVector3 pointOnClipPlaneInObjectSpace = self.display.camera->applyModelViewToPoint(GLKVector2Make(pointInView.x, pointInView.y)); //B
+    Vector3 cameraInObjectSpace = self.display.camera->cameraInObjectSpace(); //A
+    Vector3 pointOnClipPlaneInObjectSpace = self.display.camera->applyModelViewToPoint(Vector2(pointInView.x, pointInView.y)); //B
     
     //do actual line-sphere intersection
     float xA, yA, zA;
@@ -257,23 +262,23 @@ void cameraMoveFinishedCallback(void) {
     __block float maxDelta = -1;
     __block int foundI = NSNotFound;
     
-    xA = cameraInObjectSpace.x;
-    yA = cameraInObjectSpace.y;
-    zA = cameraInObjectSpace.z;
+    xA = cameraInObjectSpace.getX();
+    yA = cameraInObjectSpace.getY();
+    zA = cameraInObjectSpace.getZ();
     
-    GLKVector3 direction = GLKVector3Subtract(pointOnClipPlaneInObjectSpace, cameraInObjectSpace); //direction = B - A
-    GLKVector3 invertedDirection = GLKVector3Make(1.0f/direction.x, 1.0f/direction.y, 1.0f/direction.z);
+    Vector3 direction = pointOnClipPlaneInObjectSpace - cameraInObjectSpace; //direction = B - A
+    Vector3 invertedDirection = Vector3(1.0f/direction.getX(), 1.0f/direction.getY(), 1.0f/direction.getZ());
     int sign[3];
-    sign[0] = (invertedDirection.x < 0);
-    sign[1] = (invertedDirection.y < 0);
-    sign[2] = (invertedDirection.z < 0);
+    sign[0] = (invertedDirection.getX() < 0);
+    sign[1] = (invertedDirection.getY() < 0);
+    sign[2] = (invertedDirection.getZ() < 0);
     
-    float a = powf((direction.x), 2)+powf((direction.y), 2)+powf((direction.z), 2);
+    float a = powf((direction.getX()), 2)+powf((direction.getY()), 2)+powf((direction.getZ()), 2);
     
     IndexBox* box;
     for (int j = 0; j<[self.data.boxesForNodes count]; j++) {
         box = [self.data.boxesForNodes objectAtIndex:j];
-        if ([box doesLineIntersectOptimized:cameraInObjectSpace invertedDirection:invertedDirection sign:sign]) {
+        if ([box doesLineIntersectOptimized:Vec3ToGLK(cameraInObjectSpace) invertedDirection:Vec3ToGLK(invertedDirection) sign:sign]) {
             //            NSLog(@"intersects box %i at pos %@", j, NSStringFromGLKVector3(box.center));
             [box.indices enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
                 int i = idx;
@@ -287,13 +292,13 @@ void cameraMoveFinishedCallback(void) {
                 r = [self.data.visualization nodeSize:node]/2;
                 r = MAX(r, 0.02);
                 
-                float b = 2*((direction.x)*(xA-xC)+(direction.y)*(yA-yC)+(direction.z)*(zA-zC));
+                float b = 2*((direction.getX())*(xA-xC)+(direction.getY())*(yA-yC)+(direction.getZ())*(zA-zC));
                 float c = powf((xA-xC), 2)+powf((yA-yC), 2)+powf((zA-zC), 2)-powf(r, 2);
                 float delta = powf(b, 2)-4*a*c;
                 if (delta >= 0) {
                     //                    NSLog(@"intersected node %i: %@, delta: %f", i, NSStringFromGLKVector3(nodePosition), delta);
-                    GLKVector4 transformedNodePosition = GLKMatrix4MultiplyVector4(self.display.camera->currentModelView(), GLKVector4MakeWithVector3(nodePosition, 1));
-                    if ((delta > maxDelta) && (transformedNodePosition.z < -0.1)) {
+                    Vector4 transformedNodePosition = self.display.camera->currentModelView() * Vector4(nodePosition.x, nodePosition.y, nodePosition.z, 1);
+                    if ((delta > maxDelta) && (transformedNodePosition.getZ() < -0.1)) {
                         maxDelta = delta;
                         foundI = i;
                     }
@@ -311,15 +316,14 @@ void cameraMoveFinishedCallback(void) {
 -(CGPoint)getCoordinatesForNodeAtIndex:(int)index {
     Node* node = [self.data nodeAtIndex:index];
     
-    int viewport[4] = {0, 0, static_cast<int>(self.display.camera->displayWidth()), static_cast<int>(self.display.camera->displayHeight())};
-    
     GLKVector3 nodePosition = [self.data.visualization nodePosition:node];
     
-    GLKMatrix4 model = self.display.camera->currentModelView();
-    
-    GLKMatrix4 projection = self.display.camera->currentProjection();
-    
-    GLKVector3 coordinates = GLKMathProject(nodePosition, model, projection, viewport);
+    Matrix4 mvp = self.display.camera->currentModelViewProjection();
+
+    Vector4 proj = mvp * Vector4(nodePosition.x, nodePosition.y, nodePosition.z, 1.0f);
+    proj /= proj.getW();
+
+    Vector2 coordinates(((proj.getX() / 2.0f) + 1.0f) * self.display.camera->displayWidth(), ((proj.getY() / 2.0f) + 1.0f) * self.display.camera->displayHeight());
     
     CGPoint point = CGPointMake(coordinates.x,self.display.camera->displayHeight() - coordinates.y);
     

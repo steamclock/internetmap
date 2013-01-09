@@ -4,24 +4,23 @@
 //
 
 #include "Types.hpp"
-#include "GLKit/GLKMath.h"
 
 class Camera {
     float _displayWidth, _displayHeight;
-    GLKVector3 _target;
+    Vector3 _target;
     bool _isMovingToTarget;
     bool _allowIdleAnimation;
     
-    GLKMatrix4 _modelViewProjectionMatrix;
-    GLKMatrix4 _modelViewMatrix;
-    GLKMatrix4 _projectionMatrix;
+    Matrix4 _modelViewProjectionMatrix;
+    Matrix4 _modelViewMatrix;
+    Matrix4 _projectionMatrix;
     
-    GLKMatrix4 _rotationMatrix;
+    Matrix4 _rotationMatrix;
     float _rotation;
     float _zoom;
     
     TimeInterval _targetMoveStartTime;
-    GLKVector3 _targetMoveStartPosition;
+    Vector3 _targetMoveStartPosition;
     
     float _zoomStart;
     float _zoomTarget;
@@ -31,7 +30,7 @@ class Camera {
     TimeInterval _updateTime;
     TimeInterval _idleStartTime; // For "attract" mode
     
-    GLKVector2 _panVelocity;
+    Vector2 _panVelocity;
     TimeInterval _panEndTime;
     
     float _zoomVelocity;
@@ -40,8 +39,8 @@ class Camera {
     float _rotationVelocity;
     TimeInterval _rotationEndTime;
     
-    GLKQuaternion _rotationStart;
-    GLKQuaternion _rotationTarget;
+    Quaternion _rotationStart;
+    Quaternion _rotationTarget;
     TimeInterval _rotationStartTime;
     TimeInterval _rotationDuration;
     
@@ -49,15 +48,15 @@ class Camera {
     void handleMomentumPan(TimeInterval delta);
     void handleMomentumZoom(TimeInterval delta);
     void handleMomentumRotation(TimeInterval delta);
-    GLKVector3 calculateMoveTarget(TimeInterval delta);
+    Vector3 calculateMoveTarget(TimeInterval delta);
     void handleAnimatedZoom(TimeInterval delta);
     void handleAnimatedRotation(TimeInterval delta);
     
 public:
     Camera();
     
-    void setTarget(const GLKVector3& target);
-    GLKVector3 target(void) { return _target; }
+    void setTarget(const Vector3& target);
+    Vector3 target(void) { return _target; }
     void setDisplaySize(float width, float height) { _displayWidth = width; _displayHeight = height; }
     float displayWidth() { return _displayWidth; }
     float displayHeight() { return _displayHeight; }
@@ -67,22 +66,22 @@ public:
     void rotateRadiansX(float rotate);
     void rotateRadiansY(float rotate);
     void rotateRadiansZ(float rotate);
-    void rotateAnimated(GLKMatrix4 rotation, TimeInterval duration);
+    void rotateAnimated(Matrix4 rotation, TimeInterval duration);
     void zoomAnimated(float zoom, TimeInterval duration);
     void zoomByScale(float zoom);
     void resetIdleTimer(void);
     
     void update(TimeInterval currentTime);
 
-    GLKMatrix4 currentModelViewProjection(void);
-    GLKMatrix4 currentModelView(void);
-    GLKMatrix4 currentProjection(void);
+    Matrix4 currentModelViewProjection(void);
+    Matrix4 currentModelView(void);
+    Matrix4 currentProjection(void);
     float currentZoom(void);
 
-    GLKVector3 applyModelViewToPoint(GLKVector2 point);
-    GLKVector3 cameraInObjectSpace(void);
+    Vector3 applyModelViewToPoint(Vector2 point);
+    Vector3 cameraInObjectSpace(void);
 
-    void startMomentumPanWithVelocity(GLKVector2 velocity);
+    void startMomentumPanWithVelocity(Vector2 velocity);
     void stopMomentumPan();
     
     void startMomentumZoomWithVelocity(float velocity);

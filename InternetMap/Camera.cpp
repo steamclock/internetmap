@@ -4,6 +4,7 @@
 //
 
 #import "Camera.hpp"
+#import <stdlib.h>
 
 static const float MOVE_TIME = 1.0f;
 static const float FINAL_ZOOM_ON_SELECTION = -0.4;
@@ -14,13 +15,13 @@ void cameraMoveFinishedCallback(void);
 Camera::Camera() :
     _displayWidth(0.0f),
     _displayHeight(0.0f),
-    //_target(0.0f, 0.0f, 0.0f),
+    _target(0.0f, 0.0f, 0.0f),
     _isMovingToTarget(false),
     _allowIdleAnimation(false),
     _rotation(0.0f),
     _zoom(-3.0f),
     _targetMoveStartTime(MAXFLOAT),
-    //_targetMoveStartPosition()
+    _targetMoveStartPosition(0.0f, 0.0f, 0.0f),
     _zoomStart(0.0f),
     _zoomTarget(0.0f),
     _zoomStartTime(0.0f),
@@ -35,10 +36,8 @@ Camera::Camera() :
     _rotationStartTime(0.0f),
     _rotationDuration(0.0f)
 {
-    _rotationMatrix = GLKMatrix4Identity;
+    _rotationMatrix = Matrix4::identity();
     _zoom = -3.0f;
-    _target = GLKVector3Make(0.0f, 0.0f, 0.0f);
-    _targetMoveStartPosition = GLKVector3Make(0.0f, 0.0f, 0.0f);
     _isMovingToTarget = false;
     _panVelocity.x = 0.0f;
     _panVelocity.y = 0.0f;
@@ -54,19 +53,19 @@ void Camera::update(TimeInterval currentTime) {
     handleMomentumPan(delta);
     handleMomentumZoom(delta);
     handleMomentumRotation(delta);
-    GLKVector3 currentTarget = calculateMoveTarget(delta);
+    Vector3 currentTarget = calculateMoveTarget(delta);
     handleAnimatedZoom(delta);
     handleAnimatedRotation(delta);
     
     float aspect = fabsf(_displayWidth / _displayHeight);
-    GLKMatrix4 model = GLKMatrix4Multiply(_rotationMatrix, GLKMatrix4MakeTranslation(-currentTarget.x, -currentTarget.y, -currentTarget.z));
-    GLKMatrix4 view = GLKMatrix4MakeTranslation(0.0f, 0.0f, _zoom);
-    GLKMatrix4 modelView = GLKMatrix4Multiply(view, model);
-    GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0f), aspect, 0.1f, 100.0f);
+    Matrix4 model = _rotationMatrix * Matrix4::translation(Vector3(-currentTarget.getX(), -currentTarget.getY(), -currentTarget.getZ()));
+    Matrix4 view = Matrix4::translation(Vector3(0.0f, 0.0f, _zoom));
+    Matrix4 modelView = view * model;
+    Matrix4 projectionMatrix = Matrix4::perspective(DegreesToRadians(65.0f), aspect, 0.1f, 100.0f);
     
     _projectionMatrix = projectionMatrix;
     _modelViewMatrix = modelView;
-    _modelViewProjectionMatrix = GLKMatrix4Multiply(projectionMatrix, modelView);
+    _modelViewProjectionMatrix = projectionMatrix * modelView;
 }
 
 #pragma mark - Update loop helpers
@@ -180,12 +179,12 @@ void Camera::handleAnimatedRotation(TimeInterval delta) {
             else {
                 positionT = 1.0f - ((timeT - 1.0f) * (timeT - 1.0f) * 2.0f);
             }
-            _rotationMatrix = GLKMatrix4MakeWithQuaternion(GLKQuaternionSlerp(_rotationStart, _rotationTarget, positionT));
+            _rotationMatrix = Matrix4(Vectormath::Aos::slerp(positionT, _rotationStart , _rotationTarget), Vector3(0.0f, 0.0f, 0.0f));
         }
     }
 }
-GLKVector3 Camera::calculateMoveTarget(TimeInterval delta) {
-    GLKVector3 currentTarget;
+Vector3 Camera::calculateMoveTarget(TimeInterval delta) {
+    Vector3 currentTarget;
     
     //animated move to target
     if(_targetMoveStartTime < _updateTime) {
@@ -208,7 +207,7 @@ GLKVector3 Camera::calculateMoveTarget(TimeInterval delta) {
                 positionT = 1.0f - ((timeT - 1.0f) * (timeT - 1.0f) * 2.0f);
             }
             
-            currentTarget = GLKVector3Add(_targetMoveStartPosition, GLKVector3MultiplyScalar(GLKVector3Subtract(_target, _targetMoveStartPosition), positionT));
+            currentTarget = _targetMoveStartPosition + ((_target - _targetMoveStartPosition) * positionT);
         }
     }
     else {
@@ -225,49 +224,49 @@ float Camera::currentZoom(void) {
     return _zoom;
 }
 
-GLKMatrix4 Camera::currentModelViewProjection(void) {
+Matrix4 Camera::currentModelViewProjection(void) {
     return _modelViewProjectionMatrix;
 }
 
-GLKMatrix4 Camera::currentModelView(void) {
+Matrix4 Camera::currentModelView(void) {
     return _modelViewMatrix;
 }
 
-GLKMatrix4 Camera::currentProjection(void) {
+Matrix4 Camera::currentProjection(void) {
     return _projectionMatrix;
 }
 
-GLKVector3 Camera::cameraInObjectSpace(void) {
-    GLKMatrix4 invertedModelViewMatrix = GLKMatrix4Invert(_modelViewMatrix, NULL);
-    return GLKVector3Make(invertedModelViewMatrix.m30, invertedModelViewMatrix.m31, invertedModelViewMatrix.m32);
+Vector3 Camera::cameraInObjectSpace(void) {
+    Matrix4 invertedModelViewMatrix = Vectormath::Aos::inverse(_modelViewMatrix);
+    return invertedModelViewMatrix.getTranslation();
 }
 
-GLKVector3 Camera::applyModelViewToPoint(GLKVector2 point) {
-    GLKVector4 vec4FromPoint = GLKVector4Make(point.x, point.y, -0.1, 1);
-    GLKMatrix4 invertedModelViewProjectionMatrix = GLKMatrix4Invert(_modelViewProjectionMatrix, NULL);
-    vec4FromPoint = GLKMatrix4MultiplyVector4(invertedModelViewProjectionMatrix, vec4FromPoint);
-    vec4FromPoint = GLKVector4DivideScalar(vec4FromPoint, vec4FromPoint.w);
+Vector3 Camera::applyModelViewToPoint(Vector2 point) {
+    Vector4 vec4FromPoint(point.x, point.y, -0.1, 1);
+    Matrix4 invertedModelViewProjectionMatrix = Vectormath::Aos::inverse(_modelViewProjectionMatrix);
+    vec4FromPoint = invertedModelViewProjectionMatrix * vec4FromPoint;
+    vec4FromPoint = vec4FromPoint / vec4FromPoint.getW();
     
-    return GLKVector3Make(vec4FromPoint.x, vec4FromPoint.y, vec4FromPoint.z);
+    return Vector3(vec4FromPoint.getX(), vec4FromPoint.getY(), vec4FromPoint.getZ());
 }
 
 #pragma mark - View manipulation
 
 void Camera::rotateRadiansX(float rotate) {
-    _rotationMatrix = GLKMatrix4Multiply(GLKMatrix4MakeRotation(rotate, 0.0f, 1.0f, 0.0f), _rotationMatrix);
+    _rotationMatrix = Matrix4::rotation(rotate, Vector3(0.0f, 1.0f, 0.0f)) * _rotationMatrix;
 }
 
 void Camera::rotateRadiansY(float rotate) {
-    _rotationMatrix = GLKMatrix4Multiply(GLKMatrix4MakeRotation(rotate, 1.0f, 0.0f, 0.0f), _rotationMatrix);
+    _rotationMatrix = Matrix4::rotation(rotate, Vector3(1.0f, 0.0f, 0.0f)) * _rotationMatrix;
 }
 
 void Camera::rotateRadiansZ(float rotate) {
-    _rotationMatrix = GLKMatrix4Multiply(GLKMatrix4MakeRotation(rotate, 0.0f, 0.0f, 1.0f), _rotationMatrix);
+    _rotationMatrix = Matrix4::rotation(rotate, Vector3(0.0f, 0.0f, 1.0f)) * _rotationMatrix;
 }
 
-void Camera::rotateAnimated(GLKMatrix4 rotation, TimeInterval duration) {
-    _rotationStart = GLKQuaternionMakeWithMatrix4(_rotationMatrix);
-    _rotationTarget = GLKQuaternionMakeWithMatrix4(rotation);
+void Camera::rotateAnimated(Matrix4 rotation, TimeInterval duration) {
+    _rotationStart = Quaternion(_rotationMatrix.getUpper3x3());
+    _rotationTarget = Quaternion(rotation.getUpper3x3());
     _rotationStartTime = _updateTime;
     _rotationDuration = duration;
 }
@@ -298,7 +297,7 @@ void Camera::zoomAnimated(float zoom, TimeInterval duration) {
     _zoomDuration = duration;
 }
 
-void Camera::setTarget(const GLKVector3& target) {
+void Camera::setTarget(const Vector3& target) {
     _targetMoveStartPosition = _target;
     _target = target;
     _targetMoveStartTime = _updateTime;
@@ -308,7 +307,7 @@ void Camera::setTarget(const GLKVector3& target) {
 
 #pragma mark - Momentum Panning/Zooming/Rotation
 
-void Camera::startMomentumPanWithVelocity(GLKVector2 velocity) {
+void Camera::startMomentumPanWithVelocity(Vector2 velocity) {
     _panEndTime = _updateTime;
     _panVelocity = velocity;
 }
