@@ -7,7 +7,7 @@
 #import "Program.h"
 #import <GLKit/GLKit.h>
 #import "Camera.h"
-#import "Lines.h"
+#import "Lines.hpp"
 #import "Nodes.h"
 
 @interface MapDisplay () {
@@ -125,11 +125,11 @@
     }
     
     if(self.visualizationLines && ![HelperMethods deviceIsOld]) { // No lines on 3GS, iPod 3rd Gen or iPad 1
-        [self.visualizationLines display];
+        self.visualizationLines->display();
     }
 
     if(self.highlightLines) {
-        [self.highlightLines display];
+        self.highlightLines->display();
     }
     
     glDisable(GL_DEPTH_TEST);

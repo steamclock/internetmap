@@ -14,7 +14,6 @@
 #import "NodeInformationViewController.h"
 #import "ASNRequest.h"
 #import <dns_sd.h>
-#import "Lines.h"
 #import "IndexBox.h"
 #import <sys/socket.h>
 #import <ifaddrs.h>

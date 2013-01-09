@@ -13,7 +13,7 @@
 #import "Nodes.h"
 #import "Camera.h"
 #import "Node.h"
-#import "Lines.h"
+#import "Lines.hpp"
 #import "Connection.h"
 #import "IndexBox.h"
 
@@ -136,12 +136,15 @@
         return;
     }
     
-    Lines* lines = [[Lines alloc] initWithLineCount:filteredConnections.count];
-    
-    [lines beginUpdate];
-    
-    UIColor* brightColour = SELECTED_CONNECTION_COLOR_BRIGHT;
-    UIColor* dimColour = SELECTED_CONNECTION_COLOR_DIM;
+    std::shared_ptr<Lines> lines(new Lines(filteredConnections.count));
+    lines->beginUpdate();
+        
+    UIColor* brightColourUI = SELECTED_CONNECTION_COLOR_BRIGHT;
+    UIColor* dimColourUI = SELECTED_CONNECTION_COLOR_DIM;
+    GLKVector4 brightColour;
+    [brightColourUI getRed:&brightColour.r green:&brightColour.g blue:&brightColour.b alpha:&brightColour.a];
+    GLKVector4 dimColour;
+    [dimColourUI getRed:&dimColour.r green:&dimColour.g blue:&dimColour.b alpha:&dimColour.a];
     
     for(int i = 0; i < filteredConnections.count; i++) {
         Connection* connection = filteredConnections[i];
@@ -149,15 +152,15 @@
         Node* b = connection.second;
         
         if(node == a) {
-            [lines updateLine:i withStart:[self.data.visualization nodePosition:a] startColor:brightColour end:[self.data.visualization nodePosition:b] endColor:dimColour];
+            lines->updateLine(i, [self.data.visualization nodePosition:a], brightColour, [self.data.visualization nodePosition:b], dimColour);
         }
         else {
-            [lines updateLine:i withStart:[self.data.visualization nodePosition:a] startColor:dimColour end:[self.data.visualization nodePosition:b] endColor:brightColour];
+            lines->updateLine(i, [self.data.visualization nodePosition:a], dimColour, [self.data.visualization nodePosition:b], brightColour);
         }
     }
     
-    [lines endUpdate];
-    lines.width = ((filteredConnections.count < 20) ? 2 : 1) * ([HelperMethods deviceIsRetina] ? 2 : 1);
+    lines->endUpdate();
+    lines->setWidth(((filteredConnections.count < 20) ? 2 : 1) * ([HelperMethods deviceIsRetina] ? 2 : 1));
     self.display.highlightLines = lines;
 }
 
@@ -179,12 +182,14 @@
         [self clearHighlightLines];
         return;
     }
-    Lines* lines = [[Lines alloc] initWithLineCount:nodeList.count - 1];
+
+    std::shared_ptr<Lines> lines(new Lines(nodeList.count - 1));
+    lines->beginUpdate();
     
-    [lines beginUpdate];
-    
-    UIColor* lineColor = UIColorFromRGB(0xffa300);
-    
+    UIColor* lineColorUI = UIColorFromRGB(0xffa300);
+    GLKVector4 lineColor;
+    [lineColorUI getRed:&lineColor.r green:&lineColor.g blue:&lineColor.b alpha:&lineColor.a];
+
     [self.display.nodes beginUpdate];
     for(int i = 0; i < nodeList.count - 1; i++) {
         Node* a = nodeList[i];
@@ -193,15 +198,14 @@
         [self.display.nodes updateNode:b.index color:SELECTED_NODE_COLOR];
         [self.highlightedNodes addIndex:a.index];
         [self.highlightedNodes addIndex:b.index];
-        [lines updateLine:i withStart:[self.data.visualization nodePosition:a] startColor:lineColor end:[self.data.visualization nodePosition:b] endColor:lineColor];
+        lines->updateLine(i, [self.data.visualization nodePosition:a], lineColor, [self.data.visualization nodePosition:b], lineColor);
     }
     
     [self.display.nodes endUpdate];
     
     
-    [lines endUpdate];
-    
-    lines.width = [HelperMethods deviceIsRetina] ? 10.0 : 5.0;
+    lines->endUpdate();
+    lines->setWidth([HelperMethods deviceIsRetina] ? 10.0 : 5.0);
     
     self.display.highlightLines = lines;
     
@@ -296,7 +300,7 @@
 -(CGPoint)getCoordinatesForNodeAtIndex:(int)index {
     Node* node = [self.data nodeAtIndex:index];
     
-    int viewport[4] = {0, 0, self.display.camera.displaySize.width, self.display.camera.displaySize.height};
+    int viewport[4] = {0, 0, static_cast<int>(self.display.camera.displaySize.width), static_cast<int>(self.display.camera.displaySize.height)};
     
     GLKVector3 nodePosition = [self.data.visualization nodePosition:node];
     

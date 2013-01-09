@@ -6,7 +6,7 @@
 #import "DefaultVisualization.h"
 #import "MapDisplay.h"
 #import "Node.h"
-#import "Lines.h"
+#import "Lines.hpp"
 #import "Connection.h"
 #import "Nodes.h"
 
@@ -129,9 +129,9 @@
     
     int skipLines = 10;
     
-    Lines* lines = [[Lines alloc] initWithLineCount:filteredConnections.count / skipLines];
+    std::shared_ptr<Lines> lines(new Lines(filteredConnections.count / skipLines));
     
-    [lines beginUpdate];
+    lines->beginUpdate();
     
     int currentIndex = 0;
     int count = 0;
@@ -146,15 +146,16 @@
         Node* b = connection.second;
         
         float lineImportanceA = MAX(a.importance - 0.01f, 0.0f) * 1.5f;
-        UIColor* lineColorA = [UIColor colorWithRed:lineImportanceA green:lineImportanceA blue:lineImportanceA alpha:1.0];
+        GLKVector4 lineColorA = GLKVector4Make(lineImportanceA, lineImportanceA, lineImportanceA, 1.0);
         
         float lineImportanceB = MAX(b.importance - 0.01f, 0.0f) * 1.5f;
-        UIColor* lineColorB = [UIColor colorWithRed:lineImportanceB green:lineImportanceB blue:lineImportanceB alpha:1.0];
+        GLKVector4 lineColorB = GLKVector4Make(lineImportanceB, lineImportanceB, lineImportanceB, 1.0);
         
-        [lines updateLine:currentIndex withStart:[self nodePosition:a] startColor:lineColorA end:[self nodePosition:b] endColor:lineColorB];
+        lines->updateLine(currentIndex, [self nodePosition:a], lineColorA, [self nodePosition:b], lineColorB);
         currentIndex++;
     }
-    [lines endUpdate];
+    
+    lines->endUpdate();;
     
     display.visualizationLines = lines;
 }

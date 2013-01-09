@@ -6,7 +6,7 @@
 #import "MapData.h"
 #import "MapDisplay.h"
 #import "Node.h"
-#import "Lines.h"
+#import "Lines.hpp"
 #import "Connection.h"
 #import "IndexBox.h"
 
