@@ -6,20 +6,14 @@
 #import <Foundation/Foundation.h>
 #import "GLKit/GLKit.h"
 
-@protocol CameraDelegate <NSObject>
-
-- (BOOL)shouldDoIdleAnimation;
-
-@end
-
-
 @interface Camera : NSObject
 
 @property (nonatomic) CGSize displaySize;
 
 @property (nonatomic) GLKVector3 target;
 @property (nonatomic) BOOL isMovingToTarget;
-@property (nonatomic, weak) id<CameraDelegate> delegate;
+
+@property BOOL allowIdleAnimation;
 
 -(void)rotateRadiansX:(float)rotate;
 -(void)rotateRadiansY:(float)rotate;

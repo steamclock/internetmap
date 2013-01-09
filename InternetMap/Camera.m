@@ -98,11 +98,7 @@ static const float FINAL_ZOOM_ON_SELECTION = -0.4;
     NSTimeInterval idleTime = now - self.idleStartTime;
     float idleDelay = 0.1;
     
-    BOOL shouldDoIdle = YES;
-    if (self.delegate && [self.delegate respondsToSelector:@selector(shouldDoIdleAnimation)]) {
-        shouldDoIdle = [self.delegate shouldDoIdleAnimation];
-    }
-    if (shouldDoIdle && idleTime > idleDelay) {
+    if (self.allowIdleAnimation && (idleTime > idleDelay)) {
         // Ease in
         float spinupFactor = fminf(1.0, (idleTime - idleDelay) / 2);
         

@@ -33,6 +33,7 @@ struct RawVector3 {
     float x, y, z;
 };
 
+// Floating point colour
 struct Colour {
     Colour() {
         
@@ -45,6 +46,7 @@ struct Colour {
     float r, g, b, a;
 };
 
+// Byte-per-component colour, suitable for inclusion in vertex arrays
 struct ByteColour {
     ByteColour(const Colour& colour) {
         r = (int)(colour.r * 255.0f);
@@ -56,5 +58,8 @@ struct ByteColour {
     unsigned char r, g, b, a;
 };
 
+
+// Time, stored in seconds so that it matches NSTimeInterval
+typedef double Time;
 
 #endif

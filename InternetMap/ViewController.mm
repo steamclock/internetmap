@@ -122,7 +122,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     self.display = self.controller.display;
     self.display.camera.displaySize = self.view.bounds.size;
-    self.display.camera.delegate = self;
     
     self.data = self.controller.data;
     
@@ -203,6 +202,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (void)update
 {
+    self.display.camera.allowIdleAnimation = [self shouldDoIdleAnimation];
     [self.display update];
 }
 
@@ -374,8 +374,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     return NO;
 }
 
-
-#pragma mark - CameraDelegate methods
 
 - (BOOL)shouldDoIdleAnimation{
     return !self.tracerouteHops && !UIGestureRecognizerStateIsActive(self.longPressGestureRecognizer.state) && !UIGestureRecognizerStateIsActive(self.pinchRecognizer.state) && !UIGestureRecognizerStateIsActive(self.panRecognizer.state);
