@@ -3,18 +3,16 @@
 //  InternetMap
 //
 
-class Lines;
-
 #import <memory>
 
-@class Camera;
+class Lines;
+class Camera;
 @class Nodes;
-
 
 @interface MapDisplay : NSObject
 
 
-@property (strong, nonatomic, readonly) Camera* camera;
+@property (nonatomic, readonly) std::shared_ptr<Camera> camera;
 
 @property (strong, nonatomic) Nodes* nodes;
 @property (strong, nonatomic) Nodes* selectedNodes;
