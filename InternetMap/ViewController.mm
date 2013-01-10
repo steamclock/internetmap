@@ -650,10 +650,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     self.tracerouteHops = std::vector<NodePointer>();
     self.controller.highlightedNodes = [[NSMutableIndexSet alloc] init];
-    self.controller.display.camera->zoomAnimated(-3, 3.0f);
+    self.controller.display->camera->zoomAnimated(-3, 3.0f);
     NodePointer node = [self.data nodeAtIndex:self.controller.targetNode];
     if (node->importance > 0.006) {
-        self.controller.display.camera->rotateAnimated(Matrix4::identity(), 3.0f);
+        self.controller.display->camera->rotateAnimated(Matrix4::identity(), 3.0f);
     }else {
         self.controller.display->camera->rotateAnimated(Matrix4::rotation(M_PI, Vector3(0, 1, 0)), 3.0f);
     }
