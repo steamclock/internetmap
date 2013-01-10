@@ -22,6 +22,10 @@
 @property (nonatomic, strong) UIView* tracerouteContainerView;
 @property (nonatomic, strong) UIView* yourLocationContainerView;
 
+@property (nonatomic, strong) UIScrollView* scrollView;
+
+@property (nonatomic, assign) float contentHeight;
+
 @end
 
 @implementation NodeInformationViewController
@@ -78,7 +82,8 @@
         }
         
         height += 20; //bottom margin
-        
+        self.contentHeight = height;
+
         float width = [HelperMethods deviceIsiPad] ? 452 : [[UIScreen mainScreen] bounds].size.width;
         height = [HelperMethods deviceIsiPad] ? height : [[UIScreen mainScreen] bounds].size.height/2.0-20;
         [self setContentSizeForViewInPopover:CGSizeMake(width, height)];
@@ -91,8 +96,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.contentSizeForViewInPopover.width, self.contentSizeForViewInPopover.height)];
+    self.scrollView.contentSize = CGSizeMake(self.contentSizeForViewInPopover.width, self.contentHeight-88);
+    self.scrollView.scrollEnabled = ![HelperMethods deviceIsiPad];
+    [self.view addSubview:self.scrollView];
+    
     UIImage* xImage = [UIImage imageNamed:@"x-icon"];
-
+    
     UIView* orangeBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.contentSizeForViewInPopover.width, 44)];
     orangeBackgroundView.backgroundColor = UI_ORANGE_COLOR;
     [self.view addSubview:orangeBackgroundView];
@@ -108,7 +118,7 @@
     self.doneButton.frame = CGRectMake(self.topLabel.x+self.topLabel.width+5, 12, xImage.size.width, xImage.size.height);
     [self.doneButton setImage:xImage forState:UIControlStateNormal];
     [self.doneButton addTarget:self action:@selector(doneTapped) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.doneButton];
+    [self.scrollView addSubview:self.doneButton];
     
     float lastLabelBottom = 0;
     //create first group of labels
@@ -118,7 +128,7 @@
         label.textColor = FONT_COLOR_GRAY;
         label.backgroundColor = [UIColor clearColor];
         label.text = self.firstGroupOfStrings[i];
-        [self.view addSubview:label];
+        [self.scrollView addSubview:label];
         if (i == [self.firstGroupOfStrings count]-1) {
             lastLabelBottom = label.y+label.height;
         }
@@ -131,12 +141,12 @@
     connectionsLabel.backgroundColor = [UIColor clearColor];
     NSString* conn = [self.node.connections count] == 1 ? @"Connection" : @"Connections";
     connectionsLabel.text = [NSString stringWithFormat:@"%i %@", [self.node.connections count], conn];
-    [self.view addSubview:connectionsLabel];
+    [self.scrollView addSubview:connectionsLabel];
     [self.infoLabels addObject:connectionsLabel];
     
     self.tracerouteContainerView = [[UIView alloc] initWithFrame:CGRectMake(orangeBackgroundView.x, orangeBackgroundView.y+15, orangeBackgroundView.width, 500)];
     self.tracerouteContainerView.hidden = YES;
-    [self.view addSubview:self.tracerouteContainerView];
+    [self.scrollView addSubview:self.tracerouteContainerView];
     
     CGFloat boxWidth = (self.contentSizeForViewInPopover.width-20-30-30-20)/3.0; //total width subtracted by outer and inner margins and divided by three
     CGFloat boxHeight = 75;
@@ -166,7 +176,7 @@
     self.tracerouteTextView.textColor = [UIColor whiteColor];
     self.tracerouteTextView.editable = NO;
     self.tracerouteTextView.userInteractionEnabled = YES;
-    self.tracerouteTextView.scrollEnabled = YES;
+    self.tracerouteTextView.scrollEnabled = [HelperMethods deviceIsiPad];
     self.tracerouteTextView.font = [UIFont fontWithName:FONT_NAME_REGULAR size:12];
     [self.tracerouteContainerView addSubview:self.tracerouteTextView];
 
@@ -175,7 +185,7 @@
     self.yourLocationContainerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.contentSizeForViewInPopover.width, 44)]; //position is not really set here, only size!
     self.yourLocationContainerView.backgroundColor = UI_BLUE_COLOR;
     self.yourLocationContainerView.alpha = 0;
-    [self.tracerouteContainerView addSubview:self.yourLocationContainerView];
+    [self.view addSubview:self.yourLocationContainerView];
     
     UILabel* yourLocationLabel = [[UILabel alloc] initWithFrame:CGRectMake(8, 0, self.yourLocationContainerView.width-yourLocationImage.size.width-8-20, self.yourLocationContainerView.height)];
     yourLocationLabel.font = [UIFont fontWithName:FONT_NAME_MEDIUM size:28];
@@ -198,7 +208,7 @@
         [self.tracerouteButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [self.tracerouteButton setBackgroundImage:[[UIImage imageNamed:@"traceroute-button"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 22, 0, 22)] forState:UIControlStateNormal];
         [self.tracerouteButton addTarget:self action:@selector(tracerouteButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:self.tracerouteButton];
+        [self.scrollView addSubview:self.tracerouteButton];
     }
     
 }
@@ -215,7 +225,10 @@
         //UI setup
         if ([HelperMethods deviceIsiPad]) {
             self.contentSizeForViewInPopover = CGSizeMake(self.contentSizeForViewInPopover.width, 44+20+75+50+self.tracerouteTextView.height+20);
+            self.scrollView.frame = CGRectMake(0, 0, self.scrollView.width, 44+20+75+50+self.tracerouteTextView.height+20);
         }
+        self.scrollView.contentSize = CGSizeMake(self.contentSizeForViewInPopover.width, 44+20+75+50+self.tracerouteTextView.height+20);
+
         self.tracerouteContainerView.alpha = 0;
         self.tracerouteContainerView.hidden = NO;
         self.tracerouteTimer = [NSTimer scheduledTimerWithTimeInterval:0.001 target:self selector:@selector(tracerouteTimerFired) userInfo:nil repeats:YES];
@@ -244,15 +257,19 @@
 }
 
 - (void)tracerouteDone {
+    CGSize size = [self.tracerouteTextView.text sizeWithFont:self.tracerouteTextView.font constrainedToSize:CGSizeMake(self.tracerouteTextView.width, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
     if ([HelperMethods deviceIsiPad]) {
-        CGSize size = [self.tracerouteTextView.text sizeWithFont:self.tracerouteTextView.font constrainedToSize:CGSizeMake(self.tracerouteTextView.width, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
         self.contentSizeForViewInPopover = CGSizeMake(self.contentSizeForViewInPopover.width, 44+20+75+43+MIN(self.tracerouteTextView.height, size.height)+self.yourLocationContainerView.height+20);
-        self.yourLocationContainerView.frame = CGRectMake(0, self.tracerouteTextView.y+MIN(self.tracerouteTextView.height, size.height)+20, self.yourLocationContainerView.width, self.yourLocationContainerView.height);
+        self.yourLocationContainerView.frame = CGRectMake(0, self.contentSizeForViewInPopover.height-self.yourLocationContainerView.height, self.yourLocationContainerView.width, self.yourLocationContainerView.height);
     }else {
         self.yourLocationContainerView.frame = CGRectMake(0, self.contentSizeForViewInPopover.height-self.yourLocationContainerView.height, self.yourLocationContainerView.width, self.yourLocationContainerView.height);
+        self.scrollView.contentSize = CGSizeMake(self.contentSizeForViewInPopover.width, 44+20+75+43+MIN(self.tracerouteTextView.height, size.height)+10);
     }
     [UIView animateWithDuration:1 animations:^{
         self.yourLocationContainerView.alpha = 1;
+        if (![HelperMethods deviceIsiPad]) {
+            self.scrollView.frame = CGRectMake(0, 0, self.scrollView.width, self.contentSizeForViewInPopover.height-44);
+        }
     }];
 
 }
