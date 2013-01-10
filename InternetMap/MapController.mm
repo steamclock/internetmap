@@ -337,7 +337,7 @@ std::string loadTextResource(std::string base, std::string extension) {
     Vector4 proj = mvp * Vector4(nodePosition.x, nodePosition.y, nodePosition.z, 1.0f);
     proj /= proj.getW();
 
-    Vector2 coordinates(((proj.getX() / 2.0f) + 1.0f) * self.display.camera->displayWidth(), ((proj.getY() / 2.0f) + 1.0f) * self.display.camera->displayHeight());
+    Vector2 coordinates(((proj.getX() / 2.0f) + 0.5f) * self.display.camera->displayWidth(), ((proj.getY() / 2.0f) + 0.5f) * self.display.camera->displayHeight());
     
     CGPoint point = CGPointMake(coordinates.x,self.display.camera->displayHeight() - coordinates.y);
     
