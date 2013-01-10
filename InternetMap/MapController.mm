@@ -10,7 +10,7 @@
 #import "MapDisplay.h"
 #import "MapData.h"
 #import "DefaultVisualization.h"
-#import "Nodes.h"
+#import "Nodes.hpp"
 #import "Camera.hpp"
 #import "Node.h"
 #import "Lines.hpp"
@@ -24,6 +24,16 @@
 static Point3 GLKVec3ToPoint(const GLKVector3& in) {
     return Point3(in.x, in.y, in.z);
 };
+
+static Colour UIColorToColour(UIColor* color) {
+    float r;
+    float g;
+    float b;
+    float a;
+    [color getRed:&r green:&g blue:&b alpha:&a];
+    return Colour(r, g, b, a);
+}
+
 
 static GLKVector3 Vec3ToGLK(const Vector3& in) {
     return GLKVector3Make(in.getX(), in.getY(), in.getZ());
@@ -85,9 +95,9 @@ std::string loadTextResource(std::string base, std::string extension) {
         int i = [self indexForNodeAtPoint:point];
         if (i != NSNotFound) {
             self.hoveredNodeIndex = i;
-            [self.display.nodes beginUpdate];
-            [self.display.nodes updateNode:i color:SELECTED_NODE_COLOR];
-            [self.display.nodes endUpdate];
+            self.display.nodes->beginUpdate();
+            self.display.nodes->updateNode(i, UIColorToColour(SELECTED_NODE_COLOR));
+            self.display.nodes->endUpdate();
         }
     }
 }
@@ -130,9 +140,9 @@ std::string loadTextResource(std::string base, std::string extension) {
         GLKVector3 origTarget = [self.data.visualization nodePosition:node];
         target = Vector3(origTarget.x, origTarget.y, origTarget.z);
         
-        [self.display.nodes beginUpdate];
-        [self.display.nodes updateNode:node.index color:[UIColor clearColor]];
-        [self.display.nodes endUpdate];
+        self.display.nodes->beginUpdate();
+        self.display.nodes->updateNode(node.index, UIColorToColour([UIColor clearColor]));
+        self.display.nodes->endUpdate();
         
         [self.data.visualization resetDisplay:self.display forSelectedNodes:@[node]];
         
@@ -220,18 +230,18 @@ std::string loadTextResource(std::string base, std::string extension) {
     Colour lineColor;
     [lineColorUI getRed:&lineColor.r green:&lineColor.g blue:&lineColor.b alpha:&lineColor.a];
 
-    [self.display.nodes beginUpdate];
+    self.display.nodes->beginUpdate();
     for(int i = 0; i < nodeList.count - 1; i++) {
         Node* a = nodeList[i];
         Node* b = nodeList[i+1];
-        [self.display.nodes updateNode:a.index color:SELECTED_NODE_COLOR];
-        [self.display.nodes updateNode:b.index color:SELECTED_NODE_COLOR];
+        self.display.nodes->updateNode(a.index, UIColorToColour(SELECTED_NODE_COLOR));
+        self.display.nodes->updateNode(b.index, UIColorToColour(SELECTED_NODE_COLOR));
         [self.highlightedNodes addIndex:a.index];
         [self.highlightedNodes addIndex:b.index];
         lines->updateLine(i, GLKVec3ToPoint([self.data.visualization nodePosition:a]), lineColor, GLKVec3ToPoint([self.data.visualization nodePosition:b]), lineColor);
     }
     
-    [self.display.nodes endUpdate];
+    self.display.nodes->endUpdate();
     
     
     lines->endUpdate();

@@ -18,8 +18,8 @@ const int MAX_NODES = 30000;
 // GL vertex data for nodes
 struct RawDisplayNode {
     RawVector3 position;
-    ByteColour color;
     float size;
+    ByteColour color;
 };
 
 Nodes::Nodes(int initialCount) :
@@ -30,8 +30,8 @@ Nodes::Nodes(int initialCount) :
 {
     glEnable(GL_BLEND);
     
-//    glEnable(GL_POINT_SPRITE_OES);
-//    glEnable(GL_POINT_SMOOTH);
+    glEnable(GL_POINT_SPRITE_OES);
+    glEnable(GL_POINT_SMOOTH);
     
     // setup vertex buffer for nodes
     glGenVertexArraysOES(1, &_vertexArray);
