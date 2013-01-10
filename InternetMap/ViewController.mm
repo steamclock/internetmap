@@ -474,6 +474,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.visualizationSelectionPopover = [[WEPopoverController alloc] initWithContentViewController:tableforPopover];
         self.visualizationSelectionPopover.delegate = self;
         [self.visualizationSelectionPopover setPopoverContentSize:tableforPopover.contentSizeForViewInPopover];
+        if (![HelperMethods deviceIsiPad]) {
+            WEPopoverContainerViewProperties *prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
+            prop.upArrowImageName = nil;
+            self.visualizationSelectionPopover.containerViewProperties = prop;
+        }
     }
     [self.visualizationSelectionPopover presentPopoverFromRect:self.visualizationsButton.bounds inView:self.visualizationsButton permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
     self.visualizationsButton.selected = YES;
