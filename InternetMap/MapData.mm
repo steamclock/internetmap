@@ -6,7 +6,7 @@
 #import "MapData.h"
 #import "Node.hpp"
 #import "Lines.hpp"
-#import "Connection.h"
+#import "Connection.hpp"
 #import "IndexBox.h"
 
 @interface MapData ()
@@ -27,14 +27,12 @@
     NSArray* header = [[lines objectAtIndex:0] componentsSeparatedByString:@"  "];
     int numNodes = [[header objectAtIndex:0] intValue];
     int numConnections = [[header objectAtIndex:1] intValue];
-    
-    self.nodes = std::vector<NodePointer>();
-    self.nodesByAsn = std::map<std::string, NodePointer>();
 
+    self.testNodes = std::shared_ptr<std::vector<NodePointer>>(new std::vector<NodePointer>());
     for (int i = 0; i < numNodes; i++) {
         NSArray* nodeDesc = [[lines objectAtIndex:1 + i] componentsSeparatedByString:@" "];
         
-        Node* node = new Node();
+        NodePointer node = NodePointer(new Node());
         node->asn = std::string([[nodeDesc objectAtIndex:0] UTF8String]);
         node->index = i;
         node->importance = [[nodeDesc objectAtIndex:1] floatValue];
@@ -42,22 +40,20 @@
         node->positionY = [[nodeDesc objectAtIndex:3] floatValue];
         node->type = AS_UNKNOWN;
         
-        std::shared_ptr<Node> ptrNode(node);
-        self.nodes.push_back(ptrNode);
-        self.nodesByAsn.insert(std::make_pair(node->asn, ptrNode));
+        self.testNodes->push_back(node);
+        [self nodes].push_back(node);
+        self.nodesByAsn.insert(std::make_pair(node->asn, node));
     }
-    
-    self.connections = [NSMutableArray new];
     
     for (int i = 0; i < numConnections; i++) {
         NSArray* connectionDesc = [[lines objectAtIndex:1 + numNodes + i] componentsSeparatedByString:@" "];
         
-        Connection* connection = [Connection new];
-        connection.first = self.nodesByAsn[std::string([[connectionDesc objectAtIndex:0] UTF8String])];
-        connection.second = self.nodesByAsn[std::string([[connectionDesc objectAtIndex:1] UTF8String])];
-        connection.first->connections.push_back(connection);
-        connection.second->connections.push_back(connection);
-        [self.connections addObject:connection];
+        ConnectionPointer connection = ConnectionPointer(new Connection());
+        connection->first = self.nodesByAsn[std::string([[connectionDesc objectAtIndex:0] UTF8String])];
+        connection->second = self.nodesByAsn[std::string([[connectionDesc objectAtIndex:1] UTF8String])];
+        connection->first->connections.push_back(connection);
+        connection->second->connections.push_back(connection);
+        self.connections.push_back(connection);
     }
     
     [self createNodeBoxes];
@@ -133,11 +129,11 @@
     for(NSString *line in lines) {
         NSArray* asDesc = [line componentsSeparatedByString:@"\t"];
         
-        Node* node = [self.nodesByAsn objectForKey:[asDesc objectAtIndex:0]];
+        NodePointer node = self.nodesByAsn[std::string([[asDesc objectAtIndex:0] UTF8String])];
         if(node){
-            node.type = [[asTypeDict objectForKey: [asDesc objectAtIndex:7]] intValue];
-            node.typeString = [asDesc objectAtIndex:7];
-            node.textDescription = [asDesc objectAtIndex:1];
+            node->type = [[asTypeDict objectForKey: [asDesc objectAtIndex:7]] intValue];
+            node->typeString = std::string([[asDesc objectAtIndex:7] UTF8String]);
+            node->textDescription = std::string([[asDesc objectAtIndex:1] UTF8String]);
         }
     }
     
@@ -157,17 +153,17 @@
 //    NSLog(@"%d", [jsonObject count]);
     for(id key in jsonObject)
     {
-        Node* node = [self.nodesByAsn objectForKey:key];
+        NodePointer node = self.nodesByAsn[std::string([key UTF8String])];
         if(node){
             NSArray *as = [jsonObject objectForKey:key];
-            node.name = [as objectAtIndex:1];
-            node.textDescription = [as objectAtIndex:5];
-            node.dateRegistered = [as objectAtIndex:3];
-            node.address = [as objectAtIndex:7];
-            node.city = [as objectAtIndex:8];
-            node.state = [as objectAtIndex:9];
-            node.postalCode = [as objectAtIndex:10];
-            node.country = [as objectAtIndex:11];
+            node->name = std::string([[as objectAtIndex:1] UTF8String]);
+            node->textDescription = std::string([[as objectAtIndex:5] UTF8String]);
+            node->dateRegistered = std::string([[as objectAtIndex:3] UTF8String]);
+            node->address = std::string([[as objectAtIndex:7] UTF8String]);
+            node->city = std::string([[as objectAtIndex:8] UTF8String]);
+            node->state = std::string([[as objectAtIndex:9] UTF8String]);
+            node->postalCode = std::string([[as objectAtIndex:10] UTF8String]);
+            node->country = std::string([[as objectAtIndex:11] UTF8String]);
         }
     }
 

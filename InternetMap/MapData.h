@@ -8,6 +8,7 @@
 #include <vector>
 #include <map>
 #include "Node.hpp"
+#include "Connection.hpp"
 
 @interface MapData : NSObject
 
@@ -21,8 +22,9 @@
 -(NodePointer)nodeAtIndex:(NSUInteger)index;
 
 @property (nonatomic) std::vector<NodePointer> nodes;
+@property (nonatomic) std::shared_ptr<std::vector<NodePointer>> testNodes;
 @property (nonatomic) std::map<std::string, NodePointer> nodesByAsn;
 @property (strong, nonatomic) NSMutableArray* boxesForNodes;
-@property (strong, nonatomic) NSMutableArray* connections;
+@property (nonatomic) std::vector<ConnectionPointer> connections;
 
 @end

@@ -7,8 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
-class Node;
+#include "Node.hpp"
 
 @interface NodeTooltipViewController : UIViewController
 

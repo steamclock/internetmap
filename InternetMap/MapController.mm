@@ -14,7 +14,7 @@
 #import "Camera.hpp"
 #import "Node.hpp"
 #import "Lines.hpp"
-#import "Connection.h"
+#import "Connection.hpp"
 #import "IndexBox.h"
 
 #include <string>
@@ -117,9 +117,10 @@ std::string loadTextResource(std::string base, std::string extension) {
 - (void)unhoverNode {
     
     if (self.hoveredNodeIndex != NSNotFound && self.hoveredNodeIndex != self.targetNode) {
-        Node* node = [self.data nodeAtIndex:self.hoveredNodeIndex];
-        
-        [self.data.visualization updateDisplay:self.display.get() forNodes:@[node]];
+        NodePointer node = [self.data nodeAtIndex:self.hoveredNodeIndex];
+        std::vector<NodePointer> nodes;
+        nodes.push_back(node);
+        [self.data.visualization updateDisplay:self.display.get() forNodes:nodes];
         self.hoveredNodeIndex = NSNotFound;
     }
 }
@@ -129,24 +130,27 @@ std::string loadTextResource(std::string base, std::string extension) {
     Vector3 target;
     // update current node to default state
     if (self.targetNode != NSNotFound) {
-        Node* node = [self.data nodeAtIndex:self.targetNode];
-        
-        [self.data.visualization updateDisplay:self.display.get() forNodes:@[node]];
+        NodePointer node = [self.data nodeAtIndex:self.targetNode];
+        std::vector<NodePointer> nodes;
+        nodes.push_back(node);
+        [self.data.visualization updateDisplay:self.display.get() forNodes:nodes];
     }
     
     //set new node as targeted and change camera anchor point
     if (index != NSNotFound) {
         
         self.targetNode = index;
-        Node* node = [self.data nodeAtIndex:self.targetNode];
+        NodePointer node = [self.data nodeAtIndex:self.targetNode];
         GLKVector3 origTarget = [self.data.visualization nodePosition:node];
         target = Vector3(origTarget.x, origTarget.y, origTarget.z);
         
         self.display->nodes->beginUpdate();
-        self.display->nodes->updateNode(node.index, UIColorToColor([UIColor clearColor]));
+        self.display->nodes->updateNode(node->index, UIColorToColor([UIColor clearColor]));
         self.display->nodes->endUpdate();
         
-        [self.data.visualization resetDisplay:self.display.get() forSelectedNodes:@[node]];
+        std::vector<NodePointer> nodes;
+        nodes.push_back(node);
+        [self.data.visualization resetDisplay:self.display.get() forSelectedNodes:nodes];
         
         [self highlightConnections:node];
         
@@ -159,26 +163,27 @@ std::string loadTextResource(std::string base, std::string extension) {
 
 #pragma mark - Connection Highlighting
 
--(void)highlightConnections:(Node*)node {
+-(void)highlightConnections:(NodePointer)node {
     if(node == nil) {
         [self clearHighlightLines];
         return;
     }
     
-    NSMutableArray* filteredConnections = [NSMutableArray new];
+    std::vector<ConnectionPointer> filteredConnections;
     
-    for(Connection* connection in self.data.connections) {
-        if ((connection.first == node) || (connection.second == node) ) {
-            [filteredConnections addObject:connection];
+    for (int i = 0; i<self.data.connections.size(); i++) {
+        ConnectionPointer connection = self.data.connections.at(i);
+        if ((connection->first == node) || (connection->second == node) ) {
+            filteredConnections.push_back(connection);
         }
     }
     
-    if(filteredConnections.count == 0 || filteredConnections.count > 100) {
+    if(filteredConnections.size() == 0 || filteredConnections.size() > 100) {
         [self clearHighlightLines];
         return;
     }
     
-    std::shared_ptr<Lines> lines(new Lines(filteredConnections.count));
+    std::shared_ptr<Lines> lines(new Lines(filteredConnections.size()));
     lines->beginUpdate();
         
     UIColor* brightColorUI = SELECTED_CONNECTION_COLOR_BRIGHT;
@@ -188,10 +193,10 @@ std::string loadTextResource(std::string base, std::string extension) {
     Color dimColor;
     [dimColorUI getRed:&dimColor.r green:&dimColor.g blue:&dimColor.b alpha:&dimColor.a];
     
-    for(int i = 0; i < filteredConnections.count; i++) {
-        Connection* connection = filteredConnections[i];
-        Node* a = connection.first;
-        Node* b = connection.second;
+    for(int i = 0; i < filteredConnections.size(); i++) {
+        ConnectionPointer connection = filteredConnections[i];
+        NodePointer a = connection->first;
+        NodePointer b = connection->second;
         
         if(node == a) {
             lines->updateLine(i, GLKVec3ToPoint([self.data.visualization nodePosition:a]), brightColor, GLKVec3ToPoint([self.data.visualization nodePosition:b]), dimColor);
@@ -202,17 +207,17 @@ std::string loadTextResource(std::string base, std::string extension) {
     }
     
     lines->endUpdate();
-    lines->setWidth(((filteredConnections.count < 20) ? 2 : 1) * ([HelperMethods deviceIsRetina] ? 2 : 1));
+    lines->setWidth(((filteredConnections.size() < 20) ? 2 : 1) * ([HelperMethods deviceIsRetina] ? 2 : 1));
     self.display->highlightLines = lines;
 }
 
 
 - (void)clearHighlightLines {
     [self.highlightedNodes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
-        NSMutableArray* array = [NSMutableArray arrayWithCapacity:[self.highlightedNodes count]];
+        std::vector<NodePointer> array;
         if (idx != self.targetNode) {
-            Node* node = [self.data nodeAtIndex:idx];
-            [array addObject:node];
+            NodePointer node = [self.data nodeAtIndex:idx];
+            array.push_back(node);
         }
         [self.data.visualization updateDisplay:self.display.get() forNodes:array];
     }];
@@ -225,7 +230,7 @@ std::string loadTextResource(std::string base, std::string extension) {
         return;
     }
 
-    std::shared_ptr<Lines> lines(new Lines(nodeList.count - 1));
+    std::shared_ptr<Lines> lines(new Lines(nodeList.size() - 1));
     lines->beginUpdate();
     
     UIColor* lineColorUI = UIColorFromRGB(0xffa300);
@@ -233,13 +238,13 @@ std::string loadTextResource(std::string base, std::string extension) {
     [lineColorUI getRed:&lineColor.r green:&lineColor.g blue:&lineColor.b alpha:&lineColor.a];
 
     self.display->nodes->beginUpdate();
-    for(int i = 0; i < nodeList.count - 1; i++) {
-        Node* a = nodeList[i];
-        Node* b = nodeList[i+1];
-        self.display->nodes->updateNode(a.index, UIColorToColor(SELECTED_NODE_COLOR));
-        self.display->nodes->updateNode(b.index, UIColorToColor(SELECTED_NODE_COLOR));
-        [self.highlightedNodes addIndex:a.index];
-        [self.highlightedNodes addIndex:b.index];
+    for(int i = 0; i < nodeList.size() - 1; i++) {
+        NodePointer a = nodeList[i];
+        NodePointer b = nodeList[i+1];
+        self.display->nodes->updateNode(a->index, UIColorToColor(SELECTED_NODE_COLOR));
+        self.display->nodes->updateNode(b->index, UIColorToColor(SELECTED_NODE_COLOR));
+        [self.highlightedNodes addIndex:a->index];
+        [self.highlightedNodes addIndex:b->index];
         lines->updateLine(i, GLKVec3ToPoint([self.data.visualization nodePosition:a]), lineColor, GLKVec3ToPoint([self.data.visualization nodePosition:b]), lineColor);
     }
     
@@ -308,7 +313,7 @@ std::string loadTextResource(std::string base, std::string extension) {
             //            NSLog(@"intersects box %i at pos %@", j, NSStringFromGLKVector3(box.center));
             [box.indices enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
                 int i = idx;
-                Node* node = [self.data nodeAtIndex:i];
+                NodePointer node = [self.data nodeAtIndex:i];
                 
                 GLKVector3 nodePosition = [self.data.visualization nodePosition:node];
                 xC = nodePosition.x;
@@ -340,7 +345,7 @@ std::string loadTextResource(std::string base, std::string extension) {
 
 
 -(CGPoint)getCoordinatesForNodeAtIndex:(int)index {
-    Node* node = [self.data nodeAtIndex:index];
+    NodePointer node = [self.data nodeAtIndex:index];
     
     GLKVector3 nodePosition = [self.data.visualization nodePosition:node];
     

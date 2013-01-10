@@ -8,13 +8,26 @@
 
 #import "NodeSearchViewController.h"
 #import "Node.hpp"
+#include <algorithm>
 
 #define ASNS_AT_TOP @[@13768, @3, @15169, @714, @32934, @7847] //Peer1, MIT, google, apple, facebook, NASA
+
+class MyPredicate {
+public:
+    std::string search;
+    
+    bool operator()(NodePointer node) {
+        bool discard  = true;
+        if (std::string::npos != node->textDescription.find(search)) discard = false;
+        if (std::string::npos != node->asn.find(search)) discard = false;
+        return discard;
+    }
+};
 
 @interface NodeSearchViewController ()
 
 @property (strong, nonatomic) UITextField* textField;
-@property (strong, nonatomic) NSArray* searchResults;
+@property (nonatomic) std::vector<NodePointer> searchResults;
 @property BOOL showHostLookup;
 @property BOOL isSearching;
 @end
@@ -81,15 +94,17 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)setAllItems:(NSMutableArray *)allItems {
-    _allItems = [allItems mutableCopy];
+- (void)setAllItems:(std::vector<NodePointer>)allItems {
+    _allItems = std::vector<NodePointer>(allItems);
     NSArray* arr = ASNS_AT_TOP;
     for (int i = 0; i < [arr count]; i++) {
         int asn = [arr[i] intValue];
-        for (int j = 0; j < [self.allItems count]; j++) {
-            Node* node = self.allItems[j];
-            if ([node.asn intValue] == asn) {
-                [self.allItems exchangeObjectAtIndex:i withObjectAtIndex:j];
+        for (int j = 0; j < self.allItems.size(); j++) {
+            NodePointer node = self.allItems.at(j);
+            if ([[NSString stringWithUTF8String:node->asn.c_str()] intValue] == asn) {
+                NodePointer first = self.allItems.at(i);
+                [self allItems][i] = node;
+                [self allItems][j] = first;
                 break;
             }
         }
@@ -126,9 +141,9 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (self.isSearching && self.textField.text != nil && ![self.textField.text isEqualToString:@""]) {
-            return (self.searchResults.count ? self.searchResults.count : 1) + (self.showHostLookup ? 1 : 0);
+            return (self.searchResults.size() ? self.searchResults.size() : 1) + (self.showHostLookup ? 1 : 0);
     } else {
-        return self.allItems.count;
+        return self.allItems.size();
     }
 }
 
@@ -161,15 +176,15 @@
             }
         }
         
-        if (row >= self.searchResults.count) {
+        if (row >= self.searchResults.size()) {
             cell.textLabel.text = @"No results found";
         }else {
-            Node* node = self.searchResults[row];
-            cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", node.asn, node.textDescription];
+            NodePointer node = self.searchResults.at(row);
+            cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", [NSString stringWithUTF8String:node->asn.c_str()], [NSString stringWithUTF8String:node->textDescription.c_str()]];
         }
     } else {
-        Node* node = self.allItems[indexPath.row];
-        cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", node.asn, node.textDescription];
+        NodePointer node = self.allItems.at(indexPath.row);
+        cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", [NSString stringWithUTF8String:node->asn.c_str()], [NSString stringWithUTF8String:node->textDescription.c_str()]];
     }
     
     return cell;
@@ -197,10 +212,10 @@
             }
         }
 
-        Node* node = self.searchResults[row];
+        NodePointer node = self.searchResults.at(row);
         [self.delegate nodeSelected:node];
     } else {
-        Node* node = self.allItems[indexPath.row];
+        NodePointer node = self.allItems.at(indexPath.row);
         [self.delegate nodeSelected:node];
     }
 }
@@ -209,9 +224,10 @@
 - (void)filterContentForSearchText:(NSString*)searchText
 {
     self.showHostLookup = searchText.length != 0;
-    self.searchResults = nil; // First clear the filtered array.
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(textDescription contains[cd] %@) OR (asn contains[cd] %@)", searchText, searchText];
-    self.searchResults = [self.allItems filteredArrayUsingPredicate:predicate];
+    self.searchResults = std::vector<NodePointer>(self.allItems); // First clear the filtered array.
+    MyPredicate pred;
+    pred.search = std::string([searchText UTF8String]);
+    std::remove_copy_if(self.searchResults.begin(), self.searchResults.end(), self.searchResults.begin(), pred);
     
     [self.tableView reloadData];
 }

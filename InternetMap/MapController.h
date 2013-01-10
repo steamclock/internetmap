@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #include <memory>
+#include "Node.hpp"
 
 @class MapData;
 class MapDisplay;

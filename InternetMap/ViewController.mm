@@ -7,7 +7,7 @@
 #import "MapDisplay.hpp"
 #import "MapData.h"
 #import "Node.hpp"
-#import "Connection.h"
+#import "Connection.hpp"
 #import "DefaultVisualization.h"
 #import "VisualizationsTableViewController.h"
 #import "NodeSearchViewController.h"

@@ -27,7 +27,6 @@ enum
 class Node {
     
 public:
-    Node();
     
     std::string asn;
     unsigned int index;
