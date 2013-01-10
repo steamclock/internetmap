@@ -17,6 +17,8 @@
 #import "Connection.h"
 #import "IndexBox.h"
 
+#include <string>
+
 // Temp conversion functions while not everything is converted TODO: remove
 /// -----
 static Point3 GLKVec3ToPoint(const GLKVector3& in) {
@@ -30,6 +32,18 @@ static GLKVector3 Vec3ToGLK(const Vector3& in) {
 void cameraMoveFinishedCallback(void) {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"cameraMovementFinished" object:nil];
 }
+
+std::string loadTextResource(std::string base, std::string extension) {
+    NSString* path = [[NSBundle mainBundle] pathForResource:[NSString stringWithCString:base.c_str() encoding:NSUTF8StringEncoding] ofType:[NSString stringWithCString:extension.c_str() encoding:NSUTF8StringEncoding]];
+    NSString* contents = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+    if(!contents) {
+        return std::string("");
+    }
+    else {
+        return std::string([contents UTF8String]);
+    }
+}
+
 /// -----
 
 @implementation MapController

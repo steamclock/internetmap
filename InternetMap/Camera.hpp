@@ -3,6 +3,9 @@
 //  InternetMap
 //
 
+#ifndef InternetMap_Camera_hpp
+#define InternetMap_Camera_hpp
+
 #include "Types.hpp"
 
 class Camera {
@@ -90,3 +93,5 @@ public:
     void startMomentumRotationWithVelocity(float velocity);
     void stopMomentumRotation();
 };
+
+#endif

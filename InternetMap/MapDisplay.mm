@@ -4,11 +4,12 @@
 //
 
 #import "MapDisplay.h"
-#import "Program.h"
 #import <GLKit/GLKit.h>
 #import "Camera.hpp"
 #import "Lines.hpp"
 #import "Nodes.h"
+
+#include "Program.hpp"
 
 @interface MapDisplay () {
     
@@ -16,9 +17,9 @@
 
 @property (strong, nonatomic) EAGLContext *context;
 
-@property (strong, nonatomic) Program* nodeProgram;
-@property (strong, nonatomic) Program* selectedNodeProgram;
-@property (strong, nonatomic) Program* connectionProgram;
+@property (nonatomic) std::shared_ptr<Program> nodeProgram;
+@property (nonatomic) std::shared_ptr<Program> selectedNodeProgram;
+@property (nonatomic) std::shared_ptr<Program> connectionProgram;
 
 @property (nonatomic, readwrite) std::shared_ptr<Camera> camera;
 
@@ -54,10 +55,10 @@
     [lineVertexComponents addIndex:ATTRIB_VERTEX];
     [lineVertexComponents addIndex:ATTRIB_COLOR];
     
-    self.nodeProgram = [[Program alloc] initWithName:@"node" activeAttributes:nodeVertexComponents];
-    self.selectedNodeProgram = [[Program alloc] initWithFragmentShaderName:@"selectedNode" vertexShaderName:@"node" activeAttributes:nodeVertexComponents];
-    self.connectionProgram = [[Program alloc] initWithName:@"line" activeAttributes:lineVertexComponents];
-    
+    self.nodeProgram = std::shared_ptr<Program>(new Program("node", ATTRIB_VERTEX | ATTRIB_COLOR | ATTRIB_SIZE));
+    self.selectedNodeProgram = std::shared_ptr<Program>(new Program("selectedNode", "node", ATTRIB_VERTEX | ATTRIB_COLOR | ATTRIB_SIZE));
+    self.connectionProgram = std::shared_ptr<Program>(new Program("line", ATTRIB_VERTEX | ATTRIB_COLOR));
+
     self.camera = std::shared_ptr<Camera>(new Camera());
 }
 
@@ -78,45 +79,47 @@
     self.camera->update([NSDate timeIntervalSinceReferenceDate]);
 }
 
-- (void)draw
-{
-    Matrix4 mvp = self.camera->currentModelViewProjection();
+- (void)bindDefaultNodeUniforms:(std::shared_ptr<Program>)program {
     Matrix4 mv = self.camera->currentModelView();
     Matrix4 p = self.camera->currentProjection();
-    
+    glUniformMatrix4fv(program->uniformForName("modelViewMatrix"), 1, 0, reinterpret_cast<float*>(&mv));
+    glUniformMatrix4fv(program->uniformForName("projectionMatrix"), 1, 0, reinterpret_cast<float*>(&p));
+    glUniform1f(program->uniformForName("maxSize"), ([HelperMethods deviceIsRetina] ? 150.0f : 75.0f));
+    glUniform1f(program->uniformForName("screenWidth"), [UIScreen mainScreen].scale * self.camera->displayWidth());
+    glUniform1f(program->uniformForName("screenHeight"), [UIScreen mainScreen].scale * self.camera->displayHeight());
+}
+
+- (void)draw
+{
     glClearColor(0, 0, 0, 1.0f); //Visualization background color
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    [self.selectedNodeProgram use];
-    glUniformMatrix4fv([self.selectedNodeProgram uniformForName:@"modelViewMatrix"], 1, 0, reinterpret_cast<float*>(&mv));
-    glUniformMatrix4fv([self.selectedNodeProgram uniformForName:@"projectionMatrix"], 1, 0, reinterpret_cast<float*>(&p));
-    glUniform1f([self.selectedNodeProgram uniformForName:@"maxSize"], ([[UIScreen mainScreen] scale] == 2.00) ? 150.0f : 75.0f);
-    glUniform1f([self.selectedNodeProgram uniformForName:@"screenWidth"], [HelperMethods deviceIsRetina] ? self.camera->displayWidth()*2 : self.camera->displayWidth());
-    glUniform1f([self.selectedNodeProgram uniformForName:@"screenHeight"], [HelperMethods deviceIsRetina] ? self.camera->displayHeight()*2 : self.camera->displayHeight());
-    
     glEnable(GL_DEPTH_TEST); //enable z testing and writing
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     if (self.selectedNodes) {
+        self.selectedNodeProgram->bind();
+        [self bindDefaultNodeUniforms:self.selectedNodeProgram];
+        
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        
         [self.selectedNodes display];
     }
     
-    [self.nodeProgram use];
-    glUniformMatrix4fv([self.selectedNodeProgram uniformForName:@"modelViewMatrix"], 1, 0, reinterpret_cast<float*>(&mv));
-    glUniformMatrix4fv([self.selectedNodeProgram uniformForName:@"projectionMatrix"], 1, 0, reinterpret_cast<float*>(&p));
-    glUniform1f([self.nodeProgram uniformForName:@"maxSize"], [HelperMethods deviceIsRetina] ? 150.0f : 75.0f);
-    glUniform1f([self.nodeProgram uniformForName:@"minSize"], 2.0f);
-    glUniform1f([self.selectedNodeProgram uniformForName:@"screenWidth"], [HelperMethods deviceIsRetina] ? self.camera->displayWidth()*2 : self.camera->displayWidth());
-    glUniform1f([self.selectedNodeProgram uniformForName:@"screenHeight"], [HelperMethods deviceIsRetina] ? self.camera->displayHeight()*2 : self.camera->displayHeight());
-    
     glBlendFunc(GL_ONE, GL_ONE);
     glDepthMask(GL_FALSE); //disable z writing only
+    
     if (self.nodes) {
+        self.nodeProgram->bind();
+        [self bindDefaultNodeUniforms:self.nodeProgram];
+        glUniform1f(self.nodeProgram->uniformForName("minSize"), 2.0f);
         [self.nodes display];
     }
     
+    Matrix4 mvp = self.camera->currentModelViewProjection();
+
     if(self.visualizationLines || self.highlightLines) {
-        [self.connectionProgram use];
-        glUniformMatrix4fv([self.connectionProgram uniformForName:@"modelViewProjectionMatrix"], 1, 0, reinterpret_cast<float*>(&mvp));
+        self.connectionProgram->bind();
+        glUniformMatrix4fv(self.connectionProgram->uniformForName("modelViewProjectionMatrix"), 1, 0, reinterpret_cast<float*>(&mvp));
     }
     
     if(self.visualizationLines && ![HelperMethods deviceIsOld]) { // No lines on 3GS, iPod 3rd Gen or iPad 1

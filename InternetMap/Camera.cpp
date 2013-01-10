@@ -3,8 +3,8 @@
 //  InternetMap
 //
 
-#import "Camera.hpp"
-#import <stdlib.h>
+#include "Camera.hpp"
+#include <stdlib.h>
 
 static const float MOVE_TIME = 1.0f;
 static const float FINAL_ZOOM_ON_SELECTION = -0.4;

@@ -11,7 +11,15 @@
 static const int MAX_NODES = 30000;
 
 #import "Nodes.h"
-#import "Program.h"
+
+// TODO: Duplicated from Program.h during C++ conversion, should be able to remove once that's done
+enum
+{
+    ATTRIB_VERTEX,
+    ATTRIB_COLOR,
+    ATTRIB_SIZE,
+    NUM_ATTRIBUTES
+};
 
 // GL vertex data for nodes
 typedef struct {
