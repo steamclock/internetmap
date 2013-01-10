@@ -182,7 +182,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     //customize timeline label
     self.timelineLabel.textColor = UI_ORANGE_COLOR;
-    self.timelineLabel.font = [UIFont fontWithName:FONT_NAME_REGULAR size:50];
+    self.timelineLabel.font = [HelperMethods deviceIsiPad] ? [UIFont fontWithName:FONT_NAME_REGULAR size:50] : [UIFont fontWithName:FONT_NAME_REGULAR size:40];
     self.timelineLabel.backgroundColor = [UIColor clearColor];
     self.timelineLabel.textAlignment = UITextAlignmentRight;
     
