@@ -7,13 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#include <memory>
 
 @class MapData;
-@class MapDisplay;
+class MapDisplay;
 
 @interface MapController : NSObject
 
-@property (nonatomic, strong) MapDisplay* display;
+@property (nonatomic) std::shared_ptr<MapDisplay> display;
 @property (nonatomic, strong) MapData* data;
 @property (nonatomic) NSUInteger targetNode;
 @property (nonatomic) int hoveredNodeIndex;

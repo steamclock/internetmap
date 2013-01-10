@@ -4,7 +4,7 @@
 //
 
 #import "ViewController.h"
-#import "MapDisplay.h"
+#import "MapDisplay.hpp"
 #import "MapData.h"
 #import "Node.h"
 #import "Connection.h"
@@ -46,7 +46,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (strong, nonatomic) ASNRequest* request;
 @property (strong, nonatomic) EAGLContext *context;
 @property (strong, nonatomic) MapController* controller;
-@property (strong, nonatomic) MapDisplay* display;
 @property (strong, nonatomic) MapData* data;
 
 @property (strong, nonatomic) NSMutableArray* tracerouteHops;
@@ -133,7 +132,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     self.controller = [MapController new];
     
-    self.display = self.controller.display;    
     self.data = self.controller.data;
     
     //add gesture recognizers
@@ -199,7 +197,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayInformationPopoverForCurrentNode) name:@"cameraMovementFinished" object:nil];
     
-    self.display.camera->resetIdleTimer();
+    self.controller.display->camera->resetIdleTimer();
     
     self.cachedCurrentASN = NSNotFound;
     [self precacheCurrentASN];
@@ -214,24 +212,14 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (void)update
 {
-    
-    self.display.camera->setDisplaySize(self.view.bounds.size.width, self.view.bounds.size.height);
-    self.display.camera->setAllowIdleAnimation([self shouldDoIdleAnimation]);
-    [self.display update];
+    self.controller.display->camera->setDisplaySize(self.view.bounds.size.width, self.view.bounds.size.height);
+    self.controller.display->camera->setAllowIdleAnimation([self shouldDoIdleAnimation]);
+    self.controller.display->update([NSDate timeIntervalSinceReferenceDate]);
 }
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
-    /*
-    static int count = 0;
-    count++;
-    if(count == 30) {
-        count = 0;
-        NSLog(@"render: %.2fms", self.timeSinceLastDraw * 1000);
-    }
-     */
-    
-    [self.display draw];
+    self.controller.display->draw();
 }
 
 #pragma mark - Touch and GestureRecognizer handlers
@@ -244,19 +232,19 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(void)handleTap:(UITapGestureRecognizer*)gestureRecognizer {
-    self.display.camera->resetIdleTimer();
+    self.controller.display->camera->resetIdleTimer();
     [self dismissNodeInfoPopover];
     [self.controller selectHoveredNode];
 }
 
 - (void)handleDoubleTap:(UIGestureRecognizer*)gestureRecongizer {
-    self.display.camera->zoomAnimated(self.display.camera->currentZoom()+1.5,1.0f);
+    self.controller.display->camera->zoomAnimated(self.controller.display->camera->currentZoom()+1.5,1.0f);
     [self.controller unhoverNode];
 }
 
 - (void)handleTwoFingerTap:(UIGestureRecognizer*)gestureRecognizer {
     if (gestureRecognizer.numberOfTouches == 2) {
-        self.display.camera->zoomAnimated(self.display.camera->currentZoom()-1.5, 1.0f);
+        self.controller.display->camera->zoomAnimated(self.controller.display->camera->currentZoom()-1.5, 1.0f);
         [self.controller unhoverNode];
     }
 }
@@ -281,9 +269,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                     [self.nodeTooltipPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];
                     [self.controller unhoverNode];
                     self.controller.hoveredNodeIndex = i;
-                    self.display.nodes->beginUpdate();
-                    self.display.nodes->updateNode(i, UIColorToColor(SELECTED_NODE_COLOR));
-                    self.display.nodes->endUpdate();
+                    self.controller.display->nodes->beginUpdate();
+                    self.controller.display->nodes->updateNode(i, UIColorToColor(SELECTED_NODE_COLOR));
+                    self.controller.display->nodes->endUpdate();
                 }
             }
         }
@@ -296,12 +284,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)handlePan:(UIPanGestureRecognizer *)gestureRecognizer
 {
-    self.display.camera->resetIdleTimer();
+    self.controller.display->camera->resetIdleTimer();
     if (!self.isHandlingLongPress) {
         if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
             CGPoint translation = [gestureRecognizer translationInView:self.view];
             self.lastPanPosition = translation;
-            self.display.camera->stopMomentumPan();
+            self.controller.display->camera->stopMomentumPan();
             [self.controller unhoverNode];
         }else if([gestureRecognizer state] == UIGestureRecognizerStateChanged) {
             
@@ -309,36 +297,36 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             CGPoint delta = CGPointMake(translation.x - self.lastPanPosition.x, translation.y - self.lastPanPosition.y);
             self.lastPanPosition = translation;
             
-            self.display.camera->rotateRadiansX(delta.x * 0.01);
-            self.display.camera->rotateRadiansY(delta.y * 0.01);
+            self.controller.display->camera->rotateRadiansX(delta.x * 0.01);
+            self.controller.display->camera->rotateRadiansY(delta.y * 0.01);
         } else if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
             if (isnan([gestureRecognizer velocityInView:self.view].x) || isnan([gestureRecognizer velocityInView:self.view].y)) {
-                self.display.camera->stopMomentumPan();;
+                self.controller.display->camera->stopMomentumPan();;
             }else {
                 CGPoint velocity = [gestureRecognizer velocityInView:self.view];
-                self.display.camera->startMomentumPanWithVelocity(Vector2(velocity.x*0.002, velocity.y*0.002));
+                self.controller.display->camera->startMomentumPanWithVelocity(Vector2(velocity.x*0.002, velocity.y*0.002));
             }
         }
     }
 }
 
 - (void)handleRotation:(UIRotationGestureRecognizer*)gestureRecognizer {
-    self.display.camera->resetIdleTimer();
+    self.controller.display->camera->resetIdleTimer();
     if (!self.isHandlingLongPress) {
         if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
             [self.controller unhoverNode];
             self.lastRotation = gestureRecognizer.rotation;
-            self.display.camera->stopMomentumRotation();
+            self.controller.display->camera->stopMomentumRotation();
         }else if([gestureRecognizer state] == UIGestureRecognizerStateChanged)
         {
             float deltaRotation = -gestureRecognizer.rotation - self.lastRotation;
             self.lastRotation = -gestureRecognizer.rotation;
-            self.display.camera->rotateRadiansZ(deltaRotation);
+            self.controller.display->camera->rotateRadiansZ(deltaRotation);
         } else if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
             if (isnan(gestureRecognizer.velocity)) {
-                self.display.camera->stopMomentumRotation();
+                self.controller.display->camera->stopMomentumRotation();
             }else {
-                self.display.camera->startMomentumRotationWithVelocity(-gestureRecognizer.velocity*0.5);
+                self.controller.display->camera->startMomentumRotationWithVelocity(-gestureRecognizer.velocity*0.5);
             }
 
         }
@@ -347,7 +335,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)handlePinch:(UIPinchGestureRecognizer *)gestureRecognizer
 {
-    self.display.camera->resetIdleTimer();
+    self.controller.display->camera->resetIdleTimer();
     if (!self.isHandlingLongPress) {
         if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
             [self.controller unhoverNode];
@@ -356,12 +344,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         {
             float deltaZoom = gestureRecognizer.scale - self.lastScale;
             self.lastScale = gestureRecognizer.scale;
-            self.display.camera->zoomByScale(deltaZoom);
+            self.controller.display->camera->zoomByScale(deltaZoom);
         }else if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
             if (isnan(gestureRecognizer.velocity)) {
-                self.display.camera->stopMomentumZoom();
+                self.controller.display->camera->stopMomentumZoom();
             }else {
-                self.display.camera->startMomentumZoomWithVelocity(gestureRecognizer.velocity*0.5);
+                self.controller.display->camera->startMomentumZoomWithVelocity(gestureRecognizer.velocity*0.5);
             }
         }
     }
@@ -662,12 +650,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     self.tracerouteHops = [NSMutableArray array];
     self.controller.highlightedNodes = [[NSMutableIndexSet alloc] init];
-    self.display.camera->zoomAnimated(-3, 3.0f);
+    self.controller.display->camera->zoomAnimated(-3, 3.0f);
     Node* node = [self.data nodeAtIndex:self.controller.targetNode];
     if (node.importance > 0.006) {
-        self.display.camera->rotateAnimated(Matrix4::identity(), 3.0f);
+        self.controller.display->camera->rotateAnimated(Matrix4::identity(), 3.0f);
     }else {
-        self.display.camera->rotateAnimated(Matrix4::rotation(M_PI, Vector3(0, 1, 0)), 3.0f);
+        self.controller.display->camera->rotateAnimated(Matrix4::rotation(M_PI, Vector3(0, 1, 0)), 3.0f);
     }
     
     if(self.controller.lastSearchIP) {
