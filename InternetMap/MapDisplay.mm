@@ -7,7 +7,7 @@
 #import <GLKit/GLKit.h>
 #import "Camera.hpp"
 #import "Lines.hpp"
-#import "Nodes.h"
+#import "Nodes.hpp"
 
 #include "Program.hpp"
 
@@ -68,8 +68,8 @@
     self.connectionProgram = nil;
     
     [EAGLContext setCurrentContext:self.context];
-    self.nodes = nil;
-    self.selectedNodes = nil;
+    self.nodes = NULL;
+    self.selectedNodes = NULL;
 }
 
 #pragma mark - GLKView and GLKViewController delegate methods
@@ -102,7 +102,7 @@
         
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
-        [self.selectedNodes display];
+        self.selectedNodes->display();
     }
     
     glBlendFunc(GL_ONE, GL_ONE);
@@ -112,7 +112,7 @@
         self.nodeProgram->bind();
         [self bindDefaultNodeUniforms:self.nodeProgram];
         glUniform1f(self.nodeProgram->uniformForName("minSize"), 2.0f);
-        [self.nodes display];
+        self.nodes->display();
     }
     
     Matrix4 mvp = self.camera->currentModelViewProjection();

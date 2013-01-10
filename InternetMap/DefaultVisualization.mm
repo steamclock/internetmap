@@ -8,12 +8,23 @@
 #import "Node.h"
 #import "Lines.hpp"
 #import "Connection.h"
-#import "Nodes.h"
+#import "Nodes.hpp"
 
 // Temp conversion function while note everything is converted TODO: remove
+
 static Point3 GLKVec3ToPoint(const GLKVector3& in) {
     return Point3(in.x, in.y, in.z);
 };
+
+static Color UIColorToColor(UIColor* color) {
+    float r;
+    float g;
+    float b;
+    float a;
+    [color getRed:&r green:&g blue:&b alpha:&a];
+    return Color(r, g, b, a);
+}
+
 
 @implementation DefaultVisualization
 
@@ -25,6 +36,7 @@ static Point3 GLKVec3ToPoint(const GLKVector3& in) {
     return 0.005 + 0.70*powf(node.importance, .75);
 
 }
+
 
 
 -(void)updateDisplay:(MapDisplay*)display forNodes:(NSArray*)arrNodes {    
@@ -49,7 +61,7 @@ static Point3 GLKVec3ToPoint(const GLKVector3& in) {
 
 
     
-    [display.nodes beginUpdate];
+    display.nodes->beginUpdate();
     
     for(int i = 0; i < arrNodes.count; i++) {
         Node* node = arrNodes[i];
@@ -79,33 +91,33 @@ static Point3 GLKVec3ToPoint(const GLKVector3& in) {
                 break;
         }
         
-        
-        [display.nodes updateNode:node.index position:[self nodePosition:node] size:[self nodeSize:node] color:color]; // use index from node, not in array, so that partiual updates can work
+        display.nodes->updateNode(node.index, GLKVec3ToPoint([self nodePosition:node]), [self nodeSize:node], UIColorToColor(color)); // use index from node, not in array, so that partiual updates can work
         
     }
     
-    [display.nodes endUpdate];
+    display.nodes->endUpdate();
     
 }
 
 -(void)updateDisplay:(MapDisplay*)display forSelectedNodes:(NSArray*)arrNodes {
-    [display.selectedNodes beginUpdate];
+    display.selectedNodes->beginUpdate();
     for(int i = 0; i < arrNodes.count; i++) {
         Node* node = arrNodes[i];
         
-        
-        [display.selectedNodes updateNode:i position:[self nodePosition:node] size:[self nodeSize:node] color:SELECTED_NODE_COLOR]; // use index from node, not in array, so that partiual updates can work
+        display.selectedNodes->updateNode(i, GLKVec3ToPoint([self nodePosition:node]), [self nodeSize:node], UIColorToColor(SELECTED_NODE_COLOR));
         
     }
-    [display.selectedNodes endUpdate];
+    display.selectedNodes->endUpdate();
     
 }
 
 - (void)resetDisplay:(MapDisplay*)display forNodes:(NSArray*)arrNodes {
     if (display.nodes) {
-        NSAssert([display.nodes count] == [arrNodes count], @"Display.nodes has already been allocated and you just tried to recreate it with a different count");
+        //TODO: get assert back
+//        NSAssert(display.nodes->count == [arrNodes count], @"Display.nodes has already been allocated and you just tried to recreate it with a different count");
     }else {
-        display.nodes = [[Nodes alloc] initWithNodeCount:[arrNodes count]];
+        std::shared_ptr<Nodes> nodes(new Nodes([arrNodes count]));
+        display.nodes = nodes;
     }
 
     
@@ -114,9 +126,11 @@ static Point3 GLKVec3ToPoint(const GLKVector3& in) {
 
 - (void)resetDisplay:(MapDisplay *)display forSelectedNodes:(NSArray*)arrNodes {
     if (display.selectedNodes) {
-        NSAssert([display.selectedNodes count] == [arrNodes count], @"Display.selectedNodes has already been allocated and you just tried to recreate it with a different count");
+        //TODO: get assert back
+//        NSAssert([display.selectedNodes count] == [arrNodes count], @"Display.selectedNodes has already been allocated and you just tried to recreate it with a different count");
     }else {
-        display.selectedNodes = [[Nodes alloc] initWithNodeCount:[arrNodes count]];
+        std::shared_ptr<Nodes> nodes(new Nodes([arrNodes count]));
+        display.selectedNodes = nodes;
     }
     
     [self updateDisplay:display forSelectedNodes:arrNodes];
@@ -151,10 +165,10 @@ static Point3 GLKVec3ToPoint(const GLKVector3& in) {
         Node* b = connection.second;
         
         float lineImportanceA = MAX(a.importance - 0.01f, 0.0f) * 1.5f;
-        Colour lineColorA = Colour(lineImportanceA, lineImportanceA, lineImportanceA, 1.0);
+        Color lineColorA = Color(lineImportanceA, lineImportanceA, lineImportanceA, 1.0);
         
         float lineImportanceB = MAX(b.importance - 0.01f, 0.0f) * 1.5f;
-        Colour lineColorB = Colour(lineImportanceB, lineImportanceB, lineImportanceB, 1.0);
+        Color lineColorB = Color(lineImportanceB, lineImportanceB, lineImportanceB, 1.0);
         
         lines->updateLine(currentIndex, GLKVec3ToPoint([self nodePosition:a]), lineColorA, GLKVec3ToPoint([self nodePosition:b]), lineColorB);
         currentIndex++;

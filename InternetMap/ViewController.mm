@@ -18,7 +18,7 @@
 #import <sys/socket.h>
 #import <ifaddrs.h>
 #import "ErrorInfoView.h"
-#import "Nodes.h"
+#import "Nodes.hpp"
 #import "NodeTooltipViewController.h"
 #import "MapController.h"
 #import "LabelNumberBoxView.h"
@@ -27,6 +27,17 @@
 
 #define MIN_TIMELINE_YEAR 1993
 #define MAX_TIMELINE_YEAR 2012
+
+//temp type conversion, TODO: remove!
+
+static Color UIColorToColor(UIColor* color) {
+    float r;
+    float g;
+    float b;
+    float a;
+    [color getRed:&r green:&g blue:&b alpha:&a];
+    return Color(r, g, b, a);
+}
 
 BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     return state == UIGestureRecognizerStateBegan || state == UIGestureRecognizerStateChanged || state == UIGestureRecognizerStateRecognized;
@@ -270,9 +281,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                     [self.nodeTooltipPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];
                     [self.controller unhoverNode];
                     self.controller.hoveredNodeIndex = i;
-                    [self.display.nodes beginUpdate];
-                    [self.display.nodes updateNode:i color:SELECTED_NODE_COLOR];
-                    [self.display.nodes endUpdate];
+                    self.display.nodes->beginUpdate();
+                    self.display.nodes->updateNode(i, UIColorToColor(SELECTED_NODE_COLOR));
+                    self.display.nodes->endUpdate();
                 }
             }
         }

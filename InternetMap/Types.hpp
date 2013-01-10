@@ -43,26 +43,26 @@ struct RawVector3 {
     float x, y, z;
 };
 
-// Floating point colour
-struct Colour {
-    Colour() {
+// Floating point color
+struct Color {
+    Color() {
         
     }
     
-    Colour(float R, float G, float B, float A) {
-        r = R= g = G; b = B; a = A;
+    Color(float R, float G, float B, float A) {
+        r = R; g = G; b = B; a = A;
     }
     
     float r, g, b, a;
 };
 
-// Byte-per-component colour, suitable for inclusion in vertex arrays
-struct ByteColour {
-    ByteColour(const Colour& colour) {
-        r = (int)(colour.r * 255.0f);
-        g = (int)(colour.g * 255.0f);
-        b = (int)(colour.b * 255.0f);
-        a = (int)(colour.a * 255.0f);
+// Byte-per-component color, suitable for inclusion in vertex arrays
+struct ByteColor {
+    ByteColor(const Color& color) {
+        r = (int)(color.r * 255.0f);
+        g = (int)(color.g * 255.0f);
+        b = (int)(color.b * 255.0f);
+        a = (int)(color.a * 255.0f);
     }
     
     unsigned char r, g, b, a;
