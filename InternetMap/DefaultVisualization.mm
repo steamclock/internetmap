@@ -16,13 +16,13 @@ static Point3 GLKVec3ToPoint(const GLKVector3& in) {
     return Point3(in.x, in.y, in.z);
 };
 
-static Colour UIColorToColour(UIColor* color) {
+static Color UIColorToColor(UIColor* color) {
     float r;
     float g;
     float b;
     float a;
     [color getRed:&r green:&g blue:&b alpha:&a];
-    return Colour(r, g, b, a);
+    return Color(r, g, b, a);
 }
 
 
@@ -91,7 +91,7 @@ static Colour UIColorToColour(UIColor* color) {
                 break;
         }
         
-        display.nodes->updateNode(node.index, GLKVec3ToPoint([self nodePosition:node]), [self nodeSize:node], UIColorToColour(color)); // use index from node, not in array, so that partiual updates can work
+        display.nodes->updateNode(node.index, GLKVec3ToPoint([self nodePosition:node]), [self nodeSize:node], UIColorToColor(color)); // use index from node, not in array, so that partiual updates can work
         
     }
     
@@ -104,7 +104,7 @@ static Colour UIColorToColour(UIColor* color) {
     for(int i = 0; i < arrNodes.count; i++) {
         Node* node = arrNodes[i];
         
-        display.selectedNodes->updateNode(i, GLKVec3ToPoint([self nodePosition:node]), [self nodeSize:node], UIColorToColour(SELECTED_NODE_COLOR));
+        display.selectedNodes->updateNode(i, GLKVec3ToPoint([self nodePosition:node]), [self nodeSize:node], UIColorToColor(SELECTED_NODE_COLOR));
         
     }
     display.selectedNodes->endUpdate();
@@ -165,10 +165,10 @@ static Colour UIColorToColour(UIColor* color) {
         Node* b = connection.second;
         
         float lineImportanceA = MAX(a.importance - 0.01f, 0.0f) * 1.5f;
-        Colour lineColorA = Colour(lineImportanceA, lineImportanceA, lineImportanceA, 1.0);
+        Color lineColorA = Color(lineImportanceA, lineImportanceA, lineImportanceA, 1.0);
         
         float lineImportanceB = MAX(b.importance - 0.01f, 0.0f) * 1.5f;
-        Colour lineColorB = Colour(lineImportanceB, lineImportanceB, lineImportanceB, 1.0);
+        Color lineColorB = Color(lineImportanceB, lineImportanceB, lineImportanceB, 1.0);
         
         lines->updateLine(currentIndex, GLKVec3ToPoint([self nodePosition:a]), lineColorA, GLKVec3ToPoint([self nodePosition:b]), lineColorB);
         currentIndex++;

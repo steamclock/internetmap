@@ -25,13 +25,13 @@ static Point3 GLKVec3ToPoint(const GLKVector3& in) {
     return Point3(in.x, in.y, in.z);
 };
 
-static Colour UIColorToColour(UIColor* color) {
+static Color UIColorToColor(UIColor* color) {
     float r;
     float g;
     float b;
     float a;
     [color getRed:&r green:&g blue:&b alpha:&a];
-    return Colour(r, g, b, a);
+    return Color(r, g, b, a);
 }
 
 
@@ -96,7 +96,7 @@ std::string loadTextResource(std::string base, std::string extension) {
         if (i != NSNotFound) {
             self.hoveredNodeIndex = i;
             self.display.nodes->beginUpdate();
-            self.display.nodes->updateNode(i, UIColorToColour(SELECTED_NODE_COLOR));
+            self.display.nodes->updateNode(i, UIColorToColor(SELECTED_NODE_COLOR));
             self.display.nodes->endUpdate();
         }
     }
@@ -141,7 +141,7 @@ std::string loadTextResource(std::string base, std::string extension) {
         target = Vector3(origTarget.x, origTarget.y, origTarget.z);
         
         self.display.nodes->beginUpdate();
-        self.display.nodes->updateNode(node.index, UIColorToColour([UIColor clearColor]));
+        self.display.nodes->updateNode(node.index, UIColorToColor([UIColor clearColor]));
         self.display.nodes->endUpdate();
         
         [self.data.visualization resetDisplay:self.display forSelectedNodes:@[node]];
@@ -179,12 +179,12 @@ std::string loadTextResource(std::string base, std::string extension) {
     std::shared_ptr<Lines> lines(new Lines(filteredConnections.count));
     lines->beginUpdate();
         
-    UIColor* brightColourUI = SELECTED_CONNECTION_COLOR_BRIGHT;
-    UIColor* dimColourUI = SELECTED_CONNECTION_COLOR_DIM;
-    Colour brightColour;
-    [brightColourUI getRed:&brightColour.r green:&brightColour.g blue:&brightColour.b alpha:&brightColour.a];
-    Colour dimColour;
-    [dimColourUI getRed:&dimColour.r green:&dimColour.g blue:&dimColour.b alpha:&dimColour.a];
+    UIColor* brightColorUI = SELECTED_CONNECTION_COLOR_BRIGHT;
+    UIColor* dimColorUI = SELECTED_CONNECTION_COLOR_DIM;
+    Color brightColor;
+    [brightColorUI getRed:&brightColor.r green:&brightColor.g blue:&brightColor.b alpha:&brightColor.a];
+    Color dimColor;
+    [dimColorUI getRed:&dimColor.r green:&dimColor.g blue:&dimColor.b alpha:&dimColor.a];
     
     for(int i = 0; i < filteredConnections.count; i++) {
         Connection* connection = filteredConnections[i];
@@ -192,10 +192,10 @@ std::string loadTextResource(std::string base, std::string extension) {
         Node* b = connection.second;
         
         if(node == a) {
-            lines->updateLine(i, GLKVec3ToPoint([self.data.visualization nodePosition:a]), brightColour, GLKVec3ToPoint([self.data.visualization nodePosition:b]), dimColour);
+            lines->updateLine(i, GLKVec3ToPoint([self.data.visualization nodePosition:a]), brightColor, GLKVec3ToPoint([self.data.visualization nodePosition:b]), dimColor);
         }
         else {
-            lines->updateLine(i, GLKVec3ToPoint([self.data.visualization nodePosition:a]), dimColour, GLKVec3ToPoint([self.data.visualization nodePosition:b]), brightColour);
+            lines->updateLine(i, GLKVec3ToPoint([self.data.visualization nodePosition:a]), dimColor, GLKVec3ToPoint([self.data.visualization nodePosition:b]), brightColor);
         }
     }
     
@@ -227,15 +227,15 @@ std::string loadTextResource(std::string base, std::string extension) {
     lines->beginUpdate();
     
     UIColor* lineColorUI = UIColorFromRGB(0xffa300);
-    Colour lineColor;
+    Color lineColor;
     [lineColorUI getRed:&lineColor.r green:&lineColor.g blue:&lineColor.b alpha:&lineColor.a];
 
     self.display.nodes->beginUpdate();
     for(int i = 0; i < nodeList.count - 1; i++) {
         Node* a = nodeList[i];
         Node* b = nodeList[i+1];
-        self.display.nodes->updateNode(a.index, UIColorToColour(SELECTED_NODE_COLOR));
-        self.display.nodes->updateNode(b.index, UIColorToColour(SELECTED_NODE_COLOR));
+        self.display.nodes->updateNode(a.index, UIColorToColor(SELECTED_NODE_COLOR));
+        self.display.nodes->updateNode(b.index, UIColorToColor(SELECTED_NODE_COLOR));
         [self.highlightedNodes addIndex:a.index];
         [self.highlightedNodes addIndex:b.index];
         lines->updateLine(i, GLKVec3ToPoint([self.data.visualization nodePosition:a]), lineColor, GLKVec3ToPoint([self.data.visualization nodePosition:b]), lineColor);

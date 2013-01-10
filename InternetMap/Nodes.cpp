@@ -19,7 +19,7 @@ const int MAX_NODES = 30000;
 struct RawDisplayNode {
     RawVector3 position;
     float size;
-    ByteColour color;
+    ByteColor color;
 };
 
 Nodes::Nodes(int initialCount) :
@@ -92,7 +92,7 @@ void Nodes::endUpdate() {
     glUnmapBufferOES(GL_ARRAY_BUFFER);
 }
 
-void Nodes::updateNode(int index, const Point3& position, float size, const Colour& color) {
+void Nodes::updateNode(int index, const Point3& position, float size, const Color& color) {
     updateNode(index, position);
     updateNode(index, size);
     updateNode(index, color);
@@ -109,7 +109,7 @@ void Nodes::updateNode(int index, float size) {
     node->size = size;
 }
 
-void Nodes::updateNode(int index, const Colour& color) {
+void Nodes::updateNode(int index, const Color& color) {
     RawDisplayNode* node = &_lockedNodes[index];
     node->color = color;
 }

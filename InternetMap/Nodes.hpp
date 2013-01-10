@@ -26,10 +26,10 @@ public:
 
     void beginUpdate(void);
     void endUpdate(void);
-    void updateNode(int index, const Point3& position, float size, const Colour& color);
+    void updateNode(int index, const Point3& position, float size, const Color& color);
     void updateNode(int index, const Point3& position);
     void updateNode(int index, float size);
-    void updateNode(int index, const Colour& color);
+    void updateNode(int index, const Color& color);
     void display(void);
     int count(void);
 

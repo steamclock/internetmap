@@ -12,7 +12,7 @@
 
 struct LineVertex {
     RawVector3 position;
-    ByteColour colour;
+    ByteColor color;
 };
 
 Lines::Lines(int initialCount) :
@@ -57,7 +57,7 @@ void Lines::endUpdate(void) {
     glUnmapBufferOES(GL_ARRAY_BUFFER);
 }
 
-void Lines::updateLine(int index, const Point3& start, const Colour& startColour, const Point3& end, const Colour& endColour) {
+void Lines::updateLine(int index, const Point3& start, const Color& startColor, const Point3& end, const Color& endColor) {
     if(index >= _count) {
         return;
     }
@@ -66,10 +66,10 @@ void Lines::updateLine(int index, const Point3& start, const Colour& startColour
     LineVertex* vert1 = &_lockedVertices[index * 2 + 1];
     
     vert0->position = start;
-    vert0->colour = startColour;
+    vert0->color = startColor;
     
     vert1->position = end;
-    vert1->colour = endColour;
+    vert1->color = endColor;
 }
 
 

@@ -30,13 +30,13 @@
 
 //temp type conversion, TODO: remove!
 
-static Colour UIColorToColour(UIColor* color) {
+static Color UIColorToColor(UIColor* color) {
     float r;
     float g;
     float b;
     float a;
     [color getRed:&r green:&g blue:&b alpha:&a];
-    return Colour(r, g, b, a);
+    return Color(r, g, b, a);
 }
 
 BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
@@ -282,7 +282,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                     [self.controller unhoverNode];
                     self.controller.hoveredNodeIndex = i;
                     self.display.nodes->beginUpdate();
-                    self.display.nodes->updateNode(i, UIColorToColour(SELECTED_NODE_COLOR));
+                    self.display.nodes->updateNode(i, UIColorToColor(SELECTED_NODE_COLOR));
                     self.display.nodes->endUpdate();
                 }
             }
