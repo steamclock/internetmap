@@ -27,6 +27,6 @@
 - (int)indexForNodeAtPoint:(CGPoint)pointInView;
 -(CGPoint)getCoordinatesForNodeAtIndex:(int)index;
 - (void)clearHighlightLines;
--(void)highlightRoute:(NSArray*)nodeList;
+-(void)highlightRoute:(std::vector<NodePointer>)nodeList;
 
 @end

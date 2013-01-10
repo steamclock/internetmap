@@ -5,7 +5,7 @@
 
 #import "DefaultVisualization.h"
 #import "MapDisplay.h"
-#import "Node.h"
+#import "Node.hpp"
 #import "Lines.hpp"
 #import "Connection.h"
 #import "Nodes.hpp"

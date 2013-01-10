@@ -6,7 +6,8 @@
 #import <Foundation/Foundation.h>
 #import <GLKit/GLKit.h>
 
-@class Node;
+class Node;
+
 @class MapDisplay;
 
 @protocol Visualization <NSObject>

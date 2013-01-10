@@ -5,7 +5,7 @@
 
 #import "MapData.h"
 #import "MapDisplay.h"
-#import "Node.h"
+#import "Node.hpp"
 #import "Lines.hpp"
 #import "Connection.h"
 #import "IndexBox.h"
@@ -15,8 +15,8 @@
 
 @implementation MapData
 
--(Node*)nodeAtIndex:(NSUInteger)index {
-    return [self.nodes objectAtIndex:index];
+-(NodePointer)nodeAtIndex:(NSUInteger)index {
+    return self.nodes.at(index);
 }
 
 -(void)loadFromFile:(NSString*)filename {
@@ -29,22 +29,23 @@
     int numNodes = [[header objectAtIndex:0] intValue];
     int numConnections = [[header objectAtIndex:1] intValue];
     
-    self.nodes = [[NSMutableArray alloc] initWithCapacity:numNodes];
-    self.nodesByAsn = [[NSMutableDictionary alloc] initWithCapacity:numNodes];
+    self.nodes = std::vector<NodePointer>();
+    self.nodesByAsn = std::map<std::string, NodePointer>();
 
     for (int i = 0; i < numNodes; i++) {
         NSArray* nodeDesc = [[lines objectAtIndex:1 + i] componentsSeparatedByString:@" "];
         
-        Node* node = [Node new];
-        node.asn = [nodeDesc objectAtIndex:0];
-        node.index = i;
-        node.importance = [[nodeDesc objectAtIndex:1] floatValue];
-        node.positionX = [[nodeDesc objectAtIndex:2] floatValue];
-        node.positionY = [[nodeDesc objectAtIndex:3] floatValue];
-        node.type = AS_UNKNOWN;
+        Node* node = new Node();
+        node->asn = std::string([[nodeDesc objectAtIndex:0] UTF8String]);
+        node->index = i;
+        node->importance = [[nodeDesc objectAtIndex:1] floatValue];
+        node->positionX = [[nodeDesc objectAtIndex:2] floatValue];
+        node->positionY = [[nodeDesc objectAtIndex:3] floatValue];
+        node->type = AS_UNKNOWN;
         
-        [self.nodes addObject:node];
-        [self.nodesByAsn setObject:node forKey:node.asn];
+        std::shared_ptr<Node> ptrNode(node);
+        self.nodes.push_back(ptrNode);
+        self.nodesByAsn.insert(std::make_pair(node->asn, ptrNode));
     }
     
     self.connections = [NSMutableArray new];
@@ -53,10 +54,10 @@
         NSArray* connectionDesc = [[lines objectAtIndex:1 + numNodes + i] componentsSeparatedByString:@" "];
         
         Connection* connection = [Connection new];
-        connection.first = [self.nodesByAsn valueForKey:[connectionDesc objectAtIndex:0]];
-        connection.second = [self.nodesByAsn valueForKey:[connectionDesc objectAtIndex:1]];
-        [connection.first.connections addObject:connection];
-        [connection.second.connections addObject:connection];
+        connection.first = self.nodesByAsn[std::string([[connectionDesc objectAtIndex:0] UTF8String])];
+        connection.second = self.nodesByAsn[std::string([[connectionDesc objectAtIndex:1] UTF8String])];
+        connection.first->connections.push_back(connection);
+        connection.second->connections.push_back(connection);
         [self.connections addObject:connection];
     }
     
@@ -84,9 +85,9 @@
         }
     }
     
-    for (int i = 0; i < [self.nodes count]; i++) {
-        Node* node = [self.nodes objectAtIndex:i];
-        GLKVector3 pos = [self.visualization nodePosition:node];
+    for (int i = 0; i < self.nodes.size(); i++) {
+        NodePointer ptrNode = self.nodes.at(i);
+        GLKVector3 pos = [self.visualization nodePosition:ptrNode];
         IndexBox* box = [self indexBoxForPoint:pos];
         [box.indices addIndex:i];
     }
@@ -105,8 +106,8 @@
 }
 
 - (void)addNodesToBox:(IndexBox*)box {
-    for (int i = 0; i < [self.nodes count]; i++) {
-        Node* node = [self.nodes objectAtIndex:i];
+    for (int i = 0; i < self.nodes.size(); i++) {
+        NodePointer node = self.nodes.at(i);
         GLKVector3 pos = [self.visualization nodePosition:node];
         if ([box isPointInside:pos]) {
             [box.indices addIndex:i];

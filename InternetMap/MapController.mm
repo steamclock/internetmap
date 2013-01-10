@@ -12,7 +12,7 @@
 #import "DefaultVisualization.h"
 #import "Nodes.hpp"
 #import "Camera.hpp"
-#import "Node.h"
+#import "Node.hpp"
 #import "Lines.hpp"
 #import "Connection.h"
 #import "IndexBox.h"
@@ -217,8 +217,8 @@ std::string loadTextResource(std::string base, std::string extension) {
     self.display.highlightLines = nil;
 }
 
--(void)highlightRoute:(NSArray*)nodeList {
-    if(nodeList.count <= 1) {
+-(void)highlightRoute:(std::vector<NodePointer>)nodeList {
+    if(nodeList.size() <= 1) {
         [self clearHighlightLines];
         return;
     }

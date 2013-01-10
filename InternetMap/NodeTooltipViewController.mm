@@ -7,7 +7,7 @@
 //
 
 #import "NodeTooltipViewController.h"
-#import "Node.h"
+#import "Node.hpp"
 
 @interface NodeTooltipViewController ()
 @end

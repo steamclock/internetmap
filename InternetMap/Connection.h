@@ -5,9 +5,10 @@
 
 #import <Foundation/Foundation.h>
 
-@class Node;
+class Node;
 
 @interface Connection : NSObject
-@property (strong, nonatomic) Node* first;
-@property (strong, nonatomic) Node* second;
+@property (nonatomic) NodePointer first;
+@property (nonatomic) NodePointer second;
+
 @end

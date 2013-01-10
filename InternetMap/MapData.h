@@ -4,9 +4,12 @@
 //
 
 #import "Visualization.h"
+#include <memory>
+#include <vector>
+#include <map>
+#include "Node.hpp"
 
 @class MapDisplay;
-@class Node;
 
 @interface MapData : NSObject
 
@@ -17,10 +20,10 @@
 -(void)loadAsInfo:(NSString*)filename;
 -(void)updateDisplay:(MapDisplay*)display;
 
--(Node*)nodeAtIndex:(NSUInteger)index;
+-(NodePointer)nodeAtIndex:(NSUInteger)index;
 
-@property (strong, nonatomic) NSMutableArray* nodes;
-@property (strong, nonatomic) NSMutableDictionary* nodesByAsn;
+@property (nonatomic) std::vector<NodePointer> nodes;
+@property (nonatomic) std::map<std::string, NodePointer> nodesByAsn;
 @property (strong, nonatomic) NSMutableArray* boxesForNodes;
 @property (strong, nonatomic) NSMutableArray* connections;
 

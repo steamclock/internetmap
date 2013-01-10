@@ -63,7 +63,7 @@
 		1180CF5B169B80E300F1FB73 /* ARSMaquettePro-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1180CF57169B80E300F1FB73 /* ARSMaquettePro-Light.otf */; };
 		1180CF5C169B80E300F1FB73 /* ARSMaquettePro-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1180CF58169B80E300F1FB73 /* ARSMaquettePro-Medium.otf */; };
 		1180CF5D169B80E300F1FB73 /* ARSMaquettePro-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1180CF59169B80E300F1FB73 /* ARSMaquettePro-Regular.otf */; };
-		1186ACE816851DBE0061FA49 /* NodeTooltipViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1186ACE716851DBE0061FA49 /* NodeTooltipViewController.m */; };
+		1186ACE816851DBE0061FA49 /* NodeTooltipViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1186ACE716851DBE0061FA49 /* NodeTooltipViewController.mm */; };
 		11B99E751683AFB6005A8454 /* selectedNode.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 11B99E731683AEBC005A8454 /* selectedNode.fsh */; };
 		11D38FE9169CA3DC00225B19 /* timeline-play.png in Resources */ = {isa = PBXBuildFile; fileRef = 11D38FE7169CA3DC00225B19 /* timeline-play.png */; };
 		11D38FEA169CA3DC00225B19 /* timeline-play@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 11D38FE8169CA3DC00225B19 /* timeline-play@2x.png */; };
@@ -74,7 +74,7 @@
 		1FFD9C87165C9E7400FED149 /* as2attr.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1FFD9C86165C9E7400FED149 /* as2attr.txt */; };
 		3959464C1685343900BAF5CC /* icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 3959464B1685343900BAF5CC /* icon-72.png */; };
 		3959464F1685343C00BAF5CC /* icon-144.png in Resources */ = {isa = PBXBuildFile; fileRef = 3959464E1685343C00BAF5CC /* icon-144.png */; };
-		A6B56BF2165AE28A00DDE753 /* Node.m in Sources */ = {isa = PBXBuildFile; fileRef = A6B56BF1165AE28A00DDE753 /* Node.m */; };
+		A6B56BF2165AE28A00DDE753 /* Node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B56BF1165AE28A00DDE753 /* Node.cpp */; };
 		A6B56BF9165AF53F00DDE753 /* Program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B56BF8165AF53F00DDE753 /* Program.cpp */; };
 		A6B56BFA165AF98D00DDE753 /* line.fsh in Resources */ = {isa = PBXBuildFile; fileRef = A6B56BF3165AEDF700DDE753 /* line.fsh */; };
 		A6B56BFB165AF98D00DDE753 /* line.vsh in Resources */ = {isa = PBXBuildFile; fileRef = A6B56BF4165AEDF700DDE753 /* line.vsh */; };
@@ -91,7 +91,7 @@
 		A6F3F56B1640F1FB0070E6AE /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F56A1640F1FB0070E6AE /* OpenGLES.framework */; };
 		A6F3F5711640F1FB0070E6AE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A6F3F56F1640F1FB0070E6AE /* InfoPlist.strings */; };
 		A6F3F5731640F1FB0070E6AE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F3F5721640F1FB0070E6AE /* main.m */; };
-		A6F3F5771640F1FB0070E6AE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F3F5761640F1FB0070E6AE /* AppDelegate.m */; };
+		A6F3F5771640F1FB0070E6AE /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = A6F3F5761640F1FB0070E6AE /* AppDelegate.mm */; };
 		A6F3F5791640F1FB0070E6AE /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = A6F3F5781640F1FB0070E6AE /* Default.png */; };
 		A6F3F57B1640F1FB0070E6AE /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A6F3F57A1640F1FB0070E6AE /* Default@2x.png */; };
 		A6F3F57D1640F1FB0070E6AE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A6F3F57C1640F1FB0070E6AE /* Default-568h@2x.png */; };
@@ -116,8 +116,8 @@
 		D4CEA33416694E65004B8E8A /* youarehere.png in Resources */ = {isa = PBXBuildFile; fileRef = D4CEA32A16694E65004B8E8A /* youarehere.png */; };
 		D4CEA33516694E65004B8E8A /* youarehere@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D4CEA32B16694E65004B8E8A /* youarehere@2x.png */; };
 		D4CEA338166962F8004B8E8A /* VisualizationsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CEA337166962F8004B8E8A /* VisualizationsTableViewController.m */; };
-		D4D17D1E166EA613003A489C /* NodeInformationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D4D17D1C166EA612003A489C /* NodeInformationViewController.m */; };
-		D4F65E02166D6D530077BF5A /* NodeSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D4F65E01166D6D530077BF5A /* NodeSearchViewController.m */; };
+		D4D17D1E166EA613003A489C /* NodeInformationViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4D17D1C166EA612003A489C /* NodeInformationViewController.mm */; };
+		D4F65E02166D6D530077BF5A /* NodeSearchViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4F65E01166D6D530077BF5A /* NodeSearchViewController.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -202,7 +202,7 @@
 		1180CF58169B80E300F1FB73 /* ARSMaquettePro-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ARSMaquettePro-Medium.otf"; sourceTree = "<group>"; };
 		1180CF59169B80E300F1FB73 /* ARSMaquettePro-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ARSMaquettePro-Regular.otf"; sourceTree = "<group>"; };
 		1186ACE616851DBE0061FA49 /* NodeTooltipViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeTooltipViewController.h; sourceTree = "<group>"; };
-		1186ACE716851DBE0061FA49 /* NodeTooltipViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NodeTooltipViewController.m; sourceTree = "<group>"; };
+		1186ACE716851DBE0061FA49 /* NodeTooltipViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NodeTooltipViewController.mm; sourceTree = "<group>"; };
 		11B99E731683AEBC005A8454 /* selectedNode.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = selectedNode.fsh; path = Shaders/selectedNode.fsh; sourceTree = "<group>"; };
 		11D38FE7169CA3DC00225B19 /* timeline-play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "timeline-play.png"; path = "Images/timeline-play.png"; sourceTree = "<group>"; };
 		11D38FE8169CA3DC00225B19 /* timeline-play@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "timeline-play@2x.png"; path = "Images/timeline-play@2x.png"; sourceTree = "<group>"; };
@@ -210,6 +210,7 @@
 		11D4CFBB1677B67200ED328D /* SCDispatchQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCDispatchQueue.m; sourceTree = "<group>"; };
 		11D4CFC21677DAE400ED328D /* IndexBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IndexBox.h; sourceTree = "<group>"; };
 		11D4CFC31677DAE400ED328D /* IndexBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IndexBox.m; sourceTree = "<group>"; };
+		11DB60B6169F635200E5986D /* CPPHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPPHelpers.h; sourceTree = "<group>"; };
 		11FFB38E167FC3CD00309545 /* Nodes.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Nodes.hpp; sourceTree = "<group>"; };
 		11FFB38F167FC3CD00309545 /* Nodes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Nodes.cpp; sourceTree = "<group>"; };
 		1FA5962D167931F800C7E703 /* asinfo.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = asinfo.json; path = InternetMap/asinfo.json; sourceTree = "<group>"; };
@@ -238,8 +239,8 @@
 		A6191845169DE85F003A3A4A /* vecidx_aos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vecidx_aos.h; sourceTree = "<group>"; };
 		A6191846169DE85F003A3A4A /* vectormath_aos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vectormath_aos.h; sourceTree = "<group>"; };
 		A6191847169DE85F003A3A4A /* vmInclude.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vmInclude.h; sourceTree = "<group>"; };
-		A6B56BF0165AE28A00DDE753 /* Node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Node.h; sourceTree = "<group>"; };
-		A6B56BF1165AE28A00DDE753 /* Node.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Node.m; sourceTree = "<group>"; };
+		A6B56BF0165AE28A00DDE753 /* Node.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Node.hpp; sourceTree = "<group>"; };
+		A6B56BF1165AE28A00DDE753 /* Node.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Node.cpp; sourceTree = "<group>"; };
 		A6B56BF3165AEDF700DDE753 /* line.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = line.fsh; path = Shaders/line.fsh; sourceTree = "<group>"; };
 		A6B56BF4165AEDF700DDE753 /* line.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = line.vsh; path = Shaders/line.vsh; sourceTree = "<group>"; };
 		A6B56BF7165AF53E00DDE753 /* Program.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Program.hpp; sourceTree = "<group>"; };
@@ -268,7 +269,7 @@
 		A6F3F5721640F1FB0070E6AE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		A6F3F5741640F1FB0070E6AE /* InternetMap-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "InternetMap-Prefix.pch"; sourceTree = "<group>"; };
 		A6F3F5751640F1FB0070E6AE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		A6F3F5761640F1FB0070E6AE /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		A6F3F5761640F1FB0070E6AE /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
 		A6F3F5781640F1FB0070E6AE /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		A6F3F57A1640F1FB0070E6AE /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		A6F3F57C1640F1FB0070E6AE /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
@@ -298,9 +299,9 @@
 		D4CEA336166962F8004B8E8A /* VisualizationsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VisualizationsTableViewController.h; sourceTree = "<group>"; };
 		D4CEA337166962F8004B8E8A /* VisualizationsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VisualizationsTableViewController.m; sourceTree = "<group>"; };
 		D4D17D1B166EA612003A489C /* NodeInformationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeInformationViewController.h; sourceTree = "<group>"; };
-		D4D17D1C166EA612003A489C /* NodeInformationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NodeInformationViewController.m; sourceTree = "<group>"; };
+		D4D17D1C166EA612003A489C /* NodeInformationViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NodeInformationViewController.mm; sourceTree = "<group>"; };
 		D4F65E00166D6D530077BF5A /* NodeSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeSearchViewController.h; sourceTree = "<group>"; };
-		D4F65E01166D6D530077BF5A /* NodeSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NodeSearchViewController.m; sourceTree = "<group>"; };
+		D4F65E01166D6D530077BF5A /* NodeSearchViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NodeSearchViewController.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -529,8 +530,8 @@
 				A6D54A8B16544DBF00028B51 /* MapDisplay.mm */,
 				11D4CFC21677DAE400ED328D /* IndexBox.h */,
 				11D4CFC31677DAE400ED328D /* IndexBox.m */,
-				A6B56BF0165AE28A00DDE753 /* Node.h */,
-				A6B56BF1165AE28A00DDE753 /* Node.m */,
+				A6B56BF0165AE28A00DDE753 /* Node.hpp */,
+				A6B56BF1165AE28A00DDE753 /* Node.cpp */,
 				A6E6DB6A1676B6C700B78F44 /* Connection.h */,
 				A6E6DB6B1676B6C700B78F44 /* Connection.m */,
 				A6B56BF7165AF53E00DDE753 /* Program.hpp */,
@@ -603,7 +604,7 @@
 				D46808FC1679560A00A2C1CC /* SCTraceroute.m */,
 				D4F65DD9166D56A90077BF5A /* 3rd Party Code */,
 				A6F3F5751640F1FB0070E6AE /* AppDelegate.h */,
-				A6F3F5761640F1FB0070E6AE /* AppDelegate.m */,
+				A6F3F5761640F1FB0070E6AE /* AppDelegate.mm */,
 				11134D2216695AD60061BDED /* HelperMethods.h */,
 				11134D2316695AD60061BDED /* HelperMethods.m */,
 				D4CEA32016694E53004B8E8A /* Images */,
@@ -612,13 +613,14 @@
 				110F6B1B167BE1F900D5907E /* ErrorInfoView.h */,
 				110F6B1C167BE1F900D5907E /* ErrorInfoView.m */,
 				D4D17D1B166EA612003A489C /* NodeInformationViewController.h */,
-				D4D17D1C166EA612003A489C /* NodeInformationViewController.m */,
+				D4D17D1C166EA612003A489C /* NodeInformationViewController.mm */,
 				1186ACE616851DBE0061FA49 /* NodeTooltipViewController.h */,
-				1186ACE716851DBE0061FA49 /* NodeTooltipViewController.m */,
+				1186ACE716851DBE0061FA49 /* NodeTooltipViewController.mm */,
 				D4F65E00166D6D530077BF5A /* NodeSearchViewController.h */,
-				D4F65E01166D6D530077BF5A /* NodeSearchViewController.m */,
+				D4F65E01166D6D530077BF5A /* NodeSearchViewController.mm */,
 				A6F3F5821640F1FB0070E6AE /* ViewController.h */,
 				A6F3F5831640F1FB0070E6AE /* ViewController.mm */,
+				11DB60B6169F635200E5986D /* CPPHelpers.h */,
 				11754300169BA790008150BB /* LabelNumberBoxView.h */,
 				11754301169BA790008150BB /* LabelNumberBoxView.m */,
 				D4CEA336166962F8004B8E8A /* VisualizationsTableViewController.h */,
@@ -806,18 +808,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				A6F3F5731640F1FB0070E6AE /* main.m in Sources */,
-				A6F3F5771640F1FB0070E6AE /* AppDelegate.m in Sources */,
+				A6F3F5771640F1FB0070E6AE /* AppDelegate.mm in Sources */,
 				A6F3F5841640F1FB0070E6AE /* ViewController.mm in Sources */,
 				A6D54A8C16544DBF00028B51 /* MapDisplay.mm in Sources */,
 				A6D54A8F1654532100028B51 /* MapData.mm in Sources */,
-				A6B56BF2165AE28A00DDE753 /* Node.m in Sources */,
+				A6B56BF2165AE28A00DDE753 /* Node.cpp in Sources */,
 				A6B56BF9165AF53F00DDE753 /* Program.cpp in Sources */,
 				A6DC6610165E926100EDA4F6 /* Camera.cpp in Sources */,
 				A6DC6614165EE8FA00EDA4F6 /* DefaultVisualization.mm in Sources */,
 				11134D2416695AD60061BDED /* HelperMethods.m in Sources */,
 				D4CEA338166962F8004B8E8A /* VisualizationsTableViewController.m in Sources */,
-				D4F65E02166D6D530077BF5A /* NodeSearchViewController.m in Sources */,
-				D4D17D1E166EA613003A489C /* NodeInformationViewController.m in Sources */,
+				D4F65E02166D6D530077BF5A /* NodeSearchViewController.mm in Sources */,
+				D4D17D1E166EA613003A489C /* NodeInformationViewController.mm in Sources */,
 				11D4CFBC1677B67200ED328D /* SCDispatchQueue.m in Sources */,
 				A6E6DB681676A0CE00B78F44 /* Lines.cpp in Sources */,
 				A6E6DB6C1676B6C800B78F44 /* Connection.m in Sources */,
@@ -841,7 +843,7 @@
 				110F6B1D167BE1F900D5907E /* ErrorInfoView.m in Sources */,
 				116E598116828AC300F653BC /* UIView+Convenience.m in Sources */,
 				11FFB390167FC3CE00309545 /* Nodes.cpp in Sources */,
-				1186ACE816851DBE0061FA49 /* NodeTooltipViewController.m in Sources */,
+				1186ACE816851DBE0061FA49 /* NodeTooltipViewController.mm in Sources */,
 				1180CF3D169B4D5500F1FB73 /* MapController.mm in Sources */,
 				11754302169BA790008150BB /* LabelNumberBoxView.m in Sources */,
 			);

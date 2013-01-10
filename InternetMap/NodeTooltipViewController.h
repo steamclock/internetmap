@@ -8,12 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@class Node;
+class Node;
 
 @interface NodeTooltipViewController : UIViewController
 
-@property (nonatomic, strong) Node* node;
+@property (nonatomic) NodePointer node;
 
-- (id)initWithNode:(Node*)node;
+- (id)initWithNode:(NodePointer)node;
 
 @end

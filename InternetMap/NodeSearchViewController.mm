@@ -7,7 +7,7 @@
 //
 
 #import "NodeSearchViewController.h"
-#import "Node.h"
+#import "Node.hpp"
 
 #define ASNS_AT_TOP @[@13768, @3, @15169, @714, @32934, @7847] //Peer1, MIT, google, apple, facebook, NASA
 

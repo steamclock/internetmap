@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#include <memory>
 
 @class LabelNumberBoxView;
 
@@ -19,7 +20,7 @@
 @interface NodeInformationViewController : UIViewController
 
 
-- (id)initWithNode:(Node*)node isCurrentNode:(BOOL)isCurrent;
+- (id)initWithNode:(NodePointer)node isCurrentNode:(BOOL)isCurrent;
 - (void)tracerouteDone;
 
 @property (strong, nonatomic) UILabel* topLabel;

@@ -6,7 +6,7 @@
 #import "ViewController.h"
 #import "MapDisplay.h"
 #import "MapData.h"
-#import "Node.h"
+#import "Node.hpp"
 #import "Connection.h"
 #import "DefaultVisualization.h"
 #import "VisualizationsTableViewController.h"
@@ -49,7 +49,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (strong, nonatomic) MapDisplay* display;
 @property (strong, nonatomic) MapData* data;
 
-@property (strong, nonatomic) NSMutableArray* tracerouteHops;
+@property (nonatomic) std::vector<NodePointer> tracerouteHops;
 
 @property (strong, nonatomic) NSDate* lastIntersectionDate;
 @property (assign, nonatomic) BOOL isHandlingLongPress;
@@ -270,7 +270,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             self.lastIntersectionDate = [NSDate date];
             if (i != NSNotFound) {
                 
-                Node* node = [self.data.nodes objectAtIndex:i];
+                NodePointer node = self.data.nodes.at(i);
                 if (self.nodeTooltipViewController.node != node) {
                     self.nodeTooltipViewController = [[NodeTooltipViewController alloc] initWithNode:node];
                     
@@ -390,7 +390,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 
 - (BOOL)shouldDoIdleAnimation{
-    return !self.tracerouteHops && !UIGestureRecognizerStateIsActive(self.longPressGestureRecognizer.state) && !UIGestureRecognizerStateIsActive(self.pinchRecognizer.state) && !UIGestureRecognizerStateIsActive(self.panRecognizer.state);
+    return self.tracerouteHops.empty() && !UIGestureRecognizerStateIsActive(self.longPressGestureRecognizer.state) && !UIGestureRecognizerStateIsActive(self.pinchRecognizer.state) && !UIGestureRecognizerStateIsActive(self.panRecognizer.state);
 }
 
 
@@ -403,9 +403,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 
 - (void)selectNodeForASN:(int)asn {
-    Node* node = [self.data.nodesByAsn objectForKey:[NSString stringWithFormat:@"%i", asn]];
+    NodePointer node = self.data.nodesByAsn[std::string([[NSString stringWithFormat:@"%i", asn] UTF8String])];
     if (node) {
-        [self updateTargetForIndex:node.index];
+        [self updateTargetForIndex:node->index];
     }else {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error locating your node", nil) message:@"Couldn't finde a node associated with your IP." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"ok", nil];
         [alert show];
@@ -521,13 +521,13 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     //check if node is the current node
     BOOL isSelectingCurrentNode = NO;
     if (self.cachedCurrentASN != NSNotFound) {
-        Node* node = [self.data.nodesByAsn objectForKey:[NSString stringWithFormat:@"%i", self.cachedCurrentASN]];
-        if (node.index == self.controller.targetNode) {
+        NodePointer node = self.data.nodesByAsn[std::string([[NSString stringWithFormat:@"%i", self.cachedCurrentASN] UTF8String])];
+        if (node->index == self.controller.targetNode) {
             isSelectingCurrentNode = YES;
         }
     }
 
-    Node* node = [self.data nodeAtIndex:self.controller.targetNode];
+    NodePointer node = [self.data nodeAtIndex:self.controller.targetNode];
     
     //careful, the local assignment first is necessary, because the property is a weak reference
     NodeInformationViewController* controller = [[NodeInformationViewController alloc] initWithNode:node isCurrentNode:isSelectingCurrentNode];
@@ -592,8 +592,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 #pragma mark - NodeSearch Delegate
 
--(void)nodeSelected:(Node*)node{
-    [self updateTargetForIndex:node.index];
+-(void)nodeSelected:(NodePointer)node{
+    [self updateTargetForIndex:node->index];
 }
 
 -(void)selectNodeByHostLookup:(NSString*)host {
@@ -640,8 +640,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.tracer stop];
     self.tracer = nil;
     [self.nodeInformationViewController.tracerouteTimer invalidate];
-    if (self.tracerouteHops) {
-        self.tracerouteHops = nil;
+    if (!self.tracerouteHops.empty()) {
+        self.tracerouteHops.clear();
         [self.controller clearHighlightLines];
     }
 }
@@ -660,11 +660,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 -(void)tracerouteButtonTapped{
     [self resizeNodeInfoPopover];
     
-    self.tracerouteHops = [NSMutableArray array];
+    self.tracerouteHops = std::vector<NodePointer>();
     self.controller.highlightedNodes = [[NSMutableIndexSet alloc] init];
     self.display.camera->zoomAnimated(-3, 3.0f);
-    Node* node = [self.data nodeAtIndex:self.controller.targetNode];
-    if (node.importance > 0.006) {
+    NodePointer node = [self.data nodeAtIndex:self.controller.targetNode];
+    if (node->importance > 0.006) {
         self.display.camera->rotateAnimated(Matrix4::identity(), 3.0f);
     }else {
         self.display.camera->rotateAnimated(Matrix4::rotation(M_PI, Vector3(0, 1, 0)), 3.0f);
@@ -676,9 +676,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         [self.tracer start];
     }
     else {
-        Node* node = [self.data nodeAtIndex:self.controller.targetNode];
-        if ([node.asn intValue]) {
-            [ASNRequest fetchForASN:[node.asn intValue] responseBlock:^(NSArray *asn) {
+        NodePointer node = [self.data nodeAtIndex:self.controller.targetNode];
+        int asn = [[NSString stringWithUTF8String:node->asn.c_str()] intValue];
+        if (asn) {
+            [ASNRequest fetchForASN:asn responseBlock:^(NSArray *asn) {
                 if (asn[0] != [NSNull null]) {
                     NSLog(@"starting tracerout with IP: %@", asn[0]);
                     self.tracer = [SCTraceroute tracerouteWithAddress:asn[0] ofType:kICMP];
@@ -726,25 +727,26 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     //    NSLog(@"%@", hops);
 
     [ASNRequest fetchForAddresses:@[[hops lastObject]] responseBlock:^(NSArray *asns) {
-        Node* last = nil;
+        NodePointer last = nil;
         
         for(NSNumber* asn in asns) {
             if(![asn isEqual:[NSNull null]]) {
-                Node* current = [self.data.nodesByAsn objectForKey:[NSString stringWithFormat:@"%i", [asn intValue]]];
+                NodePointer current = self.data.nodesByAsn[std::string([[NSString stringWithFormat:@"%i", [asn intValue]] UTF8String])];
                 if(current && (current != last)) {
-                    [self.tracerouteHops addObject:current];
+                    self.tracerouteHops.push_back(current);
                 }
             }
         }
         
-        if ([self.tracerouteHops count] >= 2) {
+        if (self.tracerouteHops.size() >= 2) {
             [self.controller highlightRoute:self.tracerouteHops];
         }
         
         //update node info label for number of unique ASN Hops
         NSMutableSet* asnSet = [NSMutableSet set];
-        for (Node* node in self.tracerouteHops) {
-            [asnSet addObject:node.asn];
+        for (int i = 0; i < self.tracerouteHops.size(); i++) {
+            NodePointer node = self.tracerouteHops.at(i);
+            [asnSet addObject:[NSString stringWithUTF8String:node->asn.c_str()]];
         }
         self.nodeInformationViewController.box2.numberLabel.text = [NSString stringWithFormat:@"%i", [asnSet count]];
 
@@ -760,9 +762,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self resizeNodeInfoPopover];
 
     //highlight last node if not already highlighted
-    Node* node = [self.tracerouteHops lastObject];
-    if (node.index != self.controller.targetNode) {
-        [self.tracerouteHops addObject:[self.data nodeAtIndex:self.controller.targetNode]];
+    NodePointer node = self.tracerouteHops.back();
+    if (node->index != self.controller.targetNode) {
+        self.tracerouteHops.push_back([self.data nodeAtIndex:self.controller.targetNode]);
         [self.controller highlightRoute:self.tracerouteHops];
     }
 
@@ -777,10 +779,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self resizeNodeInfoPopover];
 
     //highlight last node if not already highlighted
-    Node* node = [self.tracerouteHops lastObject];    
-    if (node.index != self.controller.targetNode) {
-        Node* targetNode = [self.data nodeAtIndex:self.controller.targetNode];
-        [self.tracerouteHops addObject:targetNode];
+    NodePointer node = self.tracerouteHops.back();
+    if (node->index != self.controller.targetNode) {
+        NodePointer targetNode = [self.data nodeAtIndex:self.controller.targetNode];
+        self.tracerouteHops.push_back(targetNode);
         [self.controller highlightRoute:self.tracerouteHops];
     }
 }
