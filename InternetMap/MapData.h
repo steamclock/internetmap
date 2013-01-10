@@ -9,8 +9,6 @@
 #include <map>
 #include "Node.hpp"
 
-@class MapDisplay;
-
 @interface MapData : NSObject
 
 @property (strong, nonatomic) NSObject<Visualization>* visualization;

@@ -7,7 +7,7 @@
 //
 
 #import "MapController.h"
-#import "MapDisplay.h"
+#import "MapDisplay.hpp"
 #import "MapData.h"
 #import "DefaultVisualization.h"
 #import "Nodes.hpp"
@@ -62,8 +62,10 @@ std::string loadTextResource(std::string base, std::string extension) {
 - (id)init{
     
     if (self = [super init]) {
-        self.display = [MapDisplay new];
+        self.display = std::shared_ptr<MapDisplay>(new MapDisplay);
         self.data = [MapData new];
+        
+        self.display->setDisplayScale([[UIScreen mainScreen] scale]);
         
         
         self.data.visualization = [DefaultVisualization new];
@@ -71,7 +73,7 @@ std::string loadTextResource(std::string base, std::string extension) {
         [self.data loadFromFile:[[NSBundle mainBundle] pathForResource:@"data" ofType:@"txt"]];
         [self.data loadFromAttrFile:[[NSBundle mainBundle] pathForResource:@"as2attr" ofType:@"txt"]];
         [self.data loadAsInfo:[[NSBundle mainBundle] pathForResource:@"asinfo" ofType:@"json"]];
-        [self.data updateDisplay:self.display];
+        [self.data updateDisplay:self.display.get()];
         
         self.targetNode = NSNotFound;
         self.hoveredNodeIndex = NSNotFound;
@@ -86,18 +88,18 @@ std::string loadTextResource(std::string base, std::string extension) {
 
 - (void)handleTouchDownAtPoint:(CGPoint)point {
     
-    if (!self.display.camera->isMovingToTarget()) {
+    if (!self.display->camera->isMovingToTarget()) {
         //cancel panning/zooming momentum
-        self.display.camera->stopMomentumPan();
-        self.display.camera->stopMomentumZoom();
-        self.display.camera->stopMomentumRotation();
+        self.display->camera->stopMomentumPan();
+        self.display->camera->stopMomentumZoom();
+        self.display->camera->stopMomentumRotation();
         
         int i = [self indexForNodeAtPoint:point];
         if (i != NSNotFound) {
             self.hoveredNodeIndex = i;
-            self.display.nodes->beginUpdate();
-            self.display.nodes->updateNode(i, UIColorToColor(SELECTED_NODE_COLOR));
-            self.display.nodes->endUpdate();
+            self.display->nodes->beginUpdate();
+            self.display->nodes->updateNode(i, UIColorToColor(SELECTED_NODE_COLOR));
+            self.display->nodes->endUpdate();
         }
     }
 }
@@ -117,7 +119,7 @@ std::string loadTextResource(std::string base, std::string extension) {
     if (self.hoveredNodeIndex != NSNotFound && self.hoveredNodeIndex != self.targetNode) {
         Node* node = [self.data nodeAtIndex:self.hoveredNodeIndex];
         
-        [self.data.visualization updateDisplay:self.display forNodes:@[node]];
+        [self.data.visualization updateDisplay:self.display.get() forNodes:@[node]];
         self.hoveredNodeIndex = NSNotFound;
     }
 }
@@ -129,7 +131,7 @@ std::string loadTextResource(std::string base, std::string extension) {
     if (self.targetNode != NSNotFound) {
         Node* node = [self.data nodeAtIndex:self.targetNode];
         
-        [self.data.visualization updateDisplay:self.display forNodes:@[node]];
+        [self.data.visualization updateDisplay:self.display.get() forNodes:@[node]];
     }
     
     //set new node as targeted and change camera anchor point
@@ -140,11 +142,11 @@ std::string loadTextResource(std::string base, std::string extension) {
         GLKVector3 origTarget = [self.data.visualization nodePosition:node];
         target = Vector3(origTarget.x, origTarget.y, origTarget.z);
         
-        self.display.nodes->beginUpdate();
-        self.display.nodes->updateNode(node.index, UIColorToColor([UIColor clearColor]));
-        self.display.nodes->endUpdate();
+        self.display->nodes->beginUpdate();
+        self.display->nodes->updateNode(node.index, UIColorToColor([UIColor clearColor]));
+        self.display->nodes->endUpdate();
         
-        [self.data.visualization resetDisplay:self.display forSelectedNodes:@[node]];
+        [self.data.visualization resetDisplay:self.display.get() forSelectedNodes:@[node]];
         
         [self highlightConnections:node];
         
@@ -152,7 +154,7 @@ std::string loadTextResource(std::string base, std::string extension) {
         target = Vector3(0, 0, 0);
     }
     
-    self.display.camera->setTarget(target);
+    self.display->camera->setTarget(target);
 }
 
 #pragma mark - Connection Highlighting
@@ -201,7 +203,7 @@ std::string loadTextResource(std::string base, std::string extension) {
     
     lines->endUpdate();
     lines->setWidth(((filteredConnections.count < 20) ? 2 : 1) * ([HelperMethods deviceIsRetina] ? 2 : 1));
-    self.display.highlightLines = lines;
+    self.display->highlightLines = lines;
 }
 
 
@@ -212,9 +214,9 @@ std::string loadTextResource(std::string base, std::string extension) {
             Node* node = [self.data nodeAtIndex:idx];
             [array addObject:node];
         }
-        [self.data.visualization updateDisplay:self.display forNodes:array];
+        [self.data.visualization updateDisplay:self.display.get() forNodes:array];
     }];
-    self.display.highlightLines = nil;
+    self.display->highlightLines = nil;
 }
 
 -(void)highlightRoute:(std::vector<NodePointer>)nodeList {
@@ -230,24 +232,24 @@ std::string loadTextResource(std::string base, std::string extension) {
     Color lineColor;
     [lineColorUI getRed:&lineColor.r green:&lineColor.g blue:&lineColor.b alpha:&lineColor.a];
 
-    self.display.nodes->beginUpdate();
+    self.display->nodes->beginUpdate();
     for(int i = 0; i < nodeList.count - 1; i++) {
         Node* a = nodeList[i];
         Node* b = nodeList[i+1];
-        self.display.nodes->updateNode(a.index, UIColorToColor(SELECTED_NODE_COLOR));
-        self.display.nodes->updateNode(b.index, UIColorToColor(SELECTED_NODE_COLOR));
+        self.display->nodes->updateNode(a.index, UIColorToColor(SELECTED_NODE_COLOR));
+        self.display->nodes->updateNode(b.index, UIColorToColor(SELECTED_NODE_COLOR));
         [self.highlightedNodes addIndex:a.index];
         [self.highlightedNodes addIndex:b.index];
         lines->updateLine(i, GLKVec3ToPoint([self.data.visualization nodePosition:a]), lineColor, GLKVec3ToPoint([self.data.visualization nodePosition:b]), lineColor);
     }
     
-    self.display.nodes->endUpdate();
+    self.display->nodes->endUpdate();
     
     
     lines->endUpdate();
     lines->setWidth([HelperMethods deviceIsRetina] ? 10.0 : 5.0);
     
-    self.display.highlightLines = lines;
+    self.display->highlightLines = lines;
     
     //highlight nodes
     
@@ -262,7 +264,7 @@ std::string loadTextResource(std::string base, std::string extension) {
     //get point in view and adjust it for viewport
     float xOld = pointInView.x;
     CGFloat xLoOld = 0;
-    CGFloat xHiOld = self.display.camera->displayWidth();
+    CGFloat xHiOld = self.display->camera->displayWidth();
     CGFloat xLoNew = -1;
     CGFloat xHiNew = 1;
     
@@ -270,14 +272,14 @@ std::string loadTextResource(std::string base, std::string extension) {
     
     float yOld = pointInView.y;
     CGFloat yLoOld = 0;
-    CGFloat yHiOld = self.display.camera->displayHeight();
+    CGFloat yHiOld = self.display->camera->displayHeight();
     CGFloat yLoNew = 1;
     CGFloat yHiNew = -1;
     
     pointInView.y = (yOld-yLoOld) / (yHiOld-yLoOld) * (yHiNew-yLoNew) + yLoNew;
     //transform point from screen- to object-space
-    Vector3 cameraInObjectSpace = self.display.camera->cameraInObjectSpace(); //A
-    Vector3 pointOnClipPlaneInObjectSpace = self.display.camera->applyModelViewToPoint(Vector2(pointInView.x, pointInView.y)); //B
+    Vector3 cameraInObjectSpace = self.display->camera->cameraInObjectSpace(); //A
+    Vector3 pointOnClipPlaneInObjectSpace = self.display->camera->applyModelViewToPoint(Vector2(pointInView.x, pointInView.y)); //B
     
     //do actual line-sphere intersection
     float xA, yA, zA;
@@ -321,7 +323,7 @@ std::string loadTextResource(std::string base, std::string extension) {
                 float delta = powf(b, 2)-4*a*c;
                 if (delta >= 0) {
                     //                    NSLog(@"intersected node %i: %@, delta: %f", i, NSStringFromGLKVector3(nodePosition), delta);
-                    Vector4 transformedNodePosition = self.display.camera->currentModelView() * Vector4(nodePosition.x, nodePosition.y, nodePosition.z, 1);
+                    Vector4 transformedNodePosition = self.display->camera->currentModelView() * Vector4(nodePosition.x, nodePosition.y, nodePosition.z, 1);
                     if ((delta > maxDelta) && (transformedNodePosition.getZ() < -0.1)) {
                         maxDelta = delta;
                         foundI = i;
@@ -342,14 +344,14 @@ std::string loadTextResource(std::string base, std::string extension) {
     
     GLKVector3 nodePosition = [self.data.visualization nodePosition:node];
     
-    Matrix4 mvp = self.display.camera->currentModelViewProjection();
+    Matrix4 mvp = self.display->camera->currentModelViewProjection();
 
     Vector4 proj = mvp * Vector4(nodePosition.x, nodePosition.y, nodePosition.z, 1.0f);
     proj /= proj.getW();
 
-    Vector2 coordinates(((proj.getX() / 2.0f) + 0.5f) * self.display.camera->displayWidth(), ((proj.getY() / 2.0f) + 0.5f) * self.display.camera->displayHeight());
+    Vector2 coordinates(((proj.getX() / 2.0f) + 0.5f) * self.display->camera->displayWidth(), ((proj.getY() / 2.0f) + 0.5f) * self.display->camera->displayHeight());
     
-    CGPoint point = CGPointMake(coordinates.x,self.display.camera->displayHeight() - coordinates.y);
+    CGPoint point = CGPointMake(coordinates.x,self.display->camera->displayHeight() - coordinates.y);
     
     //NSLog(@"%@", NSStringFromCGPoint(point));
     

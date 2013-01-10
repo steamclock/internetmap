@@ -7,8 +7,7 @@
 #import <GLKit/GLKit.h>
 
 class Node;
-
-@class MapDisplay;
+class MapDisplay;
 
 @protocol Visualization <NSObject>
 

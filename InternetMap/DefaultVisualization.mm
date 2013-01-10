@@ -4,7 +4,7 @@
 //
 
 #import "DefaultVisualization.h"
-#import "MapDisplay.h"
+#import "MapDisplay.hpp"
 #import "Node.hpp"
 #import "Lines.hpp"
 #import "Connection.h"
@@ -61,7 +61,7 @@ static Color UIColorToColor(UIColor* color) {
 
 
     
-    display.nodes->beginUpdate();
+    display->nodes->beginUpdate();
     
     for(int i = 0; i < arrNodes.count; i++) {
         Node* node = arrNodes[i];
@@ -91,33 +91,33 @@ static Color UIColorToColor(UIColor* color) {
                 break;
         }
         
-        display.nodes->updateNode(node.index, GLKVec3ToPoint([self nodePosition:node]), [self nodeSize:node], UIColorToColor(color)); // use index from node, not in array, so that partiual updates can work
+        display->nodes->updateNode(node.index, GLKVec3ToPoint([self nodePosition:node]), [self nodeSize:node], UIColorToColor(color)); // use index from node, not in array, so that partiual updates can work
         
     }
     
-    display.nodes->endUpdate();
+    display->nodes->endUpdate();
     
 }
 
 -(void)updateDisplay:(MapDisplay*)display forSelectedNodes:(NSArray*)arrNodes {
-    display.selectedNodes->beginUpdate();
+    display->selectedNodes->beginUpdate();
     for(int i = 0; i < arrNodes.count; i++) {
         Node* node = arrNodes[i];
         
-        display.selectedNodes->updateNode(i, GLKVec3ToPoint([self nodePosition:node]), [self nodeSize:node], UIColorToColor(SELECTED_NODE_COLOR));
+        display->selectedNodes->updateNode(i, GLKVec3ToPoint([self nodePosition:node]), [self nodeSize:node], UIColorToColor(SELECTED_NODE_COLOR));
         
     }
-    display.selectedNodes->endUpdate();
+    display->selectedNodes->endUpdate();
     
 }
 
 - (void)resetDisplay:(MapDisplay*)display forNodes:(NSArray*)arrNodes {
-    if (display.nodes) {
+    if (display->nodes) {
         //TODO: get assert back
-//        NSAssert(display.nodes->count == [arrNodes count], @"Display.nodes has already been allocated and you just tried to recreate it with a different count");
+//        NSAssert(display->nodes->count == [arrNodes count], @"display->nodes has already been allocated and you just tried to recreate it with a different count");
     }else {
         std::shared_ptr<Nodes> nodes(new Nodes([arrNodes count]));
-        display.nodes = nodes;
+        display->nodes = nodes;
     }
 
     
@@ -125,18 +125,24 @@ static Color UIColorToColor(UIColor* color) {
 }
 
 - (void)resetDisplay:(MapDisplay *)display forSelectedNodes:(NSArray*)arrNodes {
-    if (display.selectedNodes) {
+    if (display->selectedNodes) {
         //TODO: get assert back
-//        NSAssert([display.selectedNodes count] == [arrNodes count], @"Display.selectedNodes has already been allocated and you just tried to recreate it with a different count");
+//        NSAssert([display->selectedNodes count] == [arrNodes count], @"display->selectedNodes has already been allocated and you just tried to recreate it with a different count");
     }else {
         std::shared_ptr<Nodes> nodes(new Nodes([arrNodes count]));
-        display.selectedNodes = nodes;
+        display->selectedNodes = nodes;
     }
     
     [self updateDisplay:display forSelectedNodes:arrNodes];
 }
 
 -(void)updateLineDisplay:(MapDisplay*)display forConnections:(NSArray*)connections {
+    
+    if([HelperMethods deviceIsOld]) {
+        // No lines on 3GS, iPod 3rd Gen or iPad 1
+        return;
+    }
+    
     NSMutableArray* filteredConnections = [NSMutableArray new];
     
     // We are only drawing lines to nodes with > 0.01 importance, filter those out
@@ -176,7 +182,7 @@ static Color UIColorToColor(UIColor* color) {
     
     lines->endUpdate();;
     
-    display.visualizationLines = lines;
+    display->visualizationLines = lines;
 }
 
 @end
