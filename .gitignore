@@ -7,3 +7,8 @@
 project.xcworkspace
 xcuserdata
 .idea
+
+Android/bin
+Android/gen
+Android/libs
+Android/obj
