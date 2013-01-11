@@ -14,5 +14,6 @@ void main()
     float orad = 0.5;
     float alpha = 1.0 - clamp((dist - irad)/(orad - irad), 0.0, 1.0);
     if(alpha < 0.35) discard;
-    gl_FragColor = vec4(fragColor.r, fragColor.g, fragColor.b, fragColor.a);
+    float glow = 0.2 * clamp(1.0 - dist * 2.0, 0.0, 0.6);
+    gl_FragColor = vec4(fragColor.r + glow, fragColor.g + glow, fragColor.b + glow, fragColor.a);
 }

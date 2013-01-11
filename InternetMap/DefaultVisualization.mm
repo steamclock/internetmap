@@ -104,7 +104,7 @@ static Color UIColorToColor(UIColor* color) {
     for(int i = 0; i < arrNodes.size(); i++) {
         NodePointer node = arrNodes[i];
         
-        display->selectedNodes->updateNode(i, GLKVec3ToPoint([self nodePosition:node]), [self nodeSize:node], UIColorToColor(SELECTED_NODE_COLOR));
+        display->selectedNodes->updateNode(i, GLKVec3ToPoint([self nodePosition:node]), [self nodeSize:node] * 0.8, UIColorToColor(SELECTED_NODE_COLOR));
         
     }
     display->selectedNodes->endUpdate();
@@ -134,6 +134,19 @@ static Color UIColorToColor(UIColor* color) {
     }
     
     [self updateDisplay:display forSelectedNodes:arrNodes];
+}
+
+-(GLKVector3)pointOnSurfaceOfNodeSized:(float)nodeSize
+                            centeredAt:(GLKVector3)positionA
+                      connectedToPoint:(GLKVector3)positionB {
+    
+    float lineLength = GLKVector3Distance(positionA, positionB);
+    
+    //0.45 is magic number for showing connections from a deep node
+    float nodeRatio = 0.32; // Magic number to scale from node size to line length
+    
+    float offsetRatio = nodeRatio * nodeSize / lineLength;
+    return GLKVector3Lerp(positionA, positionB, offsetRatio);
 }
 
 -(void)updateLineDisplay:(MapDisplay*)display forConnections:(std::vector<ConnectionPointer>)connections {
@@ -178,7 +191,17 @@ static Color UIColorToColor(UIColor* color) {
         float lineImportanceB = MAX(b->importance - 0.01f, 0.0f) * 1.5f;
         Color lineColorB = Color(lineImportanceB, lineImportanceB, lineImportanceB, 1.0);
         
-        lines->updateLine(currentIndex, GLKVec3ToPoint([self nodePosition:a]), lineColorA, GLKVec3ToPoint([self nodePosition:b]), lineColorB);
+        GLKVector3 positionA = [self nodePosition:a];
+        GLKVector3 positionB = [self nodePosition:b];
+        
+        GLKVector3 outsideA = [self pointOnSurfaceOfNodeSized:[self nodeSize:a]
+                                                   centeredAt:positionA
+                                             connectedToPoint:positionB];
+        GLKVector3 outsideB = [self pointOnSurfaceOfNodeSized:[self nodeSize:b]
+                                                   centeredAt:positionB
+                                             connectedToPoint:positionA];
+        
+        lines->updateLine(currentIndex, GLKVec3ToPoint(outsideA), lineColorA, GLKVec3ToPoint(outsideB), lineColorB);
         currentIndex++;
     }
     

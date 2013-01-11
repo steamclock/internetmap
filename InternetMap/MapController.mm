@@ -145,7 +145,7 @@ std::string loadTextResource(std::string base, std::string extension) {
         target = Vector3(origTarget.x, origTarget.y, origTarget.z);
         
         self.display->nodes->beginUpdate();
-        self.display->nodes->updateNode(node->index, UIColorToColor([UIColor clearColor]));
+        self.display->nodes->updateNode(node->index, UIColorToColor(SELECTED_NODE_COLOR));
         self.display->nodes->endUpdate();
         
         std::vector<NodePointer> nodes;
@@ -178,6 +178,20 @@ std::string loadTextResource(std::string base, std::string extension) {
         }
     }
     
+
+    if (filteredConnections.count > 100) {
+        // Only show important ones
+        
+        NSMutableArray* importantConnections = [NSMutableArray new];
+        for (Connection* connection in filteredConnections) {
+            if((connection.first.importance > 0.01) && (connection.second.importance > 0.01)) {
+                [importantConnections addObject:connection];
+            }
+        }
+        
+        filteredConnections = importantConnections;
+    }
+    
     if(filteredConnections.size() == 0 || filteredConnections.size() > 100) {
         [self clearHighlightLines];
         return;
@@ -198,11 +212,25 @@ std::string loadTextResource(std::string base, std::string extension) {
         NodePointer a = connection->first;
         NodePointer b = connection->second;
         
+        // Draw lines from outside of nodes instead of center
+        GLKVector3 positionA = [self.data.visualization nodePosition:a];
+        GLKVector3 positionB = [self.data.visualization nodePosition:b];
+        
+        DefaultVisualization* defaultVis = (DefaultVisualization*)self.data.visualization; // pointOnSurfaceOfNodeSized should be moved into a utils class once C++ conversion is complete
+
+        GLKVector3 outsideA = [defaultVis pointOnSurfaceOfNodeSized:[defaultVis nodeSize:a]
+                                                   centeredAt:positionA
+                                             connectedToPoint:positionB];
+        GLKVector3 outsideB = [defaultVis pointOnSurfaceOfNodeSized:[defaultVis nodeSize:b]
+                                                   centeredAt:positionB
+                                             connectedToPoint:positionA];
+        
+        // The bright side is the current node
         if(node == a) {
-            lines->updateLine(i, GLKVec3ToPoint([self.data.visualization nodePosition:a]), brightColor, GLKVec3ToPoint([self.data.visualization nodePosition:b]), dimColor);
+            lines->updateLine(i, GLKVec3ToPoint(outsideA), brightColor, GLKVec3ToPoint(outsideB), dimColor);
         }
         else {
-            lines->updateLine(i, GLKVec3ToPoint([self.data.visualization nodePosition:a]), dimColor, GLKVec3ToPoint([self.data.visualization nodePosition:b]), brightColor);
+            lines->updateLine(i, GLKVec3ToPoint(outsideA), dimColor, GLKVec3ToPoint(outsideB), brightColor);
         }
     }
     
