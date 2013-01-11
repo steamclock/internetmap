@@ -3,6 +3,11 @@
 //  InternetMap
 //
 
+
+#ifndef InternetMap_MapDisplay_hpp
+#define InternetMap_MapDisplay_hpp
+
+
 #include "Types.hpp"
 #include <memory>
 
@@ -34,3 +39,5 @@ public:
     void update(TimeInterval currentTime);
     void draw(void);
 };
+
+#endif

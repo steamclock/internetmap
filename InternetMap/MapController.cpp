@@ -6,56 +6,44 @@
 //  Copyright (c) 2013 Peer1. All rights reserved.
 //
 
-#import "MapController.h"
-#import "MapDisplay.hpp"
-#import "MapData.h"
-#import "DefaultVisualization.h"
-#import "Nodes.hpp"
-#import "Camera.hpp"
-#import "Node.hpp"
-#import "Lines.hpp"
-#import "Connection.hpp"
-#import "IndexBox.h"
+#include "MapController.hpp"
+#include "MapDisplay.hpp"
+#include "MapData.hpp"
+#include "DefaultVisualization.hpp"
+#include "Nodes.hpp"
+#include "Camera.hpp"
+#include "Node.hpp"
+#include "Lines.hpp"
+#include "Connection.hpp"
+#include "IndexBox.hpp"
 
 #include <string>
 
-// Temp conversion functions while not everything is converted TODO: remove
-/// -----
-static Point3 GLKVec3ToPoint(const GLKVector3& in) {
-    return Point3(in.x, in.y, in.z);
-};
-
-static Color UIColorToColor(UIColor* color) {
-    float r;
-    float g;
-    float b;
-    float a;
-    [color getRed:&r green:&g blue:&b alpha:&a];
-    return Color(r, g, b, a);
-}
-
-
-static GLKVector3 Vec3ToGLK(const Vector3& in) {
-    return GLKVector3Make(in.getX(), in.getY(), in.getZ());
-};
 
 void cameraMoveFinishedCallback(void) {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"cameraMovementFinished" object:nil];
+    //TODO: implement
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"cameraMovementFinished" object:nil];
 }
 
 std::string loadTextResource(std::string base, std::string extension) {
-    NSString* path = [[NSBundle mainBundle] pathForResource:[NSString stringWithCString:base.c_str() encoding:NSUTF8StringEncoding] ofType:[NSString stringWithCString:extension.c_str() encoding:NSUTF8StringEncoding]];
-    NSString* contents = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-    if(!contents) {
-        return std::string("");
-    }
-    else {
-        return std::string([contents UTF8String]);
-    }
+//    NSString* path = [[NSBundle mainBundle] pathForResource:[NSString stringWithCString:base.c_str() encoding:NSUTF8StringEncoding] ofType:[NSString stringWithCString:extension.c_str() encoding:NSUTF8StringEncoding]];
+//    NSString* contents = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+//    if(!contents) {
+//        return std::string("");
+//    }
+//    else {
+//        return std::string([contents UTF8String]);
+//    }
+    
+    
+    //TODO: remove
+    return std::string("");
+
 }
 
 /// -----
 
+/*
 @implementation MapController
 
 
@@ -393,3 +381,5 @@ std::string loadTextResource(std::string base, std::string extension) {
 }
 
 @end
+ 
+*/

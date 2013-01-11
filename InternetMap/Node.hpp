@@ -49,7 +49,5 @@ public:
     
 };
 
-typedef std::shared_ptr<Node> NodePointer;
-
 
 #endif

@@ -7,14 +7,15 @@
 //
 
 #import "NodeTooltipViewController.h"
-#import "Node.hpp"
+#import "NodeWrapper.h"
+
 
 @interface NodeTooltipViewController ()
 @end
 
 @implementation NodeTooltipViewController
 
-- (id)initWithNode:(NodePointer)node
+- (id)initWithNode:(NodeWrapper*)node
 {
     self = [super init];
     if (self) {
@@ -34,10 +35,10 @@
     label.textColor = [UIColor whiteColor];
     label.textAlignment = UITextAlignmentCenter;
     label.font = [UIFont fontWithName:@"HelveticaNeue" size:22];
-    if ([HelperMethods isStringEmptyOrNil:[NSString stringWithUTF8String:self.node->textDescription.c_str()]]) {
-        label.text = [NSString stringWithFormat:@"AS%s", self.node->asn.c_str()];
+    if ([HelperMethods isStringEmptyOrNil:self.node.textDescription]) {
+        label.text = [NSString stringWithFormat:@"AS%@", self.node.asn];
     }else {
-        label.text = [NSString stringWithUTF8String:self.node->textDescription.c_str()];
+        label.text = self.node.textDescription;
     }
     [self.view addSubview:label];
 }

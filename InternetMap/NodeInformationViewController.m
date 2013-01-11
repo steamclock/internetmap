@@ -7,12 +7,12 @@
 //
 
 #import "NodeInformationViewController.h"
-#import "Node.hpp"
 #import "LabelNumberBoxView.h"
+#import "NodeWrapper.h"
 
 @interface NodeInformationViewController ()
 
-@property (nonatomic) NodePointer node;
+@property (nonatomic, strong) NodeWrapper* node;
 @property (nonatomic, strong) UIButton* doneButton;
 @property (nonatomic, assign) BOOL isDisplayingCurrentNode;
 @property (nonatomic, strong) NSMutableArray* firstGroupOfStrings;
@@ -30,7 +30,7 @@
 
 @implementation NodeInformationViewController
 
-- (id)initWithNode:(NodePointer)node isCurrentNode:(BOOL)isCurrent
+- (id)initWithNode:(NodeWrapper*)node isCurrentNode:(BOOL)isCurrent
 {
     self = [super init];
     if (self) {
@@ -42,9 +42,9 @@
         
         CGFloat height = 0;
         //create the first group of strings, like ASN and text description
-        NSString* asnText = [NSString stringWithFormat:@"AS%s", self.node->asn.c_str()];
+        NSString* asnText = [NSString stringWithFormat:@"AS%@", self.node.asn];
         self.firstGroupOfStrings = [NSMutableArray array];
-        NSString* textDescription = [NSString stringWithCString:self.node->textDescription.c_str() encoding:NSUTF8StringEncoding];
+        NSString* textDescription = self.node.textDescription;
         if (self.isDisplayingCurrentNode) {
             self.title = @"You are here.";
             if (![HelperMethods isStringEmptyOrNil:textDescription]) {
@@ -64,7 +64,7 @@
             [self.firstGroupOfStrings addObject:asnText];
         }
         
-        NSString* typeString = [NSString stringWithCString:self.node->typeString.c_str() encoding:NSUTF8StringEncoding];
+        NSString* typeString = self.node.typeString;
         if (![HelperMethods isStringEmptyOrNil:typeString]) {
             [self.firstGroupOfStrings addObject:typeString];
         }
@@ -141,8 +141,8 @@
     connectionsLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:18];
     connectionsLabel.textColor = FONT_COLOR_GRAY;
     connectionsLabel.backgroundColor = [UIColor clearColor];
-    NSString* conn = self.node->connections.size() == 1 ? @"Connection" : @"Connections";
-    connectionsLabel.text = [NSString stringWithFormat:@"%li %@", self.node->connections.size(), conn];
+    NSString* conn = self.node.numberOfConnections == 1 ? @"Connection" : @"Connections";
+    connectionsLabel.text = [NSString stringWithFormat:@"%i %@", self.node.numberOfConnections, conn];
     [self.scrollView addSubview:connectionsLabel];
     [self.infoLabels addObject:connectionsLabel];
     

@@ -3,28 +3,25 @@
 //  InternetMap
 //
 
-#import "DefaultVisualization.h"
-#import "MapDisplay.hpp"
-#import "Node.hpp"
-#import "Lines.hpp"
-#import "Connection.hpp"
-#import "Nodes.hpp"
+#include "DefaultVisualization.hpp"
+#include "MapDisplay.hpp"
+#include "Node.hpp"
+#include "Lines.hpp"
+#include "Connection.hpp"
+#include "Nodes.hpp"
+
+
 
 // Temp conversion function while note everything is converted TODO: remove
 
-static Point3 GLKVec3ToPoint(const GLKVector3& in) {
-    return Point3(in.x, in.y, in.z);
-};
 
-static Color UIColorToColor(UIColor* color) {
-    float r;
-    float g;
-    float b;
-    float a;
-    [color getRed:&r green:&g blue:&b alpha:&a];
-    return Color(r, g, b, a);
+
+
+Point3 DefaultVisualization::nodePosition(Node node) {
+    return Point3(log10f(node.importance)+2.0f, node.positionX, node.positionY);
 }
 
+/*
 
 @implementation DefaultVisualization
 
@@ -211,3 +208,4 @@ static Color UIColorToColor(UIColor* color) {
 }
 
 @end
+ */

@@ -10,10 +10,8 @@
 
 class Connection {
 public:
-    NodePointer first;
-    NodePointer second;
+    Node first;
+    Node second;
 };
-
-typedef std::shared_ptr<Connection> ConnectionPointer;
 
 #endif

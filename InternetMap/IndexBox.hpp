@@ -9,8 +9,6 @@
 #ifndef InternetMap_IndexBox_hpp
 #define InternetMap_IndexBox_hpp
 
-#import <Foundation/Foundation.h>
-#import <GLKit/GLKit.h>
 #include "Types.hpp"
 #include <set>
 

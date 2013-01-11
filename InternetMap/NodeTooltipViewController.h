@@ -7,12 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#include "Node.hpp"
+
+@class NodeWrapper;
 
 @interface NodeTooltipViewController : UIViewController
 
-@property (nonatomic) NodePointer node;
+@property (nonatomic) NodeWrapper* node;
 
-- (id)initWithNode:(NodePointer)node;
+- (id)initWithNode:(NodeWrapper*)node;
 
 @end
