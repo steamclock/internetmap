@@ -68,7 +68,7 @@
 		11D38FE9169CA3DC00225B19 /* timeline-play.png in Resources */ = {isa = PBXBuildFile; fileRef = 11D38FE7169CA3DC00225B19 /* timeline-play.png */; };
 		11D38FEA169CA3DC00225B19 /* timeline-play@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 11D38FE8169CA3DC00225B19 /* timeline-play@2x.png */; };
 		11D4CFBC1677B67200ED328D /* SCDispatchQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 11D4CFBB1677B67200ED328D /* SCDispatchQueue.m */; };
-		11D4CFC41677DAE400ED328D /* IndexBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 11D4CFC31677DAE400ED328D /* IndexBox.m */; };
+		11D4CFC41677DAE400ED328D /* IndexBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 11D4CFC31677DAE400ED328D /* IndexBox.cpp */; };
 		11FFB390167FC3CE00309545 /* Nodes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 11FFB38F167FC3CD00309545 /* Nodes.cpp */; };
 		1FA5962E167931F800C7E703 /* asinfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 1FA5962D167931F800C7E703 /* asinfo.json */; };
 		1FFD9C87165C9E7400FED149 /* as2attr.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1FFD9C86165C9E7400FED149 /* as2attr.txt */; };
@@ -208,8 +208,8 @@
 		11D38FE8169CA3DC00225B19 /* timeline-play@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "timeline-play@2x.png"; path = "Images/timeline-play@2x.png"; sourceTree = "<group>"; };
 		11D4CFBA1677B67200ED328D /* SCDispatchQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCDispatchQueue.h; sourceTree = "<group>"; };
 		11D4CFBB1677B67200ED328D /* SCDispatchQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCDispatchQueue.m; sourceTree = "<group>"; };
-		11D4CFC21677DAE400ED328D /* IndexBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IndexBox.h; sourceTree = "<group>"; };
-		11D4CFC31677DAE400ED328D /* IndexBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IndexBox.m; sourceTree = "<group>"; };
+		11D4CFC21677DAE400ED328D /* IndexBox.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = IndexBox.hpp; sourceTree = "<group>"; };
+		11D4CFC31677DAE400ED328D /* IndexBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IndexBox.cpp; sourceTree = "<group>"; };
 		11DB60B6169F635200E5986D /* CPPHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPPHelpers.h; sourceTree = "<group>"; };
 		11FFB38E167FC3CD00309545 /* Nodes.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Nodes.hpp; sourceTree = "<group>"; };
 		11FFB38F167FC3CD00309545 /* Nodes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Nodes.cpp; sourceTree = "<group>"; };
@@ -528,8 +528,8 @@
 				A6D54A8E1654532100028B51 /* MapData.mm */,
 				A6D54A8A16544DBF00028B51 /* MapDisplay.hpp */,
 				A6D54A8B16544DBF00028B51 /* MapDisplay.cpp */,
-				11D4CFC21677DAE400ED328D /* IndexBox.h */,
-				11D4CFC31677DAE400ED328D /* IndexBox.m */,
+				11D4CFC21677DAE400ED328D /* IndexBox.hpp */,
+				11D4CFC31677DAE400ED328D /* IndexBox.cpp */,
 				A6B56BF0165AE28A00DDE753 /* Node.hpp */,
 				A6B56BF1165AE28A00DDE753 /* Node.cpp */,
 				A6E6DB6A1676B6C700B78F44 /* Connection.hpp */,
@@ -823,7 +823,7 @@
 				11D4CFBC1677B67200ED328D /* SCDispatchQueue.m in Sources */,
 				A6E6DB681676A0CE00B78F44 /* Lines.cpp in Sources */,
 				A6E6DB6C1676B6C800B78F44 /* Connection.cpp in Sources */,
-				11D4CFC41677DAE400ED328D /* IndexBox.m in Sources */,
+				11D4CFC41677DAE400ED328D /* IndexBox.cpp in Sources */,
 				D46808FD1679560A00A2C1CC /* SCPacketUtility.m in Sources */,
 				D46808FE1679560A00A2C1CC /* SCTraceroute.m in Sources */,
 				113D861916795AB900A15888 /* ASNRequest.m in Sources */,

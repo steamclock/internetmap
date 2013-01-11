@@ -7,7 +7,7 @@
 #import "Node.hpp"
 #import "Lines.hpp"
 #import "Connection.hpp"
-#import "IndexBox.h"
+#include "IndexBox.hpp"
 
 @interface MapData ()
 @end
@@ -71,10 +71,10 @@
             float y = IndexBoxMinY + boxSizeYWithoutOverlap*j;
             for(int i = 0; i < numberOfCellsX; i++) {
                 float x = IndexBoxMinX + boxSizeXWithoutOverlap*i;
-                IndexBox* box = [[IndexBox alloc] init];
-                box.center = GLKVector3Make(x+boxSizeXWithoutOverlap/2, y+boxSizeYWithoutOverlap/2, z+boxSizeZWithoutOverlap/2);
-                box.minCorner = GLKVector3Make(x, y, z);
-                box.maxCorner = GLKVector3Make(x+boxSizeXWithoutOverlap, y+boxSizeYWithoutOverlap, z+boxSizeZWithoutOverlap);
+                IndexBoxPointer box = IndexBoxPointer(new IndexBox());
+                box->setCenter(Point3(x+boxSizeXWithoutOverlap/2, y+boxSizeYWithoutOverlap/2, z+boxSizeZWithoutOverlap/2));
+                box->setMinCorner(Point3(x, y, z));
+                box->setMaxCorner(Point3(x+boxSizeXWithoutOverlap, y+boxSizeYWithoutOverlap, z+boxSizeZWithoutOverlap));
                 [self.boxesForNodes addObject:box];
             }
         }
