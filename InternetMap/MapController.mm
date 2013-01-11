@@ -173,6 +173,19 @@ std::string loadTextResource(std::string base, std::string extension) {
         }
     }
     
+    if (filteredConnections.count > 100) {
+        // Only show important ones
+        
+        NSMutableArray* importantConnections = [NSMutableArray new];
+        for (Connection* connection in filteredConnections) {
+            if((connection.first.importance > 0.01) && (connection.second.importance > 0.01)) {
+                [importantConnections addObject:connection];
+            }
+        }
+        
+        filteredConnections = importantConnections;
+    }
+    
     if(filteredConnections.count == 0 || filteredConnections.count > 100) {
         [self clearHighlightLines];
         return;
