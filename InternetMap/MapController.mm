@@ -143,7 +143,7 @@ std::string loadTextResource(std::string base, std::string extension) {
         target = Vector3(origTarget.x, origTarget.y, origTarget.z);
         
         self.display->nodes->beginUpdate();
-        self.display->nodes->updateNode(node.index, UIColorToColor([UIColor clearColor]));
+        self.display->nodes->updateNode(node.index, UIColorToColor(SELECTED_NODE_COLOR));
         self.display->nodes->endUpdate();
         
         [self.data.visualization resetDisplay:self.display.get() forSelectedNodes:@[node]];
