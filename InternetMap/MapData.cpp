@@ -85,33 +85,33 @@ void MapData::loadFromString(std::string json) {
 }
 
 void MapData::loadFromAttrString(std::string json){
-//    NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
-//    
-//    NSDictionary *asTypeDict = [NSDictionary dictionaryWithObjectsAndKeys:
-//                                [NSNumber numberWithInt:AS_UNKNOWN], @"abstained",
-//                                [NSNumber numberWithInt:AS_T1], @"t1",
-//                                [NSNumber numberWithInt:AS_T2], @"t2",
-//                                [NSNumber numberWithInt:AS_COMP], @"comp",
-//                                [NSNumber numberWithInt:AS_EDU], @"edu",
-//                                [NSNumber numberWithInt:AS_IX], @"ix",
-//                                [NSNumber numberWithInt:AS_NIC], @"nic",
-//                                nil];
-//    
-//    NSString *fileContents = [NSString stringWithContentsOfFile:filename encoding:NSUTF8StringEncoding error:NULL];
-//    NSArray *lines = [fileContents componentsSeparatedByString:@"\n"];
-//    
-//    for(NSString *line in lines) {
-//        NSArray* asDesc = [line componentsSeparatedByString:@"\t"];
-//        
-//        NodePointer node = self.nodesByAsn[std::string([[asDesc objectAtIndex:0] UTF8String])];
-//        if(node){
-//            node->type = [[asTypeDict objectForKey: [asDesc objectAtIndex:7]] intValue];
-//            node->typeString = std::string([[asDesc objectAtIndex:7] UTF8String]);
-//            node->textDescription = std::string([[asDesc objectAtIndex:1] UTF8String]);
-//        }
-//    }
-//    
-//    
+    std::map<std::string, int> asTypeDict;
+    asTypeDict.insert(std::make_pair("abstained", AS_UNKNOWN));
+    asTypeDict.insert(std::make_pair("t1", AS_T1));
+    asTypeDict.insert(std::make_pair("t2", AS_T2));
+    asTypeDict.insert(std::make_pair("comp", AS_COMP));
+    asTypeDict.insert(std::make_pair("edu", AS_EDU));
+    asTypeDict.insert(std::make_pair("ix", AS_IX));
+    asTypeDict.insert(std::make_pair("nic", AS_NIC));
+    
+    std::vector<std::string> lines;
+    split(lines, json, "\n");
+
+    for(int i = 0; i < lines.size(); i++) {
+        
+        std::string line = lines[i];
+        std::vector<std::string> aDesc;
+        split(aDesc, line, "\t");
+        NodePointer node = nodesByAsn[aDesc[0]];
+        
+        if(node){
+            
+            node->type = asTypeDict[aDesc[7]];
+            node->typeString = aDesc[7];
+            node->textDescription = aDesc[1];
+        }
+    }
+
 //    NSLog(@"attr load : %.2fms", ([NSDate timeIntervalSinceReferenceDate] - start) * 1000.0f);
 
 }
