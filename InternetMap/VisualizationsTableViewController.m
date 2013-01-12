@@ -11,6 +11,7 @@
 @interface VisualizationsTableViewController ()
 
 @property (nonatomic, assign) int selectedRow;
+@property (nonatomic, strong) NSArray* visualizationOptions;
 
 @end
 
@@ -21,6 +22,8 @@
     self = [super initWithStyle:style];
     if (self) {
         self.contentSizeForViewInPopover = CGSizeMake(320, 150);
+        
+        self.visualizationOptions = @[@"Network View", @"Globe View"];
     }
     return self;
 }
@@ -48,7 +51,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 5;
+    return self.visualizationOptions.count;
 }
 
 #define DIVIDER_TAG 2
@@ -88,7 +91,7 @@
     }
     
     
-    cell.textLabel.text = [NSString stringWithFormat:@"Visualization %i", indexPath.row];
+    cell.textLabel.text = [self.visualizationOptions objectAtIndex:indexPath.row];
 
 
 
