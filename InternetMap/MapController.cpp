@@ -42,12 +42,9 @@ std::string loadTextResource(std::string base, std::string extension) {
 }
 
 MapController::MapController(){
-    data = MapData();
-}
-
-
-void MapController::loadNodesFromString(std::string json) {
-    data.loadFromString(json);
+    data = std::shared_ptr<MapData>(new MapData());
+    display = std::shared_ptr<MapDisplay>(new MapDisplay());
+    data->visualization = VisualizationPointer(new DefaultVisualization());
 }
 
 /// -----
@@ -59,16 +56,6 @@ void MapController::loadNodesFromString(std::string json) {
 - (id)init{
     
     if (self = [super init]) {
-        self.display = std::shared_ptr<MapDisplay>(new MapDisplay);
-        self.data = [MapData new];
-        
-        self.display->setDisplayScale([[UIScreen mainScreen] scale]);
-        
-        
-        self.data.visualization = [DefaultVisualization new];
-        
-        [self.data loadFromFile:[[NSBundle mainBundle] pathForResource:@"data" ofType:@"txt"]];
-        [self.data loadFromAttrFile:[[NSBundle mainBundle] pathForResource:@"as2attr" ofType:@"txt"]];
         [self.data loadAsInfo:[[NSBundle mainBundle] pathForResource:@"asinfo" ofType:@"json"]];
         [self.data updateDisplay:self.display.get()];
         

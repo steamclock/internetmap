@@ -120,7 +120,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     self.controller = [MapControllerWrapper new];
     
-//    self.data = self.controller.data;
     
     //add gesture recognizers
     self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];

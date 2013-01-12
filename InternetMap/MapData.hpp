@@ -14,12 +14,13 @@
 #include "Types.hpp"
 #include "IndexBox.hpp"
 #include "MapDisplay.hpp"
+#include "Visualization.hpp"
 
 class MapData {
     IndexBox indexBoxForPoint(const Point3& point);
     void createNodeBoxes();
 public:
-    
+    VisualizationPointer visualization;
     
     std::vector<NodePointer> nodes;
     std::map<std::string, NodePointer> nodesByAsn;
@@ -29,7 +30,7 @@ public:
     void loadFromString(std::string json);
     void loadFromAttrString(std::string json);
     void loadASInfo(std::string json);
-    void updateDisplay(MapDisplay* display);
+    void updateDisplay(std::shared_ptr<MapDisplay> display);
     
     NodePointer nodeAtIndex(unsigned int index);
     

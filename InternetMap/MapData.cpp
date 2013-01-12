@@ -72,8 +72,8 @@ void MapData::loadFromString(std::string json) {
 
         ConnectionPointer connection(new Connection());
         
-        connection->first = nodesByAsn[connectionDesc[0]].get();
-        connection->second = nodesByAsn[connectionDesc[1]].get();
+        connection->first = nodesByAsn[connectionDesc[0]];
+        connection->second = nodesByAsn[connectionDesc[1]];
         connection->first->connections.push_back(connection);
         connection->second->connections.push_back(connection);
         connections.push_back(connection);
@@ -117,6 +117,8 @@ void MapData::loadFromAttrString(std::string json){
 }
 
 void MapData::loadASInfo(std::string json){
+    
+    
 //    NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
 //    
 //    NSString *fileContents = [NSString stringWithContentsOfFile:filename encoding:NSUTF8StringEncoding error:NULL];
@@ -145,12 +147,12 @@ void MapData::loadASInfo(std::string json){
     
 }
 
-void MapData::updateDisplay(MapDisplay* display){
+void MapData::updateDisplay(std::shared_ptr<MapDisplay> display){
+
 
 //    NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
-//    [self.visualization resetDisplay:display forNodes:self.nodes];
-//    [self.visualization updateLineDisplay:display forConnections:self.connections];
-//    
+    visualization->resetDisplayForNodes(display, nodes);
+    visualization->updateLineDisplay(display, connections);
 //    NSLog(@"update display : %.2fms", ([NSDate timeIntervalSinceReferenceDate] - start) * 1000.0f);
 
 }

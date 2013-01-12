@@ -14,13 +14,13 @@
 
 //#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
-class DefaultVisualization : Visualization {
-    virtual Point3 nodePosition(Node node);
-    virtual float nodeSize(Node node);
-    virtual void updateDisplayForNodes(MapDisplay display, std::vector<Node> nodes);
-    virtual void resetDisplayForNodes(MapDisplay display, std::vector<Node> nodes);
-    virtual void resetDisplayForSelectedNodes(MapDisplay display, std::vector<Node> nodes);
-    virtual void updateLineDisplay(MapDisplay display, std::vector<Connection>connections);
+class DefaultVisualization : public Visualization {
+    virtual Point3 nodePosition(NodePointer node);
+    virtual float nodeSize(NodePointer node);
+    virtual void updateDisplayForNodes(std::shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes);
+    virtual void resetDisplayForNodes(std::shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes);
+    virtual void resetDisplayForSelectedNodes(std::shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes);
+    virtual void updateLineDisplay(std::shared_ptr<MapDisplay> display, std::vector<ConnectionPointer>connections);
     
     Point3 pointOnSurfaceOfNode(float nodeSize, const Point3& centeredAt, const Point3& connectedToPoint);
 };

@@ -12,8 +12,8 @@ class Node;
 
 class Connection {
 public:
-    Node* first;
-    Node* second;
+    std::shared_ptr<Node> first;
+    std::shared_ptr<Node> second;
 };
 
 typedef std::shared_ptr<Connection> ConnectionPointer;

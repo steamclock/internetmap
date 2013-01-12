@@ -19,14 +19,13 @@ class MapController {
 public:
     MapController();
     
-    MapDisplay display;
-    MapData data;
+    std::shared_ptr<MapDisplay> display;
+    std::shared_ptr<MapData> data;
     unsigned int targetNode;
     int hoveredNodeIndex;
     std::set<int> highlightedNodes;
     std::string lastSearchIP;
     
-    void loadNodesFromString(std::string json);
     
     void unhoverNode();
     void updateTargetForIndex(int index);

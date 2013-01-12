@@ -8,7 +8,7 @@
 
 #import "MapControllerWrapper.h"
 #include "MapController.hpp"
-
+#include "Camera.hpp"
 
 @interface MapControllerWrapper()
 
@@ -25,7 +25,14 @@
         
         NSString *filePath = [[NSBundle mainBundle] pathForResource:@"data" ofType:@"txt"];
         NSString *fileContents = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:NULL];
-        _controller->loadNodesFromString(std::string([fileContents UTF8String]));
+        _controller->data->loadFromString(std::string([fileContents UTF8String]));
+        filePath = [[NSBundle mainBundle] pathForResource:@"as2attr" ofType:@"txt"];
+        fileContents = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:NULL];
+        _controller->data->loadFromAttrString(std::string([fileContents UTF8String]));
+        
+        _controller->display->setDisplayScale([[UIScreen mainScreen] scale]);
+        _controller->data->updateDisplay(_controller->display);
+        
     }
     
     return self;
@@ -35,6 +42,9 @@
     delete _controller;
 }
 
+- (void)setDisplaySize:(CGSize)displaySize {
+    _controller->display->camera->setDisplaySize(displaySize.width, displaySize.height);
+}
 
 - (void)setAllowIdleAnimation:(BOOL)allow{
     
@@ -44,10 +54,10 @@
 
 }
 - (void)update:(NSTimeInterval)now{
-
+    _controller->display->camera->update(now);
 }
 - (void)draw{
-
+    _controller->display->draw();
 }
 - (void)zoomAnimated:(float)zoom duration:(NSTimeInterval)duration{
 
