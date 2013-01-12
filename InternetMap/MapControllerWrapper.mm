@@ -22,6 +22,10 @@
 - (id)init {
     if (self = [super init]) {
         _controller = new MapController();
+        
+        NSString *filePath = [[NSBundle mainBundle] pathForResource:@"data" ofType:@"txt"];
+        NSString *fileContents = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:NULL];
+        _controller->loadNodesFromString(std::string([fileContents UTF8String]));
     }
     
     return self;
@@ -33,7 +37,7 @@
 
 
 - (void)setAllowIdleAnimation:(BOOL)allow{
-
+    
 }
 
 - (void)resetIdleTimer{

@@ -9,51 +9,78 @@
 #include "Connection.hpp"
 #include "IndexBox.hpp"
 #include "MapDisplay.hpp"
+#include <sstream>
+#include <stdlib.h>
 
-Node MapData::nodeAtIndex(unsigned int index) {
+NodePointer MapData::nodeAtIndex(unsigned int index) {
     return nodes[index];
 }
 
+void split( std::vector<std::string> & theStringVector,  /* Altered/returned value */
+      const  std::string  & theString,
+      const  std::string  & theDelimiter)
+{
+    size_t  start = 0, end = 0;
+    
+    while ( end != std::string::npos)
+    {
+        end = theString.find( theDelimiter, start);
+        
+        // If at end, use length=maxLength.  Else use length=end-start.
+        theStringVector.push_back( theString.substr( start,
+                                                    (end == std::string::npos) ? std::string::npos : end - start));
+        
+        // If at end, use start=maxSize.  Else use start=end+delimiter.
+        start = (   ( end > (std::string::npos - theDelimiter.size()) )
+                 ?  std::string::npos  :  end + theDelimiter.size());
+    }
+}
+
 void MapData::loadFromString(std::string json) {
+    
 //    NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
-//    
-//    NSString *fileContents = [NSString stringWithContentsOfFile:filename encoding:NSUTF8StringEncoding error:NULL];
-//    NSArray *lines = [fileContents componentsSeparatedByString:@"\n"];
-//    
-//    NSArray* header = [[lines objectAtIndex:0] componentsSeparatedByString:@"  "];
-//    int numNodes = [[header objectAtIndex:0] intValue];
-//    int numConnections = [[header objectAtIndex:1] intValue];
-//    
-//    self.testNodes = std::shared_ptr<std::vector<NodePointer>>(new std::vector<NodePointer>());
-//    for (int i = 0; i < numNodes; i++) {
-//        NSArray* nodeDesc = [[lines objectAtIndex:1 + i] componentsSeparatedByString:@" "];
-//        
-//        NodePointer node = NodePointer(new Node());
-//        node->asn = std::string([[nodeDesc objectAtIndex:0] UTF8String]);
-//        node->index = i;
-//        node->importance = [[nodeDesc objectAtIndex:1] floatValue];
-//        node->positionX = [[nodeDesc objectAtIndex:2] floatValue];
-//        node->positionY = [[nodeDesc objectAtIndex:3] floatValue];
-//        node->type = AS_UNKNOWN;
-//        
-//        self.testNodes->push_back(node);
-//        [self nodes].push_back(node);
-//        self.nodesByAsn.insert(std::make_pair(node->asn, node));
-//    }
-//    
-//    for (int i = 0; i < numConnections; i++) {
-//        NSArray* connectionDesc = [[lines objectAtIndex:1 + numNodes + i] componentsSeparatedByString:@" "];
-//        
-//        ConnectionPointer connection = ConnectionPointer(new Connection());
-//        connection->first = self.nodesByAsn[std::string([[connectionDesc objectAtIndex:0] UTF8String])];
-//        connection->second = self.nodesByAsn[std::string([[connectionDesc objectAtIndex:1] UTF8String])];
-//        connection->first->connections.push_back(connection);
-//        connection->second->connections.push_back(connection);
-//        self.connections.push_back(connection);
-//    }
-//    
-//    [self createNodeBoxes];
-//    
+    
+    std::vector<std::string> lines;
+    split(lines, json, "\n");
+    std::vector<std::string> header;
+    split(header, lines[0], "  ");
+    int numNodes;
+    std::stringstream(header[0]) >> numNodes;
+    int numConnections;
+    std::stringstream(header[1]) >> numConnections;
+    
+    for (int i = 0; i < numNodes; i++) {
+        std::vector<std::string> nodeDesc;
+        split(nodeDesc, lines[i+1], " ");
+        
+        NodePointer node(new Node());
+        node->asn = nodeDesc[0];
+        node->index = i;
+        node->importance = ::atof(nodeDesc[1].c_str());
+        node->positionX = ::atof(nodeDesc[2].c_str());
+        node->positionY = ::atof(nodeDesc[3].c_str());
+        node->type = AS_UNKNOWN;
+        
+        nodes.push_back(node);
+        nodesByAsn.insert(std::make_pair(node->asn, node));
+    }
+    
+
+    for (int i = 0; i < numConnections; i++) {
+        std::vector<std::string> connectionDesc;
+        split(connectionDesc, lines[1 + numNodes + i], " ");
+
+        ConnectionPointer connection(new Connection());
+        
+        connection->first = nodesByAsn[connectionDesc[0]].get();
+        connection->second = nodesByAsn[connectionDesc[1]].get();
+        connection->first->connections.push_back(connection);
+        connection->second->connections.push_back(connection);
+        connections.push_back(connection);
+    }
+
+    createNodeBoxes();
+    
 //    NSLog(@"load : %.2fms", ([NSDate timeIntervalSinceReferenceDate] - start) * 1000.0f);
 }
 

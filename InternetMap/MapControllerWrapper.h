@@ -20,6 +20,7 @@
 @property (nonatomic) int hoveredNodeIndex;
 @property (strong) NSString* lastSearchIP;
 
+
 - (void)setAllowIdleAnimation:(BOOL)allow;
 - (void)resetIdleTimer;
 - (void)update:(NSTimeInterval)now;

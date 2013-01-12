@@ -22,6 +22,9 @@
 		1127C9C716A0B7C100413FE9 /* MapControllerWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1127C9C616A0B7C100413FE9 /* MapControllerWrapper.mm */; };
 		1127C9CB16A0B9C500413FE9 /* NodeWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1127C9CA16A0B9C500413FE9 /* NodeWrapper.mm */; };
 		1127C9CE16A0B9D700413FE9 /* ConnectionWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1127C9CD16A0B9D700413FE9 /* ConnectionWrapper.mm */; };
+		1127C9DC16A0D3A500413FE9 /* jsoncpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1127C9D916A0D3A500413FE9 /* jsoncpp.cpp */; };
+		1127C9DD16A0D3A500413FE9 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1127C9DA16A0D3A500413FE9 /* README.txt */; };
+		1127C9DE16A0D3A500413FE9 /* version in Resources */ = {isa = PBXBuildFile; fileRef = 1127C9DB16A0D3A500413FE9 /* version */; };
 		113D861916795AB900A15888 /* ASNRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 113D861816795AB900A15888 /* ASNRequest.m */; };
 		114DD472167AA62D0061CB36 /* ASIAuthenticationDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 114DD45C167AA62D0061CB36 /* ASIAuthenticationDialog.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		114DD473167AA62D0061CB36 /* ASIDataCompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 114DD45F167AA62D0061CB36 /* ASIDataCompressor.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -150,6 +153,11 @@
 		1127C9CC16A0B9D700413FE9 /* ConnectionWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectionWrapper.h; sourceTree = "<group>"; };
 		1127C9CD16A0B9D700413FE9 /* ConnectionWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ConnectionWrapper.mm; sourceTree = "<group>"; };
 		1127C9D416A0CD7700413FE9 /* Conversions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Conversions.h; sourceTree = "<group>"; };
+		1127C9D716A0D3A500413FE9 /* json-forwards.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "json-forwards.h"; sourceTree = "<group>"; };
+		1127C9D816A0D3A500413FE9 /* json.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = json.h; sourceTree = "<group>"; };
+		1127C9D916A0D3A500413FE9 /* jsoncpp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jsoncpp.cpp; sourceTree = "<group>"; };
+		1127C9DA16A0D3A500413FE9 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		1127C9DB16A0D3A500413FE9 /* version */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = version; sourceTree = "<group>"; };
 		113D861716795AB900A15888 /* ASNRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASNRequest.h; sourceTree = "<group>"; };
 		113D861816795AB900A15888 /* ASNRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNRequest.m; sourceTree = "<group>"; };
 		114DD45B167AA62D0061CB36 /* ASIAuthenticationDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIAuthenticationDialog.h; sourceTree = "<group>"; };
@@ -368,7 +376,7 @@
 			name = WEPopover;
 			sourceTree = "<group>";
 		};
-		1127C9CF16A0BBFB00413FE9 /* C++ Wrappers */ = {
+		1127C9CF16A0BBFB00413FE9 /* Objective-C++ Wrappers */ = {
 			isa = PBXGroup;
 			children = (
 				1127C9CC16A0B9D700413FE9 /* ConnectionWrapper.h */,
@@ -379,12 +387,25 @@
 				1127C9C616A0B7C100413FE9 /* MapControllerWrapper.mm */,
 				1127C9D416A0CD7700413FE9 /* Conversions.h */,
 			);
-			name = "C++ Wrappers";
+			name = "Objective-C++ Wrappers";
+			sourceTree = "<group>";
+		};
+		1127C9D616A0D3A500413FE9 /* jsoncpp */ = {
+			isa = PBXGroup;
+			children = (
+				1127C9D716A0D3A500413FE9 /* json-forwards.h */,
+				1127C9D816A0D3A500413FE9 /* json.h */,
+				1127C9D916A0D3A500413FE9 /* jsoncpp.cpp */,
+				1127C9DA16A0D3A500413FE9 /* README.txt */,
+				1127C9DB16A0D3A500413FE9 /* version */,
+			);
+			path = jsoncpp;
 			sourceTree = "<group>";
 		};
 		114DD459167AA62D0061CB36 /* ExternalCode */ = {
 			isa = PBXGroup;
 			children = (
+				1127C9D616A0D3A500413FE9 /* jsoncpp */,
 				A6191830169DE85F003A3A4A /* vectormath */,
 				110F6AE5167BD1AE00D5907E /* WEPopover */,
 				114DD45A167AA62D0061CB36 /* ASIHTTPRequest */,
@@ -653,7 +674,7 @@
 				11D4CFBB1677B67200ED328D /* SCDispatchQueue.m */,
 				116E597F16828AC300F653BC /* UIView+Convenience.h */,
 				116E598016828AC300F653BC /* UIView+Convenience.m */,
-				1127C9CF16A0BBFB00413FE9 /* C++ Wrappers */,
+				1127C9CF16A0BBFB00413FE9 /* Objective-C++ Wrappers */,
 				D4D17D20166EA621003A489C /* XIBs */,
 			);
 			name = UI;
@@ -822,6 +843,8 @@
 				11754307169BBCCD008150BB /* youarehere-icon@2x.png in Resources */,
 				11D38FE9169CA3DC00225B19 /* timeline-play.png in Resources */,
 				11D38FEA169CA3DC00225B19 /* timeline-play@2x.png in Resources */,
+				1127C9DD16A0D3A500413FE9 /* README.txt in Resources */,
+				1127C9DE16A0D3A500413FE9 /* version in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -874,6 +897,7 @@
 				1127C9C716A0B7C100413FE9 /* MapControllerWrapper.mm in Sources */,
 				1127C9CB16A0B9C500413FE9 /* NodeWrapper.mm in Sources */,
 				1127C9CE16A0B9D700413FE9 /* ConnectionWrapper.mm in Sources */,
+				1127C9DC16A0D3A500413FE9 /* jsoncpp.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

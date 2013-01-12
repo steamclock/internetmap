@@ -9,8 +9,7 @@
 
 #include <string>
 #include <vector>
-
-class Connection;
+#include "Connection.hpp"
 
 enum
 {
@@ -45,9 +44,11 @@ public:
     std::string postalCode;
     std::string country;
     
-    std::vector<std::shared_ptr<Connection>> connections;
+    std::vector<ConnectionPointer> connections;
     
 };
 
+
+typedef std::shared_ptr<Node> NodePointer;
 
 #endif

@@ -41,6 +41,15 @@ std::string loadTextResource(std::string base, std::string extension) {
 
 }
 
+MapController::MapController(){
+    data = MapData();
+}
+
+
+void MapController::loadNodesFromString(std::string json) {
+    data.loadFromString(json);
+}
+
 /// -----
 
 /*

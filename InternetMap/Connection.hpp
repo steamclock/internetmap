@@ -6,12 +6,16 @@
 #ifndef InternetMap_Connection_hpp
 #define InternetMap_Connection_hpp
 
-#include "Node.hpp"
+#include <memory>
+
+class Node;
 
 class Connection {
 public:
-    Node first;
-    Node second;
+    Node* first;
+    Node* second;
 };
+
+typedef std::shared_ptr<Connection> ConnectionPointer;
 
 #endif

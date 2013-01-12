@@ -21,17 +21,17 @@ class MapData {
 public:
     
     
-    std::vector<Node> nodes;
-    std::map<std::string, Node> nodesByAsn;
+    std::vector<NodePointer> nodes;
+    std::map<std::string, NodePointer> nodesByAsn;
     std::vector<IndexBox> boxesForNodes;
-    std::vector<Connection> connections;
+    std::vector<ConnectionPointer> connections;
     
     void loadFromString(std::string json);
     void loadFromAttrString(std::string json);
     void loadASInfo(std::string json);
     void updateDisplay(MapDisplay* display);
     
-    Node nodeAtIndex(unsigned int index);
+    NodePointer nodeAtIndex(unsigned int index);
     
 };
 

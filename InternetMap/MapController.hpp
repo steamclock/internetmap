@@ -17,12 +17,16 @@
 class MapController {
     
 public:
+    MapController();
+    
     MapDisplay display;
     MapData data;
     unsigned int targetNode;
     int hoveredNodeIndex;
     std::set<int> highlightedNodes;
     std::string lastSearchIP;
+    
+    void loadNodesFromString(std::string json);
     
     void unhoverNode();
     void updateTargetForIndex(int index);
