@@ -108,53 +108,7 @@ void callbackCurrent (
 
 }
 
-- (void)fetchASNForIP:(NSString*)ip index:(int)index{
-    NSArray* ipComponents = [ip componentsSeparatedByString:@"."];
-    NSString* dnsString = [NSString stringWithFormat:@"origin.asn.cymru.com"];
-    for (NSString* component in ipComponents) {
-        dnsString = [NSString stringWithFormat:@"%@.%@", component, dnsString];
-    }
-    DNSServiceRef sdRef;
-    DNSServiceErrorType res;
-    
-    NSDictionary* context = @{@"request" : self, @"index" : [NSNumber numberWithInt:index]};
-    
-    res = DNSServiceQueryRecord(
-                                &sdRef, 0, 0,
-                                [dnsString cStringUsingEncoding:NSUTF8StringEncoding],
-                                kDNSServiceType_TXT,
-                                kDNSServiceClass_IN,
-                                callbackCurrent,
-                                (__bridge void *)context
-                                );
-    
-    if (res != kDNSServiceErr_NoError) {
-        [self failedFetchingASNForIndex:index error:@"Couldn't resolve DNS."];
-    }
-    
-    DNSServiceProcessResult(sdRef);
-    /*
-     // trying to use select, so we have a timeout, just calling DNSServiceProcessREsult
-     // can block forever, but doesn't work
-    int dns_sd_fd = DNSServiceRefSockFD(sdRef);
-    fd_set readfds;
-    struct timeval tv;
-    
-    FD_ZERO(&readfds);
-    FD_SET(dns_sd_fd, &readfds);
-    tv.tv_sec = 10;
-    tv.tv_usec = 0;
-    int result = select(1, &readfds, (fd_set*)NULL, (fd_set*)NULL, &tv);
-    if ((result > 0) && FD_ISSET(dns_sd_fd, &readfds)) {
-         DNSServiceProcessResult(sdRef);
-    }
-    else {
-        [self failedFetchingASNForIndex:index error:@"Couldn't resolve DNS."];
-    }
-     */
-    
-    DNSServiceRefDeallocate(sdRef);
-}
+ 
 
 - (void)finishedFetchingASN:(int)asn forIndex:(int)index {
     NSLog(@"ASN fetched for index %i: %i", index, asn);

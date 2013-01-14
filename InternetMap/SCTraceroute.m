@@ -21,7 +21,6 @@
 @property (nonatomic, strong) NSString *targetIP;
 @property (nonatomic, strong) NSString *lastIP;
 @property (nonatomic, strong )NSMutableArray *ipsForCurrentRequest;
-@property packetType currentTracerouteType;
 
 
 @end
@@ -36,7 +35,6 @@
         NSData *address = [self formatAddress:hostAddress];
         self.packetUtility = [SCPacketUtility utilityWithHostAddress:address];
         self.packetUtility.delegate = self;
-        self.currentTracerouteType = type;
         
     }
     return self;
@@ -51,16 +49,6 @@
         self.currentTracerouteType = type;
     }
     return self;
-}
-
-- (NSData*)formatAddress:(NSString*)address{
-    self.targetIP = address;
-    const char *ipstring = [address UTF8String];
-    struct sockaddr_in ip;
-    inet_aton(ipstring, &ip.sin_addr);
-    ip.sin_family = AF_INET;
-    NSData* hostAddress = [NSData dataWithBytes:&ip length:sizeof(ip)];
-    return hostAddress;
 }
 
 

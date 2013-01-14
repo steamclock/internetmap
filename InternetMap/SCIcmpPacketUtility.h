@@ -23,23 +23,24 @@
 
 @interface SCIcmpPacketUtility : NSObject
 {
-    NSString*   hostName;
-    NSData*     targetAddress;
-    CFHostRef   host;
-    CFSocketRef socket;
-    __unsafe_unretained id<SCIcmpPacketUtilityDelegate>  delegate;
-    uint16_t    nextSequenceNumber; // host byte order
+    NSData*     _targetAddress;
+    NSString*   _targetAddressString;
+    CFHostRef   _host;
+    CFSocketRef _socket;
+    __unsafe_unretained id<SCIcmpPacketUtilityDelegate>  _delegate;
+    uint16_t    _nextSequenceNumber; // host byte order
 }
 
 @property (nonatomic, assign, readwrite) id<SCIcmpPacketUtilityDelegate> delegate;
 @property (nonatomic, copy,   readonly) NSData*               targetAddress;
+@property (nonatomic, assign, readonly) NSString*             targetAddressString;
 @property (nonatomic, assign, readonly) uint16_t              nextSequenceNumber;
 @property (strong, nonatomic, readonly) NSMutableArray*       packetRecords;
 
 - (void)start;
 // Starts the packet utility object doing it's thing.  You should call this after you've setup the delegate.
 
-- (void)sendPacket:(NSData *)data withTTL:(int)ttl;
+- (void)sendPacketWithData:(NSData *)data andTTL:(int)ttl;
 // Sends an ICMP packet. Do not try to send a packet before you receive the -SCPacketUtility:didStartWithAddress: delegate callback.
 
 - (void)stop;
