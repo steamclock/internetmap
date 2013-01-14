@@ -10,6 +10,8 @@
 #include "MapController.hpp"
 #include "Camera.hpp"
 
+
+//TODO: move these to a better place
 std::string loadTextResource(std::string base, std::string extension) {
     NSString* path = [[NSBundle mainBundle] pathForResource:[NSString stringWithCString:base.c_str() encoding:NSUTF8StringEncoding] ofType:[NSString stringWithCString:extension.c_str() encoding:NSUTF8StringEncoding]];
     NSString* contents = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
@@ -19,7 +21,10 @@ std::string loadTextResource(std::string base, std::string extension) {
     else {
         return std::string([contents UTF8String]);
     }
-    
+}
+
+bool deviceIsOld() {
+    return [HelperMethods deviceIsOld];
 }
 
 @interface MapControllerWrapper()

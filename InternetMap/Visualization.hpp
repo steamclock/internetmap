@@ -28,6 +28,8 @@ public:
     //same as updateDisplay:forNodes:, but will replace all nodes
     virtual void resetDisplayForNodes(std::shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes) = 0;
     
+    virtual void updateDisplayForSelectedNodes(std::shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes) = 0;
+    
     //same as resetDisplay:forNodes:, but for selected nodes instead of normal nodes
     virtual void resetDisplayForSelectedNodes(std::shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes) = 0;
     

@@ -11,6 +11,8 @@
 #include "Nodes.hpp"
 #include "MapUtilities.hpp"
 
+bool deviceIsOld();
+
 Point3 DefaultVisualization::nodePosition(NodePointer node) {
     return Point3(log10f(node->importance)+2.0f, node->positionX, node->positionY);
 }
@@ -89,14 +91,12 @@ void DefaultVisualization::resetDisplayForNodes(std::shared_ptr<MapDisplay> disp
     updateDisplayForNodes(display, nodes);
 }
 
-//void resetDisplayForSelectedNodes(MapDisplay display, std::vector<NodePointer> nodes);
+
 void DefaultVisualization::updateLineDisplay(std::shared_ptr<MapDisplay> display, std::vector<ConnectionPointer>connections) {
     
-    //TODO: disable line drawing on old devices again
-//    if([HelperMethods deviceIsOld]) {
-//        // No lines on 3GS, iPod 3rd Gen or iPad 1
-//        return;
-//    }
+    if (deviceIsOld()) {
+        return;
+    }
     
     std::vector<ConnectionPointer> filteredConnections;
     
@@ -149,109 +149,26 @@ void DefaultVisualization::updateLineDisplay(std::shared_ptr<MapDisplay> display
 }
 
 
-void DefaultVisualization::resetDisplayForSelectedNodes(std::shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes){
-
-}
-/*
-
--(void)updateDisplay:(MapDisplay*)display forSelectedNodes:(std::vector<NodePointer>)arrNodes {
+void DefaultVisualization::updateDisplayForSelectedNodes(std::shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes) {
     display->selectedNodes->beginUpdate();
-    for(int i = 0; i < arrNodes.size(); i++) {
-        NodePointer node = arrNodes[i];
+    for(int i = 0; i < nodes.size(); i++) {
+        NodePointer node = nodes[i];
         
-        display->selectedNodes->updateNode(i, GLKVec3ToPoint([self nodePosition:node]), [self nodeSize:node] * 0.8, UIColorToColor(SELECTED_NODE_COLOR));
+        display->selectedNodes->updateNode(i, nodePosition(node), nodeSize(node) * 0.8, ColorFromRGB(SELECTED_NODE_COLOR_HEX));
         
     }
     display->selectedNodes->endUpdate();
-    
 }
 
-- (void)resetDisplay:(MapDisplay*)display forNodes:(std::vector<NodePointer>)arrNodes {
-    if (display->nodes) {
-        //TODO: get assert back
-//        NSAssert(display->nodes->count == [arrNodes count], @"display->nodes has already been allocated and you just tried to recreate it with a different count");
-    }else {
-        std::shared_ptr<Nodes> nodes(new Nodes(arrNodes.size()));
-        display->nodes = nodes;
-    }
+void DefaultVisualization::resetDisplayForSelectedNodes(std::shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes){
 
-    
-    [self updateDisplay:display forNodes:arrNodes];
-}
-
-- (void)resetDisplay:(MapDisplay *)display forSelectedNodes:(std::vector<NodePointer>)arrNodes {
     if (display->selectedNodes) {
         //TODO: get assert back
-//        NSAssert([display->selectedNodes count] == [arrNodes count], @"display->selectedNodes has already been allocated and you just tried to recreate it with a different count");
+        //        NSAssert([display->selectedNodes count] == [arrNodes count], @"display->selectedNodes has already been allocated and you just tried to recreate it with a different count");
     }else {
-        std::shared_ptr<Nodes> nodes(new Nodes(arrNodes.size()));
-        display->selectedNodes = nodes;
+        std::shared_ptr<Nodes> theNodes(new Nodes(nodes.size()));
+        display->selectedNodes = theNodes;
     }
     
-    [self updateDisplay:display forSelectedNodes:arrNodes];
+    updateDisplayForSelectedNodes(display, nodes);
 }
-
-
--(void)updateLineDisplay:(MapDisplay*)display forConnections:(std::vector<ConnectionPointer>)connections {
-    
-    if([HelperMethods deviceIsOld]) {
-        // No lines on 3GS, iPod 3rd Gen or iPad 1
-        return;
-    }
-    
-    std::vector<ConnectionPointer> filteredConnections;
-    
-    // We are only drawing lines to nodes with > 0.01 importance, filter those out
-    for (int i = 0; i < connections.size(); i++) {
-        ConnectionPointer connection = connections[i];
-        if ((connection->first->importance > 0.01) && (connection->second->importance > 0.01)) {
-            filteredConnections.push_back(connection);
-        }
-    }
-    
-    int skipLines = 10;
-    
-    std::shared_ptr<Lines> lines(new Lines(filteredConnections.size() / skipLines));
-    
-    lines->beginUpdate();
-    
-    int currentIndex = 0;
-    int count = 0;
-    for(int i = 0; i < filteredConnections.size(); i++) {
-        ConnectionPointer connection = filteredConnections[i];
-        count++;
-        
-        if((count % skipLines) != 0) {
-            continue;
-        }
-        
-        NodePointer a = connection->first;
-        NodePointer b = connection->second;
-        
-        float lineImportanceA = MAX(a->importance - 0.01f, 0.0f) * 1.5f;
-        Color lineColorA = Color(lineImportanceA, lineImportanceA, lineImportanceA, 1.0);
-        
-        float lineImportanceB = MAX(b->importance - 0.01f, 0.0f) * 1.5f;
-        Color lineColorB = Color(lineImportanceB, lineImportanceB, lineImportanceB, 1.0);
-        
-        GLKVector3 positionA = [self nodePosition:a];
-        GLKVector3 positionB = [self nodePosition:b];
-        
-        GLKVector3 outsideA = [self pointOnSurfaceOfNodeSized:[self nodeSize:a]
-                                                   centeredAt:positionA
-                                             connectedToPoint:positionB];
-        GLKVector3 outsideB = [self pointOnSurfaceOfNodeSized:[self nodeSize:b]
-                                                   centeredAt:positionB
-                                             connectedToPoint:positionA];
-        
-        lines->updateLine(currentIndex, GLKVec3ToPoint(outsideA), lineColorA, GLKVec3ToPoint(outsideB), lineColorB);
-        currentIndex++;
-    }
-    
-    lines->endUpdate();;
-    
-    display->visualizationLines = lines;
-}
-
-@end
- */
