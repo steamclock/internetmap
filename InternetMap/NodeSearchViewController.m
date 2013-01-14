@@ -25,7 +25,12 @@
 {
     self = [super init];
     if (self) {
-        self.contentSizeForViewInPopover = CGSizeMake(400, 290);
+        if ([HelperMethods deviceIsiPad]) {
+            self.contentSizeForViewInPopover = CGSizeMake(400, 290);
+        }else {
+            CGSize screenSize = [[UIScreen mainScreen] bounds].size;
+            self.contentSizeForViewInPopover = CGSizeMake(screenSize.width, screenSize.height-20-55-216); //status bar height, buttons, keyboard
+        }
     }
     return self;
 }
@@ -38,23 +43,27 @@
     
     self.title = @"Search Nodes";
     
+    UIView* orangeBackground = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.contentSizeForViewInPopover.width, 44)];
+    orangeBackground.backgroundColor = UI_ORANGE_COLOR;
+    [self.view addSubview:orangeBackground];
+    
     UIImage* doneImage = [UIImage imageNamed:@"x-icon"];
-    self.textField = [[UITextField alloc] initWithFrame:CGRectMake(10, 10, self.contentSizeForViewInPopover.width-doneImage.size.width-26, 44)];
+    self.textField = [[UITextField alloc] initWithFrame:CGRectMake(10, 5, self.contentSizeForViewInPopover.width-doneImage.size.width-22, 44)];
     [self.textField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     self.textField.backgroundColor = [UIColor clearColor];
     self.textField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    self.textField.textColor = [UIColor whiteColor];
+    self.textField.textColor = [UIColor blackColor];
     self.textField.delegate = self;
-    self.textField.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:24];
+    self.textField.font = [UIFont fontWithName:FONT_NAME_LIGHT size:24];
     [self.view addSubview:self.textField];
     
-    UIButton* doneButton = [[UIButton alloc] initWithFrame:CGRectMake(self.textField.x+self.textField.width, 14, doneImage.size.width, doneImage.size.height)];
+    UIButton* doneButton = [[UIButton alloc] initWithFrame:CGRectMake(self.textField.x+self.textField.width, 12, doneImage.size.width, doneImage.size.height)];
     [doneButton setImage:doneImage forState:UIControlStateNormal];
     [doneButton addTarget:self action:@selector(done) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:doneButton];
     
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(self.textField.x, self.textField.y+self.textField.height, self.contentSizeForViewInPopover.width-25, self.contentSizeForViewInPopover.height-self.textField.height-20) style:UITableViewStylePlain];
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(self.textField.x-10, self.textField.y+self.textField.height, self.contentSizeForViewInPopover.width-25, self.contentSizeForViewInPopover.height-self.textField.height-20) style:UITableViewStylePlain];
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
@@ -102,6 +111,11 @@
     [self.tableView reloadData];
 }
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return YES;
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -125,10 +139,10 @@
     
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.textLabel.textColor = [UIColor whiteColor];
-        cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:24];
-        UIView* seperator = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.width, 1)];
-        seperator.backgroundColor = [UIColor whiteColor];
+        cell.textLabel.textColor = [UIColor colorWithRed:235.0/255.0 green:235.0/255.0 blue:235.0/255.0 alpha:1.0];
+        cell.textLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:24];
+        UIView* seperator = [[UIView alloc] initWithFrame:CGRectMake(10, 43, tableView.width-10, 1)];
+        seperator.backgroundColor = [UIColor grayColor];
         [cell.contentView addSubview:seperator];
     }
     

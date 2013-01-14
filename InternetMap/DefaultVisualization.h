@@ -21,4 +21,8 @@
 -(void)resetDisplay:(MapDisplay*)display forNodes:(NSArray*)arrNodes;
 - (void)resetDisplay:(MapDisplay *)display forSelectedNodes:(NSArray*)arrNodes;
 
+-(GLKVector3)pointOnSurfaceOfNodeSized:(float)nodeSize
+                            centeredAt:(GLKVector3)positionA
+                      connectedToPoint:(GLKVector3)positionB; // Should be moved into a utilites class
+
 @end

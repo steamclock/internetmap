@@ -23,6 +23,7 @@
         self.label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
         self.label.backgroundColor = [UIColor clearColor];
         self.label.textColor = [UIColor whiteColor];
+        self.label.userInteractionEnabled = YES;
         [self addSubview:self.label];
     }
     return self;
