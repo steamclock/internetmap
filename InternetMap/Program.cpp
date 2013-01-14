@@ -24,14 +24,14 @@ Program::Program(std::string fragmentName, std::string vertexName, unsigned int 
     // Create and compile vertex shader.
     std::string vertShaderCode = loadTextResource(vertexName, "vsh");
     if (!compileShader(&vertShader,GL_VERTEX_SHADER,vertShaderCode)) {
-        //TODO: NSLog(@"Failed to compile vertex shader");
+        printf("Failed to compile vertex shader\n");
         return;
     }
     
     // Create and compile fragment shader.
     std::string frahShaderCode = loadTextResource(fragmentName, "fsh");
     if (!compileShader(&fragShader,GL_FRAGMENT_SHADER,frahShaderCode)) {
-        //TODO: NSLog(@"Failed to compile fragment shader");
+        printf("Failed to compile fragment shader\n");
         return;
     }
     
@@ -60,7 +60,7 @@ Program::Program(std::string fragmentName, std::string vertexName, unsigned int 
     
     // Link program.
     if (!linkProgram(_program)) {
-        //TODO: NSLog(@"Failed to link program: %d", _program);
+        printf("Failed to link program: %d\n", _program);
         
         if (vertShader) {
             glDeleteShader(vertShader);
@@ -121,7 +121,7 @@ bool Program::compileShader(unsigned int* shader, unsigned int type, std::string
     if (logLength > 0) {
         GLchar *log = (GLchar *)malloc(logLength);
         glGetShaderInfoLog(*shader, logLength, &logLength, log);
-        //TODO: NSLog(@"Shader compile log:\n%s", log);
+        printf("Shader compile log:\n%s", log);
         free(log);
     }
 #endif
@@ -145,7 +145,7 @@ bool Program::linkProgram(GLuint prog) {
     if (logLength > 0) {
         GLchar *log = (GLchar *)malloc(logLength);
         glGetProgramInfoLog(prog, logLength, &logLength, log);
-        //TODO: NSLog(@"Program link log:\n%s", log);
+        printf("Program link log:\n%s", log);
         free(log);
     }
 #endif
@@ -166,7 +166,7 @@ bool Program::validateProgram(GLuint prog) {
     if (logLength > 0) {
         GLchar *log = (GLchar *)malloc(logLength);
         glGetProgramInfoLog(prog, logLength, &logLength, log);
-        //TODO:NSLog(@"Program validate log:\n%s", log);
+        printf("Program validate log:\n%s", log);
         free(log);
     }
     
