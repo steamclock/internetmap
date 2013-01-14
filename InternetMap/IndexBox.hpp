@@ -40,7 +40,7 @@ public:
     std::set<int> indices;
     
     bool isPointInside(const Point3& point);
-    bool doesLineIntersectOptimized(const Point3& origin, const Point3& invertedDirection, int* sign);
+    bool doesLineIntersectOptimized(const Vector3& origin, const Vector3& invertedDirection, int* sign);
     
     Point3 minCorner();
     Point3 maxCorner();

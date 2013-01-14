@@ -75,6 +75,7 @@
 		11D38FEA169CA3DC00225B19 /* timeline-play@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 11D38FE8169CA3DC00225B19 /* timeline-play@2x.png */; };
 		11D4CFBC1677B67200ED328D /* SCDispatchQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 11D4CFBB1677B67200ED328D /* SCDispatchQueue.m */; };
 		11D4CFC41677DAE400ED328D /* IndexBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 11D4CFC31677DAE400ED328D /* IndexBox.cpp */; };
+		11E500D316A4AC8500396FCA /* MapUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 11E500D116A4AC8400396FCA /* MapUtilities.cpp */; };
 		11FFB390167FC3CE00309545 /* Nodes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 11FFB38F167FC3CD00309545 /* Nodes.cpp */; };
 		1FA5962E167931F800C7E703 /* asinfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 1FA5962D167931F800C7E703 /* asinfo.json */; };
 		1FFD9C87165C9E7400FED149 /* as2attr.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1FFD9C86165C9E7400FED149 /* as2attr.txt */; };
@@ -229,6 +230,8 @@
 		11D4CFC21677DAE400ED328D /* IndexBox.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = IndexBox.hpp; sourceTree = "<group>"; };
 		11D4CFC31677DAE400ED328D /* IndexBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IndexBox.cpp; sourceTree = "<group>"; };
 		11DB60B6169F635200E5986D /* CPPHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPPHelpers.h; sourceTree = "<group>"; };
+		11E500D116A4AC8400396FCA /* MapUtilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapUtilities.cpp; sourceTree = "<group>"; };
+		11E500D216A4AC8400396FCA /* MapUtilities.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MapUtilities.hpp; sourceTree = "<group>"; };
 		11FFB38E167FC3CD00309545 /* Nodes.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Nodes.hpp; sourceTree = "<group>"; };
 		11FFB38F167FC3CD00309545 /* Nodes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Nodes.cpp; sourceTree = "<group>"; };
 		1FA5962D167931F800C7E703 /* asinfo.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = asinfo.json; path = InternetMap/asinfo.json; sourceTree = "<group>"; };
@@ -592,6 +595,8 @@
 				A6E6DB671676A0CD00B78F44 /* Lines.cpp */,
 				A619182F169CF1FB003A3A4A /* Types.hpp */,
 				A619182E169CF0FF003A3A4A /* OpenGL.hpp */,
+				11E500D216A4AC8400396FCA /* MapUtilities.hpp */,
+				11E500D116A4AC8400396FCA /* MapUtilities.cpp */,
 			);
 			name = Map;
 			path = InternetMap;
@@ -898,6 +903,7 @@
 				1127C9CB16A0B9C500413FE9 /* NodeWrapper.mm in Sources */,
 				1127C9CE16A0B9D700413FE9 /* ConnectionWrapper.mm in Sources */,
 				1127C9DC16A0D3A500413FE9 /* jsoncpp.cpp in Sources */,
+				11E500D316A4AC8500396FCA /* MapUtilities.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

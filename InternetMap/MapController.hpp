@@ -34,7 +34,8 @@ public:
     int indexForNodeAtPoint(Vector2 pointInView);
     Vector2 getCoordinatesForNodeAtIndex(int index);
     void clearHighlightLines();
-    void highlightRoute(std::vector<Node> nodeList);
+    void highlightRoute(std::vector<NodePointer> nodeList);
+    void highlightConnections(NodePointer node);
 };
 
 #endif

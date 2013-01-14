@@ -29,7 +29,7 @@ public:
     MapDisplay();
     
     void setDisplayScale(float f) { _displayScale = f; }
-    
+    float getDisplayScale() { return _displayScale;}
     std::shared_ptr<Camera> camera;
     std::shared_ptr<Nodes> nodes;
     std::shared_ptr<Nodes> selectedNodes;

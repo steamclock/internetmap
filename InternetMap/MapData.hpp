@@ -24,7 +24,7 @@ public:
     
     std::vector<NodePointer> nodes;
     std::map<std::string, NodePointer> nodesByAsn;
-    std::vector<IndexBox> boxesForNodes;
+    std::vector<IndexBoxPointer> boxesForNodes;
     std::vector<ConnectionPointer> connections;
     
     void loadFromString(std::string json);

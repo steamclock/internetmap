@@ -41,7 +41,7 @@ void IndexBox::setCenter(const Point3& center){
     _center = center;
 }
 
-bool IndexBox::doesLineIntersectOptimized(const Point3 &origin, const Point3 &invertedDirection, int *sign) {
+bool IndexBox::doesLineIntersectOptimized(const Vector3 &origin, const Vector3 &invertedDirection, int *sign) {
     float tmin, tmax, tymin, tymax, tzmin, tzmax;
     
     tmin = (_parameters[sign[0]].getX() - origin.getX()) * invertedDirection.getX();

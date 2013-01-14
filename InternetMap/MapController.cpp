@@ -16,7 +16,9 @@
 #include "Lines.hpp"
 #include "Connection.hpp"
 #include "IndexBox.hpp"
+#include "MapUtilities.hpp"
 
+#include <algorithm>
 #include <string>
 
 
@@ -26,135 +28,120 @@ void cameraMoveFinishedCallback(void) {
 }
 
 
-MapController::MapController(){
+MapController::MapController() :
+    targetNode(INT_MAX),
+    hoveredNodeIndex(INT_MAX){
+        
     data = std::shared_ptr<MapData>(new MapData());
     display = std::shared_ptr<MapDisplay>(new MapDisplay());
     data->visualization = VisualizationPointer(new DefaultVisualization());
 }
 
-/// -----
-
-/*
-@implementation MapController
-
-
-- (id)init{
-    
-    if (self = [super init]) {
-        [self.data loadAsInfo:[[NSBundle mainBundle] pathForResource:@"asinfo" ofType:@"json"]];
-        [self.data updateDisplay:self.display.get()];
-        
-        self.targetNode = NSNotFound;
-        self.hoveredNodeIndex = NSNotFound;
-
-    }
-    
-    return self;
-}
-
-
 #pragma mark - Event Handling
 
-- (void)handleTouchDownAtPoint:(CGPoint)point {
-    
-    if (!self.display->camera->isMovingToTarget()) {
-        //cancel panning/zooming momentum
-        self.display->camera->stopMomentumPan();
-        self.display->camera->stopMomentumZoom();
-        self.display->camera->stopMomentumRotation();
+void MapController::handleTouchDownAtPoint(Vector2 point) {
+    if (!display->camera->isMovingToTarget()) {
+        display->camera->stopMomentumPan();
+        display->camera->stopMomentumZoom();
+        display->camera->stopMomentumRotation();
         
-        int i = [self indexForNodeAtPoint:point];
-        if (i != NSNotFound) {
-            self.hoveredNodeIndex = i;
-            self.display->nodes->beginUpdate();
-            self.display->nodes->updateNode(i, UIColorToColor(SELECTED_NODE_COLOR));
-            self.display->nodes->endUpdate();
+        int i = indexForNodeAtPoint(point);
+        if(i != INT_MAX) {
+            hoveredNodeIndex = i;
+            display->nodes->beginUpdate();
+            display->nodes->updateNode(i, ColorFromRGB(SELECTED_NODE_COLOR_HEX));
+            display->nodes->endUpdate();
         }
+        
     }
 }
+
 
 #pragma mark - Selected Node handling
 
-- (void)selectHoveredNode {
-    if (self.hoveredNodeIndex != NSNotFound) {
-        self.lastSearchIP = nil;
-        [self updateTargetForIndex:self.hoveredNodeIndex];
-        self.hoveredNodeIndex = NSNotFound;
+void MapController::selectHoveredNode() {
+    if (hoveredNodeIndex != INT_MAX) {
+        lastSearchIP = std::string();
+        updateTargetForIndex(hoveredNodeIndex);
+        hoveredNodeIndex = INT_MAX;
     }
 }
 
-- (void)unhoverNode {
-    
-    if (self.hoveredNodeIndex != NSNotFound && self.hoveredNodeIndex != self.targetNode) {
-        NodePointer node = [self.data nodeAtIndex:self.hoveredNodeIndex];
+void MapController::unhoverNode(){
+    if (hoveredNodeIndex != INT_MAX && hoveredNodeIndex != targetNode) {
+        NodePointer node = data->nodeAtIndex(hoveredNodeIndex);
         std::vector<NodePointer> nodes;
         nodes.push_back(node);
-        [self.data.visualization updateDisplay:self.display.get() forNodes:nodes];
-        self.hoveredNodeIndex = NSNotFound;
+        data->visualization->updateDisplayForNodes(display, nodes);
+        hoveredNodeIndex = INT_MAX;
     }
+
 }
 
-- (void)updateTargetForIndex:(int)index {
-    
+
+void MapController::updateTargetForIndex(int index) {
     Vector3 target;
     // update current node to default state
-    if (self.targetNode != NSNotFound) {
-        NodePointer node = [self.data nodeAtIndex:self.targetNode];
+    if (targetNode != INT_MAX) {
+        NodePointer node = data->nodeAtIndex(targetNode);
         std::vector<NodePointer> nodes;
         nodes.push_back(node);
-        [self.data.visualization updateDisplay:self.display.get() forNodes:nodes];
+        data->visualization->updateDisplayForNodes(display, nodes);
     }
     
     //set new node as targeted and change camera anchor point
-    if (index != NSNotFound) {
+    if (index != INT_MAX) {
         
-        self.targetNode = index;
-        NodePointer node = [self.data nodeAtIndex:self.targetNode];
-        GLKVector3 origTarget = [self.data.visualization nodePosition:node];
-        target = Vector3(origTarget.x, origTarget.y, origTarget.z);
+        targetNode = index;
+        NodePointer node = data->nodeAtIndex(targetNode);
+        Point3 origTarget = data->visualization->nodePosition(node);
+        target = Vector3(origTarget.getX(), origTarget.getY(), origTarget.getZ());
         
-        self.display->nodes->beginUpdate();
-        self.display->nodes->updateNode(node->index, UIColorToColor(SELECTED_NODE_COLOR));
-        self.display->nodes->endUpdate();
+        display->nodes->beginUpdate();
+        display->nodes->updateNode(node->index, ColorFromRGB(SELECTED_NODE_COLOR_HEX));
+        display->nodes->endUpdate();
         
         std::vector<NodePointer> nodes;
         nodes.push_back(node);
-        [self.data.visualization resetDisplay:self.display.get() forSelectedNodes:nodes];
-        
-        [self highlightConnections:node];
+        data->visualization->resetDisplayForSelectedNodes(display, nodes);
+        highlightConnections(node);
         
     } else {
         target = Vector3(0, 0, 0);
     }
     
-    self.display->camera->setTarget(target);
+    display->camera->setTarget(target);
+
 }
 
 #pragma mark - Connection Highlighting
 
--(void)highlightConnections:(NodePointer)node {
-    if(node == nil) {
-        [self clearHighlightLines];
+
+void MapController::highlightConnections(NodePointer node) {
+    if(node == NULL) {
+        clearHighlightLines();
         return;
     }
     
     std::vector<ConnectionPointer> filteredConnections;
     
-    for (int i = 0; i<self.data.connections.size(); i++) {
-        ConnectionPointer connection = self.data.connections.at(i);
+    for (int i = 0; i<data->connections.size(); i++) {
+        ConnectionPointer connection = data->connections.at(i);
         if ((connection->first == node) || (connection->second == node) ) {
             filteredConnections.push_back(connection);
         }
     }
     
-
-    if (filteredConnections.count > 100) {
+    
+    if (filteredConnections.size() > 100) {
         // Only show important ones
         
-        NSMutableArray* importantConnections = [NSMutableArray new];
-        for (Connection* connection in filteredConnections) {
-            if((connection.first.importance > 0.01) && (connection.second.importance > 0.01)) {
-                [importantConnections addObject:connection];
+        std::vector<ConnectionPointer> importantConnections;
+        
+        for (int i = 0; i<filteredConnections.size(); i++) {
+            ConnectionPointer connection = filteredConnections[i];
+            if((connection->first->importance > 0.01) && (connection->second->importance > 0.01)) {
+                importantConnections.push_back(connection);
             }
         }
         
@@ -162,133 +149,115 @@ MapController::MapController(){
     }
     
     if(filteredConnections.size() == 0 || filteredConnections.size() > 100) {
-        [self clearHighlightLines];
+        clearHighlightLines();
         return;
     }
     
     std::shared_ptr<Lines> lines(new Lines(filteredConnections.size()));
     lines->beginUpdate();
-        
-    UIColor* brightColorUI = SELECTED_CONNECTION_COLOR_BRIGHT;
-    UIColor* dimColorUI = SELECTED_CONNECTION_COLOR_DIM;
-    Color brightColor;
-    [brightColorUI getRed:&brightColor.r green:&brightColor.g blue:&brightColor.b alpha:&brightColor.a];
-    Color dimColor;
-    [dimColorUI getRed:&dimColor.r green:&dimColor.g blue:&dimColor.b alpha:&dimColor.a];
     
+    Color brightColor = ColorFromRGB(SELECTED_CONNECTION_COLOR_BRIGHT_HEX);
+    Color dimColor = ColorFromRGB(SELECTED_CONNECTION_COLOR_DIM_HEX);
+
     for(int i = 0; i < filteredConnections.size(); i++) {
         ConnectionPointer connection = filteredConnections[i];
         NodePointer a = connection->first;
         NodePointer b = connection->second;
         
         // Draw lines from outside of nodes instead of center
-        GLKVector3 positionA = [self.data.visualization nodePosition:a];
-        GLKVector3 positionB = [self.data.visualization nodePosition:b];
+        Point3 positionA = data->visualization->nodePosition(a);
+        Point3 positionB = data->visualization->nodePosition(b);
         
-        DefaultVisualization* defaultVis = (DefaultVisualization*)self.data.visualization; // pointOnSurfaceOfNodeSized should be moved into a utils class once C++ conversion is complete
+        Point3 outsideA = MapUtilities().pointOnSurfaceOfNode(data->visualization->nodeSize(a), positionA, positionB);
+        Point3 outsideB = MapUtilities().pointOnSurfaceOfNode(data->visualization->nodeSize(b), positionB, positionA);
 
-        GLKVector3 outsideA = [defaultVis pointOnSurfaceOfNodeSized:[defaultVis nodeSize:a]
-                                                   centeredAt:positionA
-                                             connectedToPoint:positionB];
-        GLKVector3 outsideB = [defaultVis pointOnSurfaceOfNodeSized:[defaultVis nodeSize:b]
-                                                   centeredAt:positionB
-                                             connectedToPoint:positionA];
-        
         // The bright side is the current node
         if(node == a) {
-            lines->updateLine(i, GLKVec3ToPoint(outsideA), brightColor, GLKVec3ToPoint(outsideB), dimColor);
+            lines->updateLine(i, outsideA, brightColor, outsideB, dimColor);
         }
         else {
-            lines->updateLine(i, GLKVec3ToPoint(outsideA), dimColor, GLKVec3ToPoint(outsideB), brightColor);
+            lines->updateLine(i, outsideA, dimColor, outsideB, brightColor);
         }
     }
     
     lines->endUpdate();
-    lines->setWidth(((filteredConnections.size() < 20) ? 2 : 1) * ([HelperMethods deviceIsRetina] ? 2 : 1));
-    self.display->highlightLines = lines;
+    lines->setWidth(((filteredConnections.size() < 20) ? 2 : 1) * display->getDisplayScale());
+    display->highlightLines = lines;
 }
 
-
-- (void)clearHighlightLines {
-    [self.highlightedNodes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
-        std::vector<NodePointer> array;
-        if (idx != self.targetNode) {
-            NodePointer node = [self.data nodeAtIndex:idx];
-            array.push_back(node);
-        }
-        [self.data.visualization updateDisplay:self.display.get() forNodes:array];
-    }];
-    self.display->highlightLines = nil;
+void MapController::clearHighlightLines() {
+    std::set<int>::iterator iter = highlightedNodes.begin();
+    std::vector<NodePointer> array;
+    while (iter != highlightedNodes.end()) {
+        NodePointer node = data->nodeAtIndex(*iter);
+        array.push_back(node);
+        iter++;
+    }
+    data->visualization->updateDisplayForNodes(display, array);
+    display->highlightLines = NULL;
 }
 
--(void)highlightRoute:(std::vector<NodePointer>)nodeList {
+void MapController::highlightRoute(std::vector<NodePointer> nodeList) {
     if(nodeList.size() <= 1) {
-        [self clearHighlightLines];
+        clearHighlightLines();
         return;
     }
-
+    
     std::shared_ptr<Lines> lines(new Lines(nodeList.size() - 1));
     lines->beginUpdate();
     
-    UIColor* lineColorUI = UIColorFromRGB(0xffa300);
-    Color lineColor;
-    [lineColorUI getRed:&lineColor.r green:&lineColor.g blue:&lineColor.b alpha:&lineColor.a];
-
-    self.display->nodes->beginUpdate();
+    Color lineColor = ColorFromRGB(0xffa300);
+    
+    display->nodes->beginUpdate();
     for(int i = 0; i < nodeList.size() - 1; i++) {
         NodePointer a = nodeList[i];
         NodePointer b = nodeList[i+1];
-        self.display->nodes->updateNode(a->index, UIColorToColor(SELECTED_NODE_COLOR));
-        self.display->nodes->updateNode(b->index, UIColorToColor(SELECTED_NODE_COLOR));
-        [self.highlightedNodes addIndex:a->index];
-        [self.highlightedNodes addIndex:b->index];
-        lines->updateLine(i, GLKVec3ToPoint([self.data.visualization nodePosition:a]), lineColor, GLKVec3ToPoint([self.data.visualization nodePosition:b]), lineColor);
+        display->nodes->updateNode(a->index, ColorFromRGB(SELECTED_NODE_COLOR_HEX));
+        display->nodes->updateNode(b->index, ColorFromRGB(SELECTED_NODE_COLOR_HEX));
+        highlightedNodes.insert(a->index);
+        highlightedNodes.insert(b->index);
+        lines->updateLine(i, data->visualization->nodePosition(a), lineColor, data->visualization->nodePosition(b), lineColor);
     }
     
-    self.display->nodes->endUpdate();
+    display->nodes->endUpdate();
     
     
     lines->endUpdate();
-    lines->setWidth([HelperMethods deviceIsRetina] ? 10.0 : 5.0);
+    lines->setWidth(5.0*display->getDisplayScale());
     
-    self.display->highlightLines = lines;
-    
-    //highlight nodes
-    
+    display->highlightLines = lines;
     
 }
 
 #pragma mark - Index/Position calculations
 
-- (int)indexForNodeAtPoint:(CGPoint)pointInView {
-    NSDate* date = [NSDate date];
-    date = date;
+int MapController::indexForNodeAtPoint(Vector2 pointInView) {
     //get point in view and adjust it for viewport
     float xOld = pointInView.x;
-    CGFloat xLoOld = 0;
-    CGFloat xHiOld = self.display->camera->displayWidth();
-    CGFloat xLoNew = -1;
-    CGFloat xHiNew = 1;
+    float xLoOld = 0;
+    float xHiOld = display->camera->displayWidth();
+    float xLoNew = -1;
+    float xHiNew = 1;
     
     pointInView.x = (xOld-xLoOld) / (xHiOld-xLoOld) * (xHiNew-xLoNew) + xLoNew;
     
     float yOld = pointInView.y;
-    CGFloat yLoOld = 0;
-    CGFloat yHiOld = self.display->camera->displayHeight();
-    CGFloat yLoNew = 1;
-    CGFloat yHiNew = -1;
+    float yLoOld = 0;
+    float yHiOld = display->camera->displayHeight();
+    float yLoNew = 1;
+    float yHiNew = -1;
     
     pointInView.y = (yOld-yLoOld) / (yHiOld-yLoOld) * (yHiNew-yLoNew) + yLoNew;
     //transform point from screen- to object-space
-    Vector3 cameraInObjectSpace = self.display->camera->cameraInObjectSpace(); //A
-    Vector3 pointOnClipPlaneInObjectSpace = self.display->camera->applyModelViewToPoint(Vector2(pointInView.x, pointInView.y)); //B
+    Vector3 cameraInObjectSpace = display->camera->cameraInObjectSpace(); //A
+    Vector3 pointOnClipPlaneInObjectSpace = display->camera->applyModelViewToPoint(Vector2(pointInView.x, pointInView.y)); //B
     
     //do actual line-sphere intersection
     float xA, yA, zA;
     __block float xC, yC, zC;
     __block float r;
     __block float maxDelta = -1;
-    __block int foundI = NSNotFound;
+    __block int foundI = INT_MAX;
     
     xA = cameraInObjectSpace.getX();
     yA = cameraInObjectSpace.getY();
@@ -303,36 +272,38 @@ MapController::MapController(){
     
     float a = powf((direction.getX()), 2)+powf((direction.getY()), 2)+powf((direction.getZ()), 2);
     
-    IndexBox* box;
-    for (int j = 0; j<[self.data.boxesForNodes count]; j++) {
-        box = [self.data.boxesForNodes objectAtIndex:j];
-        if ([box doesLineIntersectOptimized:Vec3ToGLK(cameraInObjectSpace) invertedDirection:Vec3ToGLK(invertedDirection) sign:sign]) {
+    IndexBoxPointer box;
+    for (int j = 0; j<data->boxesForNodes.size(); j++) {
+        box = data->boxesForNodes[j];
+        if (box->doesLineIntersectOptimized(cameraInObjectSpace, invertedDirection, sign)) {
             //            NSLog(@"intersects box %i at pos %@", j, NSStringFromGLKVector3(box.center));
-            [box.indices enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
-                int i = idx;
-                NodePointer node = [self.data nodeAtIndex:i];
+            std::set<int>::iterator iter = box->indices.begin();
+            while (iter != box->indices.end()) {
+                int i = *iter;
+                NodePointer node = data->nodeAtIndex(i);
                 
-                GLKVector3 nodePosition = [self.data.visualization nodePosition:node];
-                xC = nodePosition.x;
-                yC = nodePosition.y;
-                zC = nodePosition.z;
+                Point3 nodePosition = data->visualization->nodePosition(node);
+                xC = nodePosition.getX();
+                yC = nodePosition.getY();
+                zC = nodePosition.getZ();
                 
-                r = [self.data.visualization nodeSize:node]/2;
-                r = MAX(r, 0.02);
+                r = data->visualization->nodeSize(node)/2;
+                r = std::max(r, 0.02f);
                 
                 float b = 2*((direction.getX())*(xA-xC)+(direction.getY())*(yA-yC)+(direction.getZ())*(zA-zC));
                 float c = powf((xA-xC), 2)+powf((yA-yC), 2)+powf((zA-zC), 2)-powf(r, 2);
                 float delta = powf(b, 2)-4*a*c;
                 if (delta >= 0) {
                     //                    NSLog(@"intersected node %i: %@, delta: %f", i, NSStringFromGLKVector3(nodePosition), delta);
-                    Vector4 transformedNodePosition = self.display->camera->currentModelView() * Vector4(nodePosition.x, nodePosition.y, nodePosition.z, 1);
+                    Vector4 transformedNodePosition = display->camera->currentModelView() * Vector4(nodePosition.getX(), nodePosition.getY(), nodePosition.getZ(), 1);
                     if ((delta > maxDelta) && (transformedNodePosition.getZ() < -0.1)) {
                         maxDelta = delta;
                         foundI = i;
                     }
                 }
-                
-            }];
+                iter++;
+            }
+            
         }
     }
     
@@ -340,27 +311,17 @@ MapController::MapController(){
     return foundI;
 }
 
-
--(CGPoint)getCoordinatesForNodeAtIndex:(int)index {
-    NodePointer node = [self.data nodeAtIndex:index];
+Vector2 MapController::getCoordinatesForNodeAtIndex(int index) {
+    NodePointer node = data->nodeAtIndex(index);
+    Point3 nodePosition = data->visualization->nodePosition(node);
     
-    GLKVector3 nodePosition = [self.data.visualization nodePosition:node];
+    Matrix4 mvp = display->camera->currentModelViewProjection();
     
-    Matrix4 mvp = self.display->camera->currentModelViewProjection();
-
-    Vector4 proj = mvp * Vector4(nodePosition.x, nodePosition.y, nodePosition.z, 1.0f);
+    Vector4 proj = mvp * Vector4(nodePosition.getX(), nodePosition.getY(), nodePosition.getZ(), 1.0f);
     proj /= proj.getW();
+    
+    Vector2 coordinates(((proj.getX() / 2.0f) + 0.5f) * display->camera->displayWidth(), ((proj.getY() / 2.0f) + 0.5f) * display->camera->displayHeight());
+    
+    return Vector2(coordinates.x, display->camera->displayHeight() - coordinates.y);
 
-    Vector2 coordinates(((proj.getX() / 2.0f) + 0.5f) * self.display->camera->displayWidth(), ((proj.getY() / 2.0f) + 0.5f) * self.display->camera->displayHeight());
-    
-    CGPoint point = CGPointMake(coordinates.x,self.display->camera->displayHeight() - coordinates.y);
-    
-    //NSLog(@"%@", NSStringFromCGPoint(point));
-    
-    return point;
-    
 }
-
-@end
- 
-*/

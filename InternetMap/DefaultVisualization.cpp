@@ -9,20 +9,7 @@
 #include "Lines.hpp"
 #include "Connection.hpp"
 #include "Nodes.hpp"
-
-
-
-// Temp conversion function while note everything is converted TODO: remove
-
-Point3 DefaultVisualization::pointOnSurfaceOfNode(float nodeSize, const Point3& centeredAt, const Point3& connectedToPoint) {
-    float lineLength = Vectormath::Aos::dist(centeredAt, connectedToPoint);
-    
-    //0.45 is magic number for showing connections from a deep node
-    float nodeRatio = 0.32; // Magic number to scale from node size to line length
-    
-    float offsetRatio = nodeRatio * nodeSize / lineLength;
-    return Vectormath::Aos::lerp(offsetRatio, centeredAt, connectedToPoint);
-}
+#include "MapUtilities.hpp"
 
 Point3 DefaultVisualization::nodePosition(NodePointer node) {
     return Point3(log10f(node->importance)+2.0f, node->positionX, node->positionY);
@@ -149,8 +136,8 @@ void DefaultVisualization::updateLineDisplay(std::shared_ptr<MapDisplay> display
         Point3 positionA = nodePosition(a);
         Point3 positionB = nodePosition(b);
         
-        Point3 outsideA = pointOnSurfaceOfNode(nodeSize(a), positionA, positionB);
-        Point3 outsideB = pointOnSurfaceOfNode(nodeSize(b), positionB, positionA);
+        Point3 outsideA = MapUtilities().pointOnSurfaceOfNode(nodeSize(a), positionA, positionB);
+        Point3 outsideB = MapUtilities().pointOnSurfaceOfNode(nodeSize(b), positionB, positionA);
         
         lines->updateLine(currentIndex, outsideA, lineColorA, outsideB, lineColorB);
         currentIndex++;
@@ -204,18 +191,6 @@ void DefaultVisualization::resetDisplayForSelectedNodes(std::shared_ptr<MapDispl
     [self updateDisplay:display forSelectedNodes:arrNodes];
 }
 
--(GLKVector3)pointOnSurfaceOfNodeSized:(float)nodeSize
-                            centeredAt:(GLKVector3)positionA
-                      connectedToPoint:(GLKVector3)positionB {
-    
-    float lineLength = GLKVector3Distance(positionA, positionB);
-    
-    //0.45 is magic number for showing connections from a deep node
-    float nodeRatio = 0.32; // Magic number to scale from node size to line length
-    
-    float offsetRatio = nodeRatio * nodeSize / lineLength;
-    return GLKVector3Lerp(positionA, positionB, offsetRatio);
-}
 
 -(void)updateLineDisplay:(MapDisplay*)display forConnections:(std::vector<ConnectionPointer>)connections {
     
