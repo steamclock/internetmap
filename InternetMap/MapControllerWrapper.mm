@@ -10,6 +10,18 @@
 #include "MapController.hpp"
 #include "Camera.hpp"
 
+std::string loadTextResource(std::string base, std::string extension) {
+    NSString* path = [[NSBundle mainBundle] pathForResource:[NSString stringWithCString:base.c_str() encoding:NSUTF8StringEncoding] ofType:[NSString stringWithCString:extension.c_str() encoding:NSUTF8StringEncoding]];
+    NSString* contents = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+    if(!contents) {
+        return std::string("");
+    }
+    else {
+        return std::string([contents UTF8String]);
+    }
+    
+}
+
 @interface MapControllerWrapper()
 
 @property (nonatomic, readwrite, assign) MapController* controller;
