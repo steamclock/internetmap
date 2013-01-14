@@ -74,6 +74,7 @@
 		1FFD9C87165C9E7400FED149 /* as2attr.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1FFD9C86165C9E7400FED149 /* as2attr.txt */; };
 		3959464C1685343900BAF5CC /* icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 3959464B1685343900BAF5CC /* icon-72.png */; };
 		3959464F1685343C00BAF5CC /* icon-144.png in Resources */ = {isa = PBXBuildFile; fileRef = 3959464E1685343C00BAF5CC /* icon-144.png */; };
+		A600AAC916A0E520003B1028 /* OpenGL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A600AAC716A0E520003B1028 /* OpenGL.cpp */; };
 		A6B56BF2165AE28A00DDE753 /* Node.m in Sources */ = {isa = PBXBuildFile; fileRef = A6B56BF1165AE28A00DDE753 /* Node.m */; };
 		A6B56BF9165AF53F00DDE753 /* Program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B56BF8165AF53F00DDE753 /* Program.cpp */; };
 		A6B56BFA165AF98D00DDE753 /* line.fsh in Resources */ = {isa = PBXBuildFile; fileRef = A6B56BF3165AEDF700DDE753 /* line.fsh */; };
@@ -216,6 +217,7 @@
 		1FFD9C86165C9E7400FED149 /* as2attr.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = as2attr.txt; path = InternetMap/as2attr.txt; sourceTree = "<group>"; };
 		3959464B1685343900BAF5CC /* icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-72.png"; sourceTree = "<group>"; };
 		3959464E1685343C00BAF5CC /* icon-144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-144.png"; sourceTree = "<group>"; };
+		A600AAC716A0E520003B1028 /* OpenGL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OpenGL.cpp; sourceTree = "<group>"; };
 		A619182E169CF0FF003A3A4A /* OpenGL.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = OpenGL.hpp; sourceTree = "<group>"; };
 		A619182F169CF1FB003A3A4A /* Types.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Types.hpp; sourceTree = "<group>"; };
 		A6191832169DE85F003A3A4A /* boolInVec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boolInVec.h; sourceTree = "<group>"; };
@@ -546,6 +548,7 @@
 				A6E6DB671676A0CD00B78F44 /* Lines.cpp */,
 				A619182F169CF1FB003A3A4A /* Types.hpp */,
 				A619182E169CF0FF003A3A4A /* OpenGL.hpp */,
+				A600AAC716A0E520003B1028 /* OpenGL.cpp */,
 			);
 			name = Map;
 			path = InternetMap;
@@ -844,6 +847,7 @@
 				1186ACE816851DBE0061FA49 /* NodeTooltipViewController.m in Sources */,
 				1180CF3D169B4D5500F1FB73 /* MapController.mm in Sources */,
 				11754302169BA790008150BB /* LabelNumberBoxView.m in Sources */,
+				A600AAC916A0E520003B1028 /* OpenGL.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

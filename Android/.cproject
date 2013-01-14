@@ -28,6 +28,7 @@
 							<tool id="org.eclipse.cdt.build.core.settings.holder.1689807016" name="GNU C++" superClass="org.eclipse.cdt.build.core.settings.holder">
 								<option id="org.eclipse.cdt.build.core.settings.holder.incpaths.919058771" name="Include Paths" superClass="org.eclipse.cdt.build.core.settings.holder.incpaths" valueType="includePath">
 									<listOptionValue builtIn="false" value="/Users/nigel/Development/android-ndk/platforms/android-9/arch-arm/usr/include"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/InternetMap/ExternalCode}&quot;"/>
 								</option>
 								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.1402507081" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="&quot;__ ANDROID__=1&quot;"/>

@@ -12,14 +12,24 @@
 // TODO: clean this up
 std::string loadTextResource(std::string base, std::string extension);
 
-Program::Program(std::string name, unsigned int attributes) : Program(name, name, attributes) {
+Program::Program(std::string name, unsigned int attributes)  :
+    _program(0),
+    _activeAttributes(0)
+{
+    setup(name, name, attributes);
 }
 
 Program::Program(std::string fragmentName, std::string vertexName, unsigned int attributes) :
     _program(0),
-    _activeAttributes(attributes)
+    _activeAttributes(0)
 {
+    setup(fragmentName, vertexName, attributes);
+}
+
+void Program::setup(std::string fragmentName, std::string vertexName, unsigned int attributes) {
     GLuint vertShader, fragShader;
+    
+    _activeAttributes = attributes;
     
     // Create and compile vertex shader.
     std::string vertShaderCode = loadTextResource(vertexName, "vsh");

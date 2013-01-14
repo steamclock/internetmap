@@ -9,6 +9,14 @@
 #include "ExternalCode/vectormath/vmInclude.h"
 #include "ExternalCode/vectormath/vmInclude.h"
 
+#ifdef ANDROID
+#include <boost/smart_ptr/shared_ptr.hpp>
+using boost::shared_ptr;
+#else
+#include <memory>
+using std::shared_ptr;
+#endif
+
 typedef Vectormath::Aos::Matrix4 Matrix4;
 typedef vmVector3 Vector3;
 typedef Vectormath::Aos::Vector4 Vector4;

@@ -17,13 +17,14 @@ MapDisplay::MapDisplay() :
     camera(new Camera()),
     _displayScale(1.0f)
 {
+    InitOpenGLExtensions();
 }
 
 void MapDisplay::update(TimeInterval currentTime) {
     camera->update(currentTime);
 }
 
-void MapDisplay::bindDefaultNodeUniforms(std::shared_ptr<Program> program) {
+void MapDisplay::bindDefaultNodeUniforms(shared_ptr<Program> program) {
     Matrix4 mv = camera->currentModelView();
     Matrix4 p = camera->currentProjection();
     glUniformMatrix4fv(program->uniformForName("modelViewMatrix"), 1, 0, reinterpret_cast<float*>(&mv));

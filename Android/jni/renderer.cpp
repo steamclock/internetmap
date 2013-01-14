@@ -5,7 +5,7 @@
 #include <EGL/egl.h> // requires ndk r5 or newer
 #include <GLES/gl.h>
 #include <EGL/eglplatform.h>
-
+#include <string>
 #include "renderer.h"
 
 static GLint vertices[][3] = {
@@ -276,3 +276,11 @@ void* Renderer::threadStartCallback(void *myself)
     return 0;
 }
 
+std::string loadTextResource(std::string base, std::string extension) {
+	// TODO
+	return "";
+}
+
+void cameraMoveFinishedCallback(void) {
+
+}
