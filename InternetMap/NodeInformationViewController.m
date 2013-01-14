@@ -8,6 +8,7 @@
 
 #import "NodeInformationViewController.h"
 #import "Node.h"
+#import "LabelNumberBoxView.h"
 
 @interface NodeInformationViewController ()
 
@@ -17,6 +18,14 @@
 @property (nonatomic, strong) NSMutableArray* firstGroupOfStrings;
 @property (nonatomic, strong) NSMutableArray* secondGroupOfStrings;
 @property (nonatomic, strong) NSMutableArray* infoLabels;
+
+@property (nonatomic, strong) UIView* tracerouteContainerView;
+@property (nonatomic, strong) UIView* yourLocationContainerView;
+
+@property (nonatomic, strong) UIScrollView* scrollView;
+
+@property (nonatomic, assign) float contentHeight;
+
 @end
 
 @implementation NodeInformationViewController
@@ -32,7 +41,6 @@
         self.infoLabels = [[NSMutableArray alloc] init];
         
         CGFloat height = 0;
-        
         //create the first group of strings, like ASN and text description
         NSString* asnText = [NSString stringWithFormat:@"AS%@", self.node.asn];
         self.firstGroupOfStrings = [NSMutableArray array];
@@ -49,7 +57,7 @@
             }
         }
         
-        height += 20+55; //top margin and topLabel and white line
+        height += 20+35; //top margin and topLabel and white line
                 
         if (![self.title isEqualToString:asnText]) {
             [self.firstGroupOfStrings addObject:asnText];
@@ -70,12 +78,15 @@
         
         if (!self.isDisplayingCurrentNode) {
             height += 44; //traceroute button
-            height += 10; //traceroute button top margin
+            height += 20; //traceroute button top margin
         }
         
         height += 20; //bottom margin
-        
-        [self setContentSizeForViewInPopover:CGSizeMake(320, height)];
+        self.contentHeight = height;
+
+        float width = [HelperMethods deviceIsiPad] ? 452 : [[UIScreen mainScreen] bounds].size.width;
+        height = [HelperMethods deviceIsiPad] ? height : [[UIScreen mainScreen] bounds].size.height/2.0-20;
+        [self setContentSizeForViewInPopover:CGSizeMake(width, height)];
 
 
     }
@@ -85,71 +96,121 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.topLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 20, 240, 27)];
-    self.topLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:25];
-    self.topLabel.textColor = [UIColor whiteColor];
+    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.contentSizeForViewInPopover.width, self.contentSizeForViewInPopover.height)];
+    self.scrollView.contentSize = CGSizeMake(self.contentSizeForViewInPopover.width, self.contentHeight-88);
+    self.scrollView.scrollEnabled = ![HelperMethods deviceIsiPad];
+    [self.view addSubview:self.scrollView];
+    
+    UIImage* xImage = [UIImage imageNamed:@"x-icon"];
+    
+    UIView* orangeBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.contentSizeForViewInPopover.width, 44)];
+    orangeBackgroundView.backgroundColor = UI_ORANGE_COLOR;
+    [self.view addSubview:orangeBackgroundView];
+    
+    self.topLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, -2, self.contentSizeForViewInPopover.width-xImage.size.width-34, 44)];
+    self.topLabel.font = [UIFont fontWithName:FONT_NAME_MEDIUM size:24];
+    self.topLabel.textColor = [UIColor blackColor];
     self.topLabel.backgroundColor = [UIColor clearColor];
     self.topLabel.text = self.title;
     [self.view addSubview:self.topLabel];
     
-    UIImage* xImage = [UIImage imageNamed:@"x-icon"];
     self.doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.doneButton.frame = CGRectMake(self.topLabel.x+self.topLabel.width+10, 20, xImage.size.width, xImage.size.height);
+    self.doneButton.frame = CGRectMake(self.topLabel.x+self.topLabel.width+5, 12, xImage.size.width, xImage.size.height);
     [self.doneButton setImage:xImage forState:UIControlStateNormal];
     [self.doneButton addTarget:self action:@selector(doneTapped) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.doneButton];
-    
-    UIView* whiteLine = [[UIView alloc] initWithFrame:CGRectMake(self.topLabel.x, self.topLabel.y+self.topLabel.height+12, 280, 1)];
-    whiteLine.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:whiteLine];
+    [self.scrollView addSubview:self.doneButton];
     
     float lastLabelBottom = 0;
     //create first group of labels
     for (int i = 0; i < [self.firstGroupOfStrings count]; i++) {
-        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(20, whiteLine.y+whiteLine.height+10+25*i, 280, 20)];
-        label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
-        label.textColor = [UIColor whiteColor];
+        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(10, orangeBackgroundView.y+orangeBackgroundView.height+10+25*i, 280, 20)];
+        label.font = [UIFont fontWithName:FONT_NAME_LIGHT size:18];
+        label.textColor = FONT_COLOR_GRAY;
         label.backgroundColor = [UIColor clearColor];
         label.text = self.firstGroupOfStrings[i];
-        [self.view addSubview:label];
+        [self.scrollView addSubview:label];
         if (i == [self.firstGroupOfStrings count]-1) {
             lastLabelBottom = label.y+label.height;
         }
         [self.infoLabels addObject:label];
     }
     
-    UILabel* connectionsLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, lastLabelBottom+25, 280, 20)];
-    connectionsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
-    connectionsLabel.textColor = [UIColor whiteColor];
+    UILabel* connectionsLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, lastLabelBottom+25, 280, 20)];
+    connectionsLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:18];
+    connectionsLabel.textColor = FONT_COLOR_GRAY;
     connectionsLabel.backgroundColor = [UIColor clearColor];
     NSString* conn = [self.node.connections count] == 1 ? @"Connection" : @"Connections";
     connectionsLabel.text = [NSString stringWithFormat:@"%i %@", [self.node.connections count], conn];
-    [self.view addSubview:connectionsLabel];
+    [self.scrollView addSubview:connectionsLabel];
     [self.infoLabels addObject:connectionsLabel];
     
-    self.tracerouteTextView = [[UITextView alloc] initWithFrame:CGRectMake(whiteLine.x, whiteLine.y+15, whiteLine.width, 500                                 )];
+    self.tracerouteContainerView = [[UIView alloc] initWithFrame:CGRectMake(orangeBackgroundView.x, orangeBackgroundView.y+15, orangeBackgroundView.width, 500)];
+    self.tracerouteContainerView.hidden = YES;
+    [self.scrollView addSubview:self.tracerouteContainerView];
+    
+    CGFloat boxWidth = (self.contentSizeForViewInPopover.width-20-30-30-20)/3.0; //total width subtracted by outer and inner margins and divided by three
+    CGFloat boxHeight = 75;
+    
+    self.box1 = [[LabelNumberBoxView alloc] initWithFrame:CGRectMake(20, orangeBackgroundView.y+orangeBackgroundView.height+6, boxWidth, boxHeight) labelText:@"IP Hops" numberText:@"0"];
+    [self.tracerouteContainerView addSubview:self.box1];
+
+    self.box2 = [[LabelNumberBoxView alloc] initWithFrame:CGRectMake(20+boxWidth+30, orangeBackgroundView.y+orangeBackgroundView.height+6, boxWidth, boxHeight) labelText:@"ASN Hops" numberText:@"0"];
+    [self.tracerouteContainerView addSubview:self.box2];
+    
+    self.box3 = [[LabelNumberBoxView alloc] initWithFrame:CGRectMake(20+boxWidth+30+boxWidth+30, orangeBackgroundView.y+orangeBackgroundView.height+6, boxWidth, boxHeight) labelText:@"Time (ms)" numberText:@"0"];
+    [self.tracerouteContainerView addSubview:self.box3];
+    
+    UILabel* detailsLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, self.box1.y+self.box1.height+8, self.tracerouteContainerView.width-20, 18)];
+    detailsLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:18];
+    detailsLabel.textColor = FONT_COLOR_GRAY;
+    detailsLabel.backgroundColor = [UIColor clearColor];
+    detailsLabel.text = @"Details of Traceroute";
+    [self.tracerouteContainerView addSubview:detailsLabel];
+
+    UIView* dividerView = [[UIView alloc] initWithFrame:CGRectMake(detailsLabel.x, detailsLabel.y+detailsLabel.height+10, detailsLabel.width, 1)];
+    dividerView.backgroundColor = [UIColor grayColor];
+    [self.tracerouteContainerView addSubview:dividerView];
+    
+    self.tracerouteTextView = [[UITextView alloc] initWithFrame:CGRectMake(5, dividerView.y+dividerView.height+5, self.tracerouteContainerView.width-5, 450)];
     self.tracerouteTextView.backgroundColor = [UIColor clearColor];
     self.tracerouteTextView.textColor = [UIColor whiteColor];
     self.tracerouteTextView.editable = NO;
     self.tracerouteTextView.userInteractionEnabled = YES;
-    self.tracerouteTextView.scrollEnabled = YES;
-    self.tracerouteTextView.hidden = YES;
-    self.tracerouteTextView.font = [UIFont fontWithName:@"CourierNewPSMT" size:12];
-    [self.view addSubview:self.tracerouteTextView];
+    self.tracerouteTextView.scrollEnabled = [HelperMethods deviceIsiPad];
+    self.tracerouteTextView.font = [UIFont fontWithName:FONT_NAME_REGULAR size:12];
+    [self.tracerouteContainerView addSubview:self.tracerouteTextView];
 
+    
+    UIImage* yourLocationImage = [UIImage imageNamed:@"youarehere-icon"];
+    self.yourLocationContainerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.contentSizeForViewInPopover.width, 44)]; //position is not really set here, only size!
+    self.yourLocationContainerView.backgroundColor = UI_BLUE_COLOR;
+    self.yourLocationContainerView.alpha = 0;
+    [self.view addSubview:self.yourLocationContainerView];
+    
+    UILabel* yourLocationLabel = [[UILabel alloc] initWithFrame:CGRectMake(8, 0, self.yourLocationContainerView.width-yourLocationImage.size.width-8-20, self.yourLocationContainerView.height)];
+    yourLocationLabel.font = [UIFont fontWithName:FONT_NAME_MEDIUM size:28];
+    yourLocationLabel.textColor = [UIColor blackColor];
+    yourLocationLabel.backgroundColor = [UIColor clearColor];
+    yourLocationLabel.text = @"To Your Location";
+    [self.yourLocationContainerView addSubview:yourLocationLabel];
+    
+    UIImageView* yourLocationImageView = [[UIImageView alloc] initWithFrame:CGRectMake(self.yourLocationContainerView.width-yourLocationImage.size.width-25, 9, yourLocationImage.size.width, yourLocationImage.size.height)];
+    yourLocationImageView.image = yourLocationImage;
+    [self.yourLocationContainerView addSubview:yourLocationImageView];
+    
+    
     
     if (!self.isDisplayingCurrentNode) {
         self.tracerouteButton = [UIButton buttonWithType:UIButtonTypeCustom];
         self.tracerouteButton.frame = CGRectMake(20, self.contentSizeForViewInPopover.height-44-20, 280, 44);
-        [self.tracerouteButton setTitle:@"PERFORM TRACEROUTE" forState:UIControlStateNormal];
-        [self.tracerouteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [self.tracerouteButton setTitleShadowColor:[UIColor grayColor] forState:UIControlStateNormal];
-        [self.tracerouteButton.titleLabel setShadowOffset:CGSizeMake(0, -1)];
-        UIColor* tracerouteButtonColor = [UIColor colorWithRed:252.0/255.0 green:161.0/255.0 blue:0 alpha:1];
-        [self.tracerouteButton setBackgroundImage:[[HelperMethods imageWithColor:tracerouteButtonColor size:CGSizeMake(1, 1)] resizableImageWithCapInsets:UIEdgeInsetsZero] forState:UIControlStateNormal];
+        self.tracerouteButton.titleLabel.font = [UIFont fontWithName:FONT_NAME_REGULAR size:20];
+        [self.tracerouteButton setTitle:@"Perform Traceroute" forState:UIControlStateNormal];
+        [self.tracerouteButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [self.tracerouteButton setBackgroundImage:[[UIImage imageNamed:@"traceroute-button"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 22, 0, 22)] forState:UIControlStateNormal];
         [self.tracerouteButton addTarget:self action:@selector(tracerouteButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:self.tracerouteButton];
+        [self.scrollView addSubview:self.tracerouteButton];
     }
+    
 }
 
 - (IBAction)doneTapped {
@@ -162,12 +223,19 @@
 -(IBAction)tracerouteButtonTapped:(id)sender{
     if ([HelperMethods deviceHasInternetConnection]) {
         //UI setup
-        self.contentSizeForViewInPopover = CGSizeMake(340, 595);
-        self.tracerouteTextView.alpha = 0;
-        self.tracerouteTextView.hidden = NO;
+        if ([HelperMethods deviceIsiPad]) {
+            self.contentSizeForViewInPopover = CGSizeMake(self.contentSizeForViewInPopover.width, 44+20+75+50+self.tracerouteTextView.height+20);
+            self.scrollView.frame = CGRectMake(0, 0, self.scrollView.width, 44+20+75+50+self.tracerouteTextView.height+20);
+        }
+        self.scrollView.contentSize = CGSizeMake(self.contentSizeForViewInPopover.width, 44+20+75+50+self.tracerouteTextView.height+20);
+
+        self.tracerouteContainerView.alpha = 0;
+        self.tracerouteContainerView.hidden = NO;
+        self.tracerouteTimer = [NSTimer scheduledTimerWithTimeInterval:0.001 target:self selector:@selector(tracerouteTimerFired) userInfo:nil repeats:YES];
+        self.topLabel.text = [NSString stringWithFormat:@"From %@", self.topLabel.text];
         
         [UIView animateWithDuration:1 animations:^{
-            self.tracerouteTextView.alpha = 1;
+            self.tracerouteContainerView.alpha = 1;
             for (UILabel* label in self.infoLabels) {
                 label.alpha = 0;
             }
@@ -182,6 +250,28 @@
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No Internet connection" message:@"Please connect to the internet." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
         [alert show];
     }
+}
+
+- (void)tracerouteTimerFired {
+    [self.box3 incrementNumber];
+}
+
+- (void)tracerouteDone {
+    CGSize size = [self.tracerouteTextView.text sizeWithFont:self.tracerouteTextView.font constrainedToSize:CGSizeMake(self.tracerouteTextView.width, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+    if ([HelperMethods deviceIsiPad]) {
+        self.contentSizeForViewInPopover = CGSizeMake(self.contentSizeForViewInPopover.width, 44+20+75+43+MIN(self.tracerouteTextView.height, size.height)+self.yourLocationContainerView.height+20);
+        self.yourLocationContainerView.frame = CGRectMake(0, self.contentSizeForViewInPopover.height-self.yourLocationContainerView.height, self.yourLocationContainerView.width, self.yourLocationContainerView.height);
+    }else {
+        self.yourLocationContainerView.frame = CGRectMake(0, self.contentSizeForViewInPopover.height-self.yourLocationContainerView.height, self.yourLocationContainerView.width, self.yourLocationContainerView.height);
+        self.scrollView.contentSize = CGSizeMake(self.contentSizeForViewInPopover.width, 44+20+75+43+MIN(self.tracerouteTextView.height, size.height)+10);
+    }
+    [UIView animateWithDuration:1 animations:^{
+        self.yourLocationContainerView.alpha = 1;
+        if (![HelperMethods deviceIsiPad]) {
+            self.scrollView.frame = CGRectMake(0, 0, self.scrollView.width, self.contentSizeForViewInPopover.height-44);
+        }
+    }];
+
 }
 
 @end

@@ -28,7 +28,7 @@
 	CGSize imageSize = CGSizeMake(30.0f, 30.0f);
 	NSString *bgImageName = @"popoverBgSimple.png";
 	CGFloat bgMargin = 0;
-	CGFloat contentMargin = 2.0;
+	CGFloat contentMargin = 0;
 	
 	ret.leftBgMargin = bgMargin;
 	ret.rightBgMargin = bgMargin;

@@ -6,3 +6,4 @@
 *.mode2v3
 project.xcworkspace
 xcuserdata
+.idea
