@@ -3,6 +3,12 @@
 //  InternetMap
 //
 
+/** A Node holds data for one ASN.
+ ASN = Autonomous System Number
+ Each of these systems is an entity that controls the routing for their network.
+ We're more interested in the connections between systems, not what goes on inside them.
+ */
+
 #import <Foundation/Foundation.h>
 
 enum
