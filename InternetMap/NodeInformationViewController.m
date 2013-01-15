@@ -120,7 +120,7 @@
     self.doneButton.frame = CGRectMake(self.topLabel.x+self.topLabel.width+5, 12, xImage.size.width, xImage.size.height);
     [self.doneButton setImage:xImage forState:UIControlStateNormal];
     [self.doneButton addTarget:self action:@selector(doneTapped) forControlEvents:UIControlEventTouchUpInside];
-    [self.scrollView addSubview:self.doneButton];
+    [self.view addSubview:self.doneButton];
     
     float lastLabelBottom = 0;
     //create first group of labels

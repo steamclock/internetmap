@@ -23,6 +23,7 @@ class Program {
     unsigned int _program;
     unsigned int _activeAttributes;
     
+    void setup(std::string fragmentName, std::string vertexName, unsigned int attributes);
     bool compileShader(unsigned int* shader, unsigned int type, std::string file);
     bool linkProgram(unsigned int program);
     bool validateProgram(unsigned int program);
