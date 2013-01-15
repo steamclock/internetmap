@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 static const float MOVE_TIME = 1.0f;
+static const float MIN_ZOOM = -10.0f;
 
 // TODO: better way to register this
 void cameraMoveFinishedCallback(void);
@@ -276,8 +277,8 @@ void Camera::zoomByScale(float zoom) {
         _zoom = -0.2;
     }
     
-    if(_zoom < -10.0f) {
-        _zoom = -10.0f;
+    if(_zoom < MIN_ZOOM) {
+        _zoom = MIN_ZOOM;
     }
 }
 
@@ -286,8 +287,8 @@ void Camera::zoomAnimated(float zoom, TimeInterval duration) {
         zoom = -0.2;
     }
     
-    if(zoom < -10.0f) {
-        zoom = -10.0f;
+    if(zoom < MIN_ZOOM) {
+        zoom = MIN_ZOOM;
     }
     
     _zoomStart = _zoom;
