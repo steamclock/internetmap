@@ -118,7 +118,7 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
 - (id)initWithAddress:(NSString*)hostAddress
 {
     assert(hostAddress != nil);
-    NSData* hostAddressData = [self formatAddress:hostAddress];
+    NSData* hostAddressData = [self _formatAddress:hostAddress];
     
     self = [super init];
     if (self != nil) {
@@ -129,7 +129,7 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
     return self;
 }
 
-- (NSData*)formatAddress:(NSString*)address{
+- (NSData*)_formatAddress:(NSString*)address{
     const char *ipstring = [address UTF8String];
     struct sockaddr_in ip;
     inet_aton(ipstring, &ip.sin_addr);
@@ -138,6 +138,85 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
     return hostAddress;
 }
 
+- (void)_startWithHostAddress
+{
+    int                     err;
+    int                     fd;
+    const struct sockaddr * addrPtr;
+    
+    assert(self.targetAddress != nil);
+    
+    // Open the socket.
+    
+    addrPtr = (const struct sockaddr *) [self.targetAddress bytes];
+    
+    fd = -1;
+    err = 0;
+    switch (addrPtr->sa_family) {
+        case AF_INET: {
+            fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_ICMP);
+            
+            if (fd < 0) {
+                err = errno;
+            }
+        } break;
+        case AF_INET6:
+            assert(NO);
+            // fall through
+        default: {
+            err = EPROTONOSUPPORT;
+        } break;
+    }
+    
+    if (err != 0) {
+        [self _didFailWithError:[NSError errorWithDomain:NSPOSIXErrorDomain code:err userInfo:nil]];
+    } else {
+        CFSocketContext     context = {0, (__bridge void *)(self), NULL, NULL, NULL};
+        CFRunLoopSourceRef  rls;
+        
+        // Wrap it in a CFSocket and schedule it on the runloop.
+
+        self->_socket = CFSocketCreateWithNative(NULL, fd, kCFSocketReadCallBack, SocketReadCallback, &context);
+        assert(self->_socket != NULL);
+        
+        // The socket will now take care of clean up our file descriptor.
+        
+        assert( CFSocketGetSocketFlags(self->_socket) & kCFSocketCloseOnInvalidate );
+        fd = -1;
+        
+        rls = CFSocketCreateRunLoopSource(NULL, self->_socket, 0);
+        assert(rls != NULL);
+        
+        CFRunLoopAddSource(CFRunLoopGetCurrent(), rls, kCFRunLoopDefaultMode);
+        
+        CFRelease(rls);
+        
+        if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(SCPacketUtility:didStartWithAddress:)] ) {
+            [self.delegate SCIcmpPacketUtility:self didStartWithAddress:self.targetAddress];
+        }
+    }
+    assert(fd == -1);
+}
+
+- (void)start
+{
+    // If the user supplied us with an address, just start pinging that.  Otherwise... uh.
+    
+    if (self->_targetAddress != nil) {
+        [self _startWithHostAddress];
+    } else {
+        // wat.
+    }
+}
+
+- (void)stop
+{
+    if (self->_socket != NULL) {
+        CFSocketInvalidate(self->_socket);
+        CFRelease(self->_socket);
+        self->_socket = NULL;
+    }
+}
 
 #pragma mark - Packet sending
 

@@ -87,11 +87,11 @@
     [self _didFailWithError:error];
 }
 
-- (void)sendPacketWithData:(NSData *)data withTTL:(int)ttl{
-    [self sendICMPPacket:data withTTL:ttl];
+- (void)_sendPacketWithData:(NSData *)data withTTL:(int)ttl{
+    [self _sendICMPPacket:data withTTL:ttl];
 }
 
--(void)sendICMPPacket:(NSData *)data withTTL:(int)ttl{
+-(void)_sendICMPPacket:(NSData *)data withTTL:(int)ttl{
     
     int             err;
     NSData *        payload;
