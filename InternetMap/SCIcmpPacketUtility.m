@@ -342,6 +342,9 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
     
     addrLen = sizeof(addr);
     bytesRead = recvfrom(CFSocketGetNative(self->_socket), buffer, kBufferSize, 0, (struct sockaddr *) &addr, &addrLen);
+    
+    NSDate* now = [NSDate date]; //Pass this up to the delegate in case we care about RTT
+    
     err = 0;
     if (bytesRead < 0) {
         err = errno;
@@ -358,8 +361,8 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
         // We got some data, pass it up to our client.
         
         if ( [self _isValidResponsePacket:packet] ) {
-            if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(SCIcmpPacketUtility:didReceiveResponsePacket:)] ) {
-                [self.delegate SCIcmpPacketUtility:self didReceiveResponsePacket:packet];
+            if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(SCIcmpPacketUtility:didReceiveResponsePacket:arrivedAt:)] ) {
+                [self.delegate SCIcmpPacketUtility:self didReceiveResponsePacket:packet arrivedAt:now];
             }
         } else {
             if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(SCIcmpPacketUtility:didReceiveUnexpectedPacket:)] ) {

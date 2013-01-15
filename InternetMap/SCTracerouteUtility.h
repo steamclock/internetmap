@@ -10,6 +10,7 @@
 #import "SCIcmpPacketUtility.h"
 
 static const int MAX_HOPS = 30;
+static const int PACKETS_PER_ITER = 3; // How many packets we send each time we increase the TTL
 
 @protocol SCTracerouteDelegate <NSObject>
 

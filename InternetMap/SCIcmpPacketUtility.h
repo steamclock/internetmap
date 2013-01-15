@@ -74,7 +74,7 @@
 - (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didFailToSendPacket:(NSData *)packet error:(NSError *)error;
 // Called whenever the SCIcmpPacketUtility object tries and fails to send a packet.
 
-- (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didReceiveResponsePacket:(NSData *)packet;
+- (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didReceiveResponsePacket:(NSData *)packet arrivedAt:(NSDate*)dateTime;
 // Called whenever the SCIcmpPacketUtility object receives an ICMP packet that looks like a response to one of our packets
 
 - (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didReceiveUnexpectedPacket:(NSData *)packet;

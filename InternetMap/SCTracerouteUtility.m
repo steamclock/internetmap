@@ -8,6 +8,7 @@
 
 #import "SCTracerouteUtility.h"
 #import "SCIcmpPacketUtility.h"
+#import "SCPacketRecord.h"
 
 @interface SCTracerouteUtility ()
 
@@ -42,6 +43,9 @@
     return self;
 }
 
+
+#pragma mark - Start/Stop the Traceroute
+
 -(void)start{
     [self.packetUtility start];   
 }
@@ -50,17 +54,96 @@
     [self.packetUtility stop];
 }
 
+
+#pragma mark - Send packets
+- (void)sendPackets:(NSData*)data{
+    if (self.ttlCount <= MAX_HOPS) {
+        for (int i = 0; i <= PACKETS_PER_ITER; i++) {
+            [self.packetUtility sendPacketWithData:nil andTTL:self.ttlCount];
+        }   
+    } else if (self.ttlCount > MAX_HOPS) {
+        if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidTimeout)]) {
+            [self.delegate tracerouteDidTimeout];
+        }
+    }
+}
+
+
+#pragma mark - Process packets
+
+-(int)processICMPPacket:(NSData *)packet{
+    //Nab IPHeader
+    const IPHeader* IPHeader = (const struct IPHeader *) ((const uint8_t *)[packet bytes]);
+    
+    //Nab ICMP Header
+    const ICMPHeader* header = [SCIcmpPacketUtility icmpInPacket:packet];
+    NSInteger type = (NSInteger)header->type;
+    NSInteger code = (NSInteger)header->code;
+    
+    //Store last IP
+    self.lastIP = [NSString stringWithFormat:@"%d.%d.%d.%d", IPHeader->sourceAddress[0], IPHeader->sourceAddress[1], IPHeader->sourceAddress[3], IPHeader->sourceAddress[4]];
+    if (type == kICMPTimeExceeded) {
+        return kICMPTimeExceeded;
+    } else if (type == kICMPTypeEchoReply) {
+        return kICMPTypeEchoReply;
+    } else {
+        // Everything else we don't want
+        // TODO handle type 3 code 1 better (machine unreachable)
+        NSLog(@"Something is wrong, and we can't continue.");
+        NSLog(@"ICMP Type: %d and Code: %d", type, code);
+        return -1;
+    }
+}
+
+-(void)processErrorICMPPacket:(NSData *)packet arrivedAt:(NSDate*)dateTime{
+    // Use ICMP error packet structure rather than valid response structure
+    const ICMPErrorPacket* errorPacket = (const struct ICMPErrorPacket *)[packet bytes];
+    
+    // Get sequence number to calculate RTT
+    NSInteger sequenceNumber = CFSwapInt16BigToHost(errorPacket->sequenceNumberOriginal);
+
+    // If the sequence numbers match, record the time the packet arrived
+    for (SCPacketRecord* packetRecord in self.packetUtility.packetRecords) {
+        if (packetRecord.sequenceNumber == sequenceNumber) {
+            packetRecord.arrival = dateTime;
+            [self calculateResponseTimeForSequence:sequenceNumber];
+        }
+    }
+    
+}
+
+-(void)calculateResponseTimeForSequence:(NSInteger)sequenceNumber{
+    for (SCPacketRecord* packetRecord in self.packetUtility.packetRecords) {
+        if (packetRecord.sequenceNumber == sequenceNumber) {
+            // If we sent a packet with a corresponding sequence number, let's calculate the RTT
+            packetRecord.rtt = [packetRecord.arrival timeIntervalSinceDate:packetRecord.departure] * 1000;
+        }
+    }
+}
+
+
 #pragma mark - SCIcmpPacketUtility Delegate Methods
 
 - (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didStartWithAddress:(NSData *)address{
-    
+    [self sendPackets:nil];
 }
 
 - (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didSendPacket:(NSData *)packet{
     
 }
 
-- (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didReceiveResponsePacket:(NSData *)packet{
+- (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didReceiveResponsePacket:(NSData *)packet arrivedAt:(NSDate *)dateTime{
+    // Check what kind of packet from header
+    
+    int typeOfPacket = [self processICMPPacket:packet];
+    
+    if (typeOfPacket == kICMPTimeExceeded) {
+        [self processErrorICMPPacket:packet arrivedAt:dateTime];
+    } else if (typeOfPacket == kICMPTypeEchoReply) {
+        // Check if we've reached our final destination
+    } else {
+        NSLog(@"What should happen here?");
+    }
     
 }
 
@@ -69,11 +152,11 @@
 }
 
 - (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didFailToSendPacket:(NSData *)packet error:(NSError *)error{
-    
+	NSLog(@"ERROR: %@", error);
 }
 
 - (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didFailWithError:(NSError *)error{
-    
+	NSLog(@"ERROR: %@", error);    
 }
 
 @end
