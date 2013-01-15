@@ -80,8 +80,7 @@ void MapController::unhoverNode(){
 
 
 void MapController::updateTargetForIndex(int index) {
-    Vector3 target;
-    float zoom = 0;
+    Target target;
     // update current node to default state
     if (targetNode != INT_MAX) {
         NodePointer node = data->nodeAtIndex(targetNode);
@@ -90,14 +89,15 @@ void MapController::updateTargetForIndex(int index) {
         data->visualization->updateDisplayForNodes(display, nodes);
     }
     
-    //set new node as targeted and change camera anchor point
+    //set new node as targeted
     if (index != INT_MAX) {
-        
         targetNode = index;
         NodePointer node = data->nodeAtIndex(targetNode);
         Point3 origTarget = data->visualization->nodePosition(node);
-        target = Vector3(origTarget.getX(), origTarget.getY(), origTarget.getZ());
-        zoom = data->visualization->nodeZoom(node);
+
+        target.vector = Vector3(origTarget.getX(), origTarget.getY(), origTarget.getZ());
+        target.zoom = data->visualization->nodeZoom(node);
+        target.maxZoom = target.zoom + 0.1;
         
         display->nodes->beginUpdate();
         display->nodes->updateNode(node->index, ColorFromRGB(SELECTED_NODE_COLOR_HEX));
@@ -107,13 +107,10 @@ void MapController::updateTargetForIndex(int index) {
         nodes.push_back(node);
         data->visualization->resetDisplayForSelectedNodes(display, nodes);
         highlightConnections(node);
-        
-    } else {
-        target = Vector3(0, 0, 0);
     }
     
-    display->camera->setTarget(target, zoom);
-
+    //change camera anchor point and zoom
+    display->camera->setTarget(target);
 }
 
 #pragma mark - Connection Highlighting

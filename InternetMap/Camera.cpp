@@ -8,6 +8,9 @@
 
 static const float MOVE_TIME = 1.0f;
 static const float MIN_ZOOM = -10.0f;
+//we need a bound on the max. zoom because on small nodes the calculated max puts the target behind the camera.
+//this might be a bug in targeting...?
+static const float MAX_MAX_ZOOM = -0.2f;
 
 // TODO: better way to register this
 void cameraMoveFinishedCallback(void);
@@ -20,6 +23,7 @@ Camera::Camera() :
     _allowIdleAnimation(false),
     _rotation(0.0f),
     _zoom(-3.0f),
+    _maxZoom(MAX_MAX_ZOOM),
     _targetMoveStartTime(MAXFLOAT),
     _targetMoveStartPosition(0.0f, 0.0f, 0.0f),
     _zoomStart(0.0f),
@@ -273,8 +277,8 @@ void Camera::rotateAnimated(Matrix4 rotation, TimeInterval duration) {
 
 void Camera::zoomByScale(float zoom) {
     _zoom += zoom * -_zoom;
-    if(_zoom > -0.2) {
-        _zoom = -0.2;
+    if(_zoom > _maxZoom) {
+        _zoom = _maxZoom;
     }
     
     if(_zoom < MIN_ZOOM) {
@@ -283,8 +287,8 @@ void Camera::zoomByScale(float zoom) {
 }
 
 void Camera::zoomAnimated(float zoom, TimeInterval duration) {
-    if(zoom > -0.2) {
-        zoom = -0.2;
+    if(zoom > _maxZoom) {
+        zoom = _maxZoom;
     }
     
     if(zoom < MIN_ZOOM) {
@@ -297,12 +301,16 @@ void Camera::zoomAnimated(float zoom, TimeInterval duration) {
     _zoomDuration = duration;
 }
 
-void Camera::setTarget(const Vector3& target, float zoom) {
+void Camera::setTarget(const Target& target) {
     _targetMoveStartPosition = _target;
-    _target = target;
+    _target = target.vector;
     _targetMoveStartTime = _updateTime;
     _isMovingToTarget = true;
-    zoomAnimated(zoom, MOVE_TIME);
+    _maxZoom = target.maxZoom;
+    if (_maxZoom > MAX_MAX_ZOOM) {
+        _maxZoom = MAX_MAX_ZOOM;
+    }
+    zoomAnimated(target.zoom, MOVE_TIME);
 }
 
 #pragma mark - Momentum Panning/Zooming/Rotation
