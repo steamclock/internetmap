@@ -11,6 +11,8 @@
 #define LOG_INFO(...) __android_log_print(ANDROID_LOG_INFO, "InternetMap", __VA_ARGS__)
 #define LOG_ERROR(...) __android_log_print(ANDROID_LOG_ERROR, "InternetMap", __VA_ARGS__)
 
+class MapDisplay;
+
 class Renderer {
 
 public:
@@ -46,6 +48,8 @@ private:
     int _height;
     GLfloat _angle;
     
+    MapDisplay* _mapDisplay;
+
     // RenderLoop is called in a rendering thread started in start() method
     // It creates rendering context and renders scene until stop() is called
     void renderLoop();

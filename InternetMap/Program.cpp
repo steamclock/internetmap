@@ -9,6 +9,13 @@
 #include "Program.hpp"
 #include "OpenGL.hpp"
 
+#ifdef ANDROID
+#include <android/log.h>
+#define LOG(...) __android_log_print(ANDROID_LOG_INFO, "InternetMap", __VA_ARGS__)
+#else
+#define LOG(...) printf(__VA_ARGS__)
+#endif
+
 // TODO: clean this up
 std::string loadTextResource(std::string base, std::string extension);
 
@@ -34,14 +41,14 @@ void Program::setup(std::string fragmentName, std::string vertexName, unsigned i
     // Create and compile vertex shader.
     std::string vertShaderCode = loadTextResource(vertexName, "vsh");
     if (!compileShader(&vertShader,GL_VERTEX_SHADER,vertShaderCode)) {
-        //TODO: NSLog(@"Failed to compile vertex shader");
+        LOG("Failed to compile vertex shader");
         return;
     }
     
     // Create and compile fragment shader.
     std::string frahShaderCode = loadTextResource(fragmentName, "fsh");
     if (!compileShader(&fragShader,GL_FRAGMENT_SHADER,frahShaderCode)) {
-        //TODO: NSLog(@"Failed to compile fragment shader");
+        LOG("Failed to compile fragment shader");
         return;
     }
     
@@ -70,7 +77,7 @@ void Program::setup(std::string fragmentName, std::string vertexName, unsigned i
     
     // Link program.
     if (!linkProgram(_program)) {
-        //TODO: NSLog(@"Failed to link program: %d", _program);
+        LOG("Failed to link program: %d", _program);
         
         if (vertShader) {
             glDeleteShader(vertShader);
@@ -88,6 +95,8 @@ void Program::setup(std::string fragmentName, std::string vertexName, unsigned i
         return;
     }
     
+    LOG("Compiled shader %s/%s", fragmentName.c_str(), vertexName.c_str());
+
     // Release vertex and fragment shaders.
     if (vertShader) {
         glDetachShader(_program, vertShader);

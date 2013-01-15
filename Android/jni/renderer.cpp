@@ -8,37 +8,9 @@
 #include <string>
 #include "renderer.h"
 
-static GLint vertices[][3] = {
-    { -0x10000, -0x10000, -0x10000 },
-    {  0x10000, -0x10000, -0x10000 },
-    {  0x10000,  0x10000, -0x10000 },
-    { -0x10000,  0x10000, -0x10000 },
-    { -0x10000, -0x10000,  0x10000 },
-    {  0x10000, -0x10000,  0x10000 },
-    {  0x10000,  0x10000,  0x10000 },
-    { -0x10000,  0x10000,  0x10000 }
-};
-
-static GLint colors[][4] = {
-    { 0x10000, 0x00000, 0x00000, 0x10000 },
-    { 0x10000, 0x00000, 0x00000, 0x10000 },
-    { 0x10000, 0x10000, 0x00000, 0x10000 },
-    { 0x10000, 0x10000, 0x00000, 0x10000 },
-    { 0x10000, 0x00000, 0x10000, 0x10000 },
-    { 0x10000, 0x00000, 0x10000, 0x10000 },
-    { 0x10000, 0x10000, 0x10000, 0x10000 },
-    { 0x10000, 0x10000, 0x10000, 0x10000 }
-};
-
-GLubyte indices[] = {
-    0, 4, 5,    0, 5, 1,
-    1, 5, 6,    1, 6, 2,
-    2, 6, 7,    2, 7, 3,
-    3, 7, 4,    3, 4, 0,
-    4, 7, 6,    4, 6, 5,
-    3, 0, 1,    3, 1, 2
-};
-
+#include <common/MapDisplay.hpp>
+#include <common/Camera.hpp>
+#include <common/Nodes.hpp>
 
 Renderer::Renderer()
 {
@@ -48,6 +20,7 @@ Renderer::Renderer()
     _surface = 0;
     _context = 0;
     _angle = 0;
+
     return;
 }
 
@@ -55,6 +28,7 @@ Renderer::~Renderer()
 {
     LOG_INFO("Renderer instance destroyed");
     pthread_mutex_destroy(&_mutex);
+
     return;
 }
 
@@ -90,8 +64,6 @@ void Renderer::setWindow(ANativeWindow *window)
 
     return;
 }
-
-
 
 void Renderer::renderLoop()
 {
@@ -144,6 +116,12 @@ bool Renderer::initialize()
         EGL_RED_SIZE, 8,
         EGL_NONE
     };
+
+    const EGLint contextAttribs[] = {
+        EGL_CONTEXT_CLIENT_VERSION, 2,
+        EGL_NONE
+    };
+
     EGLDisplay display;
     EGLConfig config;    
     EGLint numConfigs;
@@ -185,7 +163,7 @@ bool Renderer::initialize()
         return false;
     }
     
-    if (!(context = eglCreateContext(display, config, 0, 0))) {
+    if (!(context = eglCreateContext(display, config, 0, contextAttribs))) {
         LOG_ERROR("eglCreateContext() returned error %d", eglGetError());
         destroy();
         return false;
@@ -210,26 +188,25 @@ bool Renderer::initialize()
     _width = width;
     _height = height;
 
+    _mapDisplay = new MapDisplay;
+    _mapDisplay->camera->setDisplaySize(width, height);
     
-    glDisable(GL_DITHER);
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
-    glClearColor(0, 0, 0, 0);
-    glEnable(GL_CULL_FACE);
-    glShadeModel(GL_SMOOTH);
-    glEnable(GL_DEPTH_TEST);
-    
-    glViewport(0, 0, width, height);
+    Nodes* nodes = new Nodes(2);
+    nodes->beginUpdate();
+    nodes->updateNode(0, Point3(1.0f, 0.5f, 0.0f), 0.1f, Color(1.0f,0.0f,0.0f,1.0f));
+    nodes->updateNode(1, Point3(-0.5f, -0.5f, 0.0f), 0.2f, Color(0.0f,0.0f,1.0f,1.0f));
+    nodes->endUpdate();
 
-    ratio = (GLfloat) width / height;
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glFrustumf(-ratio, ratio, -1, 1, 1, 10);
+    _mapDisplay->nodes = shared_ptr<Nodes>(nodes);
 
     return true;
 }
 
 void Renderer::destroy() {
     LOG_INFO("Destroying context");
+
+    delete _mapDisplay;
+    _mapDisplay = NULL;
 
     eglMakeCurrent(_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
     eglDestroyContext(_display, _context);
@@ -247,23 +224,9 @@ void Renderer::destroy() {
 
 void Renderer::drawFrame()
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    glTranslatef(0, 0, -3.0f);
-    glRotatef(_angle, 0, 1, 0);
-    glRotatef(_angle*0.25f, 1, 0, 0);
-
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_COLOR_ARRAY);
-    
-    glFrontFace(GL_CW);
-    glVertexPointer(3, GL_FIXED, 0, vertices);
-    glColorPointer(4, GL_FIXED, 0, colors);
-    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, indices);
-
-    _angle += 1.2f;    
+	_mapDisplay->camera->rotateRadiansX(0.01);
+	_mapDisplay->update(0.033f);
+	_mapDisplay->draw();
 }
 
 void* Renderer::threadStartCallback(void *myself)
@@ -274,11 +237,6 @@ void* Renderer::threadStartCallback(void *myself)
     pthread_exit(0);
     
     return 0;
-}
-
-std::string loadTextResource(std::string base, std::string extension) {
-	// TODO
-	return "";
 }
 
 void cameraMoveFinishedCallback(void) {

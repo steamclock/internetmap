@@ -1,6 +1,10 @@
 
 package com.peer1.internetmap;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -36,6 +40,20 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback
                 }});
     }
 
+    public String readFileAsString(String filePath) throws java.io.IOException
+    {
+    	InputStream inputStream = getAssets().open(filePath);
+    	BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        String line, results = "";
+        while( ( line = reader.readLine() ) != null)
+        {
+            results += line;
+            results += '\n';
+        }
+        reader.close();
+        return results;
+    }
+    
     @Override
     protected void onResume() {
         super.onResume();
@@ -69,11 +87,11 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback
     }
 
 
-    public static native void nativeOnCreate();
-    public static native void nativeOnResume();
-    public static native void nativeOnPause();
-    public static native void nativeOnStop();
-    public static native void nativeSetSurface(Surface surface);
+    public native void nativeOnCreate();
+    public native void nativeOnResume();
+    public native void nativeOnPause();
+    public native void nativeOnStop();
+    public native void nativeSetSurface(Surface surface);
 
     static {
         System.loadLibrary("internetmaprenderer");
