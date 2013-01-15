@@ -79,6 +79,40 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
     return [[SCIcmpPacketUtility alloc] initWithAddress:hostAddress];
 }
 
++ (const struct ICMPHeader *)icmpInPacket:(NSData *)packet
+{
+    const struct ICMPHeader *   result;
+    NSUInteger                  icmpHeaderOffset;
+    
+    result = nil;
+    icmpHeaderOffset = [self _icmpHeaderOffsetInPacket:packet];
+    if (icmpHeaderOffset != NSNotFound) {
+        result = (const struct ICMPHeader *) (((const uint8_t *)[packet bytes]) + icmpHeaderOffset);
+    }
+
+    return result;
+}
+
++ (NSUInteger)_icmpHeaderOffsetInPacket:(NSData *)packet
+{
+    NSUInteger              result;
+    const struct IPHeader * ipPtr;
+    size_t                  ipHeaderLength;
+    
+    result = NSNotFound;
+    if ([packet length] >= (sizeof(IPHeader) + sizeof(ICMPHeader))) {
+        ipPtr = (const IPHeader *) [packet bytes];
+        assert((ipPtr->versionAndHeaderLength & 0xF0) == 0x40);     // IPv4
+        assert(ipPtr->protocol == 1);                               // ICMP
+        ipHeaderLength = (ipPtr->versionAndHeaderLength & 0x0F) * sizeof(uint32_t);
+        if ([packet length] >= (ipHeaderLength + sizeof(ICMPHeader))) {
+            result = ipHeaderLength;
+        }
+    }
+    return result;
+}
+
+
 #pragma mark - Instance Methods
 
 - (id)initWithAddress:(NSString*)hostAddress
@@ -188,7 +222,7 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
     
     if ((bytesSent > 0) && (((NSUInteger) bytesSent) == [packet length]) ) {
         
-        // Tell the client, woop woop
+        // Succcess: Tell the client, woop woop
         
         if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(SCIcmpPacketUtility:didSendPacket:)] ) {
             [self.delegate SCIcmpPacketUtility:self didSendPacket:packet];
@@ -209,6 +243,131 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
     
     self.nextSequenceNumber += 1;
 }
+
+#pragma mark - Receive packets
+
+- (void)_readData{
+    // Called by the socket handling code (SocketReadCallback) to process a message waiting on the socket
+    int                     err;
+    struct sockaddr_storage addr;
+    socklen_t               addrLen;
+    ssize_t                 bytesRead;
+    void *                  buffer;
+    enum { kBufferSize = 65535 };
+    
+    // 65535 is the maximum IP packet size, which seems like a reasonable bound
+    // here (plus it's what <x-man-page://8/ping> uses).
+    
+    buffer = malloc(kBufferSize);
+    assert(buffer != NULL);
+    
+    // Actually read the data.
+    
+    addrLen = sizeof(addr);
+    bytesRead = recvfrom(CFSocketGetNative(self->_socket), buffer, kBufferSize, 0, (struct sockaddr *) &addr, &addrLen);
+    err = 0;
+    if (bytesRead < 0) {
+        err = errno;
+    }
+    
+    // Process the data we read.
+    
+    if (bytesRead > 0) {
+        NSMutableData *     packet;
+        
+        packet = [NSMutableData dataWithBytes:buffer length:bytesRead];
+        assert(packet != nil);
+        
+        // We got some data, pass it up to our client.
+        
+        if ( [self _isValidResponsePacket:packet] ) {
+            if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(SCIcmpPacketUtility:didReceiveResponsePacket:)] ) {
+                [self.delegate SCIcmpPacketUtility:self didReceiveResponsePacket:packet];
+            }
+        } else {
+            if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(SCIcmpPacketUtility:didReceiveUnexpectedPacket:)] ) {
+                [self.delegate SCIcmpPacketUtility:self didReceiveUnexpectedPacket:packet];
+            }
+        }
+    } else {
+        
+        // We failed to read the data, so shut everything down.
+        
+        if (err == 0) {
+            err = EPIPE;
+        }
+        [self _didFailWithError:[NSError errorWithDomain:NSPOSIXErrorDomain code:err userInfo:nil]];
+    }
+    
+    free(buffer);
+    
+    // Note that we don't loop back trying to read more data.  Rather, we just
+    // let CFSocket call us again.
+}
+
+static void SocketReadCallback(CFSocketRef s, CFSocketCallBackType type, CFDataRef address, const void *data, void *info)
+// This C routine is called by CFSocket when there's data waiting on our
+// ICMP socket.  It just redirects the call to Objective-C code.
+{
+    SCIcmpPacketUtility*    obj;
+    
+    obj = (__bridge SCIcmpPacketUtility*) info;
+    assert([obj isKindOfClass:[SCIcmpPacketUtility class]]);
+    
+#pragma unused(s)
+    assert(s == obj->_socket);
+#pragma unused(type)
+    assert(type == kCFSocketReadCallBack);
+#pragma unused(address)
+    assert(address == nil);
+#pragma unused(data)
+    assert(data == nil);
+    
+    [obj _readData];
+}
+
+- (BOOL)_isValidResponsePacket:(NSMutableData *)packet
+//Not sure if we really need this since we return any kind now
+{
+    //    BOOL                result;
+    //    NSUInteger          icmpHeaderOffset;
+    //    ICMPHeader *        icmpPtr;
+    //    ICMPErrorPacket *   errorPtr;
+    //    uint16_t            receivedChecksum;
+    //    uint16_t            calculatedChecksum;
+    //
+    //    result = NO;
+    //
+    //    icmpHeaderOffset = [[self class] _icmpHeaderOffsetInPacket:packet];
+    //
+    //    if (icmpHeaderOffset != NSNotFound) {
+    //
+    //        icmpPtr = (struct ICMPHeader *) (((uint8_t *)[packet mutableBytes]) + icmpHeaderOffset);
+    //
+    //
+    //        if (icmpPtr->type == kICMPTimeExceeded) {
+    //            errorPtr = (struct ICMPErrorPacket *)((uint8_t *)[packet bytes]);
+    //            receivedChecksum = errorPtr->checksum;
+    //            errorPtr->checksum = 0;
+    //            calculatedChecksum = in_cksum(errorPtr, [packet length] - icmpHeaderOffset);
+    //            errorPtr->checksum = receivedChecksum;
+    //
+    //        } else {
+    //            receivedChecksum   = icmpPtr->checksum;
+    //            icmpPtr->checksum  = 0;
+    //            calculatedChecksum = in_cksum(icmpPtr, [packet length] - icmpHeaderOffset);
+    //            icmpPtr->checksum  = receivedChecksum;
+    //        }
+    //
+    //        if (receivedChecksum == calculatedChecksum) {
+    //            NSLog(@"YAY");
+    //            result = YES;
+    //        }
+    //    }
+    
+    return YES;
+}
+
 
 
 #pragma mark - Error handling
