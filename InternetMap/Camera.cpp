@@ -7,7 +7,6 @@
 #include <stdlib.h>
 
 static const float MOVE_TIME = 1.0f;
-static const float FINAL_ZOOM_ON_SELECTION = -0.4;
 
 // TODO: better way to register this
 void cameraMoveFinishedCallback(void);
@@ -297,12 +296,12 @@ void Camera::zoomAnimated(float zoom, TimeInterval duration) {
     _zoomDuration = duration;
 }
 
-void Camera::setTarget(const Vector3& target) {
+void Camera::setTarget(const Vector3& target, float zoom) {
     _targetMoveStartPosition = _target;
     _target = target;
     _targetMoveStartTime = _updateTime;
     _isMovingToTarget = true;
-    zoomAnimated(FINAL_ZOOM_ON_SELECTION, MOVE_TIME);
+    zoomAnimated(zoom, MOVE_TIME);
 }
 
 #pragma mark - Momentum Panning/Zooming/Rotation
