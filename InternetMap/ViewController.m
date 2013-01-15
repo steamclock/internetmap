@@ -20,10 +20,8 @@
 #define MIN_TIMELINE_YEAR 1993
 #define MAX_TIMELINE_YEAR 2012
 
-//TODO: move these to a better place.
+//TODO: move this to a better place.
 #define SELECTED_NODE_COLOR UIColorFromRGB(0xffa300)
-//#define SELECTED_CONNECTION_COLOR_BRIGHT UIColorFromRGB(0xE0E0E0)
-//#define SELECTED_CONNECTION_COLOR_DIM UIColorFromRGB(0x383838)
 
 #define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 

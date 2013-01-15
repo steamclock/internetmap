@@ -153,7 +153,6 @@
 		1127C9CA16A0B9C500413FE9 /* NodeWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NodeWrapper.mm; sourceTree = "<group>"; };
 		1127C9CC16A0B9D700413FE9 /* ConnectionWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectionWrapper.h; sourceTree = "<group>"; };
 		1127C9CD16A0B9D700413FE9 /* ConnectionWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ConnectionWrapper.mm; sourceTree = "<group>"; };
-		1127C9D416A0CD7700413FE9 /* Conversions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Conversions.h; sourceTree = "<group>"; };
 		1127C9D716A0D3A500413FE9 /* json-forwards.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "json-forwards.h"; sourceTree = "<group>"; };
 		1127C9D816A0D3A500413FE9 /* json.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = json.h; sourceTree = "<group>"; };
 		1127C9D916A0D3A500413FE9 /* jsoncpp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jsoncpp.cpp; sourceTree = "<group>"; };
@@ -232,6 +231,7 @@
 		11DB60B6169F635200E5986D /* CPPHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPPHelpers.h; sourceTree = "<group>"; };
 		11E500D116A4AC8400396FCA /* MapUtilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapUtilities.cpp; sourceTree = "<group>"; };
 		11E500D216A4AC8400396FCA /* MapUtilities.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MapUtilities.hpp; sourceTree = "<group>"; };
+		11E500DE16A4C21700396FCA /* NodeWrapper+CPPHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NodeWrapper+CPPHelpers.h"; sourceTree = "<group>"; };
 		11FFB38E167FC3CD00309545 /* Nodes.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Nodes.hpp; sourceTree = "<group>"; };
 		11FFB38F167FC3CD00309545 /* Nodes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Nodes.cpp; sourceTree = "<group>"; };
 		1FA5962D167931F800C7E703 /* asinfo.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = asinfo.json; path = InternetMap/asinfo.json; sourceTree = "<group>"; };
@@ -388,7 +388,7 @@
 				1127C9CA16A0B9C500413FE9 /* NodeWrapper.mm */,
 				1127C9C516A0B7C100413FE9 /* MapControllerWrapper.h */,
 				1127C9C616A0B7C100413FE9 /* MapControllerWrapper.mm */,
-				1127C9D416A0CD7700413FE9 /* Conversions.h */,
+				11E500DE16A4C21700396FCA /* NodeWrapper+CPPHelpers.h */,
 			);
 			name = "Objective-C++ Wrappers";
 			sourceTree = "<group>";

@@ -9,9 +9,16 @@
 #import "MapControllerWrapper.h"
 #include "MapController.hpp"
 #include "Camera.hpp"
-
+#include "Nodes.hpp"
+#include "DefaultVisualization.hpp"
+#import "NodeWrapper+CPPHelpers.h"
 
 //TODO: move these to a better place
+
+void cameraMoveFinishedCallback(void) {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"cameraMovementFinished" object:nil];
+}
+
 std::string loadTextResource(std::string base, std::string extension) {
     NSString* path = [[NSBundle mainBundle] pathForResource:[NSString stringWithCString:base.c_str() encoding:NSUTF8StringEncoding] ofType:[NSString stringWithCString:extension.c_str() encoding:NSUTF8StringEncoding]];
     NSString* contents = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
@@ -26,6 +33,12 @@ std::string loadTextResource(std::string base, std::string extension) {
 bool deviceIsOld() {
     return [HelperMethods deviceIsOld];
 }
+
+Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
+    return Matrix4(Vector4(mat.m00, mat.m01, mat.m02, mat.m03), Vector4(mat.m10, mat.m11, mat.m12, mat.m13), Vector4(mat.m20, mat.m21, mat.m22, mat.m23), Vector4(mat.m30, mat.m31, mat.m32, mat.m33));
+}
+
+//end move
 
 @interface MapControllerWrapper()
 
@@ -59,102 +72,151 @@ bool deviceIsOld() {
     delete _controller;
 }
 
+#pragma mark - Display
+
+- (void)draw{
+    _controller->display->draw();
+}
+
+#pragma mark - Display: Node Updates
+
+- (void)beginNodeUpdates{
+    _controller->display->nodes->beginUpdate();
+}
+
+- (void)endNodeUpdates{
+    _controller->display->nodes->endUpdate();
+}
+
+- (void)setColor:(UIColor*)color forNodeAtIndex:(int)index{
+    _controller->display->nodes->updateNode(index, ColorFromRGB(SELECTED_NODE_COLOR_HEX));
+}
+
+
+#pragma mark - Camera: Misc
+
+- (void)update:(NSTimeInterval)now{
+    _controller->display->camera->update(now);
+}
+
 - (void)setDisplaySize:(CGSize)displaySize {
     _controller->display->camera->setDisplaySize(displaySize.width, displaySize.height);
 }
 
 - (void)setAllowIdleAnimation:(BOOL)allow{
-    
+    _controller->display->camera->setAllowIdleAnimation(allow);
 }
 
 - (void)resetIdleTimer{
+    _controller->display->camera->resetIdleTimer();
+}
 
-}
-- (void)update:(NSTimeInterval)now{
-    _controller->display->camera->update(now);
-}
-- (void)draw{
-    _controller->display->draw();
-}
+#pragma mark - Camera: View Manipulation
+
 - (void)zoomAnimated:(float)zoom duration:(NSTimeInterval)duration{
-
-}
-- (void)beginNodeUpdates{
-
-}
-- (void)endNodeUpdates{
-
-}
-- (void)setColor:(UIColor*)color forNodeAtIndex:(int)index{
-
-}
-- (void)stopMomentumPan{
-
-}
-- (void)rotateRadiansX:(float)rotate{
-
-}
-- (void)rotateRadiansY:(float)rotate{
-
-}
-- (void)rotateRadiansZ:(float)rotate{
-
-}
-- (void)startMomentumPanWithVelocity:(CGPoint)velocity{
-
-}
-- (void)startMomentumRotationWithVelocity:(float)velocity{
-
-}
-- (void)stopMomentumRotation{
-
-}
-- (void)stopMomentumZoom{
-
-}
-- (void)startMomentumZoomWithVelocity:(float)velocity{
-
-}
-- (void)zoomByScale:(float)scale{
-
-}
-
-- (NodeWrapper*)nodeByASN:(NSString*)asn{
-    return nil;
+    _controller->display->camera->zoomAnimated(zoom, duration);
 }
 
 - (void)rotateAnimated:(GLKMatrix4)matrix duration:(NSTimeInterval)duration{
-
+    _controller->display->camera->rotateAnimated(Matrix4FromGLKMatrix4(matrix), duration);
 }
+
+- (void)rotateRadiansX:(float)rotate{
+    _controller->display->camera->rotateRadiansX(rotate);
+}
+
+- (void)rotateRadiansY:(float)rotate{
+    _controller->display->camera->rotateRadiansY(rotate);
+}
+
+- (void)rotateRadiansZ:(float)rotate{
+    _controller->display->camera->rotateRadiansZ(rotate);
+}
+
+- (void)zoomByScale:(float)scale{
+    _controller->display->camera->zoomByScale(scale);
+}
+
+- (void)startMomentumPanWithVelocity:(CGPoint)velocity{
+    _controller->display->camera->startMomentumPanWithVelocity(Vector2(velocity.x, velocity.y));
+}
+
+- (void)startMomentumRotationWithVelocity:(float)velocity{
+    _controller->display->camera->startMomentumRotationWithVelocity(velocity);
+}
+
+- (void)startMomentumZoomWithVelocity:(float)velocity{
+    _controller->display->camera->startMomentumZoomWithVelocity(velocity);
+}
+
+- (void)stopMomentumPan{
+    _controller->display->camera->stopMomentumPan();
+}
+
+- (void)stopMomentumRotation{
+    _controller->display->camera->stopMomentumRotation();
+}
+
+- (void)stopMomentumZoom{
+    _controller->display->camera->stopMomentumZoom();
+}
+
+#pragma mark - Data: Node retrieval
+
+- (NodeWrapper*)nodeAtIndex:(int)index{
+    NodePointer node = _controller->data->nodes[index];
+    return [[NodeWrapper alloc] initWithNodePointer:node];
+}
+
+- (NodeWrapper*)nodeByASN:(NSString*)asn{
+    NodePointer node = _controller->data->nodesByAsn[std::string([asn UTF8String])];
+    return [[NodeWrapper alloc] initWithNodePointer:node];
+}
+
+#pragma mark - Controller: Event handling
 
 - (void)handleTouchDownAtPoint:(CGPoint)point{
-
+    _controller->handleTouchDownAtPoint(Vector2(point.x, point.y));
 }
+
+#pragma mark - Controller: Node Selection 
+
 - (void)selectHoveredNode{
-
+    _controller->selectHoveredNode();
 }
+
 - (void)unhoverNode{
-
+    _controller->unhoverNode();
 }
+
 - (int)indexForNodeAtPoint:(CGPoint)pointInView{
-    return 0;
+    return _controller->indexForNodeAtPoint(Vector2(pointInView.x, pointInView.y));
 }
-- (NodeWrapper*)nodeAtIndex:(int)index{
-    return nil;
-}
+
 -(CGPoint)getCoordinatesForNodeAtIndex:(int)index{
-    return CGPointZero;
+    Vector2 vec = _controller->getCoordinatesForNodeAtIndex(index);
+    return CGPointMake(vec.x, vec.y);
 }
+
 - (void)updateTargetForIndex:(int)index{
-
+    _controller->updateTargetForIndex(index);
 }
+
+#pragma mark - Controller: Line highlighting
+
 - (void)clearHighlightLines{
-
+    _controller->clearHighlightLines();
 }
+
 -(void)highlightRoute:(NSArray*)nodeList{
-
+    
+    std::vector<NodePointer> newList;
+    for (NodeWrapper* node in nodeList) {
+        NodePointer pointer = _controller->data->nodeAtIndex(node.index);
+        newList.push_back(pointer);
+    }
+    _controller->highlightRoute(newList);
 }
-
 
 
 @end

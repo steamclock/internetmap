@@ -11,7 +11,7 @@
 
 @interface NodeWrapper ()
 
-@property (nonatomic, readwrite, assign) Node* node;
+@property (nonatomic, readwrite, assign) NodePointer node;
 
 @end
 
@@ -19,10 +19,61 @@
 
 - (id)init {
     if (self = [super init]) {
-        _node = new Node();
+        _node = NodePointer(new Node());
     }
 
     return self;
+}
+
+-(id)initWithNodePointer:(NodePointer)node {
+    if (self = [super init]) {
+        _node = node;
+    }
+    return self;
+}
+
+- (NSString*)asn {
+    return [NSString stringWithUTF8String:_node->asn.c_str()];
+}
+
+- (NSString*)textDescription {
+    return [NSString stringWithUTF8String:_node->textDescription.c_str()];
+}
+
+- (NSString*)typeString {
+    return [NSString stringWithUTF8String:_node->typeString.c_str()];
+}
+
+- (int)index {
+    return _node->index;
+}
+
+- (float)importance {
+    return _node->importance;
+}
+
+- (int)numberOfConnections {
+    return _node->connections.size();
+}
+
+- (void)setAsn:(NSString *)asn {
+    _node->asn = std::string([asn UTF8String]);
+}
+
+- (void)setTextDescription:(NSString *)textDescription {
+    _node->textDescription = std::string([textDescription UTF8String]);
+}
+
+- (void)setTypeString:(NSString *)typeString {
+    _node->typeString = std::string([typeString UTF8String]);
+}
+
+- (void)setIndex:(int)index {
+    _node->index = index;
+}
+
+- (void)setImportance:(float)importance {
+    _node->importance = importance;
 }
 
 @end

@@ -22,12 +22,6 @@
 #include <string>
 
 
-void cameraMoveFinishedCallback(void) {
-    //TODO: implement
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"cameraMovementFinished" object:nil];
-}
-
-
 MapController::MapController() :
     targetNode(INT_MAX),
     hoveredNodeIndex(INT_MAX){
@@ -276,7 +270,7 @@ int MapController::indexForNodeAtPoint(Vector2 pointInView) {
     for (int j = 0; j<data->boxesForNodes.size(); j++) {
         box = data->boxesForNodes[j];
         if (box->doesLineIntersectOptimized(cameraInObjectSpace, invertedDirection, sign)) {
-            //            NSLog(@"intersects box %i at pos %@", j, NSStringFromGLKVector3(box.center));
+            printf("intersects box %i at pos %f, %f\n", j, box->center().getX(), box->center().getY());
             std::set<int>::iterator iter = box->indices.begin();
             while (iter != box->indices.end()) {
                 int i = *iter;
@@ -294,7 +288,8 @@ int MapController::indexForNodeAtPoint(Vector2 pointInView) {
                 float c = powf((xA-xC), 2)+powf((yA-yC), 2)+powf((zA-zC), 2)-powf(r, 2);
                 float delta = powf(b, 2)-4*a*c;
                 if (delta >= 0) {
-                    //                    NSLog(@"intersected node %i: %@, delta: %f", i, NSStringFromGLKVector3(nodePosition), delta);
+                    
+                    printf("intersected node %i, delta: %f\n", i, delta);
                     Vector4 transformedNodePosition = display->camera->currentModelView() * Vector4(nodePosition.getX(), nodePosition.getY(), nodePosition.getZ(), 1);
                     if ((delta > maxDelta) && (transformedNodePosition.getZ() < -0.1)) {
                         maxDelta = delta;
@@ -307,7 +302,6 @@ int MapController::indexForNodeAtPoint(Vector2 pointInView) {
         }
     }
     
-    //    NSLog(@"time for intersect: %f", [date timeIntervalSinceNow]);
     return foundI;
 }
 

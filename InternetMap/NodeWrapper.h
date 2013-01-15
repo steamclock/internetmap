@@ -10,11 +10,11 @@
 
 @interface NodeWrapper : NSObject
 
-@property (nonatomic, readonly) NSString* asn;
-@property (nonatomic, readonly) NSString* textDescription;
-@property (nonatomic, readonly) NSString* typeString;
-@property (nonatomic, readonly) int index;
-@property (nonatomic, readonly) float importance;
+@property (nonatomic) NSString* asn;
+@property (nonatomic) NSString* textDescription;
+@property (nonatomic) NSString* typeString;
+@property (nonatomic) int index;
+@property (nonatomic) float importance;
 @property (nonatomic, readonly) int numberOfConnections;
 
 @end
