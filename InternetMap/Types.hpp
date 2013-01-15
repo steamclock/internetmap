@@ -6,6 +6,8 @@
 #ifndef InternetMap_Types_hpp
 #define InternetMap_Types_hpp
 
+#define ColorFromRGB(rgbValue) Color(((float)((rgbValue & 0xFF0000) >> 16))/255.0, ((float)((rgbValue & 0xFF00) >> 8))/255.0,((float)(rgbValue & 0xFF))/255.0, 1.0)
+
 #include "ExternalCode/vectormath/vmInclude.h"
 #include "ExternalCode/vectormath/vmInclude.h"
 
