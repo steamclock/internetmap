@@ -133,7 +133,7 @@ bool Program::compileShader(unsigned int* shader, unsigned int type, std::string
     if (logLength > 0) {
         GLchar *log = (GLchar *)malloc(logLength);
         glGetShaderInfoLog(*shader, logLength, &logLength, log);
-        //TODO: NSLog(@"Shader compile log:\n%s", log);
+        printf("Shader compile log:\n%s", log);
         free(log);
     }
 #endif
@@ -157,7 +157,7 @@ bool Program::linkProgram(GLuint prog) {
     if (logLength > 0) {
         GLchar *log = (GLchar *)malloc(logLength);
         glGetProgramInfoLog(prog, logLength, &logLength, log);
-        //TODO: NSLog(@"Program link log:\n%s", log);
+        printf("Program link log:\n%s", log);
         free(log);
     }
 #endif
@@ -178,7 +178,7 @@ bool Program::validateProgram(GLuint prog) {
     if (logLength > 0) {
         GLchar *log = (GLchar *)malloc(logLength);
         glGetProgramInfoLog(prog, logLength, &logLength, log);
-        //TODO:NSLog(@"Program validate log:\n%s", log);
+        printf("Program validate log:\n%s", log);
         free(log);
     }
     

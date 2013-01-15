@@ -3,6 +3,11 @@
 //  InternetMap
 //
 
+
+#ifndef InternetMap_MapDisplay_hpp
+#define InternetMap_MapDisplay_hpp
+
+
 #include "Types.hpp"
 
 class Lines;
@@ -23,6 +28,7 @@ public:
     MapDisplay();
     
     void setDisplayScale(float f) { _displayScale = f; }
+    float getDisplayScale() { return _displayScale;}
     
     shared_ptr<Camera> camera;
     shared_ptr<Nodes> nodes;
@@ -33,3 +39,5 @@ public:
     void update(TimeInterval currentTime);
     void draw(void);
 };
+
+#endif
