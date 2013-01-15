@@ -404,7 +404,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             prop.upArrowImageName = nil;
             self.nodeSearchPopover.containerViewProperties = prop;
         }
-//        searchController.allItems = self.data.nodes;
+        searchController.allItems = [self.controller allNodes];
     }
     [self.nodeSearchPopover presentPopoverFromRect:self.searchButton.bounds inView:self.searchButton permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
     self.searchButton.selected = YES;

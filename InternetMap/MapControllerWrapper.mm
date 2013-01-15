@@ -59,7 +59,10 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
         filePath = [[NSBundle mainBundle] pathForResource:@"as2attr" ofType:@"txt"];
         fileContents = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:NULL];
         _controller->data->loadFromAttrString(std::string([fileContents UTF8String]));
-        
+        filePath = [[NSBundle mainBundle] pathForResource:@"asinfo" ofType:@"json"];
+        fileContents = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:NULL];
+        _controller->data->loadASInfo(std::string([fileContents UTF8String]));
+
         _controller->display->setDisplayScale([[UIScreen mainScreen] scale]);
         _controller->data->updateDisplay(_controller->display);
         
@@ -70,6 +73,44 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
 
 - (void)dealloc {
     delete _controller;
+}
+
+#pragma mark - Custom properties
+
+- (NSUInteger)targetNode{
+    return _controller->targetNode;
+}
+
+- (void)setTargetNode:(NSUInteger)targetNode {
+    _controller->targetNode = targetNode;
+}
+
+- (CGSize)displaySize {
+    return CGSizeMake(_controller->display->camera->displayHeight(), _controller->display->camera->displayWidth());
+}
+
+- (void)setDisplaySize:(CGSize)displaySize {
+    _controller->display->camera->setDisplaySize(displaySize.width, displaySize.height);
+}
+
+- (float)currentZoom {
+    return _controller->display->camera->currentZoom();
+}
+
+- (int)hoveredNodeIndex {
+    return _controller->hoveredNodeIndex;
+}
+
+- (void)setHoveredNodeIndex:(int)hoveredNodeIndex {
+    _controller->hoveredNodeIndex = hoveredNodeIndex;
+}
+
+- (NSString*)lastSearchIP {
+    return [NSString stringWithUTF8String:_controller->lastSearchIP.c_str()];
+}
+
+- (void)setLastSearchIP:(NSString *)lastSearchIP {
+    _controller->lastSearchIP = std::string([lastSearchIP UTF8String]);
 }
 
 #pragma mark - Display
@@ -97,10 +138,6 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
 
 - (void)update:(NSTimeInterval)now{
     _controller->display->camera->update(now);
-}
-
-- (void)setDisplaySize:(CGSize)displaySize {
-    _controller->display->camera->setDisplaySize(displaySize.width, displaySize.height);
 }
 
 - (void)setAllowIdleAnimation:(BOOL)allow{
@@ -162,6 +199,17 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
 }
 
 #pragma mark - Data: Node retrieval
+
+-(NSMutableArray*)allNodes {
+    NSMutableArray* array = [NSMutableArray arrayWithCapacity:_controller->data->nodes.size()];
+    for (int i = 0; i<_controller->data->nodes.size(); i++) {
+        NodePointer node = _controller->data->nodes[i];
+        NodeWrapper* wrap = [[NodeWrapper alloc] initWithNodePointer:node];
+        [array addObject:wrap];
+    }
+    
+    return array;
+}
 
 - (NodeWrapper*)nodeAtIndex:(int)index{
     NodePointer node = _controller->data->nodes[index];

@@ -18,7 +18,7 @@
 @property (nonatomic) CGSize displaySize;
 @property (nonatomic, readonly) float currentZoom;
 @property (nonatomic) int hoveredNodeIndex;
-@property (strong) NSString* lastSearchIP;
+@property (nonatomic, strong) NSString* lastSearchIP;
 
 
 - (void)setAllowIdleAnimation:(BOOL)allow;
@@ -41,6 +41,7 @@
 - (void)zoomByScale:(float)scale;
 - (NodeWrapper*)nodeByASN:(NSString*)asn;
 - (void)rotateAnimated:(GLKMatrix4)matrix duration:(NSTimeInterval)duration;
+- (NSMutableArray*)allNodes;
 
 - (void)handleTouchDownAtPoint:(CGPoint)point;
 - (void)selectHoveredNode;
