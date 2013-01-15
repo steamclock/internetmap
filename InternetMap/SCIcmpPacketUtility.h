@@ -53,7 +53,7 @@
 
 @end
 
-@protocol SCPacketUtilityDelegate <NSObject>
+@protocol SCIcmpPacketUtilityDelegate <NSObject>
 
 @optional
 

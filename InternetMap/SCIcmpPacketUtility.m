@@ -179,7 +179,8 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
             packet.sentWithTTL = ttl;
             packet.sequenceNumber = self.nextSequenceNumber;
             packet.departure = now;
-            packet.
+            
+            [self.packetRecords addObject:packet];
         }
     }
     
