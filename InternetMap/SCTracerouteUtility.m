@@ -7,7 +7,32 @@
 //
 
 #import "SCTracerouteUtility.h"
+#import "SCIcmpPacketUtility.h"
+
+@interface SCTracerouteUtility ()
+
+@property (nonatomic, strong) SCIcmpPacketUtility* packetUtility;
+@property int ttlCount;
+
+@end
 
 @implementation SCTracerouteUtility
+
+#pragma mark - Class Methods
++(SCTracerouteUtility*)tracerouteWithAddress:(NSString*)address{
+    
+    
+}
+
+
+#pragma mark - Instance Methods
+
+
+-(void)start{
+    
+}
+-(void)stop{
+    
+}
 
 @end

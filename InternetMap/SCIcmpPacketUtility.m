@@ -20,8 +20,6 @@
 @property (nonatomic, copy,   readwrite) NSData*    targetAddress;
 @property (nonatomic, assign, readwrite) uint16_t   nextSequenceNumber;
 
-- (void)_stopDataTransfer;
-
 @end
 
 @implementation SCIcmpPacketUtility
