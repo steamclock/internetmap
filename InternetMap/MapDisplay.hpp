@@ -3,6 +3,11 @@
 //  InternetMap
 //
 
+
+#ifndef InternetMap_MapDisplay_hpp
+#define InternetMap_MapDisplay_hpp
+
+
 #include "Types.hpp"
 #include <memory>
 
@@ -24,7 +29,7 @@ public:
     MapDisplay();
     
     void setDisplayScale(float f) { _displayScale = f; }
-    
+    float getDisplayScale() { return _displayScale;}
     std::shared_ptr<Camera> camera;
     std::shared_ptr<Nodes> nodes;
     std::shared_ptr<Nodes> selectedNodes;
@@ -34,3 +39,5 @@ public:
     void update(TimeInterval currentTime);
     void draw(void);
 };
+
+#endif

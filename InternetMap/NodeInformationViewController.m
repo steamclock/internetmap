@@ -7,12 +7,12 @@
 //
 
 #import "NodeInformationViewController.h"
-#import "Node.h"
 #import "LabelNumberBoxView.h"
+#import "NodeWrapper.h"
 
 @interface NodeInformationViewController ()
 
-@property (nonatomic, strong) Node* node;
+@property (nonatomic, strong) NodeWrapper* node;
 @property (nonatomic, strong) UIButton* doneButton;
 @property (nonatomic, assign) BOOL isDisplayingCurrentNode;
 @property (nonatomic, strong) NSMutableArray* firstGroupOfStrings;
@@ -30,7 +30,7 @@
 
 @implementation NodeInformationViewController
 
-- (id)initWithNode:(Node*)node isCurrentNode:(BOOL)isCurrent
+- (id)initWithNode:(NodeWrapper*)node isCurrentNode:(BOOL)isCurrent
 {
     self = [super init];
     if (self) {
@@ -44,14 +44,15 @@
         //create the first group of strings, like ASN and text description
         NSString* asnText = [NSString stringWithFormat:@"AS%@", self.node.asn];
         self.firstGroupOfStrings = [NSMutableArray array];
+        NSString* textDescription = self.node.textDescription;
         if (self.isDisplayingCurrentNode) {
             self.title = @"You are here.";
-            if (![HelperMethods isStringEmptyOrNil:self.node.textDescription]) {
-                [self.firstGroupOfStrings addObject:self.node.textDescription];
+            if (![HelperMethods isStringEmptyOrNil:textDescription]) {
+                [self.firstGroupOfStrings addObject:textDescription];
             }
         }else {
-            if (![HelperMethods isStringEmptyOrNil:self.node.textDescription]) {
-                self.title = self.node.textDescription;
+            if (![HelperMethods isStringEmptyOrNil:textDescription]) {
+                self.title = textDescription;
             }else {
                 self.title = asnText;
             }
@@ -63,8 +64,9 @@
             [self.firstGroupOfStrings addObject:asnText];
         }
         
-        if (![HelperMethods isStringEmptyOrNil:self.node.typeString]) {
-            [self.firstGroupOfStrings addObject:self.node.typeString];
+        NSString* typeString = self.node.typeString;
+        if (![HelperMethods isStringEmptyOrNil:typeString]) {
+            [self.firstGroupOfStrings addObject:typeString];
         }
         
         if ([self.firstGroupOfStrings count] == 0) {
@@ -139,8 +141,8 @@
     connectionsLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:18];
     connectionsLabel.textColor = FONT_COLOR_GRAY;
     connectionsLabel.backgroundColor = [UIColor clearColor];
-    NSString* conn = [self.node.connections count] == 1 ? @"Connection" : @"Connections";
-    connectionsLabel.text = [NSString stringWithFormat:@"%i %@", [self.node.connections count], conn];
+    NSString* conn = self.node.numberOfConnections == 1 ? @"Connection" : @"Connections";
+    connectionsLabel.text = [NSString stringWithFormat:@"%i %@", self.node.numberOfConnections, conn];
     [self.scrollView addSubview:connectionsLabel];
     [self.infoLabels addObject:connectionsLabel];
     
