@@ -60,9 +60,7 @@ enum {
     kICMPTypeDestinationUnreachable = 3,
     kICMPTypeEchoRequest = 8,            // code is always 0
     kICMPTimeExceeded = 11
-}ICMPTypes;
-
-typedef enum ICMPTypes ICMPType;
+};
 
 check_compile_time(sizeof(ICMPHeader) == 8);
 check_compile_time(offsetof(ICMPHeader, type) == 0);

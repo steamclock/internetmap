@@ -102,7 +102,7 @@
     // Get sequence number to calculate RTT
     NSInteger sequenceNumber = CFSwapInt16BigToHost(errorPacket->sequenceNumberOriginal);
 
-    // If the sequence numbers match, record the time the packet arrived
+    // If the sequence numbers match, record the time the packet arrived & rtt
     for (SCPacketRecord* packetRecord in self.packetUtility.packetRecords) {
         if (packetRecord.sequenceNumber == sequenceNumber) {
             packetRecord.arrival = dateTime;

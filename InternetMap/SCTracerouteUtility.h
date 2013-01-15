@@ -12,7 +12,7 @@
 static const int MAX_HOPS = 30;
 static const int PACKETS_PER_ITER = 3; // How many packets we send each time we increase the TTL
 
-@protocol SCTracerouteDelegate <NSObject>
+@protocol SCTracerouteUtilityDelegate <NSObject>
 
 - (void)tracerouteDidFindHop:(NSString*)report withHops:(NSArray*)hops;
 - (void)tracerouteDidComplete:(NSArray*)hops;
@@ -22,7 +22,7 @@ static const int PACKETS_PER_ITER = 3; // How many packets we send each time we 
 
 @interface SCTracerouteUtility : NSObject <SCIcmpPacketUtilityDelegate>
 
-@property (weak, nonatomic) id<SCTracerouteDelegate> delegate;
+@property (weak, nonatomic) id<SCTracerouteUtilityDelegate> delegate;
 
 +(SCTracerouteUtility*)tracerouteWithAddress:(NSString*)address; //Pass me an IP as a string
 

@@ -53,7 +53,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (nonatomic) float lastScale;
 @property (nonatomic) int isCurrentlyFetchingASN;
 
-@property (strong, nonatomic) SCTraceroute* tracer;
+@property (strong, nonatomic) SCTracerouteUtility* tracer;
 
 
 @property (nonatomic) NSTimeInterval updateTime;
@@ -649,7 +649,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
     
     if(self.controller.lastSearchIP) {
-        self.tracer = [SCTraceroute tracerouteWithAddress:self.controller.lastSearchIP ofType:kICMP]; //we need ip for node!
+        self.tracer = [SCTracerouteUtility tracerouteWithAddress:self.controller.lastSearchIP]; //we need ip for node!
         self.tracer.delegate = self;
         [self.tracer start];
     }
@@ -660,7 +660,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             [ASNRequest fetchForASN:asn responseBlock:^(NSArray *asn) {
                 if (asn[0] != [NSNull null]) {
                     NSLog(@"starting tracerout with IP: %@", asn[0]);
-                    self.tracer = [SCTraceroute tracerouteWithAddress:asn[0] ofType:kICMP];
+                    self.tracer = [SCTracerouteUtility tracerouteWithAddress:asn[0]];
                     self.tracer.delegate = self;
                     [self.tracer start];
                 }else {

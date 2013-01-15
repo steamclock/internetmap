@@ -6,10 +6,10 @@
 #import <UIKit/UIKit.h>
 #import <GLKit/GLKit.h>
 #import "NodeSearchViewController.h"
-#import "SCTraceroute.h"
+#import "SCTracerouteUtility.h"
 #import "WEPopoverController.h"
 
-@interface ViewController : GLKViewController <NodeSearchDelegate, SCTracerouteDelegate, UIGestureRecognizerDelegate, WEPopoverControllerDelegate>
+@interface ViewController : GLKViewController <NodeSearchDelegate, SCTracerouteUtilityDelegate, UIGestureRecognizerDelegate, WEPopoverControllerDelegate>
 
 
 @end
