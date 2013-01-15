@@ -75,6 +75,7 @@ void MapController::unhoverNode(){
 
 void MapController::updateTargetForIndex(int index) {
     Vector3 target;
+    float zoom = 0;
     // update current node to default state
     if (targetNode != INT_MAX) {
         NodePointer node = data->nodeAtIndex(targetNode);
@@ -90,6 +91,7 @@ void MapController::updateTargetForIndex(int index) {
         NodePointer node = data->nodeAtIndex(targetNode);
         Point3 origTarget = data->visualization->nodePosition(node);
         target = Vector3(origTarget.getX(), origTarget.getY(), origTarget.getZ());
+        zoom = data->visualization->nodeZoom(node);
         
         display->nodes->beginUpdate();
         display->nodes->updateNode(node->index, ColorFromRGB(SELECTED_NODE_COLOR_HEX));
@@ -104,7 +106,7 @@ void MapController::updateTargetForIndex(int index) {
         target = Vector3(0, 0, 0);
     }
     
-    display->camera->setTarget(target);
+    display->camera->setTarget(target, zoom);
 
 }
 
