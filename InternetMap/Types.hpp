@@ -17,6 +17,13 @@ using boost::shared_ptr;
 using std::shared_ptr;
 #endif
 
+#ifdef ANDROID
+#include <android/log.h>
+#define LOG(...) __android_log_print(ANDROID_LOG_INFO, "InternetMap", __VA_ARGS__)
+#else
+#define LOG(...) printf(__VA_ARGS__)
+#endif
+
 typedef Vectormath::Aos::Matrix4 Matrix4;
 typedef vmVector3 Vector3;
 typedef Vectormath::Aos::Vector4 Vector4;

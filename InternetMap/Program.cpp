@@ -9,13 +9,6 @@
 #include "Program.hpp"
 #include "OpenGL.hpp"
 
-#ifdef ANDROID
-#include <android/log.h>
-#define LOG(...) __android_log_print(ANDROID_LOG_INFO, "InternetMap", __VA_ARGS__)
-#else
-#define LOG(...) printf(__VA_ARGS__)
-#endif
-
 // TODO: clean this up
 std::string loadTextResource(std::string base, std::string extension);
 
