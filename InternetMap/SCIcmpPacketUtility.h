@@ -37,6 +37,11 @@
 @property (nonatomic, assign, readonly) uint16_t              nextSequenceNumber;
 @property (strong, nonatomic, readonly) NSMutableArray*       packetRecords;
 
++ (SCIcmpPacketUtility*)utilityWithHostAddress:(NSString*)hostAddress;    // contains (struct sockaddr) - should have this take IP string, then convert to struct sockaddr
+
++ (const struct ICMPHeader *)icmpInPacket:(NSData *)packet;
+// Given a valid IP packet contains an ICMP, returns the address of the ICMP header that follows the IP header.  This doesn't do any significant validation of the packet.
+
 - (void)start;
 // Starts the packet utility object doing it's thing.  You should call this after you've setup the delegate.
 
@@ -46,10 +51,6 @@
 - (void)stop;
 // Stops the packet utility object.  You should call this when you're done using it.
 
-+ (SCIcmpPacketUtility*)utilityWithHostAddress:(NSData *)hostAddress;    // contains (struct sockaddr) - should have this take IP string, then convert to struct sockaddr
-
-+ (const struct ICMPHeader *)icmpInPacket:(NSData *)packet;
-// Given a valid IP packet contains an ICMP, returns the address of the ICMP header that follows the IP header.  This doesn't do any significant validation of the packet.
 
 @end
 
