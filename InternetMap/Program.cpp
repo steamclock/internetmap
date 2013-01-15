@@ -8,6 +8,7 @@
 
 #include "Program.hpp"
 #include "OpenGL.hpp"
+#include "Types.hpp"
 
 // TODO: clean this up
 std::string loadTextResource(std::string base, std::string extension);
