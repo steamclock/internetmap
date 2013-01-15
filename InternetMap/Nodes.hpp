@@ -6,6 +6,10 @@
 //  Copyright (c) 2012 Peer1. All rights reserved.
 //
 
+/**
+ Nodes handles drawing a collection of nodes in openGL.
+ */
+
 #ifndef InternetMap_Nodes_hpp
 #define InternetMap_Nodes_hpp
 

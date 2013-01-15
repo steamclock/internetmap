@@ -7,14 +7,15 @@
 //
 
 #import "NodeTooltipViewController.h"
-#import "Node.h"
+#import "NodeWrapper.h"
+
 
 @interface NodeTooltipViewController ()
 @end
 
 @implementation NodeTooltipViewController
 
-- (id)initWithNode:(Node*)node
+- (id)initWithNode:(NodeWrapper*)node
 {
     self = [super init];
     if (self) {

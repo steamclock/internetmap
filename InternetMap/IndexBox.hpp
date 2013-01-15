@@ -6,8 +6,11 @@
 //  Copyright (c) 2012 Peer1. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import <GLKit/GLKit.h>
+#ifndef InternetMap_IndexBox_hpp
+#define InternetMap_IndexBox_hpp
+
+#include "Types.hpp"
+#include <set>
 
 static const float IndexBoxMinX = -8;
 static const float IndexBoxMaxX = 8;
@@ -26,16 +29,27 @@ static const float boxSizeXWithoutOverlap = lengthX/numberOfCellsX;
 static const float boxSizeYWithoutOverlap = lengthY/numberOfCellsY;
 static const float boxSizeZWithoutOverlap = lengthZ/numberOfCellsZ;
 
-@interface IndexBox : NSObject {
-    GLKVector3 parameters[2];
-}
+class IndexBox {
+    Point3 _parameters[2];
+    Point3 _center;
+    Point3 _minCorner;
+    Point3 _maxCorner;
+    
+public:
 
-    @property (nonatomic, assign) GLKVector3 center;
-    @property (nonatomic, assign) GLKVector3 minCorner;
-    @property (nonatomic, assign) GLKVector3 maxCorner;
-    @property (nonatomic, strong) NSMutableIndexSet* indices;
+    std::set<int> indices;
+    
+    bool isPointInside(const Point3& point);
+    bool doesLineIntersectOptimized(const Vector3& origin, const Vector3& invertedDirection, int* sign);
+    
+    Point3 minCorner();
+    Point3 maxCorner();
+    Point3 center();
+    void setMinCorner(const Point3& minCorner);
+    void setMaxCorner(const Point3& maxCorner);
+    void setCenter(const Point3& center);
+};
 
-- (BOOL)isPointInside:(GLKVector3)point;
-- (BOOL)doesLineIntersectOptimized:(GLKVector3)origin invertedDirection:(GLKVector3)invertedDirection sign:(int *)sign;
+typedef std::shared_ptr<IndexBox> IndexBoxPointer;
 
-@end
+#endif

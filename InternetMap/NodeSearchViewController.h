@@ -8,12 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@class Node;
+@class NodeWrapper;
 
 @protocol NodeSearchDelegate
 
 -(void)nodeSearchDelegateDone;
--(void)nodeSelected:(Node*)node;
+-(void)nodeSelected:(NodeWrapper*)node;
 -(void)selectNodeByHostLookup:(NSString*)host;
 
 @end
@@ -21,7 +21,7 @@
 @interface NodeSearchViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
 
 @property (weak, nonatomic) id delegate;
-@property (copy, nonatomic) NSMutableArray* allItems;
+@property (nonatomic, copy) NSMutableArray* allItems;
 @property (strong, nonatomic) UITableView* tableView;
 
 @end
