@@ -11,6 +11,7 @@
 #include "MapDisplay.hpp"
 #include <sstream>
 #include <stdlib.h>
+#include "json.h"
 
 NodePointer MapData::nodeAtIndex(unsigned int index) {
     return nodes[index];
@@ -118,33 +119,26 @@ void MapData::loadFromAttrString(std::string json){
 
 void MapData::loadASInfo(std::string json){
     
-    
-//    NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
-//    
-//    NSString *fileContents = [NSString stringWithContentsOfFile:filename encoding:NSUTF8StringEncoding error:NULL];
-//    NSError *parseError = nil;
-//    NSData* data = [fileContents dataUsingEncoding:NSUTF8StringEncoding];
-//    id jsonObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:&parseError];
-//    
-//    //    NSLog(@"%d", [jsonObject count]);
-//    for(id key in jsonObject)
-//    {
-//        NodePointer node = self.nodesByAsn[std::string([key UTF8String])];
-//        if(node){
-//            NSArray *as = [jsonObject objectForKey:key];
-//            node->name = std::string([[as objectAtIndex:1] UTF8String]);
-//            node->textDescription = std::string([[as objectAtIndex:5] UTF8String]);
-//            node->dateRegistered = std::string([[as objectAtIndex:3] UTF8String]);
-//            node->address = std::string([[as objectAtIndex:7] UTF8String]);
-//            node->city = std::string([[as objectAtIndex:8] UTF8String]);
-//            node->state = std::string([[as objectAtIndex:9] UTF8String]);
-//            node->postalCode = std::string([[as objectAtIndex:10] UTF8String]);
-//            node->country = std::string([[as objectAtIndex:11] UTF8String]);
-//        }
-//    }
-//    
-//    NSLog(@"asinfo load : %.2fms", ([NSDate timeIntervalSinceReferenceDate] - start) * 1000.0f);
-    
+    Json::Value root;
+    Json::Reader reader;
+    bool success = reader.parse(json, root);
+    if(success) {
+        std::vector<std::string> members = root.getMemberNames();
+        for (int i = 0; i < members.size(); i++) {
+            NodePointer node = nodesByAsn[members[i]];
+            if (node) {
+                Json::Value as = root[members[i]];
+                node->name = as[1].asString();
+                node->textDescription = as[5].asString();
+                node->dateRegistered = as[3].asString();
+                node->address = as[7].asString();
+                node->city = as[8].asString();
+                node->state = as[9].asString();
+                node->postalCode = as[10].asString();
+                node->country = as[11].asString();
+            }
+        }
+    }
 }
 
 void MapData::updateDisplay(std::shared_ptr<MapDisplay> display){
@@ -159,40 +153,37 @@ void MapData::updateDisplay(std::shared_ptr<MapDisplay> display){
 
 
 void MapData::createNodeBoxes() {
-//    self.boxesForNodes = [NSMutableArray array];
-//    
-//    for (int k = 0; k < numberOfCellsZ; k++) {
-//        float z = IndexBoxMinZ + boxSizeZWithoutOverlap*k;
-//        for (int j = 0; j < numberOfCellsY; j++) {
-//            float y = IndexBoxMinY + boxSizeYWithoutOverlap*j;
-//            for(int i = 0; i < numberOfCellsX; i++) {
-//                float x = IndexBoxMinX + boxSizeXWithoutOverlap*i;
-//                IndexBoxPointer box = IndexBoxPointer(new IndexBox());
-//                box->setCenter(Point3(x+boxSizeXWithoutOverlap/2, y+boxSizeYWithoutOverlap/2, z+boxSizeZWithoutOverlap/2));
-//                box->setMinCorner(Point3(x, y, z));
-//                box->setMaxCorner(Point3(x+boxSizeXWithoutOverlap, y+boxSizeYWithoutOverlap, z+boxSizeZWithoutOverlap));
-//                [self.boxesForNodes addObject:box];
-//            }
-//        }
-//    }
-//    
-//    for (int i = 0; i < self.nodes.size(); i++) {
-//        NodePointer ptrNode = self.nodes.at(i);
-//        GLKVector3 pos = [self.visualization nodePosition:ptrNode];
-//        IndexBox* box = [self indexBoxForPoint:pos];
-//        [box.indices addIndex:i];
-//    }
+    
+    for (int k = 0; k < numberOfCellsZ; k++) {
+        float z = IndexBoxMinZ + boxSizeZWithoutOverlap*k;
+        for (int j = 0; j < numberOfCellsY; j++) {
+            float y = IndexBoxMinY + boxSizeYWithoutOverlap*j;
+            for(int i = 0; i < numberOfCellsX; i++) {
+                float x = IndexBoxMinX + boxSizeXWithoutOverlap*i;
+                IndexBoxPointer box = IndexBoxPointer(new IndexBox());
+                box->setCenter(Point3(x+boxSizeXWithoutOverlap/2, y+boxSizeYWithoutOverlap/2, z+boxSizeZWithoutOverlap/2));
+                box->setMinCorner(Point3(x, y, z));
+                box->setMaxCorner(Point3(x+boxSizeXWithoutOverlap, y+boxSizeYWithoutOverlap, z+boxSizeZWithoutOverlap));
+                boxesForNodes.push_back(box);
+            }
+        }
+    }
+    
+    for (int i = 0; i < nodes.size(); i++) {
+        NodePointer ptrNode = nodes.at(i);
+        Point3 pos = visualization->nodePosition(ptrNode);
+        IndexBoxPointer box = indexBoxForPoint(pos);
+        box->indices.insert(i);
+    }
 }
 
-IndexBox MapData::indexBoxForPoint(const Point3& point) {
-//    GLKVector3 pos = point;
-//    
-//    int posX = (int)fabsf((pos.x + fabsf(IndexBoxMinX))/boxSizeXWithoutOverlap);
-//    int posY = (int)fabsf((pos.y + fabsf(IndexBoxMinY))/boxSizeYWithoutOverlap);
-//    int posZ = (int)fabsf((pos.z + fabsf(IndexBoxMinZ))/boxSizeZWithoutOverlap);
-//    int posInArray = posX + (fabsf(IndexBoxMinX) + fabsf(IndexBoxMaxX))/boxSizeXWithoutOverlap*posY + (fabsf(IndexBoxMinX) + fabsf(IndexBoxMaxX))/boxSizeXWithoutOverlap*(fabsf(IndexBoxMinY)+fabsf(IndexBoxMaxY))/boxSizeYWithoutOverlap*posZ;
-//    
-//    return [self.boxesForNodes objectAtIndex:posInArray];
-    return IndexBox();
+IndexBoxPointer MapData::indexBoxForPoint(const Point3& point) {
+    
+    int posX = (int)fabsf((point.getX() + fabsf(IndexBoxMinX))/boxSizeXWithoutOverlap);
+    int posY = (int)fabsf((point.getY() + fabsf(IndexBoxMinY))/boxSizeYWithoutOverlap);
+    int posZ = (int)fabsf((point.getZ() + fabsf(IndexBoxMinZ))/boxSizeZWithoutOverlap);
+    int posInArray = posX + (fabsf(IndexBoxMinX) + fabsf(IndexBoxMaxX))/boxSizeXWithoutOverlap*posY + (fabsf(IndexBoxMinX) + fabsf(IndexBoxMaxX))/boxSizeXWithoutOverlap*(fabsf(IndexBoxMinY)+fabsf(IndexBoxMaxY))/boxSizeYWithoutOverlap*posZ;
+    
+    return boxesForNodes[posInArray];
 }
 

@@ -17,7 +17,7 @@
 #include "Visualization.hpp"
 
 class MapData {
-    IndexBox indexBoxForPoint(const Point3& point);
+    IndexBoxPointer indexBoxForPoint(const Point3& point);
     void createNodeBoxes();
 public:
     VisualizationPointer visualization;
