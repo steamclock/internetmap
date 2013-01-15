@@ -11,6 +11,21 @@
 #include "ExternalCode/vectormath/vmInclude.h"
 #include "ExternalCode/vectormath/vmInclude.h"
 
+#ifdef ANDROID
+#include <boost/smart_ptr/shared_ptr.hpp>
+using boost::shared_ptr;
+#else
+#include <memory>
+using std::shared_ptr;
+#endif
+
+#ifdef ANDROID
+#include <android/log.h>
+#define LOG(...) __android_log_print(ANDROID_LOG_INFO, "InternetMap", __VA_ARGS__)
+#else
+#define LOG(...) printf(__VA_ARGS__)
+#endif
+
 typedef Vectormath::Aos::Matrix4 Matrix4;
 typedef vmVector3 Vector3;
 typedef Vectormath::Aos::Vector4 Vector4;

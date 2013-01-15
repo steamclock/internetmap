@@ -21,6 +21,13 @@ float DefaultVisualization::nodeSize(NodePointer node) {
     return 0.005 + 0.7*powf(node->importance, .75);
 }
 
+float DefaultVisualization::nodeZoom(NodePointer node) {
+    float zoom = log10f(node->importance);
+    zoom = -1.1 - zoom/5.0;
+    //printf("zoom of %f is %f\n", node->importance, log);
+    return zoom;
+}
+
 
 void DefaultVisualization::updateDisplayForNodes(std::shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes) {
 //    UIColor* t1Color = UIColorFromRGB(0x548dff); // Changed to blue in style guide

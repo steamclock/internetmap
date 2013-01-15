@@ -58,7 +58,7 @@ class Camera {
 public:
     Camera();
     
-    void setTarget(const Vector3& target);
+    void setTarget(const Vector3& target, float zoom);
     Vector3 target(void) { return _target; }
     void setDisplaySize(float width, float height) { _displayWidth = width; _displayHeight = height; }
     float displayWidth() { return _displayWidth; }

@@ -13,7 +13,7 @@
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
-const int MAX_NODES = 30000;
+const unsigned int MAX_NODES = 30000;
 
 // GL vertex data for nodes
 struct RawDisplayNode {
@@ -31,7 +31,6 @@ Nodes::Nodes(int initialCount) :
     glEnable(GL_BLEND);
     
     glEnable(GL_POINT_SPRITE_OES);
-    glEnable(GL_POINT_SMOOTH);
     
     // setup vertex buffer for nodes
     glGenVertexArraysOES(1, &_vertexArray);

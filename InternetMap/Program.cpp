@@ -8,30 +8,41 @@
 
 #include "Program.hpp"
 #include "OpenGL.hpp"
+#include "Types.hpp"
 
 // TODO: clean this up
 std::string loadTextResource(std::string base, std::string extension);
 
-Program::Program(std::string name, unsigned int attributes) : Program(name, name, attributes) {
+Program::Program(std::string name, unsigned int attributes)  :
+    _program(0),
+    _activeAttributes(0)
+{
+    setup(name, name, attributes);
 }
 
 Program::Program(std::string fragmentName, std::string vertexName, unsigned int attributes) :
     _program(0),
-    _activeAttributes(attributes)
+    _activeAttributes(0)
 {
+    setup(fragmentName, vertexName, attributes);
+}
+
+void Program::setup(std::string fragmentName, std::string vertexName, unsigned int attributes) {
     GLuint vertShader, fragShader;
+    
+    _activeAttributes = attributes;
     
     // Create and compile vertex shader.
     std::string vertShaderCode = loadTextResource(vertexName, "vsh");
     if (!compileShader(&vertShader,GL_VERTEX_SHADER,vertShaderCode)) {
-        printf("Failed to compile vertex shader\n");
+        LOG("Failed to compile vertex shader");
         return;
     }
     
     // Create and compile fragment shader.
     std::string frahShaderCode = loadTextResource(fragmentName, "fsh");
     if (!compileShader(&fragShader,GL_FRAGMENT_SHADER,frahShaderCode)) {
-        printf("Failed to compile fragment shader\n");
+        LOG("Failed to compile fragment shader");
         return;
     }
     
@@ -60,7 +71,7 @@ Program::Program(std::string fragmentName, std::string vertexName, unsigned int 
     
     // Link program.
     if (!linkProgram(_program)) {
-        printf("Failed to link program: %d\n", _program);
+        LOG("Failed to link program: %d", _program);
         
         if (vertShader) {
             glDeleteShader(vertShader);
@@ -78,6 +89,8 @@ Program::Program(std::string fragmentName, std::string vertexName, unsigned int 
         return;
     }
     
+    LOG("Compiled shader %s/%s", fragmentName.c_str(), vertexName.c_str());
+
     // Release vertex and fragment shaders.
     if (vertShader) {
         glDetachShader(_program, vertShader);
