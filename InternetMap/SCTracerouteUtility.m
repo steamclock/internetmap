@@ -19,6 +19,7 @@
 
 @property (nonatomic, strong) NSString *targetIP;
 @property (nonatomic, strong) NSString *lastIP;
+@property (nonatomic, strong) NSMutableArray  *hopsForCurrentIP;
 
 @end
 
@@ -39,6 +40,7 @@
         self.ttlCount = 1;
         self.packetUtility = [SCIcmpPacketUtility utilityWithHostAddress:hostAddress];
         self.packetUtility.delegate = self;
+        self.hopsForCurrentIP = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -57,8 +59,10 @@
 
 #pragma mark - Send packets
 - (void)sendPackets:(NSData*)data{
+    
+    NSLog(@"Sending another batch of packets..");
     if (self.ttlCount <= MAX_HOPS) {
-        for (int i = 0; i <= PACKETS_PER_ITER; i++) {
+        for (int i = 1; i <= PACKETS_PER_ITER; i++) {
             [self.packetUtility sendPacketWithData:nil andTTL:self.ttlCount];
         }   
     } else if (self.ttlCount > MAX_HOPS) {
@@ -96,26 +100,70 @@
 }
 
 -(void)processErrorICMPPacket:(NSData *)packet arrivedAt:(NSDate*)dateTime{
+    
+    // IP Header
+    const IPHeader* IPHeader = (const struct IPHeader *) ((const uint8_t *)[packet bytes]);
     // Use ICMP error packet structure rather than valid response structure
     const ICMPErrorPacket* errorPacket = (const struct ICMPErrorPacket *)[packet bytes];
     
     // Get sequence number to calculate RTT
     NSInteger sequenceNumber = CFSwapInt16BigToHost(errorPacket->sequenceNumberOriginal);
+    
+    NSString* IP = [NSString stringWithFormat:@"%d.%d.%d.%d", IPHeader->sourceAddress[0], IPHeader->sourceAddress[1], IPHeader->sourceAddress[3], IPHeader->sourceAddress[4]];
 
+    // Assign what IP we're from
     // If the sequence numbers match, record the time the packet arrived & rtt
+    
+    int numberOfRepliesForIP = 0;
+    int numberOfTimeoutsForIP = 0;
+    
     for (SCPacketRecord* packetRecord in self.packetUtility.packetRecords) {
         if (packetRecord.sequenceNumber == sequenceNumber) {
             packetRecord.arrival = dateTime;
             [self calculateResponseTimeForSequence:sequenceNumber];
+            NSLog(@"Response time for sequence %d is %.2fms", sequenceNumber, packetRecord.rtt);
+            packetRecord.responseAddress = IP;
         }
+        
+        if ([packetRecord.responseAddress isEqualToString:IP]) {
+            numberOfRepliesForIP++;
+        }
+        
+        if (numberOfRepliesForIP == 0) {
+//            [self.hopsForCurrentIP addObject:IP];
+//            numberOfRepliesForIP++;
+        } else if (numberOfRepliesForIP == 3) {
+            // If we got back all three packets, that's great
+            self.ttlCount++;
+            [self sendPackets:nil];
+        } else {
+            // Check if a packet has timed out otherwise
+            NSDate* now = [NSDate date];
+            float msPassed = [now timeIntervalSinceDate:packetRecord.departure] * 1000;
+            
+            if (msPassed > 1000) {
+                numberOfTimeoutsForIP++;
+                packetRecord.timedOut = YES;
+            }
+        }
+        
+        if (numberOfTimeoutsForIP > numberOfRepliesForIP) {
+            // Timed out, start on next set of packets
+            // TODO: call delegate method here
+            NSLog(@"Timeout detected for IP: %@", IP);
+            self.ttlCount++;
+            [self sendPackets:nil];
+        }
+        
     }
+    
+    NSLog(@"We have %d replies for IP %@ and %d timeouts.", numberOfRepliesForIP, IP, numberOfTimeoutsForIP);
     
 }
 
 -(void)calculateResponseTimeForSequence:(NSInteger)sequenceNumber{
     for (SCPacketRecord* packetRecord in self.packetUtility.packetRecords) {
         if (packetRecord.sequenceNumber == sequenceNumber) {
-            // If we sent a packet with a corresponding sequence number, let's calculate the RTT
             packetRecord.rtt = [packetRecord.arrival timeIntervalSinceDate:packetRecord.departure] * 1000;
         }
     }
@@ -125,10 +173,12 @@
 #pragma mark - SCIcmpPacketUtility Delegate Methods
 
 - (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didStartWithAddress:(NSData *)address{
+    NSLog(@"ICMP Packet Utility Ready.");
     [self sendPackets:nil];
 }
 
 - (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didSendPacket:(NSData *)packet{
+    //NSLog(@"Packet sent.");
     
 }
 
@@ -139,7 +189,9 @@
     
     if (typeOfPacket == kICMPTimeExceeded) {
         [self processErrorICMPPacket:packet arrivedAt:dateTime];
+        NSLog(@"Packet received: TTL Expired");
     } else if (typeOfPacket == kICMPTypeEchoReply) {
+        NSLog(@"Packet received: Echo Reply");
         // Check if we've reached our final destination
     } else {
         NSLog(@"What should happen here?");

@@ -703,7 +703,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     return YES;
 }
 
-#pragma mark - SCTraceroute Delegate
+#pragma mark - SCTracerouteUtility Delegate
 
 - (void)tracerouteDidFindHop:(NSString*)report withHops:(NSArray *)hops{
     

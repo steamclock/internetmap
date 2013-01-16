@@ -61,8 +61,8 @@
 //    assert(error != nil);
 //
 //    [self stop];
-//    if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(SCPacketUtility:didFailWithError:)] ) {
-//        [self.delegate SCPacketUtility:self didFailWithError:error];
+//    if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(SCIcmpPacketUtility:didFailWithError:)] ) {
+//        [self.delegate SCIcmpPacketUtility:self didFailWithError:error];
 //    }
 //}
 //
@@ -167,8 +167,8 @@
 //        
 //        // Complete success.  Tell the client.
 //        
-//        if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(SCPacketUtility:didSendPacket:)] ) {
-//            [self.delegate SCPacketUtility:self didSendPacket:packet];
+//        if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(SCIcmpPacketUtility:didSendPacket:)] ) {
+//            [self.delegate SCIcmpPacketUtility:self didSendPacket:packet];
 //        }
 //    } else {
 //        NSError*   error;
@@ -179,8 +179,8 @@
 //            err = ENOBUFS;          // This is not a hugely descriptor error, alas.
 //        }
 //        error = [NSError errorWithDomain:NSPOSIXErrorDomain code:err userInfo:nil];
-//        if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(SCPacketUtility:didFailToSendPacket:error:)] ) {
-//            [self.delegate SCPacketUtility:self didFailToSendPacket:packet error:error];
+//        if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(SCIcmpPacketUtility:didFailToSendPacket:error:)] ) {
+//            [self.delegate SCIcmpPacketUtility:self didFailToSendPacket:packet error:error];
 //        }
 //    }
 //    
@@ -305,12 +305,12 @@
 //        // We got some data, pass it up to our client.
 //        
 //        if ( [self _isValidResponsePacket:packet] ) {
-//            if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(SCPacketUtility:didReceiveResponsePacket:)] ) {
-//                [self.delegate SCPacketUtility:self didReceiveResponsePacket:packet];
+//            if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(SCIcmpPacketUtility:didReceiveResponsePacket:)] ) {
+//                [self.delegate SCIcmpPacketUtility:self didReceiveResponsePacket:packet];
 //            }
 //        } else {
-//            if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(SCPacketUtility:didReceiveUnexpectedPacket:)] ) {
-//                [self.delegate SCPacketUtility:self didReceiveUnexpectedPacket:packet];
+//            if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(SCIcmpPacketUtility:didReceiveUnexpectedPacket:)] ) {
+//                [self.delegate SCIcmpPacketUtility:self didReceiveUnexpectedPacket:packet];
 //            }
 //        }
 //    } else {
@@ -406,8 +406,8 @@
 //        
 //        CFRelease(rls);
 //        
-//        if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(SCPacketUtility:didStartWithAddress:)] ) {
-//            [self.delegate SCPacketUtility:self didStartWithAddress:self.hostAddress];
+//        if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(SCIcmpPacketUtility:didStartWithAddress:)] ) {
+//            [self.delegate SCIcmpPacketUtility:self didStartWithAddress:self.hostAddress];
 //        }
 //    }
 //    assert(fd == -1);

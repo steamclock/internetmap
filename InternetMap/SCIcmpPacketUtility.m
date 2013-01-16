@@ -189,7 +189,7 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
         
         CFRelease(rls);
         
-        if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(SCPacketUtility:didStartWithAddress:)] ) {
+        if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(SCIcmpPacketUtility:didStartWithAddress:)] ) {
             [self.delegate SCIcmpPacketUtility:self didStartWithAddress:self.targetAddress];
         }
     }

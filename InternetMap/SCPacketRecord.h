@@ -16,6 +16,7 @@
 @property NSDate* departure; // Departure time of packet sent for this sequence number
 @property NSDate* arrival; // Arrive of response packet for this sequence number
 @property float rtt; //The round trip time for the sequence, which is essentially (arrival - sent)
+@property BOOL timedOut;
 
 
 @end
