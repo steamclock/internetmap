@@ -35,13 +35,13 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeOnCreate(JNI
 
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeOnResume(JNIEnv* jenv, jobject obj)
 {
-    renderer->start();
+    renderer->resume();
     return;
 }
 
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeOnPause(JNIEnv* jenv, jobject obj)
 {
-    renderer->stop();
+    renderer->pause();
     return;
 }
 
@@ -62,6 +62,10 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeSetSurface(J
     }
 
     return;
+}
+
+void DetachThreadFromVM(void) {
+	javaVM->DetachCurrentThread();
 }
 
 std::string loadTextResource(std::string base, std::string extension) {

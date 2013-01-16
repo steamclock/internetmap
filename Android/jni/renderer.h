@@ -19,26 +19,17 @@ public:
     Renderer();
     virtual ~Renderer();
 
-    // Following methods can be called from any thread.
-    // They send message to render thread which executes required actions.
-    void start();
-    void stop();
+    void resume();
+    void pause();
     void setWindow(ANativeWindow* window);
     
     
 private:
-
-    enum RenderThreadMessage {
-        MSG_NONE = 0,
-        MSG_WINDOW_SET,
-        MSG_RENDER_LOOP_EXIT
-    };
-
     pthread_t _threadId;
     pthread_mutex_t _mutex;
-    enum RenderThreadMessage _msg;
+    bool _done;
+    bool _paused;
     
-    // android window, supported by NDK r5 and newer
     ANativeWindow* _window;
 
     EGLDisplay _display;
@@ -46,8 +37,8 @@ private:
     EGLContext _context;
     int _width;
     int _height;
-    GLfloat _angle;
-    float _currentTime;
+    double _initialTimeSec;
+    double _currentTimeSec;
     MapController* _mapController;
 
     // RenderLoop is called in a rendering thread started in start() method

@@ -207,7 +207,10 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
 
 - (NodeWrapper*)nodeByASN:(NSString*)asn{
     NodePointer node = _controller->data->nodesByAsn[std::string([asn UTF8String])];
-    return [[NodeWrapper alloc] initWithNodePointer:node];
+    if(node)
+        return [[NodeWrapper alloc] initWithNodePointer:node];
+    else
+        return nil;
 }
 
 #pragma mark - Controller: Event handling

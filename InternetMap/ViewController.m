@@ -711,15 +711,18 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     self.nodeInformationViewController.tracerouteTextView.text = [[NSString stringWithFormat:@"%@\n%@", self.nodeInformationViewController.tracerouteTextView.text, report] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     [self.nodeInformationViewController.box1 incrementNumber];
+    
+    if ([hops count] <= 0) {
+        return;
+    }
     //    NSLog(@"%@", hops);
 
     [ASNRequest fetchForAddresses:@[[hops lastObject]] responseBlock:^(NSArray *asns) {
-        NodeWrapper* last = nil;
-        
+        NodeWrapper* last = [self.tracerouteHops lastObject];
         for(NSNumber* asn in asns) {
             if(![asn isEqual:[NSNull null]]) {
                 NodeWrapper* current =  [self.controller nodeByASN:[NSString stringWithFormat:@"%i", [asn intValue]]];
-                if(current && (current != last)) {
+                if(current && current != last) {
                     [self.tracerouteHops addObject:current];
                 }
             }
