@@ -41,8 +41,6 @@ Camera::Camera() :
     _rotationDuration(0.0f)
 {
     _rotationMatrix = Matrix4::identity();
-    _zoom = -3.0f;
-    _isMovingToTarget = false;
     _panVelocity.x = 0.0f;
     _panVelocity.y = 0.0f;
 }
