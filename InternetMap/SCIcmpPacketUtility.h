@@ -33,7 +33,7 @@
 
 @property (nonatomic, assign, readwrite) id<SCIcmpPacketUtilityDelegate> delegate;
 @property (nonatomic, copy,   readonly) NSData*               targetAddress;
-@property (nonatomic, assign, readonly) NSString*             targetAddressString;
+@property (nonatomic, copy, readwrite) NSString*             targetAddressString;
 @property (nonatomic, assign, readonly) uint16_t              nextSequenceNumber;
 @property (strong, nonatomic, readonly) NSMutableArray*       packetRecords;
 

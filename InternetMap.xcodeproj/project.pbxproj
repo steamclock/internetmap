@@ -56,7 +56,6 @@
 		11754302169BA790008150BB /* LabelNumberBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = 11754301169BA790008150BB /* LabelNumberBoxView.m */; };
 		11754306169BBCCD008150BB /* youarehere-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 11754304169BBCCC008150BB /* youarehere-icon.png */; };
 		11754307169BBCCD008150BB /* youarehere-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 11754305169BBCCD008150BB /* youarehere-icon@2x.png */; };
-		1180CF3D169B4D5500F1FB73 /* MapController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1180CF3C169B4D5500F1FB73 /* MapController.cpp */; };
 		1180CF47169B71A800F1FB73 /* eye_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 1180CF3F169B71A800F1FB73 /* eye_selected.png */; };
 		1180CF48169B71A800F1FB73 /* eye_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1180CF40169B71A800F1FB73 /* eye_selected@2x.png */; };
 		1180CF49169B71A800F1FB73 /* search_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 1180CF41169B71A800F1FB73 /* search_selected.png */; };
@@ -112,6 +111,7 @@
 		D414E21A1697839000C41CFC /* SCIcmpPacketUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = D414E2191697839000C41CFC /* SCIcmpPacketUtility.m */; };
 		D414E21D169783C300C41CFC /* SCTracerouteUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = D414E21C169783C300C41CFC /* SCTracerouteUtility.m */; };
 		D414E220169783F200C41CFC /* SCPacketRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = D414E21F169783F200C41CFC /* SCPacketRecord.m */; };
+		D4548E1E16A63DD700C20CE9 /* MapController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1180CF3C169B4D5500F1FB73 /* MapController.cpp */; };
 		D46808FD1679560A00A2C1CC /* SCPacketUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = D46808FA1679560A00A2C1CC /* SCPacketUtility.m */; };
 		D46808FE1679560A00A2C1CC /* SCTraceroute.m in Sources */ = {isa = PBXBuildFile; fileRef = D46808FC1679560A00A2C1CC /* SCTraceroute.m */; };
 		D468090416795D4600A2C1CC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D468090216795CC200A2C1CC /* SystemConfiguration.framework */; };
@@ -928,8 +928,7 @@
 				D414E21A1697839000C41CFC /* SCIcmpPacketUtility.m in Sources */,
 				D414E21D169783C300C41CFC /* SCTracerouteUtility.m in Sources */,
 				D414E220169783F200C41CFC /* SCPacketRecord.m in Sources */,
-				1180CF3D169B4D5500F1FB73 /* MapController.mm in Sources */,
-				1180CF3D169B4D5500F1FB73 /* MapController.cpp in Sources */,
+				D4548E1E16A63DD700C20CE9 /* MapController.cpp in Sources */,
 				11754302169BA790008150BB /* LabelNumberBoxView.m in Sources */,
 				A600AAC916A0E520003B1028 /* OpenGL.cpp in Sources */,
 				1127C9C716A0B7C100413FE9 /* MapControllerWrapper.mm in Sources */,
