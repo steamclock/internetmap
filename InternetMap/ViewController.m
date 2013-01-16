@@ -391,6 +391,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 #pragma mark - Action methods
 
 -(IBAction)searchButtonPressed:(id)sender {
+    //TODO: find out if we can make this work in timeline mode
+    if (self.timelineButton.selected) {
+        [self leaveTimelineMode];
+    }
     if (!self.nodeSearchPopover) {
         NodeSearchViewController *searchController = [[NodeSearchViewController alloc] init];
         searchController.delegate = self;
@@ -411,6 +415,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(IBAction)youAreHereButtonPressed:(id)sender {
+    //TODO: find out if we can make this work in timeline mode
+    if (self.timelineButton.selected) {
+        [self leaveTimelineMode];
+    }
     if ([HelperMethods deviceHasInternetConnection]) {
         //fetch current ASN and select node
         if (!self.isCurrentlyFetchingASN) {
@@ -455,6 +463,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(IBAction)visualizationsButtonPressed:(id)sender {
+    //TODO: find out if we can make this work in timeline mode
+    if (self.timelineButton.selected) {
+        [self leaveTimelineMode];
+    }
     if (!self.visualizationSelectionPopover) {
         VisualizationsTableViewController *tableforPopover = [[VisualizationsTableViewController alloc] initWithStyle:UITableViewStylePlain];
         self.visualizationSelectionPopover = [[WEPopoverController alloc] initWithContentViewController:tableforPopover];
@@ -476,20 +488,16 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.timelineButton.selected = YES;
         self.playButton.hidden = NO;
         self.timelineLabel.hidden = NO;
-
-        self.searchButton.enabled = NO;
-        self.youAreHereButton.enabled = NO;
-        self.visualizationsButton.enabled = NO;
     } else {
-        self.timelineSlider.hidden = YES;
-        self.timelineButton.selected = NO;
-        self.playButton.hidden = YES;
-        self.timelineLabel.hidden = YES;
-
-        self.searchButton.enabled = YES;
-        self.youAreHereButton.enabled = YES;
-        self.visualizationsButton.enabled = YES;
+        [self leaveTimelineMode];
     }
+}
+
+-(void)leaveTimelineMode {
+    self.timelineSlider.hidden = YES;
+    self.timelineButton.selected = NO;
+    self.playButton.hidden = YES;
+    self.timelineLabel.hidden = YES;
 }
 
 -(void)displayInformationPopoverForCurrentNode {
