@@ -50,6 +50,6 @@ public:
     void setCenter(const Point3& center);
 };
 
-typedef std::shared_ptr<IndexBox> IndexBoxPointer;
+typedef shared_ptr<IndexBox> IndexBoxPointer;
 
 #endif

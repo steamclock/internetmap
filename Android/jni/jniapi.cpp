@@ -94,3 +94,7 @@ std::string loadTextResource(std::string base, std::string extension) {
 	env->DeleteLocalRef(result);
 	return resultObj;
 }
+
+bool deviceIsOld() {
+	return false;
+}

@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Peer1. All rights reserved.
 //
 
-#import "IndexBox.hpp"
+#include "IndexBox.hpp"
 
 bool IndexBox::isPointInside(const Point3& point) {
     return (point.getX() > _center.getX()-boxSizeXWithoutOverlap) && (point.getX() < _center.getX()+boxSizeXWithoutOverlap) &&

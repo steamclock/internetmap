@@ -3,5 +3,5 @@
 //  InternetMap
 //
 
-#import "Connection.hpp"
+#include "Connection.hpp"
 

@@ -26,8 +26,8 @@ MapController::MapController() :
     targetNode(INT_MAX),
     hoveredNodeIndex(INT_MAX){
         
-    data = std::shared_ptr<MapData>(new MapData());
-    display = std::shared_ptr<MapDisplay>(new MapDisplay());
+    data = shared_ptr<MapData>(new MapData());
+    display = shared_ptr<MapDisplay>(new MapDisplay());
     data->visualization = VisualizationPointer(new DefaultVisualization());
 }
 
@@ -149,7 +149,7 @@ void MapController::highlightConnections(NodePointer node) {
         return;
     }
     
-    std::shared_ptr<Lines> lines(new Lines(filteredConnections.size()));
+    shared_ptr<Lines> lines(new Lines(filteredConnections.size()));
     lines->beginUpdate();
     
     Color brightColor = ColorFromRGB(SELECTED_CONNECTION_COLOR_BRIGHT_HEX);
@@ -190,7 +190,7 @@ void MapController::clearHighlightLines() {
         iter++;
     }
     data->visualization->updateDisplayForNodes(display, array);
-    display->highlightLines = NULL;
+    display->highlightLines = shared_ptr<Lines>();
 }
 
 void MapController::highlightRoute(std::vector<NodePointer> nodeList) {
@@ -199,7 +199,7 @@ void MapController::highlightRoute(std::vector<NodePointer> nodeList) {
         return;
     }
     
-    std::shared_ptr<Lines> lines(new Lines(nodeList.size() - 1));
+    shared_ptr<Lines> lines(new Lines(nodeList.size() - 1));
     lines->beginUpdate();
     
     Color lineColor = ColorFromRGB(0xffa300);
@@ -250,10 +250,10 @@ int MapController::indexForNodeAtPoint(Vector2 pointInView) {
     
     //do actual line-sphere intersection
     float xA, yA, zA;
-    __block float xC, yC, zC;
-    __block float r;
-    __block float maxDelta = -1;
-    __block int foundI = INT_MAX;
+    float xC, yC, zC;
+    float r;
+    float maxDelta = -1;
+    int foundI = INT_MAX;
     
     xA = cameraInObjectSpace.getX();
     yA = cameraInObjectSpace.getY();

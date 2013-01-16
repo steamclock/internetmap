@@ -19,8 +19,8 @@ class MapController {
 public:
     MapController();
     
-    std::shared_ptr<MapDisplay> display;
-    std::shared_ptr<MapData> data;
+    shared_ptr<MapDisplay> display;
+    shared_ptr<MapData> data;
     unsigned int targetNode;
     int hoveredNodeIndex;
     std::set<int> highlightedNodes;

@@ -29,7 +29,7 @@ float DefaultVisualization::nodeZoom(NodePointer node) {
 }
 
 
-void DefaultVisualization::updateDisplayForNodes(std::shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes) {
+void DefaultVisualization::updateDisplayForNodes(shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes) {
 //    UIColor* t1Color = UIColorFromRGB(0x548dff); // Changed to blue in style guide
 //    UIColor* t2Color = UIColorFromRGB(0x375ca6); // Slightly darker blue than in style guide
 //    UIColor* unknownColor = UIColorFromRGB(0x7ce346); // slightly brighter green than style guide
@@ -87,19 +87,19 @@ void DefaultVisualization::updateDisplayForNodes(std::shared_ptr<MapDisplay> dis
 }
 
 
-void DefaultVisualization::resetDisplayForNodes(std::shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes) {
+void DefaultVisualization::resetDisplayForNodes(shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes) {
     if (display->nodes) {
         //TODO: get assert back
         //        NSAssert(display->nodes->count == [arrNodes count], @"display->nodes has already been allocated and you just tried to recreate it with a different count");
     }else {
-        std::shared_ptr<Nodes> theNodes(new Nodes(nodes.size()));
+        shared_ptr<Nodes> theNodes(new Nodes(nodes.size()));
         display->nodes = theNodes;
     }
     updateDisplayForNodes(display, nodes);
 }
 
 
-void DefaultVisualization::updateLineDisplay(std::shared_ptr<MapDisplay> display, std::vector<ConnectionPointer>connections) {
+void DefaultVisualization::updateLineDisplay(shared_ptr<MapDisplay> display, std::vector<ConnectionPointer>connections) {
     
     if (deviceIsOld()) {
         return;
@@ -117,7 +117,7 @@ void DefaultVisualization::updateLineDisplay(std::shared_ptr<MapDisplay> display
     
     int skipLines = 10;
     
-    std::shared_ptr<Lines> lines(new Lines(filteredConnections.size() / skipLines));
+    shared_ptr<Lines> lines(new Lines(filteredConnections.size() / skipLines));
     
     lines->beginUpdate();
     
@@ -156,7 +156,7 @@ void DefaultVisualization::updateLineDisplay(std::shared_ptr<MapDisplay> display
 }
 
 
-void DefaultVisualization::updateDisplayForSelectedNodes(std::shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes) {
+void DefaultVisualization::updateDisplayForSelectedNodes(shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes) {
     display->selectedNodes->beginUpdate();
     for(int i = 0; i < nodes.size(); i++) {
         NodePointer node = nodes[i];
@@ -167,13 +167,13 @@ void DefaultVisualization::updateDisplayForSelectedNodes(std::shared_ptr<MapDisp
     display->selectedNodes->endUpdate();
 }
 
-void DefaultVisualization::resetDisplayForSelectedNodes(std::shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes){
+void DefaultVisualization::resetDisplayForSelectedNodes(shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes){
 
     if (display->selectedNodes) {
         //TODO: get assert back
         //        NSAssert([display->selectedNodes count] == [arrNodes count], @"display->selectedNodes has already been allocated and you just tried to recreate it with a different count");
     }else {
-        std::shared_ptr<Nodes> theNodes(new Nodes(nodes.size()));
+        shared_ptr<Nodes> theNodes(new Nodes(nodes.size()));
         display->selectedNodes = theNodes;
     }
     
