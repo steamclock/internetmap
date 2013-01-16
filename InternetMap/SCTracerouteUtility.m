@@ -60,7 +60,7 @@
 #pragma mark - Send packets
 - (void)sendPackets:(NSData*)data{
     
-    NSLog(@"Sending another batch of packets..");
+    NSLog(@"Sending a batch of packets..");
     if (self.ttlCount <= MAX_HOPS) {
         for (int i = 1; i <= PACKETS_PER_ITER; i++) {
             [self.packetUtility sendPacketWithData:nil andTTL:self.ttlCount];
@@ -84,18 +84,15 @@
     NSInteger type = (NSInteger)header->type;
     NSInteger code = (NSInteger)header->code;
     
-    //Store last IP
-    self.lastIP = [NSString stringWithFormat:@"%d.%d.%d.%d", IPHeader->sourceAddress[0], IPHeader->sourceAddress[1], IPHeader->sourceAddress[3], IPHeader->sourceAddress[4]];
+    NSLog(@"Packet for IP: %@", [NSString stringWithFormat:@"%d.%d.%d.%d", IPHeader->sourceAddress[0], IPHeader->sourceAddress[1], IPHeader->sourceAddress[3], IPHeader->sourceAddress[4]]);
+    NSLog(@"ICMP Type: %d and Code: %d", type, code);
+    
     if (type == kICMPTimeExceeded) {
         return kICMPTimeExceeded;
     } else if (type == kICMPTypeEchoReply) {
         return kICMPTypeEchoReply;
     } else {
-        // Everything else we don't want
-        // TODO handle type 3 code 1 better (machine unreachable)
-        NSLog(@"Something is wrong, and we can't continue.");
-        NSLog(@"ICMP Type: %d and Code: %d", type, code);
-        return -1;
+        return kICMPTypeDestinationUnreachable;
     }
 }
 
@@ -111,7 +108,6 @@
     
     NSString* IP = [NSString stringWithFormat:@"%d.%d.%d.%d", IPHeader->sourceAddress[0], IPHeader->sourceAddress[1], IPHeader->sourceAddress[3], IPHeader->sourceAddress[4]];
 
-    // Assign what IP we're from
     // If the sequence numbers match, record the time the packet arrived & rtt
     
     int numberOfRepliesForIP = 0;
@@ -131,7 +127,6 @@
         
         if (numberOfRepliesForIP == 0) {
 //            [self.hopsForCurrentIP addObject:IP];
-//            numberOfRepliesForIP++;
         } else if (numberOfRepliesForIP == 3) {
             // If we got back all three packets, that's great
             self.ttlCount++;
@@ -193,6 +188,9 @@
     } else if (typeOfPacket == kICMPTypeEchoReply) {
         NSLog(@"Packet received: Echo Reply");
         // Check if we've reached our final destination
+    } else if (typeOfPacket == kICMPTypeDestinationUnreachable){
+        [self processErrorICMPPacket:packet arrivedAt:dateTime];
+        NSLog(@"Packet received: Destination Unreachable");
     } else {
         NSLog(@"What should happen here?");
     }
