@@ -19,10 +19,8 @@ public:
     Renderer();
     virtual ~Renderer();
 
-    // Following methods can be called from any thread.
-    // They send message to render thread which executes required actions.
-    void start();
-    void stop();
+    void resume();
+    void pause();
     void setWindow(ANativeWindow* window);
     
     
@@ -30,6 +28,7 @@ private:
     pthread_t _threadId;
     pthread_mutex_t _mutex;
     bool _done;
+    bool _paused;
     
     ANativeWindow* _window;
 
@@ -38,7 +37,6 @@ private:
     EGLContext _context;
     int _width;
     int _height;
-    GLfloat _angle;
     double _initialTimeSec;
     double _currentTimeSec;
     MapController* _mapController;
