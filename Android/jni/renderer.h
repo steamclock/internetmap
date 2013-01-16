@@ -47,7 +47,8 @@ private:
     int _width;
     int _height;
     GLfloat _angle;
-    float _currentTime;
+    double _initialTimeSec;
+    double _currentTimeSec;
     MapController* _mapController;
 
     // RenderLoop is called in a rendering thread started in start() method

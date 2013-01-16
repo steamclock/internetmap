@@ -6,6 +6,7 @@
 #include <GLES/gl.h>
 #include <EGL/eglplatform.h>
 #include <string>
+#include <time.h>
 #include "renderer.h"
 
 #include <common/MapController.hpp>
@@ -22,7 +23,8 @@ Renderer::Renderer()
     _context = 0;
     _angle = 0;
 
-    _currentTime = 0.0f;
+	_currentTimeSec = double(clock()) / double(CLOCKS_PER_SEC);
+	_initialTimeSec = _currentTimeSec;
 
     return;
 }
@@ -195,6 +197,8 @@ bool Renderer::initialize()
     _mapController->display->camera->setDisplaySize(width, height);
     _mapController->data->updateDisplay(_mapController->display);
     
+    _mapController->display->camera->setAllowIdleAnimation(true);
+
     return true;
 }
 
@@ -220,9 +224,8 @@ void Renderer::destroy() {
 
 void Renderer::drawFrame()
 {
-	_mapController->display->camera->rotateRadiansX(0.01);
-	_currentTime += 0.033f;
-	_mapController->display->update(_currentTime);
+	_currentTimeSec = double(clock()) / double(CLOCKS_PER_SEC);
+	_mapController->display->update(_currentTimeSec - _initialTimeSec);
 	_mapController->display->draw();
 }
 
