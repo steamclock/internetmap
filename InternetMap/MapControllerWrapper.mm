@@ -52,17 +52,6 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
 - (id)init {
     if (self = [super init]) {
         _controller = new MapController();
-        
-        NSString *filePath = [[NSBundle mainBundle] pathForResource:@"data" ofType:@"txt"];
-        NSString *fileContents = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:NULL];
-        _controller->data->loadFromString(std::string([fileContents UTF8String]));
-        filePath = [[NSBundle mainBundle] pathForResource:@"as2attr" ofType:@"txt"];
-        fileContents = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:NULL];
-        _controller->data->loadFromAttrString(std::string([fileContents UTF8String]));
-        filePath = [[NSBundle mainBundle] pathForResource:@"asinfo" ofType:@"json"];
-        fileContents = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:NULL];
-        _controller->data->loadASInfo(std::string([fileContents UTF8String]));
-
         _controller->display->setDisplayScale([[UIScreen mainScreen] scale]);
         _controller->data->updateDisplay(_controller->display);
         

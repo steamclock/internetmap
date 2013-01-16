@@ -21,6 +21,8 @@
 #include <algorithm>
 #include <string>
 
+// TODO: clean this up
+std::string loadTextResource(std::string base, std::string extension);
 
 MapController::MapController() :
     targetNode(INT_MAX),
@@ -29,6 +31,10 @@ MapController::MapController() :
     data = shared_ptr<MapData>(new MapData());
     display = shared_ptr<MapDisplay>(new MapDisplay());
     data->visualization = VisualizationPointer(new DefaultVisualization());
+        
+    data->loadFromString(loadTextResource("data", "txt"));
+    data->loadFromAttrString(loadTextResource("as2attr", "txt"));
+    data->loadASInfo(loadTextResource("asinfo", "json"));
 }
 
 #pragma mark - Event Handling
