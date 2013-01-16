@@ -54,6 +54,6 @@ public:
 };
 
 
-typedef std::shared_ptr<Node> NodePointer;
+typedef shared_ptr<Node> NodePointer;
 
 #endif

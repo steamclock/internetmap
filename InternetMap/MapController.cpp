@@ -21,14 +21,20 @@
 #include <algorithm>
 #include <string>
 
+// TODO: clean this up
+std::string loadTextResource(std::string base, std::string extension);
 
 MapController::MapController() :
     targetNode(INT_MAX),
     hoveredNodeIndex(INT_MAX){
         
-    data = std::shared_ptr<MapData>(new MapData());
-    display = std::shared_ptr<MapDisplay>(new MapDisplay());
+    data = shared_ptr<MapData>(new MapData());
+    display = shared_ptr<MapDisplay>(new MapDisplay());
     data->visualization = VisualizationPointer(new DefaultVisualization());
+        
+    data->loadFromString(loadTextResource("data", "txt"));
+    data->loadFromAttrString(loadTextResource("as2attr", "txt"));
+    data->loadASInfo(loadTextResource("asinfo", "json"));
 }
 
 #pragma mark - Event Handling
@@ -74,8 +80,7 @@ void MapController::unhoverNode(){
 
 
 void MapController::updateTargetForIndex(int index) {
-    Vector3 target;
-    float zoom = 0;
+    Target target;
     // update current node to default state
     if (targetNode != INT_MAX) {
         NodePointer node = data->nodeAtIndex(targetNode);
@@ -84,14 +89,15 @@ void MapController::updateTargetForIndex(int index) {
         data->visualization->updateDisplayForNodes(display, nodes);
     }
     
-    //set new node as targeted and change camera anchor point
+    //set new node as targeted
     if (index != INT_MAX) {
-        
         targetNode = index;
         NodePointer node = data->nodeAtIndex(targetNode);
         Point3 origTarget = data->visualization->nodePosition(node);
-        target = Vector3(origTarget.getX(), origTarget.getY(), origTarget.getZ());
-        zoom = data->visualization->nodeZoom(node);
+
+        target.vector = Vector3(origTarget.getX(), origTarget.getY(), origTarget.getZ());
+        target.zoom = data->visualization->nodeZoom(node);
+        target.maxZoom = target.zoom + 0.1;
         
         display->nodes->beginUpdate();
         display->nodes->updateNode(node->index, ColorFromRGB(SELECTED_NODE_COLOR_HEX));
@@ -101,13 +107,10 @@ void MapController::updateTargetForIndex(int index) {
         nodes.push_back(node);
         data->visualization->resetDisplayForSelectedNodes(display, nodes);
         highlightConnections(node);
-        
-    } else {
-        target = Vector3(0, 0, 0);
     }
     
-    display->camera->setTarget(target, zoom);
-
+    //change camera anchor point and zoom
+    display->camera->setTarget(target);
 }
 
 #pragma mark - Connection Highlighting
@@ -149,7 +152,7 @@ void MapController::highlightConnections(NodePointer node) {
         return;
     }
     
-    std::shared_ptr<Lines> lines(new Lines(filteredConnections.size()));
+    shared_ptr<Lines> lines(new Lines(filteredConnections.size()));
     lines->beginUpdate();
     
     Color brightColor = ColorFromRGB(SELECTED_CONNECTION_COLOR_BRIGHT_HEX);
@@ -190,7 +193,7 @@ void MapController::clearHighlightLines() {
         iter++;
     }
     data->visualization->updateDisplayForNodes(display, array);
-    display->highlightLines = NULL;
+    display->highlightLines = shared_ptr<Lines>();
 }
 
 void MapController::highlightRoute(std::vector<NodePointer> nodeList) {
@@ -199,7 +202,7 @@ void MapController::highlightRoute(std::vector<NodePointer> nodeList) {
         return;
     }
     
-    std::shared_ptr<Lines> lines(new Lines(nodeList.size() - 1));
+    shared_ptr<Lines> lines(new Lines(nodeList.size() - 1));
     lines->beginUpdate();
     
     Color lineColor = ColorFromRGB(0xffa300);
@@ -250,10 +253,10 @@ int MapController::indexForNodeAtPoint(Vector2 pointInView) {
     
     //do actual line-sphere intersection
     float xA, yA, zA;
-    __block float xC, yC, zC;
-    __block float r;
-    __block float maxDelta = -1;
-    __block int foundI = INT_MAX;
+    float xC, yC, zC;
+    float r;
+    float maxDelta = -1;
+    int foundI = INT_MAX;
     
     xA = cameraInObjectSpace.getX();
     yA = cameraInObjectSpace.getY();

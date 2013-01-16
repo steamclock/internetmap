@@ -15,7 +15,6 @@ struct LineVertex;
 class Lines {
     float _width;
     int _count;
-    unsigned int _vertexArray;
     unsigned int _vertexBuffer;
     LineVertex* _lockedVertices;
     

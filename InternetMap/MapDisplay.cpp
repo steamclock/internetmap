@@ -40,6 +40,8 @@ void MapDisplay::draw(void)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     glEnable(GL_DEPTH_TEST); //enable z testing and writing
+    glEnable(GL_BLEND);
+    glEnable(GL_POINT_SPRITE_OES);
 
     if (selectedNodes) {
         _selectedNodeProgram->bind();
@@ -52,14 +54,14 @@ void MapDisplay::draw(void)
     
     glBlendFunc(GL_ONE, GL_ONE);
     glDepthMask(GL_FALSE); //disable z writing only
-    
+
     if (nodes) {
         _nodeProgram->bind();
         bindDefaultNodeUniforms(_nodeProgram);
         glUniform1f(_nodeProgram->uniformForName("minSize"), 2.0f);
         nodes->display();
     }
-    
+
     Matrix4 mvp = camera->currentModelViewProjection();
 
     if(visualizationLines || highlightLines) {

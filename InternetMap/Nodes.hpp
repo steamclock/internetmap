@@ -20,7 +20,6 @@ struct RawDisplayNode;
 class Nodes {
     
     unsigned int _count;
-    unsigned int _vertexArray;
     unsigned int _vertexBuffer;
     RawDisplayNode* _lockedNodes;
     

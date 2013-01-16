@@ -42,16 +42,16 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback
 
     public String readFileAsString(String filePath) throws java.io.IOException
     {
-    	InputStream inputStream = getAssets().open(filePath);
-    	BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        String line, results = "";
-        while( ( line = reader.readLine() ) != null)
-        {
-            results += line;
-            results += '\n';
-        }
-        reader.close();
-        return results;
+    	Log.i(TAG, String.format("Reading %s", filePath));
+    	InputStream input = getAssets().open(filePath);
+
+        int size = input.available();
+        byte[] buffer = new byte[size];
+        input.read(buffer);
+        input.close();
+
+        // byte buffer into a string
+        return new String(buffer);
     }
     
     @Override

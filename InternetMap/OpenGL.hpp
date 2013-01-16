@@ -11,9 +11,6 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 
-extern PFNGLGENVERTEXARRAYSOESPROC glGenVertexArraysOES;
-extern PFNGLBINDVERTEXARRAYOESPROC glBindVertexArrayOES;
-extern PFNGLDELETEVERTEXARRAYSOESPROC glDeleteVertexArraysOES;
 extern PFNGLMAPBUFFEROESPROC glMapBufferOES;
 extern PFNGLUNMAPBUFFEROESPROC glUnmapBufferOES;
 

@@ -30,7 +30,7 @@ public:
     void loadFromString(std::string json);
     void loadFromAttrString(std::string json);
     void loadASInfo(std::string json);
-    void updateDisplay(std::shared_ptr<MapDisplay> display);
+    void updateDisplay(shared_ptr<MapDisplay> display);
     
     NodePointer nodeAtIndex(unsigned int index);
     

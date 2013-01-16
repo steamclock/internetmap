@@ -11,7 +11,13 @@
 #include "MapDisplay.hpp"
 #include <sstream>
 #include <stdlib.h>
+
+// TODO: figure out how to do this right
+#ifdef ANDROID
+#include "ExternalCode/jsoncpp/json.h"
+#else
 #include "json.h"
+#endif
 
 NodePointer MapData::nodeAtIndex(unsigned int index) {
     return nodes[index];
@@ -63,7 +69,7 @@ void MapData::loadFromString(std::string json) {
         node->type = AS_UNKNOWN;
         
         nodes.push_back(node);
-        nodesByAsn.insert(std::make_pair(node->asn, node));
+        nodesByAsn[node->asn] = node;
     }
     
 
@@ -82,18 +88,19 @@ void MapData::loadFromString(std::string json) {
 
     createNodeBoxes();
     
+    LOG("Loaded %d nodes, %d connections", numNodes, numConnections);
 //    NSLog(@"load : %.2fms", ([NSDate timeIntervalSinceReferenceDate] - start) * 1000.0f);
 }
 
 void MapData::loadFromAttrString(std::string json){
     std::map<std::string, int> asTypeDict;
-    asTypeDict.insert(std::make_pair("abstained", AS_UNKNOWN));
-    asTypeDict.insert(std::make_pair("t1", AS_T1));
-    asTypeDict.insert(std::make_pair("t2", AS_T2));
-    asTypeDict.insert(std::make_pair("comp", AS_COMP));
-    asTypeDict.insert(std::make_pair("edu", AS_EDU));
-    asTypeDict.insert(std::make_pair("ix", AS_IX));
-    asTypeDict.insert(std::make_pair("nic", AS_NIC));
+    asTypeDict["abstained"] = AS_UNKNOWN;
+    asTypeDict["t1"] = AS_T1;
+    asTypeDict["t2"] = AS_T2;
+    asTypeDict["comp"] = AS_COMP;
+    asTypeDict["edu"] = AS_EDU;
+    asTypeDict["ix"] = AS_IX;
+    asTypeDict["nic"] = AS_NIC;
     
     std::vector<std::string> lines;
     split(lines, json, "\n");
@@ -141,7 +148,7 @@ void MapData::loadASInfo(std::string json){
     }
 }
 
-void MapData::updateDisplay(std::shared_ptr<MapDisplay> display){
+void MapData::updateDisplay(shared_ptr<MapDisplay> display){
 
 
 //    NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];

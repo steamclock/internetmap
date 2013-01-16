@@ -18,30 +18,18 @@ struct LineVertex {
 Lines::Lines(int initialCount) :
     _width(1.0f),
     _count(initialCount),
-    _vertexArray(0),
     _vertexBuffer(0),
     _lockedVertices(0)
 {
-    glGenVertexArraysOES(1, &_vertexArray);
-    glBindVertexArrayOES(_vertexArray);
-    
+    // set up vertex buffer state
     glGenBuffers(1, &_vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
-    
     glBufferData(GL_ARRAY_BUFFER, _count * 2 * sizeof(LineVertex), NULL, GL_DYNAMIC_DRAW);
-    
-    glEnableVertexAttribArray(ATTRIB_VERTEX);
-    glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, GL_FALSE, sizeof(LineVertex), BUFFER_OFFSET(0));
-    
-    glEnableVertexAttribArray(ATTRIB_COLOR);
-    glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(LineVertex), BUFFER_OFFSET(sizeof(float) * 3));
-    
-    glBindVertexArrayOES(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 Lines::~Lines() {
     glDeleteBuffers(1, &_vertexBuffer);
-    glDeleteVertexArraysOES(1, &_vertexArray);
 }
 
 void Lines::beginUpdate(void) {
@@ -53,8 +41,8 @@ void Lines::beginUpdate(void) {
 
 void Lines::endUpdate(void) {
     _lockedVertices = NULL;
-    glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
     glUnmapBufferOES(GL_ARRAY_BUFFER);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void Lines::updateLine(int index, const Point3& start, const Color& startColor, const Point3& end, const Color& endColor) {
@@ -75,6 +63,19 @@ void Lines::updateLine(int index, const Point3& start, const Color& startColor, 
 
 void Lines::display(void) {
     glLineWidth(_width);
-    glBindVertexArrayOES(_vertexArray);
+
+    glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
+
+    glEnableVertexAttribArray(ATTRIB_VERTEX);
+    glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, GL_FALSE, sizeof(LineVertex), BUFFER_OFFSET(0));
+    
+    glEnableVertexAttribArray(ATTRIB_COLOR);
+    glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(LineVertex), BUFFER_OFFSET(sizeof(float) * 3));
+    
     glDrawArrays(GL_LINES, 0, _count * 2);
+    
+    glDisableVertexAttribArray(ATTRIB_VERTEX);
+    glDisableVertexAttribArray(ATTRIB_COLOR);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 }

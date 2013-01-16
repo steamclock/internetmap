@@ -76,11 +76,12 @@
 		11D4CFC41677DAE400ED328D /* IndexBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 11D4CFC31677DAE400ED328D /* IndexBox.cpp */; };
 		11E500D316A4AC8500396FCA /* MapUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 11E500D116A4AC8400396FCA /* MapUtilities.cpp */; };
 		11FFB390167FC3CE00309545 /* Nodes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 11FFB38F167FC3CD00309545 /* Nodes.cpp */; };
-		1FA5962E167931F800C7E703 /* asinfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 1FA5962D167931F800C7E703 /* asinfo.json */; };
-		1FFD9C87165C9E7400FED149 /* as2attr.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1FFD9C86165C9E7400FED149 /* as2attr.txt */; };
 		3959464C1685343900BAF5CC /* icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 3959464B1685343900BAF5CC /* icon-72.png */; };
 		3959464F1685343C00BAF5CC /* icon-144.png in Resources */ = {isa = PBXBuildFile; fileRef = 3959464E1685343C00BAF5CC /* icon-144.png */; };
 		A600AAC916A0E520003B1028 /* OpenGL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A600AAC716A0E520003B1028 /* OpenGL.cpp */; };
+		A600AAD616A664E1003B1028 /* as2attr.txt in Resources */ = {isa = PBXBuildFile; fileRef = A600AAD316A664DF003B1028 /* as2attr.txt */; };
+		A600AAD716A664E1003B1028 /* asinfo.json in Resources */ = {isa = PBXBuildFile; fileRef = A600AAD416A664E0003B1028 /* asinfo.json */; };
+		A600AAD816A664E1003B1028 /* data.txt in Resources */ = {isa = PBXBuildFile; fileRef = A600AAD516A664E0003B1028 /* data.txt */; };
 		A6B56BF2165AE28A00DDE753 /* Node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B56BF1165AE28A00DDE753 /* Node.cpp */; };
 		A6B56BF9165AF53F00DDE753 /* Program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B56BF8165AF53F00DDE753 /* Program.cpp */; };
 		A6B56BFA165AF98D00DDE753 /* line.fsh in Resources */ = {isa = PBXBuildFile; fileRef = A6B56BF3165AEDF700DDE753 /* line.fsh */; };
@@ -238,11 +239,12 @@
 		11E500DE16A4C21700396FCA /* NodeWrapper+CPPHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NodeWrapper+CPPHelpers.h"; sourceTree = "<group>"; };
 		11FFB38E167FC3CD00309545 /* Nodes.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Nodes.hpp; sourceTree = "<group>"; };
 		11FFB38F167FC3CD00309545 /* Nodes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Nodes.cpp; sourceTree = "<group>"; };
-		1FA5962D167931F800C7E703 /* asinfo.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = asinfo.json; path = InternetMap/asinfo.json; sourceTree = "<group>"; };
-		1FFD9C86165C9E7400FED149 /* as2attr.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = as2attr.txt; path = InternetMap/as2attr.txt; sourceTree = "<group>"; };
 		3959464B1685343900BAF5CC /* icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-72.png"; sourceTree = "<group>"; };
 		3959464E1685343C00BAF5CC /* icon-144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-144.png"; sourceTree = "<group>"; };
 		A600AAC716A0E520003B1028 /* OpenGL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OpenGL.cpp; sourceTree = "<group>"; };
+		A600AAD316A664DF003B1028 /* as2attr.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = as2attr.txt; path = Common/data/as2attr.txt; sourceTree = "<group>"; };
+		A600AAD416A664E0003B1028 /* asinfo.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = asinfo.json; path = Common/data/asinfo.json; sourceTree = "<group>"; };
+		A600AAD516A664E0003B1028 /* data.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = data.txt; path = Common/data/data.txt; sourceTree = "<group>"; };
 		A619182E169CF0FF003A3A4A /* OpenGL.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = OpenGL.hpp; sourceTree = "<group>"; };
 		A619182F169CF1FB003A3A4A /* Types.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Types.hpp; sourceTree = "<group>"; };
 		A6191832169DE85F003A3A4A /* boolInVec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boolInVec.h; sourceTree = "<group>"; };
@@ -523,6 +525,16 @@
 			path = ARSMaquettePro;
 			sourceTree = "<group>";
 		};
+		A600AADA16A664E9003B1028 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				A600AAD316A664DF003B1028 /* as2attr.txt */,
+				A600AAD416A664E0003B1028 /* asinfo.json */,
+				A600AAD516A664E0003B1028 /* data.txt */,
+			);
+			name = Data;
+			sourceTree = "<group>";
+		};
 		A6191830169DE85F003A3A4A /* vectormath */ = {
 			isa = PBXGroup;
 			children = (
@@ -620,9 +632,7 @@
 			children = (
 				3959464E1685343C00BAF5CC /* icon-144.png */,
 				3959464B1685343900BAF5CC /* icon-72.png */,
-				1FFD9C86165C9E7400FED149 /* as2attr.txt */,
-				1FA5962D167931F800C7E703 /* asinfo.json */,
-				A6F3F5901640F7080070E6AE /* data.txt */,
+				A600AADA16A664E9003B1028 /* Data */,
 				A6F3F56D1640F1FB0070E6AE /* Supporting Files */,
 				A6F3F56C1640F1FB0070E6AE /* UI */,
 				A6D54A8616544B3000028B51 /* Map */,
@@ -825,8 +835,6 @@
 				A6F3F5811640F1FB0070E6AE /* node.vsh in Resources */,
 				A6F3F5871640F1FB0070E6AE /* ViewController_iPhone.xib in Resources */,
 				A6F3F58A1640F1FB0070E6AE /* ViewController_iPad.xib in Resources */,
-				A6F3F5911640F7080070E6AE /* data.txt in Resources */,
-				1FFD9C87165C9E7400FED149 /* as2attr.txt in Resources */,
 				D4CEA32C16694E65004B8E8A /* eye.png in Resources */,
 				D4CEA32D16694E65004B8E8A /* eye@2x.png in Resources */,
 				D4CEA32E16694E65004B8E8A /* peer1-logo.png in Resources */,
@@ -837,7 +845,6 @@
 				D4CEA33316694E65004B8E8A /* travelback@2x.png in Resources */,
 				D4CEA33416694E65004B8E8A /* youarehere.png in Resources */,
 				D4CEA33516694E65004B8E8A /* youarehere@2x.png in Resources */,
-				1FA5962E167931F800C7E703 /* asinfo.json in Resources */,
 				110F6B05167BD1C400D5907E /* popoverArrowDownSimple.png in Resources */,
 				110F6B08167BD1C400D5907E /* popoverArrowLeftSimple.png in Resources */,
 				110F6B0B167BD1C400D5907E /* popoverArrowRightSimple.png in Resources */,
@@ -878,6 +885,9 @@
 				11D38FEA169CA3DC00225B19 /* timeline-play@2x.png in Resources */,
 				1127C9DD16A0D3A500413FE9 /* README.txt in Resources */,
 				1127C9DE16A0D3A500413FE9 /* version in Resources */,
+				A600AAD616A664E1003B1028 /* as2attr.txt in Resources */,
+				A600AAD716A664E1003B1028 /* asinfo.json in Resources */,
+				A600AAD816A664E1003B1028 /* data.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

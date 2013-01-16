@@ -79,7 +79,15 @@ std::string loadTextResource(std::string base, std::string extension) {
         }
     }
 
-	std::string final = std::string("shaders/") + base + "." + extension;
+    std::string path;
+
+    if((extension == "fsh") || (extension == "vsh")) {
+    	path = "shaders/";
+    }
+    else {
+    	path = "data/";
+    }
+	std::string final = path + base + "." + extension;
 
 	jstring javaString = env->NewStringUTF(final.c_str());
 	jclass klass = env->GetObjectClass(activity);
@@ -93,4 +101,8 @@ std::string loadTextResource(std::string base, std::string extension) {
 	env->ReleaseStringUTFChars(result,resultChars);
 	env->DeleteLocalRef(result);
 	return resultObj;
+}
+
+bool deviceIsOld() {
+	return false;
 }

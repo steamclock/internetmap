@@ -23,7 +23,7 @@ using std::shared_ptr;
 #include <android/log.h>
 #define LOG(...) __android_log_print(ANDROID_LOG_INFO, "InternetMap", __VA_ARGS__)
 #else
-#define LOG(...) printf(__VA_ARGS__)
+#define LOG(...) printf(__VA_ARGS__), printf("\n")
 #endif
 
 typedef Vectormath::Aos::Matrix4 Matrix4;

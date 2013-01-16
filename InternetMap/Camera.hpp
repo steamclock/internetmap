@@ -8,8 +8,23 @@
 
 #include "Types.hpp"
 
+/**
+ a target contains all the data needed for the camera to sensibly focus on a node.
+ */
+struct Target {
+    Vector3 vector; //where to aim the camera
+    float zoom; //default zoom level
+    float maxZoom; //max. user zoom level
+    Target():vector(0, 0, 0), zoom(0.0f), maxZoom(0.0f) {}
+};
+
+/**
+ the opengl camera for the view.
+ has nice functions for targeting, animated zoom, rotation, etc.
+ */
 class Camera {
     float _displayWidth, _displayHeight;
+    //TODO maybe target should be a Target?
     Vector3 _target;
     bool _isMovingToTarget;
     bool _allowIdleAnimation;
@@ -21,6 +36,7 @@ class Camera {
     Matrix4 _rotationMatrix;
     float _rotation;
     float _zoom;
+    float _maxZoom; //based on target node, because big nodes look ugly close up.
     
     TimeInterval _targetMoveStartTime;
     Vector3 _targetMoveStartPosition;
@@ -58,7 +74,7 @@ class Camera {
 public:
     Camera();
     
-    void setTarget(const Vector3& target, float zoom);
+    void setTarget(const Target& target);
     Vector3 target(void) { return _target; }
     void setDisplaySize(float width, float height) { _displayWidth = width; _displayHeight = height; }
     float displayWidth() { return _displayWidth; }
