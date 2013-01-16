@@ -7,11 +7,9 @@ import java.io.InputStreamReader;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.*;
+import android.widget.PopupWindow;
 import android.widget.Toast;
-import android.view.Surface;
-import android.view.SurfaceView;
-import android.view.SurfaceHolder;
-import android.view.View;
 import android.view.View.OnClickListener;
 import android.util.Log;
 
@@ -31,13 +29,6 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback
         setContentView(R.layout.main);
         SurfaceView surfaceView = (SurfaceView)findViewById(R.id.surfaceview);
         surfaceView.getHolder().addCallback(this);
-        surfaceView.setOnClickListener(new OnClickListener() {
-                public void onClick(View view) {
-                    Toast toast = Toast.makeText(InternetMap.this,
-                                                 "Test tap overlay",
-                                                 Toast.LENGTH_LONG);
-                    toast.show();
-                }});
     }
 
     public String readFileAsString(String filePath) throws java.io.IOException
@@ -84,6 +75,19 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback
 
     public void surfaceDestroyed(SurfaceHolder holder) {
         nativeSetSurface(null);
+    }
+
+
+    //UI stuff
+
+    public void visualizationsButtonPressed(View view) {
+        LayoutInflater layoutInflater
+                = (LayoutInflater)getBaseContext()
+                .getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = layoutInflater.inflate(R.layout.testview, null);
+        PopupWindow popupWindow = new PopupWindow(popupView);
+        popupWindow.showAsDropDown(findViewById(R.id.searchButton));
+
     }
 
 
