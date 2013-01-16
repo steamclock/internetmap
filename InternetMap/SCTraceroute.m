@@ -109,7 +109,7 @@
     NSInteger type = (NSInteger)header->type;
     NSInteger code = (NSInteger)header->code;
     
-    //NSLog(@"ICMP Type: %d and Code: %d with sequenceNumber: %d", type, code, (NSInteger)sequenceNumber);
+    //  NSLog(@"ICMP Type: %d and Code: %d with sequenceNumber: %d", type, code, (NSInteger)sequenceNumber);
     
     //Store last IP
     self.lastIP = [NSString stringWithFormat:@"%d.%d.%d.%d", IPHeader->sourceAddress[0], IPHeader->sourceAddress[1], IPHeader->sourceAddress[3], IPHeader->sourceAddress[4]];
