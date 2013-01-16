@@ -88,6 +88,7 @@ void MapData::loadFromString(std::string json) {
 
     createNodeBoxes();
     
+    LOG("Loaded %d nodes, %d connections", numNodes, numConnections);
 //    NSLog(@"load : %.2fms", ([NSDate timeIntervalSinceReferenceDate] - start) * 1000.0f);
 }
 

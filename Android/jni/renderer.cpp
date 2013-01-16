@@ -8,6 +8,7 @@
 #include <string>
 #include "renderer.h"
 
+#include <common/MapController.hpp>
 #include <common/MapDisplay.hpp>
 #include <common/Camera.hpp>
 #include <common/Nodes.hpp>
@@ -20,6 +21,8 @@ Renderer::Renderer()
     _surface = 0;
     _context = 0;
     _angle = 0;
+
+    _currentTime = 0.0f;
 
     return;
 }
@@ -130,7 +133,6 @@ bool Renderer::initialize()
     EGLContext context;
     EGLint width;
     EGLint height;
-    GLfloat ratio;
     
     LOG_INFO("Initializing context");
     
@@ -188,25 +190,18 @@ bool Renderer::initialize()
     _width = width;
     _height = height;
 
-    _mapDisplay = new MapDisplay;
-    _mapDisplay->camera->setDisplaySize(width, height);
+    _mapController = new MapController;
+    _mapController->display->camera->setDisplaySize(width, height);
+    _mapController->data->updateDisplay(_mapController->display);
     
-    Nodes* nodes = new Nodes(2);
-    nodes->beginUpdate();
-    nodes->updateNode(0, Point3(1.0f, 0.5f, 0.0f), 0.1f, Color(1.0f,0.0f,0.0f,1.0f));
-    nodes->updateNode(1, Point3(-0.5f, -0.5f, 0.0f), 0.2f, Color(0.0f,0.0f,1.0f,1.0f));
-    nodes->endUpdate();
-
-    _mapDisplay->nodes = shared_ptr<Nodes>(nodes);
-
     return true;
 }
 
 void Renderer::destroy() {
     LOG_INFO("Destroying context");
 
-    delete _mapDisplay;
-    _mapDisplay = NULL;
+    delete _mapController;
+    _mapController = NULL;
 
     eglMakeCurrent(_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
     eglDestroyContext(_display, _context);
@@ -224,9 +219,10 @@ void Renderer::destroy() {
 
 void Renderer::drawFrame()
 {
-	_mapDisplay->camera->rotateRadiansX(0.01);
-	_mapDisplay->update(0.033f);
-	_mapDisplay->draw();
+	_mapController->display->camera->rotateRadiansX(0.01);
+	_currentTime += 0.033f;
+	_mapController->display->update(_currentTime);
+	_mapController->display->draw();
 }
 
 void* Renderer::threadStartCallback(void *myself)
