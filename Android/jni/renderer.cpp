@@ -14,10 +14,13 @@
 #include <common/Camera.hpp>
 #include <common/Nodes.hpp>
 
+void DetachThreadFromVM(void);
+
 Renderer::Renderer()
 {
     LOG_INFO("Renderer instance created");
-    pthread_mutex_init(&_mutex, 0);    
+    pthread_mutex_init(&_mutex, 0);
+    _window = NULL;
     _display = 0;
     _surface = 0;
     _context = 0;
@@ -39,6 +42,7 @@ Renderer::~Renderer()
 
 void Renderer::start()
 {
+	_done = false;
     LOG_INFO("Creating renderer thread");
     pthread_create(&_threadId, 0, threadStartCallback, this);
     return;
@@ -50,7 +54,7 @@ void Renderer::stop()
 
     // send message to render thread to stop rendering
     pthread_mutex_lock(&_mutex);
-    _msg = MSG_RENDER_LOOP_EXIT;
+    _done = true;
     pthread_mutex_unlock(&_mutex);    
 
     pthread_join(_threadId, 0);
@@ -63,7 +67,6 @@ void Renderer::setWindow(ANativeWindow *window)
 {
     // notify render thread that window has changed
     pthread_mutex_lock(&_mutex);
-    _msg = MSG_WINDOW_SET;
     _window = window;
     pthread_mutex_unlock(&_mutex);
 
@@ -80,33 +83,29 @@ void Renderer::renderLoop()
 
         pthread_mutex_lock(&_mutex);
 
-        // process incoming messages
-        switch (_msg) {
-
-            case MSG_WINDOW_SET:
-                initialize();
-                break;
-
-            case MSG_RENDER_LOOP_EXIT:
-                renderingEnabled = false;
-                destroy();
-                break;
-
-            default:
-                break;
+        if((_display == 0) && _window) {
+        	initialize();
         }
-        _msg = MSG_NONE;
+
+        if(_done) {
+			renderingEnabled = false;
+			destroy();
+        }
         
+        pthread_mutex_unlock(&_mutex);
+
         if (_display) {
             drawFrame();
+
             if (!eglSwapBuffers(_display, _surface)) {
                 LOG_ERROR("eglSwapBuffers() returned error %d", eglGetError());
             }
         }
         
-        pthread_mutex_unlock(&_mutex);
     }
     
+    DetachThreadFromVM();
+
     LOG_INFO("Render loop exits");
     
     return;

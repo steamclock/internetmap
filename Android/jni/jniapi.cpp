@@ -64,6 +64,10 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeSetSurface(J
     return;
 }
 
+void DetachThreadFromVM(void) {
+	javaVM->DetachCurrentThread();
+}
+
 std::string loadTextResource(std::string base, std::string extension) {
     // Cannot share a JNIEnv between threads. Need to store the JavaVM, and use JavaVM->GetEnv to discover the thread's JNIEnv
     JNIEnv *env = NULL;
