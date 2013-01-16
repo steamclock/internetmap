@@ -10,14 +10,38 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content" />
 
-<TextView
+<LinearLayout
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentLeft="true"
     android:layout_alignParentTop="true"
-    android:text="Test text"
-    android:textColor="#ffffff"
-    android:textSize="12dp" />
+    >
+
+    <Button
+            android:id="@+id/searchButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/searchbutton"/>
+
+    <Button
+            android:id="@+id/youAreHereButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/youareherebutton"/>
+
+    <Button
+            android:id="@+id/visualizationsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/visualizationsbutton"/>
+
+    <Button
+            android:id="@+id/timelineButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/timelinebutton"/>
+
+</LinearLayout>
 
 </RelativeLayout>
 
