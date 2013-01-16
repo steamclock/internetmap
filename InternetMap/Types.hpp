@@ -6,8 +6,25 @@
 #ifndef InternetMap_Types_hpp
 #define InternetMap_Types_hpp
 
+#define ColorFromRGB(rgbValue) Color(((float)((rgbValue & 0xFF0000) >> 16))/255.0, ((float)((rgbValue & 0xFF00) >> 8))/255.0,((float)(rgbValue & 0xFF))/255.0, 1.0)
+
 #include "ExternalCode/vectormath/vmInclude.h"
 #include "ExternalCode/vectormath/vmInclude.h"
+
+#ifdef ANDROID
+#include <boost/smart_ptr/shared_ptr.hpp>
+using boost::shared_ptr;
+#else
+#include <memory>
+using std::shared_ptr;
+#endif
+
+#ifdef ANDROID
+#include <android/log.h>
+#define LOG(...) __android_log_print(ANDROID_LOG_INFO, "InternetMap", __VA_ARGS__)
+#else
+#define LOG(...) printf(__VA_ARGS__)
+#endif
 
 typedef Vectormath::Aos::Matrix4 Matrix4;
 typedef vmVector3 Vector3;

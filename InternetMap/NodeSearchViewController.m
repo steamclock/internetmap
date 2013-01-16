@@ -7,9 +7,9 @@
 //
 
 #import "NodeSearchViewController.h"
-#import "Node.h"
+#import "NodeWrapper.h"
 
-#define ASNS_AT_TOP @[@13768, @3, @15169, @714, @32934, @7847] //Peer1, MIT, google, apple, facebook, NASA
+#define ASNS_AT_TOP @[@13768, @23498, @3, @15169, @714, @32934, @7847] //Peer1, Cogeco, MIT, google, apple, facebook, NASA
 
 @interface NodeSearchViewController ()
 
@@ -87,7 +87,7 @@
     for (int i = 0; i < [arr count]; i++) {
         int asn = [arr[i] intValue];
         for (int j = 0; j < [self.allItems count]; j++) {
-            Node* node = self.allItems[j];
+            NodeWrapper* node = self.allItems[j];
             if ([node.asn intValue] == asn) {
                 [self.allItems exchangeObjectAtIndex:i withObjectAtIndex:j];
                 break;
@@ -126,7 +126,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (self.isSearching && self.textField.text != nil && ![self.textField.text isEqualToString:@""]) {
-            return (self.searchResults.count ? self.searchResults.count : 1) + (self.showHostLookup ? 1 : 0);
+        return (self.searchResults.count ? self.searchResults.count : 1) + (self.showHostLookup ? 1 : 0);
     } else {
         return self.allItems.count;
     }
@@ -164,11 +164,11 @@
         if (row >= self.searchResults.count) {
             cell.textLabel.text = @"No results found";
         }else {
-            Node* node = self.searchResults[row];
+            NodeWrapper* node = self.searchResults[row];
             cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", node.asn, node.textDescription];
         }
     } else {
-        Node* node = self.allItems[indexPath.row];
+        NodeWrapper* node = self.allItems[indexPath.row];
         cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", node.asn, node.textDescription];
     }
     
@@ -197,10 +197,10 @@
             }
         }
 
-        Node* node = self.searchResults[row];
+        NodeWrapper* node = self.searchResults[row];
         [self.delegate nodeSelected:node];
     } else {
-        Node* node = self.allItems[indexPath.row];
+        NodeWrapper* node = self.allItems[indexPath.row];
         [self.delegate nodeSelected:node];
     }
 }
