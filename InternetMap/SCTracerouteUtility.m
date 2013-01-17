@@ -40,6 +40,7 @@
         self.ttlCount = 1;
         self.packetUtility = [SCIcmpPacketUtility utilityWithHostAddress:hostAddress];
         self.packetUtility.delegate = self;
+        self.targetIP = hostAddress;
         self.hopsForCurrentIP = [[NSMutableArray alloc] init];
     }
     return self;
@@ -49,11 +50,16 @@
 #pragma mark - Start/Stop the Traceroute
 
 -(void)start{
-    [self.packetUtility start];   
+    if (!self.packetUtility) {
+        self.packetUtility = [SCIcmpPacketUtility utilityWithHostAddress:self.targetIP];
+        self.packetUtility.delegate = self;
+    }
+    [self.packetUtility start];
 }
 -(void)stop{
     self.ttlCount = 1;
     [self.packetUtility stop];
+    self.packetUtility = nil;
 }
 
 
@@ -105,7 +111,7 @@
     NSString* IP = [self getIpFromIPHeader:packet];
     
     int numberOfRepliesForIP = 0;
-    int numberOfTimeoutsForIP = 0;
+    //int numberOfTimeoutsForIP = 0;
     
     for (SCPacketRecord* packetRecord in [self.packetUtility.packetRecords copy]) {
         if ((packetRecord.sequenceNumber == sequenceNumber) && !packetRecord.timedOut) {
@@ -128,23 +134,8 @@
             self.ttlCount++;
             [self sendPackets:nil];
         } else {
-            // Check if a packet has timed out otherwise
-            NSDate* now = [NSDate date];
-            float msPassed = [now timeIntervalSinceDate:packetRecord.departure] * 1000;
-            if (msPassed > 1000) {
-                numberOfTimeoutsForIP++;
-                packetRecord.timedOut = YES;
-                NSLog(@"%.2fms have passed for this packet #%d! timedout?", msPassed, packetRecord.sequenceNumber);
-            }
+            // ?
         }        
-    }
-    
-    NSLog(@"We have %d replies for IP %@ and %d timeouts.", numberOfRepliesForIP, IP, numberOfTimeoutsForIP);
-    
-    if (numberOfTimeoutsForIP > numberOfRepliesForIP) {
-        // Timed out, start on next set of packets
-        // TODO: call delegate method here
-        NSLog(@"Timeout detected for IP: %@", IP);
     }
     
 }
@@ -210,18 +201,18 @@
 -(void)timeExceededForPacket:(NSData*)packet {
 
     for (SCPacketRecord* packetRecord in [self.packetUtility.packetRecords copy]) {
-        if ([self getSequenceNumberForPacket:packet] == packetRecord.sequenceNumber) {
+        if (([self getSequenceNumberForPacket:packet] == packetRecord.sequenceNumber) && !packetRecord) {
             packetRecord.timedOut = YES;
+        }
+        
+        if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:withHops:)]) {
+            NSArray* hops = self.hopsForCurrentIP;
+            [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: * * * Hop did not reply or timed out.", self.ttlCount] withHops:hops];
+            self.totalHopsTimedOut++;
         }
     }
 
-    if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:withHops:)]) {
-        NSArray* hops = self.hopsForCurrentIP;
-        [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: * * * Hop did not reply or timed out.", self.ttlCount] withHops:hops];
-        self.totalHopsTimedOut++;
-    }
-
-    if (self.totalHopsTimedOut > 3) {
+    if (self.totalHopsTimedOut >= 3) {
         //SHUT. DOWN. EVERYTHING.
         if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidTimeout)]) {
             [self.delegate tracerouteDidTimeout];

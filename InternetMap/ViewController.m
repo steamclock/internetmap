@@ -620,10 +620,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 #pragma mark - NodeInfo delegate
 
 - (void)dismissNodeInfoPopover {
-    self.youAreHereButton.selected = NO;
-    [self.nodeInformationPopover dismissPopoverAnimated:YES];
     [self.tracer stop];
     self.tracer = nil;
+    self.youAreHereButton.selected = NO;
+    [self.nodeInformationPopover dismissPopoverAnimated:YES];
     [self.nodeInformationViewController.tracerouteTimer invalidate];
     if (self.tracerouteHops) {
         self.tracerouteHops = nil;
@@ -652,7 +652,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     NodeWrapper* node = [self.controller nodeAtIndex:self.controller.targetNode];
     if (node.importance > 0.006) {
         [self.controller rotateAnimated:GLKMatrix4Identity duration:3];
-    }else {
+    } else {
         [self.controller rotateAnimated:GLKMatrix4MakeRotation(M_PI, 0, 1, 0) duration:3];
     }
     
@@ -660,8 +660,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.tracer = [SCTracerouteUtility tracerouteWithAddress:self.controller.lastSearchIP]; //we need ip for node!
         self.tracer.delegate = self;
         [self.tracer start];
-    }
-    else {
+    } else {
         NodeWrapper* node = [self.controller nodeAtIndex:self.controller.targetNode];
         int asn = [node.asn intValue];
         if (asn) {
@@ -671,7 +670,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                     self.tracer = [SCTracerouteUtility tracerouteWithAddress:asn[0]];
                     self.tracer.delegate = self;
                     [self.tracer start];
-                }else {
+                } else {
                     NSLog(@"asn couldn't be resolved to IP");
                     self.nodeInformationViewController.tracerouteTextView.textColor = [UIColor redColor];
                     self.nodeInformationViewController.tracerouteTextView.text = @"Error: ASN couldn't be resolved into IP.";
