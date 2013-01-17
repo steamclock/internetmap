@@ -79,14 +79,14 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback
     }
 
     public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
-    	android.view.Display display = getWindowManager().getDefaultDisplay();
-    	Point size = new Point();
-    	display.getSize(size);
-    	int width = size.x;
-    	int height = size.y;
-    	
-    	Log.i(TAG, String.format("screen %d %d ", width, height, getResources().getDisplayMetrics().density));
-    	Log.i(TAG, String.format("surface %d %d %.2f", w, h, getResources().getDisplayMetrics().density));
+        android.view.Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+
+        Log.i(TAG, String.format("screen %d %d ", width, height, getResources().getDisplayMetrics().density));
+        Log.i(TAG, String.format("surface %d %d %.2f", w, h, getResources().getDisplayMetrics().density));
         nativeSetSurface(holder.getSurface(), getResources().getDisplayMetrics().density);
     }
 
