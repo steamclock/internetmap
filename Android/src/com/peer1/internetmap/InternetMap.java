@@ -1,4 +1,3 @@
-
 package com.peer1.internetmap;
 
 import java.io.InputStream;
@@ -16,8 +15,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.util.Log;
 
-public class InternetMap extends Activity implements SurfaceHolder.Callback
-{
+public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
     private static String TAG = "InternetMap";
 
@@ -26,27 +24,26 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(android.view.Window.FEATURE_NO_TITLE);
-        
+
         Log.i(TAG, "onCreate()");
 
         nativeOnCreate();
-        
+
         setContentView(R.layout.main);
-        SurfaceView surfaceView = (SurfaceView)findViewById(R.id.surfaceview);
+        SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceview);
         surfaceView.getHolder().addCallback(this);
         surfaceView.setOnClickListener(new OnClickListener() {
-                public void onClick(View view) {
-                    Toast toast = Toast.makeText(InternetMap.this,
-                                                 "Test tap overlay",
-                                                 Toast.LENGTH_LONG);
-                    toast.show();
-                }});
+            public void onClick(View view) {
+                Toast toast = Toast.makeText(InternetMap.this,
+                        "Test tap overlay", Toast.LENGTH_LONG);
+                toast.show();
+            }
+        });
     }
 
-    public String readFileAsString(String filePath) throws java.io.IOException
-    {
-    	Log.i(TAG, String.format("Reading %s", filePath));
-    	InputStream input = getAssets().open(filePath);
+    public String readFileAsString(String filePath) throws java.io.IOException {
+        Log.i(TAG, String.format("Reading %s", filePath));
+        InputStream input = getAssets().open(filePath);
 
         int size = input.available();
         byte[] buffer = new byte[size];
@@ -56,14 +53,14 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback
         // byte buffer into a string
         return new String(buffer);
     }
-    
+
     @Override
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume()");
         nativeOnResume();
     }
-    
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -107,11 +104,14 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback
         nativeSetSurface(null, 1.0f);
     }
 
-
     public native void nativeOnCreate();
+
     public native void nativeOnResume();
+
     public native void nativeOnPause();
+
     public native void nativeOnStop();
+
     public native void nativeSetSurface(Surface surface, float density);
 
     static {

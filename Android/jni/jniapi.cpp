@@ -14,11 +14,11 @@ static JavaVM* javaVM;
 
 jint JNI_OnLoad(JavaVM* vm, void* reserved)
 {
-	JNIEnv *env;
-	javaVM = vm;
+    JNIEnv *env;
+    javaVM = vm;
     if (vm->GetEnv((void**) &env, JNI_VERSION_1_6) != JNI_OK) {
-    	LOG_ERROR("Could not get JNIEnv");
-    	return -1;
+        LOG_ERROR("Could not get JNIEnv");
+        return -1;
     }
 
     return JNI_VERSION_1_6;
@@ -26,12 +26,12 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved)
 
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeOnCreate(JNIEnv* jenv, jobject obj)
 {
-	LOG("OnCreate");
+    LOG("OnCreate");
 
-	if(!renderer) {
-		renderer = new Renderer();
-	}
-	activity = jenv->NewGlobalRef(obj);
+    if(!renderer) {
+        renderer = new Renderer();
+    }
+    activity = jenv->NewGlobalRef(obj);
     return;
 }
 
@@ -71,7 +71,7 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeSetSurface(J
 }
 
 void DetachThreadFromVM(void) {
-	javaVM->DetachCurrentThread();
+    javaVM->DetachCurrentThread();
 }
 
 std::string loadTextResource(std::string base, std::string extension) {
@@ -92,27 +92,27 @@ std::string loadTextResource(std::string base, std::string extension) {
     std::string path;
 
     if((extension == "fsh") || (extension == "vsh")) {
-    	path = "shaders/";
+        path = "shaders/";
     }
     else {
-    	path = "data/";
+        path = "data/";
     }
-	std::string final = path + base + "." + extension;
+    std::string final = path + base + "." + extension;
 
-	jstring javaString = env->NewStringUTF(final.c_str());
-	jclass klass = env->GetObjectClass(activity);
-	jmethodID methodID = env->GetMethodID(klass, "readFileAsString", "(Ljava/lang/String;)Ljava/lang/String;");
-	jstring result = (jstring)env->CallObjectMethod(activity, methodID, javaString);
-	env->DeleteLocalRef(javaString);
+    jstring javaString = env->NewStringUTF(final.c_str());
+    jclass klass = env->GetObjectClass(activity);
+    jmethodID methodID = env->GetMethodID(klass, "readFileAsString", "(Ljava/lang/String;)Ljava/lang/String;");
+    jstring result = (jstring)env->CallObjectMethod(activity, methodID, javaString);
+    env->DeleteLocalRef(javaString);
 
-	const char* resultChars = env->GetStringUTFChars(result,0);
+    const char* resultChars = env->GetStringUTFChars(result,0);
 
-	std::string resultObj(resultChars);
-	env->ReleaseStringUTFChars(result,resultChars);
-	env->DeleteLocalRef(result);
-	return resultObj;
+    std::string resultObj(resultChars);
+    env->ReleaseStringUTFChars(result,resultChars);
+    env->DeleteLocalRef(result);
+    return resultObj;
 }
 
 bool deviceIsOld() {
-	return false;
+    return false;
 }
