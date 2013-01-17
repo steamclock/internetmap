@@ -12,6 +12,8 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeRotateRadian
         float radX, float radY);
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeStartMomentumPanWithVelocity(JNIEnv* jenv, jobject obj,
         float vX, float vY);
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeHandleTouchDownAtPoint(JNIEnv* jenv, jobject obj,
+        float x, float y);
 };
 
 #endif // JNIAPI_H

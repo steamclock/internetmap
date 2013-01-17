@@ -85,6 +85,11 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeStartMomentu
     renderer->_mapController->display->camera->startMomentumPanWithVelocity(Vector2(vX, vY));
 }
 
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeHandleTouchDownAtPoint(JNIEnv* jenv, jobject obj,
+        float x, float y) {
+    renderer->_mapController->handleTouchDownAtPoint(Vector2(x, y));
+}
+
 void DetachThreadFromVM(void) {
     javaVM->DetachCurrentThread();
 }

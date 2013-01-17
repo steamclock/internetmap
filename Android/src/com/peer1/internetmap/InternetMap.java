@@ -167,6 +167,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     
     public native void nativeRotateRadiansXY(float radX, float radY);
     public native void nativeStartMomentumPanWithVelocity(float vX, float vY);
+    public native void nativeHandleTouchDownAtPoint(float x, float y);
 
     static {
         System.loadLibrary("internetmaprenderer");
@@ -183,7 +184,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
         @Override
         public boolean onDown(MotionEvent event) { 
-            Log.d(TAG,"onDown"); 
+            Log.d(TAG,"onDown");
+            nativeHandleTouchDownAtPoint(event.getX(), event.getY());
             return true;
         }
 
