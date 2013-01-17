@@ -1,12 +1,12 @@
 
 package com.peer1.internetmap;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Point;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.Toast;
 import android.view.Surface;
@@ -78,12 +78,22 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback
         nativeOnStop();
     }
 
+    @SuppressWarnings("deprecation")
+    @SuppressLint("NewApi")
     public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
         android.view.Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-        int height = size.y;
+        
+        int width, height;
+        //getSize is only available from api 13
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            Point size = new Point();
+            display.getSize(size);
+            width = size.x;
+            height = size.y;
+        } else {
+            width = display.getWidth();
+            height = display.getHeight();
+        }
 
         Log.i(TAG, String.format("screen %d %d ", width, height, getResources().getDisplayMetrics().density));
         Log.i(TAG, String.format("surface %d %d %.2f", w, h, getResources().getDisplayMetrics().density));
