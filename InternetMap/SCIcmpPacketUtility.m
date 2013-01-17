@@ -97,16 +97,18 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
     const struct IPHeader * ipPtr;
     size_t                  ipHeaderLength;
     
-    result = NSNotFound;
+    result = 0;
+    
     if ([packet length] >= (sizeof(IPHeader) + sizeof(ICMPHeader))) {
         ipPtr = (const IPHeader *) [packet bytes];
-        assert((ipPtr->versionAndHeaderLength & 0xF0) == 0x40);     // IPv4
-        assert(ipPtr->protocol == 1);                               // ICMP
-        ipHeaderLength = (ipPtr->versionAndHeaderLength & 0x0F) * sizeof(uint32_t);
-        if ([packet length] >= (ipHeaderLength + sizeof(ICMPHeader))) {
-            result = ipHeaderLength;
+        if (ipPtr->protocol == 1 &&( (ipPtr->versionAndHeaderLength & 0xF0) == 0x40) ) { //Verify packet is IPv4 and ICMP
+            ipHeaderLength = (ipPtr->versionAndHeaderLength & 0x0F) * sizeof(uint32_t);
+            if ([packet length] >= (ipHeaderLength + sizeof(ICMPHeader))) {
+                result = ipHeaderLength;
+            }
         }
     }
+    
     return result;
 }
 
@@ -243,6 +245,7 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
     icmpPtr->type = kICMPTypeEchoRequest;
     icmpPtr->code = 0;
     icmpPtr->checksum = 0;
+    icmpPtr->identifier = (uint16_t) arc4random();
     icmpPtr->sequenceNumber = OSSwapHostToBigInt16(self.nextSequenceNumber);
     
     memcpy(&icmpPtr[1], [payload bytes], [payload length]);
@@ -286,12 +289,12 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
         } else {
             // Complete success. Track ze packet!
             
-            SCPacketRecord* packet = [[SCPacketRecord alloc] init];
-            packet.sentWithTTL = ttl;
-            packet.sequenceNumber = self.nextSequenceNumber;
-            packet.departure = now;
+            SCPacketRecord* packetRecord = [[SCPacketRecord alloc] init];
+            packetRecord.sentWithTTL = ttl;
+            packetRecord.sequenceNumber = self.nextSequenceNumber;
+            packetRecord.departure = now;
             
-            [self.packetRecords addObject:packet];
+            [self.packetRecords addObject:packetRecord];
         }
     }
     

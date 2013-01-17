@@ -186,18 +186,17 @@
 
 -(NSInteger)getSequenceNumberForPacket:(NSData*)packet{
     
-    int packetType = [self processICMPPacket:packet];
-    NSInteger sequenceNumber = -1;
+    NSInteger sequenceNumber = 0;
+    const ICMPHeader* header = [SCIcmpPacketUtility icmpInPacket:packet];
+    NSInteger type = (NSInteger)header->type;
     
-    if (packetType == kICMPTypeEchoRequest) {
+    if (type == kICMPTypeEchoRequest) {
         // This was a packet we sent, probably it timed out
-        const ICMPHeader* sentPacketHeader = [SCIcmpPacketUtility icmpInPacket:packet];
-        sequenceNumber = sentPacketHeader->sequenceNumber;
-    } else if (packetType == kICMPTimeExceeded) {
+        sequenceNumber = CFSwapInt16BigToHost(header->sequenceNumber);
+    } else if (type == kICMPTimeExceeded) {
         const ICMPErrorPacket* errorPacket = (const struct ICMPErrorPacket *)[packet bytes];
         sequenceNumber = CFSwapInt16BigToHost(errorPacket->sequenceNumberOriginal);
     }
-    NSLog(@"SEQUENCE NUMBER: %d", sequenceNumber);
     return sequenceNumber;
 }
 
@@ -216,7 +215,6 @@
 }
 
 - (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didSendPacket:(NSData *)packet{
-    //NSLog(@"Packet sent.");
     
     //If we just don't get ANY packets back after a whole two seconds, bail on the hop
     [self performSelector:@selector(timeExceededForPacket:) withObject:packet afterDelay:2];
