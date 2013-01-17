@@ -52,12 +52,15 @@ void MapController::handleTouchDownAtPoint(Vector2 point) {
 
 #pragma mark - Selected Node handling
 
-void MapController::selectHoveredNode() {
+bool MapController::selectHoveredNode() {
     if (hoveredNodeIndex != INT_MAX) {
         lastSearchIP = std::string();
         updateTargetForIndex(hoveredNodeIndex);
         hoveredNodeIndex = INT_MAX;
+        return true;
     }
+    
+    return false;
 }
 
 void MapController::hoverNode(int i) {
@@ -81,16 +84,20 @@ void MapController::unhoverNode(){
 
 }
 
-
-void MapController::updateTargetForIndex(int index) {
-    Target target;
-    // update current node to default state
+void MapController::deselectCurrentNode(){
     if (targetNode != INT_MAX) {
         NodePointer node = data->nodeAtIndex(targetNode);
         std::vector<NodePointer> nodes;
         nodes.push_back(node);
         data->visualization->updateDisplayForNodes(display, nodes);
+        data->visualization->resetDisplayForSelectedNodes(display, std::vector<NodePointer>());
     }
+}
+
+void MapController::updateTargetForIndex(int index) {
+    Target target;
+    // update current node to default state
+    deselectCurrentNode();
     
     //set new node as targeted
     if (index != INT_MAX) {

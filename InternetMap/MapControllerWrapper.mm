@@ -202,12 +202,16 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
 
 #pragma mark - Controller: Node Selection 
 
-- (void)selectHoveredNode{
-    _controller->selectHoveredNode();
+- (BOOL)selectHoveredNode{
+    return _controller->selectHoveredNode();
 }
 
 - (void)unhoverNode{
     _controller->unhoverNode();
+}
+
+- (void)deselectCurrentNode {
+    _controller->deselectCurrentNode();
 }
 
 - (int)indexForNodeAtPoint:(CGPoint)pointInView{

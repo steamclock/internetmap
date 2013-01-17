@@ -218,13 +218,18 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
     self.isHandlingLongPress = NO;
 
-    [self.controller handleTouchDownAtPoint:[[touches anyObject] locationInView:self.view]];
+    [self.controller handleTouchDownAtPoint:[touch locationInView:self.view]];
 }
 
 -(void)handleTap:(UITapGestureRecognizer*)gestureRecognizer {
     [self.controller resetIdleTimer];
     [self dismissNodeInfoPopover];
-    [self.controller selectHoveredNode];
+    if (![self.controller selectHoveredNode]) { //couldn't select node
+        
+        [self dismissNodeInfoPopover];
+        [self.controller clearHighlightLines];
+        [self.controller deselectCurrentNode];
+    }
 }
 
 - (void)handleDoubleTap:(UIGestureRecognizer*)gestureRecongizer {
