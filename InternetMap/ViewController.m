@@ -163,10 +163,18 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     
     //customize timeline slider
-    [self.timelineSlider setMinimumTrackImage:[[UIImage imageNamed:@"timeline-barleft"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 11, 0, 1)] forState:UIControlStateNormal];
-    [self.timelineSlider setMaximumTrackImage:[[UIImage imageNamed:@"timeline-barright"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 1, 0, 11)] forState:UIControlStateNormal];
+    UIImage* leftCap = [[UIImage imageNamed:@"timeline-left"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 11, 0, 1)];
+    UIImage* rightCap = [[UIImage imageNamed:@"timeline-right"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 1, 0, 11)];
+    [self.timelineSlider setMinimumTrackImage:leftCap forState:UIControlStateNormal];
+    [self.timelineSlider setMaximumTrackImage:rightCap forState:UIControlStateNormal];
     [self.timelineSlider setThumbImage:[UIImage imageNamed:@"timeline-handle"] forState:UIControlStateNormal];
-
+    UIImageView* leftSliderCap = [[UIImageView alloc] initWithFrame:CGRectMake(-11, -18, 22, leftCap.size.height)];
+    leftSliderCap.image = leftCap;
+    [self.timelineSlider addSubview:leftSliderCap];
+    
+    UIImageView* rightSliderCap = [[UIImageView alloc] initWithFrame:CGRectMake(self.timelineSlider.width-11, -18, 22, rightCap.size.height)];
+    rightSliderCap.image = rightCap;
+    [self.timelineSlider addSubview:rightSliderCap];
     
     //setup timeline slider values
     float diff = MAX_TIMELINE_YEAR-MIN_TIMELINE_YEAR;
