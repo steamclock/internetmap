@@ -489,6 +489,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.timelineButton.selected = YES;
         self.playButton.hidden = NO;
         self.timelineLabel.hidden = NO;
+        [self dismissNodeInfoPopover];
     } else {
         [self leaveTimelineMode];
     }
