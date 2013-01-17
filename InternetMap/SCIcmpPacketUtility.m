@@ -227,7 +227,7 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
     ICMPHeader *    icmpPtr;
     ssize_t         bytesSent;
     
-    // Construct the traceroute packet.
+    // Construct the ICMP
     
     payload = data;
     if (payload == nil) {

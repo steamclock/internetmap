@@ -111,7 +111,7 @@
     NSString* IP = [self getIpFromIPHeader:packet];
     
     int numberOfRepliesForIP = 0;
-    //int numberOfTimeoutsForIP = 0;
+    int numberOfTimeoutsForIP = 0;
     
     for (SCPacketRecord* packetRecord in [self.packetUtility.packetRecords copy]) {
         if ((packetRecord.sequenceNumber == sequenceNumber) && !packetRecord.timedOut) {
@@ -125,19 +125,55 @@
             }
         }
         
+        if ([packetRecord.responseAddress isEqualToString:IP] && packetRecord.timedOut) {
+            numberOfTimeoutsForIP++;
+        }
+        
         if ([packetRecord.responseAddress isEqualToString:IP]) {
             numberOfRepliesForIP++;
         }
-        
+    
         if (numberOfRepliesForIP == 3) {
             // If we got back all three packets, that's great
             self.ttlCount++;
             [self sendPackets:nil];
-        } else {
-            // ?
-        }        
+        } else if (numberOfTimeoutsForIP > numberOfRepliesForIP){
+            NSLog(@"Timeout detected");
+            
+            self.totalHopsTimedOut++;
+            
+            if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:withHops:)]) {
+                NSArray* hops = self.hopsForCurrentIP;
+                [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: * * * Hop did not reply or timed out.", self.ttlCount] withHops:hops];
+                self.totalHopsTimedOut++;
+            }
+        
+            if (self.totalHopsTimedOut >= 3) {
+                if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidTimeout)]) {
+                    [self.delegate tracerouteDidTimeout];
+                }
+            }
+        }
+    }
+//    NSLog(@"Number of replies for %@ is %d", IP, numberOfRepliesForIP);
+//    NSLog(@"Number of timeouts for %@ is %d", IP, numberOfTimeoutsForIP);
+}
+-(void)timeExceededForPacket:(NSData*)packet {
+    NSInteger sequenceNumber = [self getSequenceNumberForPacket:packet];
+    int numberOfTimeoutsForIP = 0;
+    for (SCPacketRecord* packetRecord in [self.packetUtility.packetRecords copy]) {
+        if (packetRecord.sequenceNumber == sequenceNumber) {
+            packetRecord.timedOut = YES;
+        }
+        
+        if (packetRecord.timedOut) {
+            numberOfTimeoutsForIP++;
+        }
     }
     
+    if (numberOfTimeoutsForIP > 1) {
+        NSLog(@"TIMEDOUT!");
+    }
 }
 
 -(void)foundNewIP:(NSString*)ip withReport:(NSString*)report{
@@ -149,8 +185,19 @@
 }
 
 -(NSInteger)getSequenceNumberForPacket:(NSData*)packet{
-    const ICMPErrorPacket* errorPacket = (const struct ICMPErrorPacket *)[packet bytes];
-    NSInteger sequenceNumber = CFSwapInt16BigToHost(errorPacket->sequenceNumberOriginal);
+    
+    int packetType = [self processICMPPacket:packet];
+    NSInteger sequenceNumber = -1;
+    
+    if (packetType == kICMPTypeEchoRequest) {
+        // This was a packet we sent, probably it timed out
+        const ICMPHeader* sentPacketHeader = [SCIcmpPacketUtility icmpInPacket:packet];
+        sequenceNumber = sentPacketHeader->sequenceNumber;
+    } else if (packetType == kICMPTimeExceeded) {
+        const ICMPErrorPacket* errorPacket = (const struct ICMPErrorPacket *)[packet bytes];
+        sequenceNumber = CFSwapInt16BigToHost(errorPacket->sequenceNumberOriginal);
+    }
+    NSLog(@"SEQUENCE NUMBER: %d", sequenceNumber);
     return sequenceNumber;
 }
 
@@ -197,33 +244,6 @@
     }
     
 }
-
--(void)timeExceededForPacket:(NSData*)packet {
-
-    for (SCPacketRecord* packetRecord in [self.packetUtility.packetRecords copy]) {
-        if (([self getSequenceNumberForPacket:packet] == packetRecord.sequenceNumber) && !packetRecord) {
-            packetRecord.timedOut = YES;
-        }
-        
-        if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:withHops:)]) {
-            NSArray* hops = self.hopsForCurrentIP;
-            [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: * * * Hop did not reply or timed out.", self.ttlCount] withHops:hops];
-            self.totalHopsTimedOut++;
-        }
-    }
-
-    if (self.totalHopsTimedOut >= 3) {
-        //SHUT. DOWN. EVERYTHING.
-        if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidTimeout)]) {
-            [self.delegate tracerouteDidTimeout];
-        }
-    } else {
-//        self.ttlCount++;
-//        [self sendPackets:nil];
-    }
-    
-}
-
 
 - (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didReceiveUnexpectedPacket:(NSData *)packet{
     
