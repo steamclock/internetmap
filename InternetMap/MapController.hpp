@@ -22,11 +22,11 @@ public:
     shared_ptr<MapDisplay> display;
     shared_ptr<MapData> data;
     unsigned int targetNode;
-    int hoveredNodeIndex;
     std::set<int> highlightedNodes;
     std::string lastSearchIP;
     
     
+    void hoverNode(int index);
     void unhoverNode();
     void updateTargetForIndex(int index);
     void handleTouchDownAtPoint(Vector2 point);
@@ -36,6 +36,9 @@ public:
     void clearHighlightLines();
     void highlightRoute(std::vector<NodePointer> nodeList);
     void highlightConnections(NodePointer node);
+    
+private:
+    int hoveredNodeIndex;
 };
 
 #endif

@@ -62,6 +62,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (nonatomic) int cachedCurrentASN;
 
 /* UIKit Overlay */
+@property (weak, nonatomic) IBOutlet UIView* buttonContainerView;
 @property (weak, nonatomic) IBOutlet UIButton* searchButton;
 @property (weak, nonatomic) IBOutlet UIButton* youAreHereButton;
 @property (weak, nonatomic) IBOutlet UIButton* visualizationsButton;
@@ -211,6 +212,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
+    UITouch* touch = [touches anyObject];
+    if (touch.view == self.buttonContainerView) {
+        return;
+    }
     self.isHandlingLongPress = NO;
 
     [self.controller handleTouchDownAtPoint:[[touches anyObject] locationInView:self.view]];
@@ -253,11 +258,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                     self.nodeTooltipPopover.passthroughViews = @[self.view];
                     CGPoint center = [self.controller getCoordinatesForNodeAtIndex:i];
                     [self.nodeTooltipPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];
-                    [self.controller unhoverNode];
-                    self.controller.hoveredNodeIndex = i;
-                    [self.controller beginNodeUpdates];
-                    [self.controller setColor:SELECTED_NODE_COLOR forNodeAtIndex:i];
-                    [self.controller endNodeUpdates];
+                    [self.controller hoverNode:i];
                 }
             }
         }
@@ -365,7 +366,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 
 - (BOOL)shouldDoIdleAnimation{
-    return !self.tracerouteHops && !UIGestureRecognizerStateIsActive(self.longPressGestureRecognizer.state) && !UIGestureRecognizerStateIsActive(self.pinchRecognizer.state) && !UIGestureRecognizerStateIsActive(self.panRecognizer.state);
+    return !UIGestureRecognizerStateIsActive(self.longPressGestureRecognizer.state) && !UIGestureRecognizerStateIsActive(self.pinchRecognizer.state) && !UIGestureRecognizerStateIsActive(self.panRecognizer.state);
 }
 
 
@@ -488,6 +489,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.timelineButton.selected = YES;
         self.playButton.hidden = NO;
         self.timelineLabel.hidden = NO;
+        [self dismissNodeInfoPopover];
     } else {
         [self leaveTimelineMode];
     }
@@ -710,15 +712,18 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     self.nodeInformationViewController.tracerouteTextView.text = [[NSString stringWithFormat:@"%@\n%@", self.nodeInformationViewController.tracerouteTextView.text, report] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     [self.nodeInformationViewController.box1 incrementNumber];
+    
+    if ([hops count] <= 0) {
+        return;
+    }
     //    NSLog(@"%@", hops);
 
     [ASNRequest fetchForAddresses:@[[hops lastObject]] responseBlock:^(NSArray *asns) {
-        NodeWrapper* last = nil;
-        
+        NodeWrapper* last = [self.tracerouteHops lastObject];
         for(NSNumber* asn in asns) {
             if(![asn isEqual:[NSNull null]]) {
                 NodeWrapper* current =  [self.controller nodeByASN:[NSString stringWithFormat:@"%i", [asn intValue]]];
-                if(current && (current != last)) {
+                if(current && current != last) {
                     [self.tracerouteHops addObject:current];
                 }
             }

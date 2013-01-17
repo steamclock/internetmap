@@ -6,6 +6,7 @@
 #include <GLES/gl.h>
 #include <EGL/eglplatform.h>
 #include <string>
+#include <time.h>
 #include "renderer.h"
 
 #include <common/MapController.hpp>
@@ -13,130 +14,121 @@
 #include <common/Camera.hpp>
 #include <common/Nodes.hpp>
 
-Renderer::Renderer()
-{
+void DetachThreadFromVM(void);
+
+Renderer::Renderer() {
     LOG_INFO("Renderer instance created");
-    pthread_mutex_init(&_mutex, 0);    
+    pthread_mutex_init(&_mutex, 0);
+    _window = NULL;
     _display = 0;
     _surface = 0;
     _context = 0;
-    _angle = 0;
 
-    _currentTime = 0.0f;
+    _currentTimeSec = double(clock()) / double(CLOCKS_PER_SEC);
+    _initialTimeSec = _currentTimeSec;
 
-    return;
-}
+    // Lock the mutex to keep the thread from doing anything until we get resumed
+    pthread_mutex_lock(&_mutex);
+    _paused = true;
 
-Renderer::~Renderer()
-{
-    LOG_INFO("Renderer instance destroyed");
-    pthread_mutex_destroy(&_mutex);
-
-    return;
-}
-
-void Renderer::start()
-{
-    LOG_INFO("Creating renderer thread");
+    // Create the rendering thread
+    _done = false;
     pthread_create(&_threadId, 0, threadStartCallback, this);
-    return;
-}
-
-void Renderer::stop()
-{
-    LOG_INFO("Stopping renderer thread");
-
-    // send message to render thread to stop rendering
-    pthread_mutex_lock(&_mutex);
-    _msg = MSG_RENDER_LOOP_EXIT;
-    pthread_mutex_unlock(&_mutex);    
-
-    pthread_join(_threadId, 0);
-    LOG_INFO("Renderer thread stopped");
 
     return;
 }
 
-void Renderer::setWindow(ANativeWindow *window)
-{
-    // notify render thread that window has changed
-    pthread_mutex_lock(&_mutex);
-    _msg = MSG_WINDOW_SET;
-    _window = window;
-    pthread_mutex_unlock(&_mutex);
-
-    return;
-}
-
-void Renderer::renderLoop()
-{
-    bool renderingEnabled = true;
-    
-    LOG_INFO("renderLoop()");
-
-    while (renderingEnabled) {
-
-        pthread_mutex_lock(&_mutex);
-
-        // process incoming messages
-        switch (_msg) {
-
-            case MSG_WINDOW_SET:
-                initialize();
-                break;
-
-            case MSG_RENDER_LOOP_EXIT:
-                renderingEnabled = false;
-                destroy();
-                break;
-
-            default:
-                break;
-        }
-        _msg = MSG_NONE;
-        
-        if (_display) {
-            drawFrame();
-            if (!eglSwapBuffers(_display, _surface)) {
-                LOG_ERROR("eglSwapBuffers() returned error %d", eglGetError());
-            }
-        }
-        
+Renderer::~Renderer() {
+    LOG_INFO("Renderer instance destroyed");
+    _done = true;
+    if (_paused) {
         pthread_mutex_unlock(&_mutex);
     }
-    
-    LOG_INFO("Render loop exits");
-    
+    pthread_join(_threadId, 0);
+    destroy();
+    pthread_mutex_destroy(&_mutex);
     return;
 }
 
-bool Renderer::initialize()
-{
-    const EGLint attribs[] = {
-        EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
-        EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
-        EGL_BLUE_SIZE, 8,
-        EGL_GREEN_SIZE, 8,
-        EGL_RED_SIZE, 8,
-        EGL_NONE
-    };
+void Renderer::resume() {
+    assert(_paused);
+    pthread_mutex_unlock(&_mutex);
+    return;
+}
 
-    const EGLint contextAttribs[] = {
-        EGL_CONTEXT_CLIENT_VERSION, 2,
-        EGL_NONE
-    };
+void Renderer::pause() {
+    assert(!_paused);
+    pthread_mutex_lock(&_mutex);
+    return;
+}
+
+void Renderer::setWindow(ANativeWindow *window, float displayScale) {
+    _displayScale = displayScale;
+
+    // notify render thread that window has changed
+    if (!_paused) {
+        pthread_mutex_lock(&_mutex);
+    }
+    _window = window;
+    if (!_paused) {
+        pthread_mutex_unlock(&_mutex);
+    }
+
+    return;
+}
+
+void Renderer::renderLoop() {
+    pthread_mutex_lock(&_mutex);
+
+    while (!_done) {
+        // TODO: do we need to handle the window changing after creation, don't think so, but not sure
+        if ((_display == 0) && _window) {
+            initialize();
+        }
+
+        pthread_mutex_unlock(&_mutex);
+
+        if (_display) {
+            drawFrame();
+
+            if (!eglSwapBuffers(_display, _surface)) {
+                LOG_ERROR("eglSwapBuffers() returned error %d", eglGetError());
+                // Hack: this fails when we rotate, delete the context to force a recreation
+                // TODO: need to detect and handle this better
+                destroy();
+            }
+        }
+
+        pthread_mutex_lock(&_mutex);
+    }
+
+    pthread_mutex_unlock(&_mutex);
+
+    DetachThreadFromVM();
+
+    LOG_INFO("Render loop exits");
+
+    return;
+}
+
+bool Renderer::initialize() {
+    const EGLint attribs[] = { EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+            EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT, EGL_BLUE_SIZE, 8,
+            EGL_GREEN_SIZE, 8, EGL_RED_SIZE, 8, EGL_NONE };
+
+    const EGLint contextAttribs[] = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE };
 
     EGLDisplay display;
-    EGLConfig config;    
+    EGLConfig config;
     EGLint numConfigs;
     EGLint format;
     EGLSurface surface;
     EGLContext context;
     EGLint width;
     EGLint height;
-    
+
     LOG_INFO("Initializing context");
-    
+
     if ((display = eglGetDisplay(EGL_DEFAULT_DISPLAY)) == EGL_NO_DISPLAY) {
         LOG_ERROR("eglGetDisplay() returned error %d", eglGetError());
         return false;
@@ -165,26 +157,27 @@ bool Renderer::initialize()
         destroy();
         return false;
     }
-    
+
     if (!(context = eglCreateContext(display, config, 0, contextAttribs))) {
         LOG_ERROR("eglCreateContext() returned error %d", eglGetError());
         destroy();
         return false;
     }
-    
+
     if (!eglMakeCurrent(display, surface, surface, context)) {
         LOG_ERROR("eglMakeCurrent() returned error %d", eglGetError());
         destroy();
         return false;
     }
 
-    if (!eglQuerySurface(display, surface, EGL_WIDTH, &width) ||
-        !eglQuerySurface(display, surface, EGL_HEIGHT, &height)) {
+    if (!eglQuerySurface(display, surface, EGL_WIDTH, &width)
+            || !eglQuerySurface(display, surface, EGL_HEIGHT, &height)) {
         LOG_ERROR("eglQuerySurface() returned error %d", eglGetError());
         destroy();
         return false;
     }
 
+    LOG("display size: %d %d %.2f", width, height, _displayScale);
     _display = display;
     _surface = surface;
     _context = context;
@@ -193,8 +186,13 @@ bool Renderer::initialize()
 
     _mapController = new MapController;
     _mapController->display->camera->setDisplaySize(width, height);
+
+    _mapController->display->setDisplayScale(_displayScale);
+
     _mapController->data->updateDisplay(_mapController->display);
-    
+
+    _mapController->display->camera->setAllowIdleAnimation(true);
+
     return true;
 }
 
@@ -208,7 +206,7 @@ void Renderer::destroy() {
     eglDestroyContext(_display, _context);
     eglDestroySurface(_display, _surface);
     eglTerminate(_display);
-    
+
     _display = EGL_NO_DISPLAY;
     _surface = EGL_NO_SURFACE;
     _context = EGL_NO_CONTEXT;
@@ -218,21 +216,18 @@ void Renderer::destroy() {
     return;
 }
 
-void Renderer::drawFrame()
-{
-	_mapController->display->camera->rotateRadiansX(0.01);
-	_currentTime += 0.033f;
-	_mapController->display->update(_currentTime);
-	_mapController->display->draw();
+void Renderer::drawFrame() {
+    _currentTimeSec = double(clock()) / double(CLOCKS_PER_SEC);
+    _mapController->display->update(_currentTimeSec - _initialTimeSec);
+    _mapController->display->draw();
 }
 
-void* Renderer::threadStartCallback(void *myself)
-{
-    Renderer *renderer = (Renderer*)myself;
+void* Renderer::threadStartCallback(void *myself) {
+    Renderer *renderer = (Renderer*) myself;
 
     renderer->renderLoop();
     pthread_exit(0);
-    
+
     return 0;
 }
 

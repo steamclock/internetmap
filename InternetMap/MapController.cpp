@@ -46,16 +46,9 @@ void MapController::handleTouchDownAtPoint(Vector2 point) {
         display->camera->stopMomentumRotation();
         
         int i = indexForNodeAtPoint(point);
-        if(i != INT_MAX) {
-            hoveredNodeIndex = i;
-            display->nodes->beginUpdate();
-            display->nodes->updateNode(i, ColorFromRGB(SELECTED_NODE_COLOR_HEX));
-            display->nodes->endUpdate();
-        }
-        
+        hoverNode(i);
     }
 }
-
 
 #pragma mark - Selected Node handling
 
@@ -64,6 +57,16 @@ void MapController::selectHoveredNode() {
         lastSearchIP = std::string();
         updateTargetForIndex(hoveredNodeIndex);
         hoveredNodeIndex = INT_MAX;
+    }
+}
+
+void MapController::hoverNode(int i) {
+    unhoverNode();
+    if(i != INT_MAX) {
+        hoveredNodeIndex = i;
+        display->nodes->beginUpdate();
+        display->nodes->updateNode(i, ColorFromRGB(SELECTED_NODE_COLOR_HEX));
+        display->nodes->endUpdate();
     }
 }
 

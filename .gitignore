@@ -7,6 +7,7 @@
 project.xcworkspace
 xcuserdata
 .idea
+*.iml
 
 Android/bin
 Android/gen

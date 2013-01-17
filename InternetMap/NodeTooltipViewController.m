@@ -38,7 +38,21 @@
     if ([HelperMethods isStringEmptyOrNil:self.node.textDescription]) {
         label.text = [NSString stringWithFormat:@"AS%@", self.node.asn];
     }else {
-        label.text = self.node.textDescription;
+        
+        NSMutableString* textDescription = [self.node.textDescription mutableCopy];
+        NSArray* components = [textDescription componentsSeparatedByString:@" "];
+        if ([components count] > 1) {
+            NSString* firstWord = components[0];
+            if ([firstWord rangeOfString:@"-"].location != NSNotFound || [firstWord isEqualToString:components[1]]) {
+                textDescription = [NSMutableString string];
+                for (int i = 1; i<[components count]-1; i++) {
+                    [textDescription appendFormat:@"%@ ", components[i]];
+                }
+                textDescription = [[textDescription capitalizedString] mutableCopy];
+            }
+        }
+        
+        label.text = textDescription;
     }
     [self.view addSubview:label];
 }
