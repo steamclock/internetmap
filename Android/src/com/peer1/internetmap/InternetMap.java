@@ -25,6 +25,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        requestWindowFeature(android.view.Window.FEATURE_NO_TITLE);
+        
         Log.i(TAG, "onCreate()");
 
         nativeOnCreate();
