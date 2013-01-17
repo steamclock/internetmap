@@ -157,12 +157,12 @@ void callbackCurrent (
 }
 
 - (void)finishedFetchingASN:(int)asn forIndex:(int)index {
-    NSLog(@"ASN fetched for index %i: %i", index, asn);
+    //NSLog(@"ASN fetched for index %i: %i", index, asn);
     [self.result replaceObjectAtIndex:index withObject:[NSNumber numberWithInt:asn]];
 }
 
 - (void)failedFetchingASNForIndex:(int)index error:(NSString*)error {
-    NSLog(@"Failed for index: %i, error: %@", index, error);
+    //NSLog(@"Failed for index: %i, error: %@", index, error);
 }
 
 +(void)fetchForAddresses:(NSArray*)addresses responseBlock:(ASNResponseBlock)response {
