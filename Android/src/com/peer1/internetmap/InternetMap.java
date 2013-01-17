@@ -6,25 +6,21 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Point;
 import android.os.Build;
-import android.app.AlertDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.Toast;
 import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.support.v4.view.GestureDetectorCompat;
-import android.support.v4.view.MotionEventCompat;
 import android.util.Log;
 
 public class InternetMap extends Activity implements SurfaceHolder.Callback {
@@ -135,7 +131,6 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             visualizationPopup.setBackgroundDrawable(new ColorDrawable(Color.argb(200, 0, 0, 0)));
             visualizationPopup.setOutsideTouchable(true);
             visualizationPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                @Override
                 public void onDismiss() {
                     visualizationPopup = null;
                 }
@@ -146,7 +141,6 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             listView.setAdapter(adapter);
 
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
                     Log.d("INT_MAP", "Tapped row " + position);
