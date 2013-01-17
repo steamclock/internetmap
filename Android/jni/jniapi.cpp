@@ -80,6 +80,11 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeRotateRadian
 	renderer->_mapController->display->camera->rotateRadiansY(radY);
 }
 
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeStartMomentumPanWithVelocity(JNIEnv* jenv, jobject obj,
+        float vX, float vY) {
+    renderer->_mapController->display->camera->startMomentumPanWithVelocity(Vector2(vX, vY));
+}
+
 void DetachThreadFromVM(void) {
     javaVM->DetachCurrentThread();
 }

@@ -166,6 +166,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     public native void nativeSetSurface(Surface surface, float density);
     
     public native void nativeRotateRadiansXY(float radX, float radY);
+    public native void nativeStartMomentumPanWithVelocity(float vX, float vY);
 
     static {
         System.loadLibrary("internetmaprenderer");
@@ -176,10 +177,13 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         private float distance2radians(float distance) {
             return -0.01f * distance;
         }
+        private float velocityAdjust(float velocity) {
+            return 0.002f * velocity;
+        }
 
         @Override
         public boolean onDown(MotionEvent event) { 
-            Log.d(TAG,"onDown: " + event.toString()); 
+            Log.d(TAG,"onDown"); 
             return true;
         }
 
@@ -195,6 +199,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         public boolean onFling(MotionEvent event1, MotionEvent event2, 
                 float velocityX, float velocityY) {
             Log.d(TAG, String.format("onFling: vx %f vy %f", velocityX, velocityY));
+            nativeStartMomentumPanWithVelocity(velocityAdjust(velocityX), velocityAdjust(velocityY));
             return true;
         }
     }
