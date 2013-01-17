@@ -164,12 +164,18 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     public native void nativeOnStop();
 
     public native void nativeSetSurface(Surface surface, float density);
+    
+    public native void nativeRotateRadiansXY(float radX, float radY);
 
     static {
         System.loadLibrary("internetmaprenderer");
     }
 
     class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
+        
+        private float distance2radians(float distance) {
+            return -0.01f * distance;
+        }
 
         @Override
         public boolean onDown(MotionEvent event) { 
@@ -181,6 +187,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
                 float distanceY) {
             Log.d(TAG, String.format("onScroll: x %f y %f", distanceX, distanceY));
+            nativeRotateRadiansXY(distance2radians(distanceX), distance2radians(distanceY));
             return true;
         }
         

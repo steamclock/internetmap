@@ -6,6 +6,10 @@
 #include "jniapi.h"
 #include "renderer.h"
 
+#include <common/MapController.hpp>
+#include <common/MapDisplay.hpp>
+#include <common/Camera.hpp>
+
 static ANativeWindow *window = 0;
 static Renderer *renderer = 0;
 
@@ -68,6 +72,12 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeSetSurface(J
     }
 
     return;
+}
+
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeRotateRadiansXY(JNIEnv* jenv, jobject obj,
+		float radX, float radY) {
+	renderer->_mapController->display->camera->rotateRadiansX(radX);
+	renderer->_mapController->display->camera->rotateRadiansY(radY);
 }
 
 void DetachThreadFromVM(void) {
