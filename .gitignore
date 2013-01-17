@@ -11,5 +11,5 @@ xcuserdata
 
 Android/bin
 Android/gen
-Android/libs
+Android/libs/armeabi
 Android/obj
