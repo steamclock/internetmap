@@ -62,6 +62,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (nonatomic) int cachedCurrentASN;
 
 /* UIKit Overlay */
+@property (weak, nonatomic) IBOutlet UIView* buttonContainerView;
 @property (weak, nonatomic) IBOutlet UIButton* searchButton;
 @property (weak, nonatomic) IBOutlet UIButton* youAreHereButton;
 @property (weak, nonatomic) IBOutlet UIButton* visualizationsButton;
@@ -211,6 +212,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
+    UITouch* touch = [touches anyObject];
+    if (touch.view == self.buttonContainerView) {
+        return;
+    }
     self.isHandlingLongPress = NO;
 
     [self.controller handleTouchDownAtPoint:[[touches anyObject] locationInView:self.view]];
@@ -254,6 +259,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                     CGPoint center = [self.controller getCoordinatesForNodeAtIndex:i];
                     [self.nodeTooltipPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];
                     [self.controller unhoverNode];
+                    //should viewController really be setting MapController vars directly?
+                    //I think we need a hoverNode() and hoveredNodeIndex should be private.
                     self.controller.hoveredNodeIndex = i;
                     [self.controller beginNodeUpdates];
                     [self.controller setColor:SELECTED_NODE_COLOR forNodeAtIndex:i];
