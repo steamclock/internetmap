@@ -10,17 +10,27 @@ import android.app.AlertDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Toast;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.Surface;
+import android.view.SurfaceView;
+import android.view.SurfaceHolder;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.support.v4.view.GestureDetectorCompat;
+import android.support.v4.view.MotionEventCompat;
 import android.util.Log;
 
 public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
     private static String TAG = "InternetMap";
+    private GestureDetectorCompat mGestureDetector;
 
     private PopupWindow visualizationPopup;
 
@@ -37,6 +47,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         setContentView(R.layout.main);
         SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceview);
         surfaceView.getHolder().addCallback(this);
+        
+        mGestureDetector = new GestureDetectorCompat(this, new MyGestureListener());
     }
 
     public String readFileAsString(String filePath) throws java.io.IOException {
@@ -102,6 +114,11 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         nativeSetSurface(null, 1.0f);
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+        mGestureDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
+    }
 
 
     //UI stuff
@@ -158,4 +175,26 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         System.loadLibrary("internetmaprenderer");
     }
 
+    class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
+
+        @Override
+        public boolean onDown(MotionEvent event) { 
+            Log.d(TAG,"onDown: " + event.toString()); 
+            return true;
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
+                float distanceY) {
+            Log.d(TAG, String.format("onScroll: x %f y %f", distanceX, distanceY));
+            return true;
+        }
+        
+        @Override
+        public boolean onFling(MotionEvent event1, MotionEvent event2, 
+                float velocityX, float velocityY) {
+            Log.d(TAG, String.format("onFling: vx %f vy %f", velocityX, velocityY));
+            return true;
+        }
+    }
 }
