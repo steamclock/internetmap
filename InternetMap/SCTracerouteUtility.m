@@ -79,9 +79,7 @@
 }
 
 
-#pragma mark - Process packets
-
--(int)processICMPPacket:(NSData *)packet{
+-(void)debugPacket:(NSData*)packet{
     //Nab IPHeader
     const IPHeader* IPHeader = (const struct IPHeader *) ((const uint8_t *)[packet bytes]);
     
@@ -92,6 +90,13 @@
     
     NSLog(@"Packet for IP: %@", [NSString stringWithFormat:@"%d.%d.%d.%d", IPHeader->sourceAddress[0], IPHeader->sourceAddress[1], IPHeader->sourceAddress[3], IPHeader->sourceAddress[4]]);
     NSLog(@"ICMP Type: %d and Code: %d", type, code);
+}
+
+#pragma mark - Process packets
+
+-(int)processICMPPacket:(NSData *)packet{
+    const ICMPHeader* header = [SCIcmpPacketUtility icmpInPacket:packet];
+    NSInteger type = (NSInteger)header->type;
     
     if (type == kICMPTimeExceeded) {
         return kICMPTimeExceeded;
