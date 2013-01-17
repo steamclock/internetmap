@@ -137,26 +137,8 @@
             // If we got back all three packets, that's great
             self.ttlCount++;
             [self sendPackets:nil];
-        } else if (numberOfTimeoutsForIP > numberOfRepliesForIP){
-            NSLog(@"Timeout detected");
-            
-            self.totalHopsTimedOut++;
-            
-            if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:withHops:)]) {
-                NSArray* hops = self.hopsForCurrentIP;
-                [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: * * * Hop did not reply or timed out.", self.ttlCount] withHops:hops];
-                self.totalHopsTimedOut++;
-            }
-        
-            if (self.totalHopsTimedOut >= 3) {
-                if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidTimeout)]) {
-                    [self.delegate tracerouteDidTimeout];
-                }
-            }
-        }
+        } 
     }
-//    NSLog(@"Number of replies for %@ is %d", IP, numberOfRepliesForIP);
-//    NSLog(@"Number of timeouts for %@ is %d", IP, numberOfTimeoutsForIP);
 }
 -(void)timeExceededForPacket:(NSData*)packet {
     NSInteger sequenceNumber = [self getSequenceNumberForPacket:packet];
@@ -171,8 +153,22 @@
         }
     }
     
-    if (numberOfTimeoutsForIP > 1) {
-        NSLog(@"TIMEDOUT!");
+    if (numberOfTimeoutsForIP > 2) {
+        if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:withHops:)]) {
+            NSArray* hops = self.hopsForCurrentIP;
+            [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: * * * Hop did not reply or timed out.", self.ttlCount] withHops:hops];
+            self.totalHopsTimedOut++;
+            
+            //Send m0ar packets?
+            self.ttlCount++;
+            [self sendPackets:nil];
+        }
+        
+        if (self.totalHopsTimedOut >= 3) {
+            if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidTimeout)]) {
+                [self.delegate tracerouteDidTimeout];
+            }
+        }
     }
 }
 
