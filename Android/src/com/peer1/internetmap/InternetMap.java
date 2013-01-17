@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import android.app.Activity;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.widget.Toast;
 import android.view.Surface;
@@ -76,14 +77,22 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback
     }
 
     public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
-        nativeSetSurface(holder.getSurface());
+    	android.view.Display display = getWindowManager().getDefaultDisplay();
+    	Point size = new Point();
+    	display.getSize(size);
+    	int width = size.x;
+    	int height = size.y;
+    	
+    	Log.i(TAG, String.format("screen %d %d ", width, height, getResources().getDisplayMetrics().density));
+    	Log.i(TAG, String.format("surface %d %d %.2f", w, h, getResources().getDisplayMetrics().density));
+        nativeSetSurface(holder.getSurface(), getResources().getDisplayMetrics().density);
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
     }
 
     public void surfaceDestroyed(SurfaceHolder holder) {
-        nativeSetSurface(null);
+        nativeSetSurface(null, 1.0f);
     }
 
 
@@ -91,7 +100,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback
     public native void nativeOnResume();
     public native void nativeOnPause();
     public native void nativeOnStop();
-    public native void nativeSetSurface(Surface surface);
+    public native void nativeSetSurface(Surface surface, float density);
 
     static {
         System.loadLibrary("internetmaprenderer");

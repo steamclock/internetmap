@@ -28,8 +28,10 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeOnCreate(JNI
 {
 	LOG("OnCreate");
 
-    renderer = new Renderer();
-    activity = jenv->NewGlobalRef(obj);
+	if(!renderer) {
+		renderer = new Renderer();
+	}
+	activity = jenv->NewGlobalRef(obj);
     return;
 }
 
@@ -47,16 +49,20 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeOnPause(JNIE
 
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeOnStop(JNIEnv* jenv, jobject obj)
 {
-    delete renderer;
-    renderer = 0;
+//    delete renderer;
+//    renderer = NULL;
+
+    jenv->DeleteGlobalRef(activity);
+    activity = NULL;
+
     return;
 }
 
-JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeSetSurface(JNIEnv* jenv, jobject obj, jobject surface)
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeSetSurface(JNIEnv* jenv, jobject obj, jobject surface, float scale)
 {
     if (surface != 0) {
         window = ANativeWindow_fromSurface(jenv, surface);
-        renderer->setWindow(window);
+        renderer->setWindow(window, scale);
     } else {
         ANativeWindow_release(window);
     }

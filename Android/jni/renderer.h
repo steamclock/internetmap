@@ -21,7 +21,7 @@ public:
 
     void resume();
     void pause();
-    void setWindow(ANativeWindow* window);
+    void setWindow(ANativeWindow* window, float displayScale);
     
     
 private:
@@ -37,6 +37,7 @@ private:
     EGLContext _context;
     int _width;
     int _height;
+    float _displayScale;
     double _initialTimeSec;
     double _currentTimeSec;
     MapController* _mapController;

@@ -62,7 +62,9 @@ void Renderer::pause() {
 	return;
 }
 
-void Renderer::setWindow(ANativeWindow *window) {
+void Renderer::setWindow(ANativeWindow *window, float displayScale) {
+	_displayScale = displayScale;
+
 	// notify render thread that window has changed
 	if (!_paused) {
 		pthread_mutex_lock(&_mutex);
@@ -91,6 +93,9 @@ void Renderer::renderLoop() {
 
 			if (!eglSwapBuffers(_display, _surface)) {
 				LOG_ERROR("eglSwapBuffers() returned error %d", eglGetError());
+				// Hack: this fails when we rotate, delete the context to force a recreation
+				// TODO: need to detect and handle this better
+				destroy();
 			}
 		}
 
@@ -172,6 +177,7 @@ bool Renderer::initialize() {
 		return false;
 	}
 
+	LOG("display size: %d %d %.2f", width, height, _displayScale);
 	_display = display;
 	_surface = surface;
 	_context = context;
@@ -180,6 +186,9 @@ bool Renderer::initialize() {
 
 	_mapController = new MapController;
 	_mapController->display->camera->setDisplaySize(width, height);
+
+	_mapController->display->setDisplayScale(_displayScale);
+
 	_mapController->data->updateDisplay(_mapController->display);
 
 	_mapController->display->camera->setAllowIdleAnimation(true);
