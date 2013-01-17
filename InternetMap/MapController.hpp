@@ -28,9 +28,10 @@ public:
     
     void hoverNode(int index);
     void unhoverNode();
+    void deselectCurrentNode();
     void updateTargetForIndex(int index);
     void handleTouchDownAtPoint(Vector2 point);
-    void selectHoveredNode();
+    bool selectHoveredNode();
     int indexForNodeAtPoint(Vector2 pointInView);
     Vector2 getCoordinatesForNodeAtIndex(int index);
     void clearHighlightLines();
