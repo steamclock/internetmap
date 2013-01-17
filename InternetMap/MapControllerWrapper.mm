@@ -86,14 +86,6 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
     return _controller->display->camera->currentZoom();
 }
 
-- (int)hoveredNodeIndex {
-    return _controller->hoveredNodeIndex;
-}
-
-- (void)setHoveredNodeIndex:(int)hoveredNodeIndex {
-    _controller->hoveredNodeIndex = hoveredNodeIndex;
-}
-
 - (NSString*)lastSearchIP {
     return [NSString stringWithUTF8String:_controller->lastSearchIP.c_str()];
 }
@@ -108,20 +100,9 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
     _controller->display->draw();
 }
 
-#pragma mark - Display: Node Updates
-
-- (void)beginNodeUpdates{
-    _controller->display->nodes->beginUpdate();
+- (void)hoverNode:(int)index {
+    _controller->hoverNode(index);
 }
-
-- (void)endNodeUpdates{
-    _controller->display->nodes->endUpdate();
-}
-
-- (void)setColor:(UIColor*)color forNodeAtIndex:(int)index{
-    _controller->display->nodes->updateNode(index, ColorFromRGB(SELECTED_NODE_COLOR_HEX));
-}
-
 
 #pragma mark - Camera: Misc
 

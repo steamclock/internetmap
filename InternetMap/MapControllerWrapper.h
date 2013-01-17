@@ -17,7 +17,6 @@
 @property (nonatomic) NSUInteger targetNode;
 @property (nonatomic) CGSize displaySize;
 @property (nonatomic, readonly) float currentZoom;
-@property (nonatomic) int hoveredNodeIndex;
 @property (nonatomic, strong) NSString* lastSearchIP;
 
 
@@ -26,9 +25,6 @@
 - (void)update:(NSTimeInterval)now;
 - (void)draw;
 - (void)zoomAnimated:(float)zoom duration:(NSTimeInterval)duration;
-- (void)beginNodeUpdates;
-- (void)endNodeUpdates;
-- (void)setColor:(UIColor*)color forNodeAtIndex:(int)index;
 - (void)stopMomentumPan;
 - (void)rotateRadiansX:(float)rotate;
 - (void)rotateRadiansY:(float)rotate;
@@ -46,6 +42,7 @@
 - (void)handleTouchDownAtPoint:(CGPoint)point;
 - (void)selectHoveredNode;
 - (void)unhoverNode;
+- (void)hoverNode:(int)index;
 - (int)indexForNodeAtPoint:(CGPoint)pointInView;
 - (NodeWrapper*)nodeAtIndex:(int)index;
 -(CGPoint)getCoordinatesForNodeAtIndex:(int)index;

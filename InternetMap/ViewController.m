@@ -258,13 +258,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                     self.nodeTooltipPopover.passthroughViews = @[self.view];
                     CGPoint center = [self.controller getCoordinatesForNodeAtIndex:i];
                     [self.nodeTooltipPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];
-                    [self.controller unhoverNode];
-                    //should viewController really be setting MapController vars directly?
-                    //I think we need a hoverNode() and hoveredNodeIndex should be private.
-                    self.controller.hoveredNodeIndex = i;
-                    [self.controller beginNodeUpdates];
-                    [self.controller setColor:SELECTED_NODE_COLOR forNodeAtIndex:i];
-                    [self.controller endNodeUpdates];
+                    [self.controller hoverNode:i];
                 }
             }
         }
