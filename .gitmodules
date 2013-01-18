@@ -1,0 +1,3 @@
+[submodule "InternetMap/ExternalCode/DTCoreText"]
+	path = InternetMap/ExternalCode/DTCoreText
+	url = https://github.com/Cocoanetics/DTCoreText.git

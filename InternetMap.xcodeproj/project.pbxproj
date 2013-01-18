@@ -59,6 +59,8 @@
 		1175AA0416AA091800B93031 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1175AA0316AA091800B93031 /* CoreText.framework */; };
 		1175AA3216AA117800B93031 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1175AA3116AA117800B93031 /* libxml2.dylib */; };
 		1175AA3416AA117F00B93031 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1175AA3316AA117F00B93031 /* ImageIO.framework */; };
+		1175AA7F16AA165500B93031 /* libDTCoreText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1175AA5A16AA15FC00B93031 /* libDTCoreText.a */; };
+		1175AA8116AA167400B93031 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1175AA8016AA167400B93031 /* QuartzCore.framework */; };
 		1180CF47169B71A800F1FB73 /* eye_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 1180CF3F169B71A800F1FB73 /* eye_selected.png */; };
 		1180CF48169B71A800F1FB73 /* eye_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1180CF40169B71A800F1FB73 /* eye_selected@2x.png */; };
 		1180CF49169B71A800F1FB73 /* search_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 1180CF41169B71A800F1FB73 /* search_selected.png */; };
@@ -132,6 +134,65 @@
 		D4D17D1E166EA613003A489C /* NodeInformationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D4D17D1C166EA612003A489C /* NodeInformationViewController.m */; };
 		D4F65E02166D6D530077BF5A /* NodeSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D4F65E01166D6D530077BF5A /* NodeSearchViewController.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1175AA5516AA15FC00B93031 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1175AA4216AA15FB00B93031 /* DTCoreText.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1D6058910D05DD3D006BFB54;
+			remoteInfo = DemoApp;
+		};
+		1175AA5716AA15FC00B93031 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1175AA4216AA15FB00B93031 /* DTCoreText.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A70F119B14863198009202BF;
+			remoteInfo = "Static Framework";
+		};
+		1175AA5916AA15FC00B93031 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1175AA4216AA15FB00B93031 /* DTCoreText.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A70F11DE148632CD009202BF;
+			remoteInfo = "Static Library";
+		};
+		1175AA5B16AA15FC00B93031 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1175AA4216AA15FB00B93031 /* DTCoreText.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A788CA681486456100E1AFD9;
+			remoteInfo = UnitTest;
+		};
+		1175AA5D16AA15FC00B93031 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1175AA4216AA15FB00B93031 /* DTCoreText.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A7949A5814CC456000A8CCDE;
+			remoteInfo = MacUnitTest;
+		};
+		1175AA5F16AA15FC00B93031 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1175AA4216AA15FB00B93031 /* DTCoreText.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A7F7EFCD1573603100F5A4D0;
+			remoteInfo = "Static Library (no DTFoundation)";
+		};
+		1175AA6116AA15FC00B93031 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1175AA4216AA15FB00B93031 /* DTCoreText.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E2262DC61638331500BFDAD7;
+			remoteInfo = "Mac Framework";
+		};
+		1175AA7D16AA162000B93031 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1175AA4216AA15FB00B93031 /* DTCoreText.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = A70F11DD148632CD009202BF;
+			remoteInfo = "Static Library";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		110F6AE6167BD1AE00D5907E /* UIBarButtonItem+WEPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBarButtonItem+WEPopover.h"; sourceTree = "<group>"; };
@@ -215,6 +276,8 @@
 		1175AA0316AA091800B93031 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		1175AA3116AA117800B93031 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		1175AA3316AA117F00B93031 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		1175AA4216AA15FB00B93031 /* DTCoreText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DTCoreText.xcodeproj; path = DTCoreText/DTCoreText.xcodeproj; sourceTree = "<group>"; };
+		1175AA8016AA167400B93031 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		1180CF3B169B4D5500F1FB73 /* MapController.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MapController.hpp; sourceTree = "<group>"; };
 		1180CF3C169B4D5500F1FB73 /* MapController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapController.cpp; sourceTree = "<group>"; };
 		1180CF3F169B71A800F1FB73 /* eye_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = eye_selected.png; path = Images/eye_selected.png; sourceTree = "<group>"; };
@@ -346,6 +409,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1175AA8116AA167400B93031 /* QuartzCore.framework in Frameworks */,
+				1175AA7F16AA165500B93031 /* libDTCoreText.a in Frameworks */,
 				114DD47D167AA6850061CB36 /* MobileCoreServices.framework in Frameworks */,
 				1175AA3416AA117F00B93031 /* ImageIO.framework in Frameworks */,
 				1175AA3216AA117800B93031 /* libxml2.dylib in Frameworks */,
@@ -427,6 +492,7 @@
 		114DD459167AA62D0061CB36 /* ExternalCode */ = {
 			isa = PBXGroup;
 			children = (
+				1175AA6C16AA160200B93031 /* DTCoreText */,
 				1127C9D616A0D3A500413FE9 /* jsoncpp */,
 				A6191830169DE85F003A3A4A /* vectormath */,
 				110F6AE5167BD1AE00D5907E /* WEPopover */,
@@ -484,6 +550,28 @@
 				1190E52A16A8BC8E00423288 /* timeline-play@2x.png */,
 			);
 			name = Timeline;
+			sourceTree = "<group>";
+		};
+		1175AA4316AA15FB00B93031 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1175AA5616AA15FC00B93031 /* RTDemoApp.app */,
+				1175AA5816AA15FC00B93031 /* DTCoreText.framework */,
+				1175AA5A16AA15FC00B93031 /* libDTCoreText.a */,
+				1175AA5C16AA15FC00B93031 /* UnitTest.octest */,
+				1175AA5E16AA15FC00B93031 /* MacUnitTest.octest */,
+				1175AA6016AA15FC00B93031 /* libDTCoreText_no_DTFoundation.a */,
+				1175AA6216AA15FC00B93031 /* DTCoreText.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1175AA6C16AA160200B93031 /* DTCoreText */ = {
+			isa = PBXGroup;
+			children = (
+				1175AA4216AA15FB00B93031 /* DTCoreText.xcodeproj */,
+			);
+			name = DTCoreText;
 			sourceTree = "<group>";
 		};
 		1180CF4F169B731800F1FB73 /* Buttons */ = {
@@ -659,6 +747,7 @@
 		A6F3F5611640F1FB0070E6AE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1175AA8016AA167400B93031 /* QuartzCore.framework */,
 				1175AA3316AA117F00B93031 /* ImageIO.framework */,
 				1175AA3116AA117800B93031 /* libxml2.dylib */,
 				1175AA0316AA091800B93031 /* CoreText.framework */,
@@ -794,6 +883,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				1175AA7E16AA162000B93031 /* PBXTargetDependency */,
 			);
 			name = InternetMap;
 			productName = InternetMap;
@@ -819,12 +909,70 @@
 			mainGroup = A6F3F5531640F1FB0070E6AE;
 			productRefGroup = A6F3F55F1640F1FB0070E6AE /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 1175AA4316AA15FB00B93031 /* Products */;
+					ProjectRef = 1175AA4216AA15FB00B93031 /* DTCoreText.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				A6F3F55D1640F1FB0070E6AE /* InternetMap */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		1175AA5616AA15FC00B93031 /* RTDemoApp.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = RTDemoApp.app;
+			remoteRef = 1175AA5516AA15FC00B93031 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1175AA5816AA15FC00B93031 /* DTCoreText.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = DTCoreText.framework;
+			remoteRef = 1175AA5716AA15FC00B93031 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1175AA5A16AA15FC00B93031 /* libDTCoreText.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libDTCoreText.a;
+			remoteRef = 1175AA5916AA15FC00B93031 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1175AA5C16AA15FC00B93031 /* UnitTest.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = UnitTest.octest;
+			remoteRef = 1175AA5B16AA15FC00B93031 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1175AA5E16AA15FC00B93031 /* MacUnitTest.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = MacUnitTest.octest;
+			remoteRef = 1175AA5D16AA15FC00B93031 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1175AA6016AA15FC00B93031 /* libDTCoreText_no_DTFoundation.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libDTCoreText_no_DTFoundation.a;
+			remoteRef = 1175AA5F16AA15FC00B93031 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1175AA6216AA15FC00B93031 /* DTCoreText.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = DTCoreText.framework;
+			remoteRef = 1175AA6116AA15FC00B93031 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		A6F3F55C1640F1FB0070E6AE /* Resources */ = {
@@ -957,6 +1105,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		1175AA7E16AA162000B93031 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Static Library";
+			targetProxy = 1175AA7D16AA162000B93031 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		A6F3F56F1640F1FB0070E6AE /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
@@ -1022,13 +1178,16 @@
 		84531465169B74F600532962 /* Testflight */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "InternetMap/InternetMap-Prefix.pch";
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = "InternetMap/InternetMap-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = internetmap;
 				RUN_CLANG_STATIC_ANALYZER = YES;
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/DerivedData/**";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Testflight;
@@ -1090,13 +1249,16 @@
 		A6F3F58E1640F1FB0070E6AE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "InternetMap/InternetMap-Prefix.pch";
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = "InternetMap/InternetMap-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = internetmap;
 				RUN_CLANG_STATIC_ANALYZER = YES;
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/DerivedData/**";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1104,13 +1266,16 @@
 		A6F3F58F1640F1FB0070E6AE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "InternetMap/InternetMap-Prefix.pch";
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = "InternetMap/InternetMap-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = internetmap;
 				RUN_CLANG_STATIC_ANALYZER = YES;
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/DerivedData/**";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
