@@ -141,10 +141,15 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         cell.textLabel.textColor = [UIColor colorWithRed:235.0/255.0 green:235.0/255.0 blue:235.0/255.0 alpha:1.0];
+        cell.textLabel.highlightedTextColor = UI_ORANGE_COLOR;
         cell.textLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:24];
+        cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+        cell.selectedBackgroundView = [[UIView alloc] init];
+        
         UIView* seperator = [[UIView alloc] initWithFrame:CGRectMake(10, 43, tableView.width-10, 1)];
         seperator.backgroundColor = [UIColor grayColor];
         [cell.contentView addSubview:seperator];
+
     }
     
     if (self.isSearching && self.textField.text != nil && ![self.textField.text isEqualToString:@""]) {

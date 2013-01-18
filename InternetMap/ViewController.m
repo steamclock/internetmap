@@ -391,6 +391,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (void)updateTargetForIndex:(int)index {
     [self dismissNodeInfoPopover];
+    [self nodeSearchDelegateDone];
     [self.controller updateTargetForIndex:index];
 }
 
@@ -413,6 +414,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if (self.timelineButton.selected) {
         [self leaveTimelineMode];
     }
+    [self dismissNodeInfoPopover];
+    
     if (!self.nodeSearchPopover) {
         NodeSearchViewController *searchController = [[NodeSearchViewController alloc] init];
         searchController.delegate = self;
@@ -598,6 +601,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)nodeSelected:(NodeWrapper*)node{
     [self updateTargetForIndex:node.index];
+    [self nodeSearchDelegateDone];
 }
 
 -(void)selectNodeByHostLookup:(NSString*)host {
