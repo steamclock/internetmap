@@ -23,7 +23,8 @@ package com.peer1.internetmap;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.SystemClock;
-import android.util.FloatMath;
+import android.view.MotionEvent;
+
 
 /**
  * Detects 2-finger rotate transformation gestures using the supplied {@link MotionEvent}s.
@@ -132,18 +133,12 @@ public class RotateGestureDetector {
     private float mFocusX;
     private float mFocusY;
 
-    private float mCurrSpan;
-    private float mPrevSpan;
-    private float mInitialSpan;
-    private float mCurrSpanX;
-    private float mCurrSpanY;
-    private float mPrevSpanX;
-    private float mPrevSpanY;
+    private float mCurrSlope;
+    private float mPrevSlope;
+    private float mInitialSlope;
     private long mCurrTime;
     private long mPrevTime;
     private boolean mInProgress;
-    private int mSpanSlop;
-    private int mMinSpan;
 
     // Bounds for recently seen values
     private float mTouchUpper;
@@ -155,24 +150,15 @@ public class RotateGestureDetector {
 
     private static final long TOUCH_STABILIZE_TIME = 128; // ms
     private static final int TOUCH_MIN_MAJOR = 48; // dp
-
-    /**
-     * Consistency verifier for debugging purposes.
-     */
-    private final InputEventConsistencyVerifier mInputEventConsistencyVerifier =
-            InputEventConsistencyVerifier.isInstrumentationEnabled() ?
-                    new InputEventConsistencyVerifier(this, 0) : null;
+    //android has no rotate slop, so we make our own. hopefully it's ok.
+    private static final float mSlopeSlop = 0.087f; //about 5 degrees (I just picked something small at random)
 
     public RotateGestureDetector(Context context, OnRotateGestureListener listener) {
         mContext = context;
         mListener = listener;
-        mSpanSlop = ViewConfiguration.get(context).getScaledTouchSlop() * 2;
 
         final Resources res = context.getResources();
-        mTouchMinMajor = res.getDimensionPixelSize(
-                com.android.internal.R.dimen.config_minScalingTouchMajor);
-        mMinSpan = res.getDimensionPixelSize(
-                com.android.internal.R.dimen.config_minScalingSpan);
+        mTouchMinMajor = res.getDimensionPixelSize(TOUCH_MIN_MAJOR);
     }
 
     /**
@@ -259,9 +245,6 @@ public class RotateGestureDetector {
      *         rest of the MotionEvents in this event stream.
      */
     public boolean onTouchEvent(MotionEvent event) {
-        if (mInputEventConsistencyVerifier != null) {
-            mInputEventConsistencyVerifier.onTouchEvent(event, 0);
-        }
 
         final int action = event.getActionMasked();
 
@@ -274,7 +257,7 @@ public class RotateGestureDetector {
             if (mInProgress) {
                 mListener.onRotateEnd(this);
                 mInProgress = false;
-                mInitialSpan = 0;
+                mInitialSlope = 0;
             }
 
             if (streamComplete) {
@@ -289,70 +272,59 @@ public class RotateGestureDetector {
         final boolean pointerUp = action == MotionEvent.ACTION_POINTER_UP;
         final int skipIndex = pointerUp ? event.getActionIndex() : -1;
 
-        // Determine focal point
-        float sumX = 0, sumY = 0;
-        final int count = event.getPointerCount();
-        for (int i = 0; i < count; i++) {
-            if (skipIndex == i) continue;
-            sumX += event.getX(i);
-            sumY += event.getY(i);
-        }
-        final int div = pointerUp ? count - 1 : count;
-        final float focusX = sumX / div;
-        final float focusY = sumY / div;
-
-
         addTouchHistory(event);
 
-        // Determine average deviation from focal point
-        float devSumX = 0, devSumY = 0;
-        for (int i = 0; i < count; i++) {
-            if (skipIndex == i) continue;
+        // Determine slope (in radians) between first two pointers.
+        //FIXME how will this behave with >2 fingers?
+        final int count = event.getPointerCount();
+        //we need at least two points to calculate a slope
+        final int needed = pointerUp ? 3 : 2;
 
-            // Convert the resulting diameter into a radius.
-            final float touchSize = mTouchHistoryLastAccepted / 2;
-            devSumX += Math.abs(event.getX(i) - focusX) + touchSize;
-            devSumY += Math.abs(event.getY(i) - focusY) + touchSize;
+        final boolean haveSlope = (count >= needed);
+        float slope = 0;
+        if (haveSlope) {
+            float x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+            boolean gotFirst = false;
+            for (int i = 0; i < count; i++) {
+                if (skipIndex == i) continue;
+                if (!gotFirst) {
+                    x1 = event.getX(i);
+                    y1 = event.getY(i);
+                    gotFirst = true;
+                } else {
+                    x2 = event.getX(i);
+                    y2 = event.getY(i);
+                    break;
+                }
+            }
+            final float dX = x1 - x2;
+            final float dY = y1 - y2;
+            slope = (float) Math.atan2(dY, dX);
         }
-        final float devX = devSumX / div;
-        final float devY = devSumY / div;
-
-        // Span is the average distance between touch points through the focal point;
-        // i.e. the diameter of the circle with a radius of the average deviation from
-        // the focal point.
-        final float spanX = devX * 2;
-        final float spanY = devY * 2;
-        final float span = FloatMath.sqrt(spanX * spanX + spanY * spanY);
 
         // Dispatch begin/end events as needed.
         // If the configuration changes, notify the app to reset its current state by beginning
         // a fresh rotate event stream.
         final boolean wasInProgress = mInProgress;
-        mFocusX = focusX;
-        mFocusY = focusY;
-        if (mInProgress && (span < mMinSpan || configChanged)) {
+        //mFocusX = focusX;
+        //mFocusY = focusY;
+        if (mInProgress && (!haveSlope || configChanged)) {
             mListener.onRotateEnd(this);
             mInProgress = false;
-            mInitialSpan = span;
+            mInitialSlope = slope;
         }
         if (configChanged) {
-            mPrevSpanX = mCurrSpanX = spanX;
-            mPrevSpanY = mCurrSpanY = spanY;
-            mInitialSpan = mPrevSpan = mCurrSpan = span;
+            mInitialSlope = mPrevSlope = mCurrSlope = slope;
         }
-        if (!mInProgress && span >= mMinSpan &&
-                (wasInProgress || Math.abs(span - mInitialSpan) > mSpanSlop)) {
-            mPrevSpanX = mCurrSpanX = spanX;
-            mPrevSpanY = mCurrSpanY = spanY;
-            mPrevSpan = mCurrSpan = span;
+        if (!mInProgress && haveSlope &&
+                (wasInProgress || Math.abs(slope - mInitialSlope) > mSlopeSlop)) {
+            mPrevSlope = mCurrSlope = slope;
             mInProgress = mListener.onRotateBegin(this);
         }
 
         // Handle motion; focal point and span/rotate factor are changing.
         if (action == MotionEvent.ACTION_MOVE) {
-            mCurrSpanX = spanX;
-            mCurrSpanY = spanY;
-            mCurrSpan = span;
+            mCurrSlope = slope;
 
             boolean updatePrev = true;
             if (mInProgress) {
@@ -360,9 +332,7 @@ public class RotateGestureDetector {
             }
 
             if (updatePrev) {
-                mPrevSpanX = mCurrSpanX;
-                mPrevSpanY = mCurrSpanY;
-                mPrevSpan = mCurrSpan;
+                mPrevSlope = mCurrSlope;
             }
         }
 
@@ -410,28 +380,8 @@ public class RotateGestureDetector {
      *
      * @return Distance between pointers in pixels.
      */
-    public float getCurrentSpan() {
-        return mCurrSpan;
-    }
-
-    /**
-     * Return the average X distance between each of the pointers forming the
-     * gesture in progress through the focal point.
-     *
-     * @return Distance between pointers in pixels.
-     */
-    public float getCurrentSpanX() {
-        return mCurrSpanX;
-    }
-
-    /**
-     * Return the average Y distance between each of the pointers forming the
-     * gesture in progress through the focal point.
-     *
-     * @return Distance between pointers in pixels.
-     */
-    public float getCurrentSpanY() {
-        return mCurrSpanY;
+    public float getCurrentSlope() {
+        return mCurrSlope;
     }
 
     /**
@@ -440,39 +390,19 @@ public class RotateGestureDetector {
      *
      * @return Previous distance between pointers in pixels.
      */
-    public float getPreviousSpan() {
-        return mPrevSpan;
-    }
-
-    /**
-     * Return the previous average X distance between each of the pointers forming the
-     * gesture in progress through the focal point.
-     *
-     * @return Previous distance between pointers in pixels.
-     */
-    public float getPreviousSpanX() {
-        return mPrevSpanX;
-    }
-
-    /**
-     * Return the previous average Y distance between each of the pointers forming the
-     * gesture in progress through the focal point.
-     *
-     * @return Previous distance between pointers in pixels.
-     */
-    public float getPreviousSpanY() {
-        return mPrevSpanY;
+    public float getPreviousSlope() {
+        return mPrevSlope;
     }
 
     /**
      * Return the rotate factor from the previous rotate event to the current
      * event. This value is defined as
-     * ({@link #getCurrentSpan()} / {@link #getPreviousSpan()}).
+     * ({@link #getCurrentSlope()} - {@link #getPreviousSlope()}).
      *
      * @return The current rotate factor.
      */
     public float getRotateFactor() {
-        return mPrevSpan > 0 ? mCurrSpan / mPrevSpan : 1;
+        return mCurrSlope - mPrevSlope; //FIXME what if there is no prev?
     }
 
     /**
