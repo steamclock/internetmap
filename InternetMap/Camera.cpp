@@ -219,6 +219,16 @@ Vector3 Camera::calculateMoveTarget(TimeInterval delta) {
     return currentTarget;
 }
 
+void Camera::setRotationAndRenormalize(const Matrix4& matrix) {
+    _rotationMatrix = matrix;
+    
+    // Becasue we are doing sucessive modification of the rotation matrix, error can accumulate
+    // Here we renormalize the matrix to make sure that the error doesn't grow
+    Vector3 zAxis = Vectormath::Aos::normalize(_rotationMatrix.getCol2().getXYZ());
+    _rotationMatrix.setCol0(Vector4(Vectormath::Aos::normalize(Vectormath::Aos::cross(_rotationMatrix.getCol1().getXYZ(), zAxis)), 0.0f));
+    _rotationMatrix.setCol1(Vector4(Vectormath::Aos::normalize(Vectormath::Aos::cross(zAxis, _rotationMatrix.getCol0().getXYZ())), 0.0f));
+    _rotationMatrix.setCol2(Vector4(zAxis, 0.0f));
+}
 
 #pragma mark - Information retrieval
 
@@ -255,15 +265,15 @@ Vector3 Camera::applyModelViewToPoint(Vector2 point) {
 #pragma mark - View manipulation
 
 void Camera::rotateRadiansX(float rotate) {
-    _rotationMatrix = Matrix4::rotation(rotate, Vector3(0.0f, 1.0f, 0.0f)) * _rotationMatrix;
+    setRotationAndRenormalize(Matrix4::rotation(rotate, Vector3(0.0f, 1.0f, 0.0f)) * _rotationMatrix);
 }
 
 void Camera::rotateRadiansY(float rotate) {
-    _rotationMatrix = Matrix4::rotation(rotate, Vector3(1.0f, 0.0f, 0.0f)) * _rotationMatrix;
+    setRotationAndRenormalize(Matrix4::rotation(rotate, Vector3(1.0f, 0.0f, 0.0f)) * _rotationMatrix);
 }
 
 void Camera::rotateRadiansZ(float rotate) {
-    _rotationMatrix = Matrix4::rotation(rotate, Vector3(0.0f, 0.0f, 1.0f)) * _rotationMatrix;
+    setRotationAndRenormalize(_rotationMatrix = Matrix4::rotation(rotate, Vector3(0.0f, 0.0f, 1.0f)) * _rotationMatrix);
 }
 
 void Camera::rotateAnimated(Matrix4 rotation, TimeInterval duration) {

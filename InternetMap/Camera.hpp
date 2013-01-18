@@ -70,6 +70,7 @@ class Camera {
     Vector3 calculateMoveTarget(TimeInterval delta);
     void handleAnimatedZoom(TimeInterval delta);
     void handleAnimatedRotation(TimeInterval delta);
+    void setRotationAndRenormalize(const Matrix4& matrix);
     
 public:
     Camera();
