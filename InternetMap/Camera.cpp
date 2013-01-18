@@ -45,8 +45,6 @@ Camera::Camera() :
     _panVelocity.y = 0.0f;
 }
 
-#pragma mark - Main update loop
-
 void Camera::update(TimeInterval currentTime) {
     TimeInterval delta = currentTime - _updateTime;
     _updateTime = currentTime;
@@ -69,8 +67,6 @@ void Camera::update(TimeInterval currentTime) {
     _modelViewMatrix = modelView;
     _modelViewProjectionMatrix = projectionMatrix * modelView;
 }
-
-#pragma mark - Update loop helpers
 
 void Camera::handleIdleMovement(TimeInterval delta) {
     // Rotate camera if idle
@@ -230,8 +226,6 @@ void Camera::setRotationAndRenormalize(const Matrix4& matrix) {
     _rotationMatrix.setCol2(Vector4(zAxis, 0.0f));
 }
 
-#pragma mark - Information retrieval
-
 float Camera::currentZoom(void) {
     return _zoom;
 }
@@ -261,8 +255,6 @@ Vector3 Camera::applyModelViewToPoint(Vector2 point) {
     
     return Vector3(vec4FromPoint.getX(), vec4FromPoint.getY(), vec4FromPoint.getZ());
 }
-
-#pragma mark - View manipulation
 
 void Camera::rotateRadiansX(float rotate) {
     setRotationAndRenormalize(Matrix4::rotation(rotate, Vector3(0.0f, 1.0f, 0.0f)) * _rotationMatrix);
@@ -321,8 +313,6 @@ void Camera::setTarget(const Target& target) {
     zoomAnimated(target.zoom, MOVE_TIME);
 }
 
-#pragma mark - Momentum Panning/Zooming/Rotation
-
 void Camera::startMomentumPanWithVelocity(Vector2 velocity) {
     _panEndTime = _updateTime;
     _panVelocity = velocity;
@@ -349,9 +339,6 @@ void Camera::startMomentumRotationWithVelocity(float velocity) {
 void Camera::stopMomentumRotation(void) {
     _rotationVelocity = 0;
 }
-
-
-#pragma mark - Idle Timer
 
 void Camera::resetIdleTimer() {
     _idleStartTime = _updateTime;

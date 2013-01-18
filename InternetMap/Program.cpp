@@ -119,8 +119,6 @@ void Program::bind() {
     glUseProgram(_program);
 }
 
-#pragma mark - Shader compilation helpers
-
 bool Program::compileShader(unsigned int* shader, unsigned int type, const std::string& code)
 {
     GLint status;

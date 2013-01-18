@@ -105,7 +105,7 @@ void MapData::loadFromAttrString(const std::string& json){
     std::vector<std::string> lines;
     split(lines, json, "\n");
 
-    for(int i = 0; i < lines.size(); i++) {
+    for(unsigned int i = 0; i < lines.size(); i++) {
         
         std::string line = lines[i];
         std::vector<std::string> aDesc;
@@ -131,7 +131,7 @@ void MapData::loadASInfo(const std::string& json){
     bool success = reader.parse(json, root);
     if(success) {
         std::vector<std::string> members = root.getMemberNames();
-        for (int i = 0; i < members.size(); i++) {
+        for (unsigned int i = 0; i < members.size(); i++) {
             NodePointer node = nodesByAsn[members[i]];
             if (node) {
                 Json::Value as = root[members[i]];
@@ -176,7 +176,7 @@ void MapData::createNodeBoxes() {
         }
     }
     
-    for (int i = 0; i < nodes.size(); i++) {
+    for (unsigned int i = 0; i < nodes.size(); i++) {
         NodePointer ptrNode = nodes.at(i);
         Point3 pos = visualization->nodePosition(ptrNode);
         IndexBoxPointer box = indexBoxForPoint(pos);

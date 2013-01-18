@@ -51,7 +51,7 @@ void DefaultVisualization::updateDisplayForNodes(shared_ptr<MapDisplay> display,
     
     display->nodes->beginUpdate();
     
-    for(int i = 0; i < nodes.size(); i++) {
+    for(unsigned int i = 0; i < nodes.size(); i++) {
         NodePointer node = nodes[i];
         
         Color color;
@@ -108,7 +108,7 @@ void DefaultVisualization::updateLineDisplay(shared_ptr<MapDisplay> display, std
     std::vector<ConnectionPointer> filteredConnections;
     
     // We are only drawing lines to nodes with > 0.01 importance, filter those out
-    for (int i = 0; i < connections.size(); i++) {
+    for (unsigned int i = 0; i < connections.size(); i++) {
         ConnectionPointer connection = connections[i];
         if ((connection->first->importance > 0.01) && (connection->second->importance > 0.01)) {
             filteredConnections.push_back(connection);
@@ -123,7 +123,7 @@ void DefaultVisualization::updateLineDisplay(shared_ptr<MapDisplay> display, std
     
     int currentIndex = 0;
     int count = 0;
-    for(int i = 0; i < filteredConnections.size(); i++) {
+    for(unsigned int i = 0; i < filteredConnections.size(); i++) {
         ConnectionPointer connection = filteredConnections[i];
         count++;
         
@@ -158,7 +158,7 @@ void DefaultVisualization::updateLineDisplay(shared_ptr<MapDisplay> display, std
 
 void DefaultVisualization::updateDisplayForSelectedNodes(shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes) {
     display->selectedNodes->beginUpdate();
-    for(int i = 0; i < nodes.size(); i++) {
+    for(unsigned int i = 0; i < nodes.size(); i++) {
         NodePointer node = nodes[i];
         
         display->selectedNodes->updateNode(i, nodePosition(node), nodeSize(node) * 0.8, ColorFromRGB(SELECTED_NODE_COLOR_HEX));

@@ -45,8 +45,6 @@ MapController::MapController() :
     data->loadASInfo(asinfoText);
 }
 
-#pragma mark - Event Handling
-
 void MapController::handleTouchDownAtPoint(Vector2 point) {
     if (!display->camera->isMovingToTarget()) {
         display->camera->stopMomentumPan();
@@ -57,8 +55,6 @@ void MapController::handleTouchDownAtPoint(Vector2 point) {
         hoverNode(i);
     }
 }
-
-#pragma mark - Selected Node handling
 
 bool MapController::selectHoveredNode() {
     if (hoveredNodeIndex != INT_MAX) {
@@ -82,7 +78,7 @@ void MapController::hoverNode(int i) {
 }
 
 void MapController::unhoverNode(){
-    if (hoveredNodeIndex != INT_MAX && hoveredNodeIndex != targetNode) {
+    if ((hoveredNodeIndex != INT_MAX) && (hoveredNodeIndex != (int)targetNode)) {
         NodePointer node = data->nodeAtIndex(hoveredNodeIndex);
         std::vector<NodePointer> nodes;
         nodes.push_back(node);
@@ -131,9 +127,6 @@ void MapController::updateTargetForIndex(int index) {
     display->camera->setTarget(target);
 }
 
-#pragma mark - Connection Highlighting
-
-
 void MapController::highlightConnections(NodePointer node) {
     if(node == NULL) {
         clearHighlightLines();
@@ -142,7 +135,7 @@ void MapController::highlightConnections(NodePointer node) {
     
     std::vector<ConnectionPointer> filteredConnections;
     
-    for (int i = 0; i<data->connections.size(); i++) {
+    for (unsigned int i = 0; i<data->connections.size(); i++) {
         ConnectionPointer connection = data->connections.at(i);
         if ((connection->first == node) || (connection->second == node) ) {
             filteredConnections.push_back(connection);
@@ -155,7 +148,7 @@ void MapController::highlightConnections(NodePointer node) {
         
         std::vector<ConnectionPointer> importantConnections;
         
-        for (int i = 0; i<filteredConnections.size(); i++) {
+        for (unsigned int i = 0; i<filteredConnections.size(); i++) {
             ConnectionPointer connection = filteredConnections[i];
             if((connection->first->importance > 0.01) && (connection->second->importance > 0.01)) {
                 importantConnections.push_back(connection);
@@ -176,7 +169,7 @@ void MapController::highlightConnections(NodePointer node) {
     Color brightColor = ColorFromRGB(SELECTED_CONNECTION_COLOR_BRIGHT_HEX);
     Color dimColor = ColorFromRGB(SELECTED_CONNECTION_COLOR_DIM_HEX);
 
-    for(int i = 0; i < filteredConnections.size(); i++) {
+    for(unsigned int i = 0; i < filteredConnections.size(); i++) {
         ConnectionPointer connection = filteredConnections[i];
         NodePointer a = connection->first;
         NodePointer b = connection->second;
@@ -226,7 +219,7 @@ void MapController::highlightRoute(std::vector<NodePointer> nodeList) {
     Color lineColor = ColorFromRGB(0xffa300);
     
     display->nodes->beginUpdate();
-    for(int i = 0; i < nodeList.size() - 1; i++) {
+    for(unsigned int i = 0; i < nodeList.size() - 1; i++) {
         NodePointer a = nodeList[i];
         NodePointer b = nodeList[i+1];
         display->nodes->updateNode(a->index, ColorFromRGB(SELECTED_NODE_COLOR_HEX));
@@ -245,8 +238,6 @@ void MapController::highlightRoute(std::vector<NodePointer> nodeList) {
     display->highlightLines = lines;
     
 }
-
-#pragma mark - Index/Position calculations
 
 int MapController::indexForNodeAtPoint(Vector2 pointInView) {
     //get point in view and adjust it for viewport
@@ -290,7 +281,7 @@ int MapController::indexForNodeAtPoint(Vector2 pointInView) {
     float a = powf((direction.getX()), 2)+powf((direction.getY()), 2)+powf((direction.getZ()), 2);
     
     IndexBoxPointer box;
-    for (int j = 0; j<data->boxesForNodes.size(); j++) {
+    for (unsigned int j = 0; j<data->boxesForNodes.size(); j++) {
         box = data->boxesForNodes[j];
         if (box->doesLineIntersectOptimized(cameraInObjectSpace, invertedDirection, sign)) {
 //            printf("intersects box %i at pos %f, %f\n", j, box->center().getX(), box->center().getY());

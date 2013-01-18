@@ -14,8 +14,8 @@ MapDisplay::MapDisplay() :
     _nodeProgram(new Program("node", ATTRIB_VERTEX | ATTRIB_COLOR | ATTRIB_SIZE)),
     _selectedNodeProgram(new Program("selectedNode", "node", ATTRIB_VERTEX | ATTRIB_COLOR | ATTRIB_SIZE)),
     _connectionProgram (new Program("line", ATTRIB_VERTEX | ATTRIB_COLOR)),
-    camera(new Camera()),
-    _displayScale(1.0f)
+    _displayScale(1.0f),
+    camera(new Camera())
 {
     InitOpenGLExtensions();
 }
