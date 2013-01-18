@@ -146,7 +146,6 @@ public class RotateGestureDetector {
     private float mTouchHistoryLastAccepted;
     private int mTouchHistoryDirection;
     private long mTouchHistoryLastAcceptedTime;
-    private int mTouchMinMajor;
 
     private static final long TOUCH_STABILIZE_TIME = 128; // ms
     private static final int TOUCH_MIN_MAJOR = 48; // dp
@@ -158,7 +157,6 @@ public class RotateGestureDetector {
         mListener = listener;
 
         final Resources res = context.getResources();
-        mTouchMinMajor = res.getDimensionPixelSize(TOUCH_MIN_MAJOR);
     }
 
     /**
@@ -183,7 +181,7 @@ public class RotateGestureDetector {
                 } else {
                     major = ev.getTouchMajor(i);
                 }
-                if (major < mTouchMinMajor) major = mTouchMinMajor;
+                if (major < TOUCH_MIN_MAJOR) major = TOUCH_MIN_MAJOR;
                 total += major;
 
                 if (Float.isNaN(mTouchUpper) || major > mTouchUpper) {

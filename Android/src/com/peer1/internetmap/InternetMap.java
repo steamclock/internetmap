@@ -29,6 +29,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     private static String TAG = "InternetMap";
     private GestureDetectorCompat mGestureDetector;
     private ScaleGestureDetector mScaleDetector;
+    private RotateGestureDetector mRotateDetector;
 
     private PopupWindow visualizationPopup;
 
@@ -48,6 +49,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         
         mGestureDetector = new GestureDetectorCompat(this, new MyGestureListener());
         mScaleDetector = new ScaleGestureDetector(this, new ScaleListener());
+        mRotateDetector = new RotateGestureDetector(this, new RotateListener());
     }
 
     public String readFileAsString(String filePath) throws java.io.IOException {
@@ -118,6 +120,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     @Override
     public boolean onTouchEvent(MotionEvent event){
         mScaleDetector.onTouchEvent(event);
+        mRotateDetector.onTouchEvent(event);
         mGestureDetector.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
@@ -212,7 +215,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             return true;
         }
     }
-    
+
     //zoom gesture
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
         @Override
@@ -228,6 +231,24 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             float scale = detector.getScaleFactor() - 1;
             Log.d(TAG, String.format("scaleEnd: %f", scale));
             nativeStartMomentumZoomWithVelocity(scale*50);
+        }
+    }
+
+    //2-finger rotate gesture
+    private class RotateListener extends RotateGestureDetector.SimpleOnRotateGestureListener {
+        @Override
+        public boolean onRotate(RotateGestureDetector detector) {
+            float scale = detector.getRotateFactor();
+            Log.d(TAG, String.format("!!rotate: %f", scale));
+            //nativeZoomByScale(scale);
+            return true;
+        }
+
+        @Override
+        public void onRotateEnd(RotateGestureDetector detector) {
+            float scale = detector.getRotateFactor();
+            Log.d(TAG, String.format("!!!!rotateEnd: %f", scale));
+            //nativeStartMomentumZoomWithVelocity(scale*50);
         }
     }
     
