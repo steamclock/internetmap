@@ -658,7 +658,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         [self.controller rotateAnimated:GLKMatrix4MakeRotation(M_PI, 0, 1, 0) duration:3];
     }
     
-    if(self.controller.lastSearchIP) {
+    if(self.controller.lastSearchIP && ![self.controller.lastSearchIP isEqualToString:@""]) {
         self.tracer = [SCTracerouteUtility tracerouteWithAddress:self.controller.lastSearchIP]; //we need ip for node!
         self.tracer.delegate = self;
         [self.tracer start];

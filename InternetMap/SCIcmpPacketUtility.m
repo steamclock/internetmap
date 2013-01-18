@@ -117,7 +117,7 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
 
 - (id)initWithAddress:(NSString*)hostAddress
 {
-    assert(hostAddress != nil);
+    assert(![hostAddress isEqualToString:@""]);
     NSData* hostAddressData = [self _formatAddress:hostAddress];
     
     self = [super init];

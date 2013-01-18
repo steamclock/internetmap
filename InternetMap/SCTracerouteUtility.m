@@ -27,6 +27,7 @@
 
 #pragma mark - Class Methods
 +(SCTracerouteUtility*)tracerouteWithAddress:(NSString*)address{
+    
     return [[SCTracerouteUtility alloc] initWithAddress:address];
 }
 
@@ -66,7 +67,7 @@
 #pragma mark - Send packets
 - (void)sendPackets:(NSData*)data{
     
-    NSLog(@"Sending a batch of packets..");
+    //NSLog(@"Sending a batch of packets..");
     if (self.ttlCount <= MAX_HOPS) {
         for (int i = 1; i <= PACKETS_PER_ITER; i++) {
             [self.packetUtility sendPacketWithData:nil andTTL:self.ttlCount];
@@ -116,7 +117,6 @@
     NSString* IP = [self getIpFromIPHeader:packet];
     
     int numberOfRepliesForIP = 0;
-    int numberOfTimeoutsForIP = 0;
     
     for (SCPacketRecord* packetRecord in [self.packetUtility.packetRecords copy]) {
         if ((packetRecord.sequenceNumber == sequenceNumber) && !packetRecord.timedOut) {
@@ -127,11 +127,16 @@
             
             if (numberOfRepliesForIP == 0) {
                 [self foundNewIP:IP withReport:[NSString stringWithFormat:@"%d: %@  %.2fms", self.ttlCount, IP, packetRecord.rtt]];
+                NSLog(@"Target IP: %@", self.targetIP);
+                if ([IP isEqualToString:self.targetIP]) {
+                    // YAY DONE.
+                    if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidComplete:)]) {
+                        NSArray* hops = self.hopsForCurrentIP;
+                        [self.delegate tracerouteDidComplete:hops];
+                    }
+                    break;
+                }
             }
-        }
-        
-        if ([packetRecord.responseAddress isEqualToString:IP] && packetRecord.timedOut) {
-            numberOfTimeoutsForIP++;
         }
         
         if ([packetRecord.responseAddress isEqualToString:IP]) {
