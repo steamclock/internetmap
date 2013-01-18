@@ -127,7 +127,6 @@
             
             if (numberOfRepliesForIP == 0) {
                 [self foundNewIP:IP withReport:[NSString stringWithFormat:@"%d: %@  %.2fms", self.ttlCount, IP, packetRecord.rtt]];
-                NSLog(@"Target IP: %@", self.targetIP);
                 if ([IP isEqualToString:self.targetIP]) {
                     // YAY DONE.
                     if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidComplete:)]) {
@@ -223,7 +222,7 @@
 - (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didSendPacket:(NSData *)packet{
     
     //If we just don't get ANY packets back after a whole two seconds, bail on the hop
-    [self performSelector:@selector(timeExceededForPacket:) withObject:packet afterDelay:2];
+    [self performSelector:@selector(timeExceededForPacket:) withObject:packet afterDelay:5];
     
     
 }
