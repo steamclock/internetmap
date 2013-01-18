@@ -58,8 +58,9 @@
     self.textField.font = [UIFont fontWithName:FONT_NAME_LIGHT size:24];
     [self.view addSubview:self.textField];
     
-    UIButton* doneButton = [[UIButton alloc] initWithFrame:CGRectMake(self.textField.x+self.textField.width, 12, doneImage.size.width, doneImage.size.height)];
+    UIButton* doneButton = [[UIButton alloc] initWithFrame:CGRectMake(self.textField.x+self.textField.width-10, 2, doneImage.size.width+20, doneImage.size.height+20)];
     [doneButton setImage:doneImage forState:UIControlStateNormal];
+    doneButton.imageView.contentMode = UIViewContentModeCenter;
     [doneButton addTarget:self action:@selector(done) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:doneButton];
     

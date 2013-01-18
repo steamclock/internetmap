@@ -125,17 +125,19 @@
     orangeBackgroundView.backgroundColor = UI_ORANGE_COLOR;
     [self.view addSubview:orangeBackgroundView];
     
-    self.topLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, -2, self.contentSizeForViewInPopover.width-xImage.size.width-34, 44)];
+    float topLabelOffset = [HelperMethods deviceIsiPad] ? 34 : 24;
+    self.topLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, -2, self.contentSizeForViewInPopover.width-xImage.size.width-topLabelOffset, 44)];
     self.topLabel.font = [UIFont fontWithName:FONT_NAME_MEDIUM size:24];
     self.topLabel.textColor = [UIColor blackColor];
-    self.topLabel.backgroundColor = [UIColor clearColor];
     self.topLabel.text = self.title;
     self.topLabel.minimumFontSize = 14;
     self.topLabel.adjustsFontSizeToFitWidth = YES;
     [self.view addSubview:self.topLabel];
     
     self.doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.doneButton.frame = CGRectMake(self.topLabel.x+self.topLabel.width+5, 12, xImage.size.width, xImage.size.height);
+    self.doneButton.frame = CGRectMake(self.topLabel.x+self.topLabel.width-5, 2, xImage.size.width+20, xImage.size.height+20);
+    self.doneButton.imageView.contentMode = UIViewContentModeCenter;
+    self.doneButton.backgroundColor = [UIColor redColor];
     [self.doneButton setImage:xImage forState:UIControlStateNormal];
     [self.doneButton addTarget:self action:@selector(doneTapped) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.doneButton];
