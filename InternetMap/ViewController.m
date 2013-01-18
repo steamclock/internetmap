@@ -163,18 +163,21 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     
     //customize timeline slider
-    UIImage* leftCap = [[UIImage imageNamed:@"timeline-left"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 11, 0, 1)];
-    UIImage* rightCap = [[UIImage imageNamed:@"timeline-right"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 1, 0, 11)];
-    [self.timelineSlider setMinimumTrackImage:leftCap forState:UIControlStateNormal];
-    [self.timelineSlider setMaximumTrackImage:rightCap forState:UIControlStateNormal];
-    [self.timelineSlider setThumbImage:[UIImage imageNamed:@"timeline-handle"] forState:UIControlStateNormal];
-    UIImageView* leftSliderCap = [[UIImageView alloc] initWithFrame:CGRectMake(-11, -18, 22, leftCap.size.height)];
-    leftSliderCap.image = leftCap;
-    [self.timelineSlider addSubview:leftSliderCap];
+    float cap = 12;
+    UIImage* trackImage = [[UIImage imageNamed:@"timeline-track"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, cap, 0, cap)];
     
-    UIImageView* rightSliderCap = [[UIImageView alloc] initWithFrame:CGRectMake(self.timelineSlider.width-11, -18, 22, rightCap.size.height)];
-    rightSliderCap.image = rightCap;
-    [self.timelineSlider addSubview:rightSliderCap];
+    //We're setting the track images to an invisible image here
+    //instead, we are drawing an additional UIImageView in the back as the track image
+    //this is a workaround to a bug in iOS 5.x
+    UIImage* invisibleImage = [HelperMethods imageWithColor:[UIColor clearColor] size:CGSizeMake(1, 1)];
+    [self.timelineSlider setMinimumTrackImage:invisibleImage forState:UIControlStateNormal];
+    [self.timelineSlider setMaximumTrackImage:invisibleImage forState:UIControlStateNormal];
+    
+    [self.timelineSlider setThumbImage:[UIImage imageNamed:@"timeline-handle"] forState:UIControlStateNormal];
+    
+    UIImageView* trackImageView = [[UIImageView alloc] initWithImage:trackImage];
+    trackImageView.frame = CGRectMake(-cap, -19, self.timelineSlider.width+2*cap, trackImage.size.height);
+    [self.timelineSlider addSubview:trackImageView];
     
     //setup timeline slider values
     float diff = MAX_TIMELINE_YEAR-MIN_TIMELINE_YEAR;
@@ -182,6 +185,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.timelineSlider.minimumValue = 0;
     self.timelineSlider.maximumValue = diff;
     self.timelineSlider.value = diff;
+    [self timelineSliderValueChanged:self.timelineSlider];
     
     //customize timeline label
     self.timelineLabel.textColor = UI_ORANGE_COLOR;
