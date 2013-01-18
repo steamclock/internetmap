@@ -22,19 +22,27 @@
 #include <string>
 
 // TODO: clean this up
-std::string loadTextResource(std::string base, std::string extension);
+void loadTextResource(std::string* resource, const std::string& base, const std::string& extension);
 
 MapController::MapController() :
     targetNode(INT_MAX),
-    hoveredNodeIndex(INT_MAX){
+    hoveredNodeIndex(INT_MAX) {
         
     data = shared_ptr<MapData>(new MapData());
     display = shared_ptr<MapDisplay>(new MapDisplay());
     data->visualization = VisualizationPointer(new DefaultVisualization());
         
-    data->loadFromString(loadTextResource("data", "txt"));
-    data->loadFromAttrString(loadTextResource("as2attr", "txt"));
-    data->loadASInfo(loadTextResource("asinfo", "json"));
+    std::string dataText;
+    loadTextResource(&dataText, "data", "txt");
+    data->loadFromString(dataText);
+        
+    std::string attrText;
+    loadTextResource(&attrText, "as2attr", "txt");
+    data->loadFromAttrString(attrText);
+    
+    std::string asinfoText;
+    loadTextResource(&asinfoText, "asinfo", "json");
+    data->loadASInfo(asinfoText);
 }
 
 #pragma mark - Event Handling

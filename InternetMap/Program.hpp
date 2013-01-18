@@ -23,18 +23,18 @@ class Program {
     unsigned int _program;
     unsigned int _activeAttributes;
     
-    void setup(std::string fragmentName, std::string vertexName, unsigned int attributes);
-    bool compileShader(unsigned int* shader, unsigned int type, std::string file);
+    void setup(const std::string& fragmentName, const std::string& vertexName, unsigned int attributes);
+    bool compileShader(unsigned int* shader, unsigned int type, const std::string& file);
     bool linkProgram(unsigned int program);
     bool validateProgram(unsigned int program);
     
 public:
     
-    Program(std::string name, unsigned int attributes);
-    Program(std::string fragmentName, std::string vertexName, unsigned int attributes);
+    Program(const std::string& name, unsigned int attributes);
+    Program(const std::string& fragmentName, const std::string& vertexName, unsigned int attributes);
     ~Program();
     
-    int uniformForName(std::string name);
+    int uniformForName(const std::string& name);
     void bind(void);
 };
 

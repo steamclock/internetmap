@@ -43,7 +43,7 @@ void split( std::vector<std::string> & theStringVector,  /* Altered/returned val
     }
 }
 
-void MapData::loadFromString(std::string json) {
+void MapData::loadFromString(const std::string& json) {
     
 //    NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
     
@@ -92,7 +92,7 @@ void MapData::loadFromString(std::string json) {
 //    NSLog(@"load : %.2fms", ([NSDate timeIntervalSinceReferenceDate] - start) * 1000.0f);
 }
 
-void MapData::loadFromAttrString(std::string json){
+void MapData::loadFromAttrString(const std::string& json){
     std::map<std::string, int> asTypeDict;
     asTypeDict["abstained"] = AS_UNKNOWN;
     asTypeDict["t1"] = AS_T1;
@@ -124,7 +124,7 @@ void MapData::loadFromAttrString(std::string json){
 
 }
 
-void MapData::loadASInfo(std::string json){
+void MapData::loadASInfo(const std::string& json){
     
     Json::Value root;
     Json::Reader reader;

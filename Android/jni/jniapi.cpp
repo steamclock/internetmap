@@ -104,7 +104,7 @@ void DetachThreadFromVM(void) {
     javaVM->DetachCurrentThread();
 }
 
-std::string loadTextResource(std::string base, std::string extension) {
+void loadTextResource(std::string* resource, const std::string& base, const std::string& extension) {
     // Cannot share a JNIEnv between threads. Need to store the JavaVM, and use JavaVM->GetEnv to discover the thread's JNIEnv
     JNIEnv *env = NULL;
     int status = javaVM->GetEnv((void **)&env, JNI_VERSION_1_6);
@@ -115,7 +115,7 @@ std::string loadTextResource(std::string base, std::string extension) {
         if(status < 0)
         {
             LOG_ERROR("failed to attach current thread");
-            return "";
+            *resource = "";
         }
     }
 
@@ -137,10 +137,9 @@ std::string loadTextResource(std::string base, std::string extension) {
 
     const char* resultChars = env->GetStringUTFChars(result,0);
 
-    std::string resultObj(resultChars);
+    *resource = resultChars;
     env->ReleaseStringUTFChars(result,resultChars);
     env->DeleteLocalRef(result);
-    return resultObj;
 }
 
 bool deviceIsOld() {

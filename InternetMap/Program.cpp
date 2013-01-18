@@ -11,37 +11,39 @@
 #include "Types.hpp"
 
 // TODO: clean this up
-std::string loadTextResource(std::string base, std::string extension);
+void loadTextResource(std::string* resource, const std::string& base, const std::string& extension);
 
-Program::Program(std::string name, unsigned int attributes)  :
+Program::Program(const std::string& name, unsigned int attributes)  :
     _program(0),
     _activeAttributes(0)
 {
     setup(name, name, attributes);
 }
 
-Program::Program(std::string fragmentName, std::string vertexName, unsigned int attributes) :
+Program::Program(const std::string& fragmentName, const std::string& vertexName, unsigned int attributes) :
     _program(0),
     _activeAttributes(0)
 {
     setup(fragmentName, vertexName, attributes);
 }
 
-void Program::setup(std::string fragmentName, std::string vertexName, unsigned int attributes) {
+void Program::setup(const std::string& fragmentName, const std::string& vertexName, unsigned int attributes) {
     GLuint vertShader, fragShader;
     
     _activeAttributes = attributes;
     
     // Create and compile vertex shader.
-    std::string vertShaderCode = loadTextResource(vertexName, "vsh");
+    std::string vertShaderCode;
+    loadTextResource(&vertShaderCode, vertexName, "vsh");
     if (!compileShader(&vertShader,GL_VERTEX_SHADER,vertShaderCode)) {
         LOG("Failed to compile vertex shader");
         return;
     }
     
     // Create and compile fragment shader.
-    std::string frahShaderCode = loadTextResource(fragmentName, "fsh");
-    if (!compileShader(&fragShader,GL_FRAGMENT_SHADER,frahShaderCode)) {
+    std::string fragShaderCode;
+    loadTextResource(&fragShaderCode, fragmentName, "fsh");
+    if (!compileShader(&fragShader,GL_FRAGMENT_SHADER,fragShaderCode)) {
         LOG("Failed to compile fragment shader");
         return;
     }
@@ -109,7 +111,7 @@ Program::~Program() {
     }
 }
 
-int Program::uniformForName(std::string name) {
+int Program::uniformForName(const std::string& name) {
     return glGetUniformLocation(_program, name.c_str());
 }
 
@@ -119,7 +121,7 @@ void Program::bind() {
 
 #pragma mark - Shader compilation helpers
 
-bool Program::compileShader(unsigned int* shader, unsigned int type, std::string code)
+bool Program::compileShader(unsigned int* shader, unsigned int type, const std::string& code)
 {
     GLint status;
     const GLchar *source = code.c_str();

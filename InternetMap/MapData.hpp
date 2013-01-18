@@ -27,9 +27,9 @@ public:
     std::vector<IndexBoxPointer> boxesForNodes;
     std::vector<ConnectionPointer> connections;
     
-    void loadFromString(std::string json);
-    void loadFromAttrString(std::string json);
-    void loadASInfo(std::string json);
+    void loadFromString(const std::string& json);
+    void loadFromAttrString(const std::string& json);
+    void loadASInfo(const std::string& json);
     void updateDisplay(shared_ptr<MapDisplay> display);
     
     NodePointer nodeAtIndex(unsigned int index);
