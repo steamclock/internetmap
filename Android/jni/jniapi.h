@@ -14,6 +14,8 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeStartMomentu
         float vX, float vY);
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeHandleTouchDownAtPoint(JNIEnv* jenv, jobject obj,
         float x, float y);
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeZoomByScale(JNIEnv* jenv, jobject obj,
+        float scale);
 };
 
 #endif // JNIAPI_H

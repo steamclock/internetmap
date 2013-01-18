@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.view.ScaleGestureDetector;
 import android.view.ViewGroup.LayoutParams;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
     private static String TAG = "InternetMap";
     private GestureDetectorCompat mGestureDetector;
+    private ScaleGestureDetector mScaleDetector;
 
     private PopupWindow visualizationPopup;
 
@@ -45,6 +47,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         surfaceView.getHolder().addCallback(this);
         
         mGestureDetector = new GestureDetectorCompat(this, new MyGestureListener());
+        mScaleDetector = new ScaleGestureDetector(this, new ScaleListener());
     }
 
     public String readFileAsString(String filePath) throws java.io.IOException {
@@ -110,14 +113,14 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         nativeSetSurface(null, 1.0f);
     }
 
+    //UI stuff
+
     @Override
     public boolean onTouchEvent(MotionEvent event){
+        mScaleDetector.onTouchEvent(event);
         mGestureDetector.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
-
-
-    //UI stuff
 
     public void visualizationsButtonPressed(View view) {
         if (visualizationPopup == null) {
@@ -155,6 +158,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
 
 
+    //native wrappers
     public native void nativeOnCreate();
 
     public native void nativeOnResume();
@@ -168,11 +172,13 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     public native void nativeRotateRadiansXY(float radX, float radY);
     public native void nativeStartMomentumPanWithVelocity(float vX, float vY);
     public native void nativeHandleTouchDownAtPoint(float x, float y);
+    public native void nativeZoomByScale(float scale);
 
     static {
         System.loadLibrary("internetmaprenderer");
     }
 
+    //simple one-finger gestures (eg. pan)
     class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
         
         private float distance2radians(float distance) {
@@ -205,4 +211,16 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             return true;
         }
     }
+    
+    //zoom gesture
+    private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+            float scale = detector.getScaleFactor() - 1;
+            Log.d(TAG, String.format("@@@@@@scale: %f", scale));
+            nativeZoomByScale(scale);
+            return true;
+        }
+    }
+    
 }

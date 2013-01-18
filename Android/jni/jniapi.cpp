@@ -90,6 +90,11 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeHandleTouchD
     renderer->_mapController->handleTouchDownAtPoint(Vector2(x, y));
 }
 
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeZoomByScale(JNIEnv* jenv, jobject obj,
+        float scale) {
+    renderer->_mapController->display->camera->zoomByScale(scale);
+}
+
 void DetachThreadFromVM(void) {
     javaVM->DetachCurrentThread();
 }
