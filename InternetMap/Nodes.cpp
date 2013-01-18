@@ -33,6 +33,10 @@ Nodes::Nodes(int initialCount) :
 }
 
 Nodes::~Nodes() {
+    if(!gHasMapBuffer && _lockedNodes) {
+        delete _lockedNodes;
+    }
+    
     glDeleteBuffers(1, &_vertexBuffer);
 }
 
@@ -63,16 +67,30 @@ void Nodes::display() {
 }
 
 void Nodes::beginUpdate() {
-    if(!_lockedNodes) {
-        glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
-        _lockedNodes = (RawDisplayNode*)glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
+    if(gHasMapBuffer ) {
+        if(!_lockedNodes) {
+             glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
+             _lockedNodes = (RawDisplayNode*)glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
+        }
+    }
+    else {
+        if(!_lockedNodes) {
+            _lockedNodes = new RawDisplayNode[MAX_NODES];
+        }
     }
 }
 
 void Nodes::endUpdate() {
-    _lockedNodes = NULL;
-    glUnmapBufferOES(GL_ARRAY_BUFFER);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    if(gHasMapBuffer ) {
+        _lockedNodes = NULL;
+        glUnmapBufferOES(GL_ARRAY_BUFFER);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+    else {
+        glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
+        glBufferData(GL_ARRAY_BUFFER, MAX_NODES * sizeof(RawDisplayNode), _lockedNodes, GL_DYNAMIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
 }
 
 void Nodes::updateNode(int index, const Point3& position, float size, const Color& color) {

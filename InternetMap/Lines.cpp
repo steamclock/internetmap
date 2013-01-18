@@ -29,20 +29,38 @@ Lines::Lines(int initialCount) :
 }
 
 Lines::~Lines() {
+    if(!gHasMapBuffer && _lockedVertices) {
+        delete _lockedVertices;
+    }
+
     glDeleteBuffers(1, &_vertexBuffer);
 }
 
-void Lines::beginUpdate(void) {
-    if(!_lockedVertices) {
-        glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
-        _lockedVertices = (LineVertex*)glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
+void Lines::beginUpdate() {
+    if(gHasMapBuffer ) {
+        if(!_lockedVertices) {
+            glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
+            _lockedVertices = (LineVertex*)glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
+        }
+    }
+    else {
+        if(!_lockedVertices) {
+            _lockedVertices = new LineVertex[_count * 2];
+        }
     }
 }
 
-void Lines::endUpdate(void) {
-    _lockedVertices = NULL;
-    glUnmapBufferOES(GL_ARRAY_BUFFER);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+void Lines::endUpdate() {
+    if(gHasMapBuffer ) {
+        _lockedVertices = NULL;
+        glUnmapBufferOES(GL_ARRAY_BUFFER);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+    else {
+        glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
+        glBufferData(GL_ARRAY_BUFFER, _count * 2 * sizeof(LineVertex), _lockedVertices, GL_DYNAMIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
 }
 
 void Lines::updateLine(int index, const Point3& start, const Color& startColor, const Point3& end, const Color& endColor) {

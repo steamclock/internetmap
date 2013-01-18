@@ -40,8 +40,9 @@
 - (NSMutableArray*)allNodes;
 
 - (void)handleTouchDownAtPoint:(CGPoint)point;
-- (void)selectHoveredNode;
+- (BOOL)selectHoveredNode;
 - (void)unhoverNode;
+- (void)deselectCurrentNode;
 - (void)hoverNode:(int)index;
 - (int)indexForNodeAtPoint:(CGPoint)pointInView;
 - (NodeWrapper*)nodeAtIndex:(int)index;

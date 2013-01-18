@@ -75,6 +75,9 @@ struct Color {
 
 // Byte-per-component color, suitable for inclusion in vertex arrays
 struct ByteColor {
+    
+    ByteColor() {}
+    
     ByteColor(const Color& color) {
         r = (int)(color.r * 255.0f);
         g = (int)(color.g * 255.0f);
