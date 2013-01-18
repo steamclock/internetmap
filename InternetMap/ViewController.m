@@ -16,6 +16,7 @@
 #import "MapControllerWrapper.h"
 #import "LabelNumberBoxView.h"
 #import "NodeWrapper.h"
+#import "TimelineInfoViewController.h"
 
 #define MIN_TIMELINE_YEAR 1993
 #define MAX_TIMELINE_YEAR 2012
@@ -81,6 +82,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (strong, nonatomic) WEPopoverController* nodeSearchPopover;
 @property (strong, nonatomic) WEPopoverController* nodeInformationPopover;
 @property (weak, nonatomic) NodeInformationViewController* nodeInformationViewController; //this is weak because it's enough for us that the popover retains the controller. this is only a reference to update the ui of the infoViewController on traceroute callbacks, not to signify ownership
+@property (strong, nonatomic) WEPopoverController* timelinePopover;
+@property (strong, nonatomic) TimelineInfoViewController* timelineInfoViewController;
 @property (strong, nonatomic) WEPopoverController* nodeTooltipPopover;
 @property (strong, nonatomic) NodeTooltipViewController* nodeTooltipViewController;
 
@@ -174,6 +177,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.timelineSlider setMaximumTrackImage:invisibleImage forState:UIControlStateNormal];
     
     [self.timelineSlider setThumbImage:[UIImage imageNamed:@"timeline-handle"] forState:UIControlStateNormal];
+    [self.timelineSlider addTarget:self action:@selector(timelineSliderTouchUp:) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside | UIControlEventTouchCancel];
     
     UIImageView* trackImageView = [[UIImageView alloc] initWithImage:trackImage];
     trackImageView.frame = CGRectMake(-cap, -19, self.timelineSlider.width+2*cap, trackImage.size.height);
@@ -570,9 +574,26 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 }
 
+
+
 - (IBAction)timelineSliderValueChanged:(id)sender {
     self.timelineLabel.text = [NSString stringWithFormat:@"%i", (int)(MIN_TIMELINE_YEAR+self.timelineSlider.value*10)];
+    CGRect thumbRect = [self.timelineSlider thumbRectForBounds:self.timelineSlider.bounds trackRect:[self.timelineSlider trackRectForBounds:self.timelineSlider.bounds] value:self.timelineSlider.value];
+    thumbRect = [self.view convertRect:thumbRect fromView:self.timelineSlider];
+    
+    [self.timelinePopover dismissPopoverAnimated:NO];
+    if (!self.timelinePopover) {
+        self.timelineInfoViewController = [[TimelineInfoViewController alloc] init];
+        self.timelinePopover = [[WEPopoverController alloc] initWithContentViewController:self.timelineInfoViewController];
+        
+    }
+    
+    [self.timelinePopover setPopoverContentSize:self.timelineInfoViewController.contentSizeForViewInPopover];
+    [self.timelinePopover presentPopoverFromRect:thumbRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];
+}
 
+- (void)timelineSliderTouchUp:(id)sender {
+    [self.timelinePopover dismissPopoverAnimated:NO];
 }
 
 #pragma mark - Helper Methods: Current ASN precaching

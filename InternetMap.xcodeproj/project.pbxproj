@@ -54,6 +54,11 @@
 		11754307169BBCCD008150BB /* youarehere-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 11754305169BBCCD008150BB /* youarehere-icon@2x.png */; };
 		1175A9EB16A9ED6200B93031 /* timeline-track.png in Resources */ = {isa = PBXBuildFile; fileRef = 1175A9E916A9ED6200B93031 /* timeline-track.png */; };
 		1175A9EC16A9ED6200B93031 /* timeline-track@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1175A9EA16A9ED6200B93031 /* timeline-track@2x.png */; };
+		1175A9F716A9FC0500B93031 /* TimelineInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1175A9F616A9FC0500B93031 /* TimelineInfoViewController.m */; };
+		1175A9FE16AA042400B93031 /* history.json in Resources */ = {isa = PBXBuildFile; fileRef = 1175A9FD16AA042400B93031 /* history.json */; };
+		1175AA0416AA091800B93031 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1175AA0316AA091800B93031 /* CoreText.framework */; };
+		1175AA3216AA117800B93031 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1175AA3116AA117800B93031 /* libxml2.dylib */; };
+		1175AA3416AA117F00B93031 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1175AA3316AA117F00B93031 /* ImageIO.framework */; };
 		1180CF47169B71A800F1FB73 /* eye_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 1180CF3F169B71A800F1FB73 /* eye_selected.png */; };
 		1180CF48169B71A800F1FB73 /* eye_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1180CF40169B71A800F1FB73 /* eye_selected@2x.png */; };
 		1180CF49169B71A800F1FB73 /* search_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 1180CF41169B71A800F1FB73 /* search_selected.png */; };
@@ -204,6 +209,12 @@
 		11754305169BBCCD008150BB /* youarehere-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "youarehere-icon@2x.png"; path = "Images/youarehere-icon@2x.png"; sourceTree = "<group>"; };
 		1175A9E916A9ED6200B93031 /* timeline-track.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "timeline-track.png"; path = "Images/timeline-track.png"; sourceTree = "<group>"; };
 		1175A9EA16A9ED6200B93031 /* timeline-track@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "timeline-track@2x.png"; path = "Images/timeline-track@2x.png"; sourceTree = "<group>"; };
+		1175A9F516A9FC0500B93031 /* TimelineInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimelineInfoViewController.h; sourceTree = "<group>"; };
+		1175A9F616A9FC0500B93031 /* TimelineInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimelineInfoViewController.m; sourceTree = "<group>"; };
+		1175A9FD16AA042400B93031 /* history.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = history.json; path = InternetMap/history.json; sourceTree = "<group>"; };
+		1175AA0316AA091800B93031 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		1175AA3116AA117800B93031 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
+		1175AA3316AA117F00B93031 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		1180CF3B169B4D5500F1FB73 /* MapController.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MapController.hpp; sourceTree = "<group>"; };
 		1180CF3C169B4D5500F1FB73 /* MapController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapController.cpp; sourceTree = "<group>"; };
 		1180CF3F169B71A800F1FB73 /* eye_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = eye_selected.png; path = Images/eye_selected.png; sourceTree = "<group>"; };
@@ -335,8 +346,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				114DD47F167AA6950061CB36 /* libz.dylib in Frameworks */,
 				114DD47D167AA6850061CB36 /* MobileCoreServices.framework in Frameworks */,
+				1175AA3416AA117F00B93031 /* ImageIO.framework in Frameworks */,
+				1175AA3216AA117800B93031 /* libxml2.dylib in Frameworks */,
+				1175AA0416AA091800B93031 /* CoreText.framework in Frameworks */,
+				114DD47F167AA6950061CB36 /* libz.dylib in Frameworks */,
 				D468090516795D4D00A2C1CC /* CFNetwork.framework in Frameworks */,
 				D468090416795D4600A2C1CC /* SystemConfiguration.framework in Frameworks */,
 				1117E57B1676BFCD0046AA69 /* libresolv.dylib in Frameworks */,
@@ -517,6 +531,7 @@
 		A600AADA16A664E9003B1028 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				1175A9FD16AA042400B93031 /* history.json */,
 				A600AAD316A664DF003B1028 /* as2attr.txt */,
 				A600AAD416A664E0003B1028 /* asinfo.json */,
 				A600AAD516A664E0003B1028 /* data.txt */,
@@ -644,6 +659,9 @@
 		A6F3F5611640F1FB0070E6AE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1175AA3316AA117F00B93031 /* ImageIO.framework */,
+				1175AA3116AA117800B93031 /* libxml2.dylib */,
+				1175AA0316AA091800B93031 /* CoreText.framework */,
 				114DD47E167AA6950061CB36 /* libz.dylib */,
 				114DD47C167AA6850061CB36 /* MobileCoreServices.framework */,
 				D468090216795CC200A2C1CC /* SystemConfiguration.framework */,
@@ -681,6 +699,8 @@
 				D4F65E01166D6D530077BF5A /* NodeSearchViewController.m */,
 				A6F3F5821640F1FB0070E6AE /* ViewController.h */,
 				A6F3F5831640F1FB0070E6AE /* ViewController.m */,
+				1175A9F516A9FC0500B93031 /* TimelineInfoViewController.h */,
+				1175A9F616A9FC0500B93031 /* TimelineInfoViewController.m */,
 				11DB60B6169F635200E5986D /* CPPHelpers.h */,
 				11754300169BA790008150BB /* LabelNumberBoxView.h */,
 				11754301169BA790008150BB /* LabelNumberBoxView.m */,
@@ -873,6 +893,7 @@
 				1190E52C16A8BC8E00423288 /* timeline-play@2x.png in Resources */,
 				1175A9EB16A9ED6200B93031 /* timeline-track.png in Resources */,
 				1175A9EC16A9ED6200B93031 /* timeline-track@2x.png in Resources */,
+				1175A9FE16AA042400B93031 /* history.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -930,6 +951,7 @@
 				1127C9DC16A0D3A500413FE9 /* jsoncpp.cpp in Sources */,
 				11E500D316A4AC8500396FCA /* MapUtilities.cpp in Sources */,
 				A600AAE516A9D1C6003B1028 /* VertexBuffer.cpp in Sources */,
+				1175A9F716A9FC0500B93031 /* TimelineInfoViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
