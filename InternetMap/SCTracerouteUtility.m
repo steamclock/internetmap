@@ -27,7 +27,7 @@
 
 #pragma mark - Class Methods
 +(SCTracerouteUtility*)tracerouteWithAddress:(NSString*)address{
-    
+    assert(![address isEqualToString:@""]);
     return [[SCTracerouteUtility alloc] initWithAddress:address];
 }
 
