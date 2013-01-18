@@ -6,21 +6,29 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Point;
 import android.os.Build;
-import android.app.AlertDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.*;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.view.ScaleGestureDetector;
 import android.view.ViewGroup.LayoutParams;
+import android.view.GestureDetector;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.Surface;
+import android.view.SurfaceView;
+import android.view.SurfaceHolder;
+import android.view.View;
+import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
 
 public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
     private static String TAG = "InternetMap";
+    private GestureDetectorCompat mGestureDetector;
+    private ScaleGestureDetector mScaleDetector;
 
     private PopupWindow visualizationPopup;
 
@@ -37,6 +45,9 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         setContentView(R.layout.main);
         SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceview);
         surfaceView.getHolder().addCallback(this);
+        
+        mGestureDetector = new GestureDetectorCompat(this, new MyGestureListener());
+        mScaleDetector = new ScaleGestureDetector(this, new ScaleListener());
     }
 
     public String readFileAsString(String filePath) throws java.io.IOException {
@@ -102,9 +113,14 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         nativeSetSurface(null, 1.0f);
     }
 
-
-
     //UI stuff
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+        mScaleDetector.onTouchEvent(event);
+        mGestureDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
+    }
 
     public void visualizationsButtonPressed(View view) {
         if (visualizationPopup == null) {
@@ -118,7 +134,6 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             visualizationPopup.setBackgroundDrawable(new ColorDrawable(Color.argb(200, 0, 0, 0)));
             visualizationPopup.setOutsideTouchable(true);
             visualizationPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                @Override
                 public void onDismiss() {
                     visualizationPopup = null;
                 }
@@ -129,7 +144,6 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             listView.setAdapter(adapter);
 
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
                     Log.d("INT_MAP", "Tapped row " + position);
@@ -144,6 +158,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
 
 
+    //native wrappers
     public native void nativeOnCreate();
 
     public native void nativeOnResume();
@@ -153,9 +168,67 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     public native void nativeOnStop();
 
     public native void nativeSetSurface(Surface surface, float density);
+    
+    public native void nativeRotateRadiansXY(float radX, float radY);
+    public native void nativeStartMomentumPanWithVelocity(float vX, float vY);
+    public native void nativeHandleTouchDownAtPoint(float x, float y);
+    public native void nativeZoomByScale(float scale);
+    public native void nativeStartMomentumZoomWithVelocity(float velocity);
 
     static {
         System.loadLibrary("internetmaprenderer");
     }
 
+    //simple one-finger gestures (eg. pan)
+    class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
+        
+        private float distance2radians(float distance) {
+            return -0.01f * distance;
+        }
+        private float velocityAdjust(float velocity) {
+            return 0.002f * velocity;
+        }
+
+        @Override
+        public boolean onDown(MotionEvent event) { 
+            Log.d(TAG,"onDown");
+            nativeHandleTouchDownAtPoint(event.getX(), event.getY());
+            return true;
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
+                float distanceY) {
+            Log.d(TAG, String.format("onScroll: x %f y %f", distanceX, distanceY));
+            nativeRotateRadiansXY(distance2radians(distanceX), distance2radians(distanceY));
+            return true;
+        }
+        
+        @Override
+        public boolean onFling(MotionEvent event1, MotionEvent event2, 
+                float velocityX, float velocityY) {
+            Log.d(TAG, String.format("onFling: vx %f vy %f", velocityX, velocityY));
+            nativeStartMomentumPanWithVelocity(velocityAdjust(velocityX), velocityAdjust(velocityY));
+            return true;
+        }
+    }
+    
+    //zoom gesture
+    private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+            float scale = detector.getScaleFactor() - 1;
+            Log.d(TAG, String.format("scale: %f", scale));
+            nativeZoomByScale(scale);
+            return true;
+        }
+
+        @Override
+        public void onScaleEnd(ScaleGestureDetector detector) {
+            float scale = detector.getScaleFactor() - 1;
+            Log.d(TAG, String.format("scaleEnd: %f", scale));
+            nativeStartMomentumZoomWithVelocity(scale*50);
+        }
+    }
+    
 }

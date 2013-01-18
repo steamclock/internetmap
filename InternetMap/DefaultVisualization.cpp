@@ -169,13 +169,10 @@ void DefaultVisualization::updateDisplayForSelectedNodes(shared_ptr<MapDisplay> 
 
 void DefaultVisualization::resetDisplayForSelectedNodes(shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes){
 
-    if (display->selectedNodes) {
-        //TODO: get assert back
-        //        NSAssert([display->selectedNodes count] == [arrNodes count], @"display->selectedNodes has already been allocated and you just tried to recreate it with a different count");
-    }else {
-        shared_ptr<Nodes> theNodes(new Nodes(nodes.size()));
-        display->selectedNodes = theNodes;
-    }
+    //TODO: this could be handled better, by reusing the vertex buffer and not recreating every time.
+    //doesn't matter too much at this point because there can only be one node selected at the same time
+    shared_ptr<Nodes> theNodes(new Nodes(nodes.size()));
+    display->selectedNodes = theNodes;
     
     updateDisplayForSelectedNodes(display, nodes);
 }

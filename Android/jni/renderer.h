@@ -22,7 +22,8 @@ public:
     void resume();
     void pause();
     void setWindow(ANativeWindow* window, float displayScale);
-    
+
+    MapController* _mapController;
     
 private:
     pthread_t _threadId;
@@ -40,7 +41,6 @@ private:
     float _displayScale;
     double _initialTimeSec;
     double _currentTimeSec;
-    MapController* _mapController;
 
     // RenderLoop is called in a rendering thread started in start() method
     // It creates rendering context and renders scene until stop() is called

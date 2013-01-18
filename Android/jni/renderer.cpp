@@ -87,6 +87,7 @@ void Renderer::renderLoop() {
         }
 
         pthread_mutex_unlock(&_mutex);
+        pthread_mutex_lock(&_mutex);
 
         if (_display) {
             drawFrame();
@@ -99,7 +100,6 @@ void Renderer::renderLoop() {
             }
         }
 
-        pthread_mutex_lock(&_mutex);
     }
 
     pthread_mutex_unlock(&_mutex);

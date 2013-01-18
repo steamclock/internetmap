@@ -53,7 +53,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (nonatomic) float lastScale;
 @property (nonatomic) int isCurrentlyFetchingASN;
 
-@property (strong, nonatomic) SCTraceroute* tracer;
+@property (strong, nonatomic) SCTracerouteUtility* tracer;
 
 
 @property (nonatomic) NSTimeInterval updateTime;
@@ -163,10 +163,18 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     
     //customize timeline slider
-    [self.timelineSlider setMinimumTrackImage:[[UIImage imageNamed:@"timeline-barleft"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 11, 0, 1)] forState:UIControlStateNormal];
-    [self.timelineSlider setMaximumTrackImage:[[UIImage imageNamed:@"timeline-barright"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 1, 0, 11)] forState:UIControlStateNormal];
+    UIImage* leftCap = [[UIImage imageNamed:@"timeline-left"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 11, 0, 1)];
+    UIImage* rightCap = [[UIImage imageNamed:@"timeline-right"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 1, 0, 11)];
+    [self.timelineSlider setMinimumTrackImage:leftCap forState:UIControlStateNormal];
+    [self.timelineSlider setMaximumTrackImage:rightCap forState:UIControlStateNormal];
     [self.timelineSlider setThumbImage:[UIImage imageNamed:@"timeline-handle"] forState:UIControlStateNormal];
-
+    UIImageView* leftSliderCap = [[UIImageView alloc] initWithFrame:CGRectMake(-11, -18, 22, leftCap.size.height)];
+    leftSliderCap.image = leftCap;
+    [self.timelineSlider addSubview:leftSliderCap];
+    
+    UIImageView* rightSliderCap = [[UIImageView alloc] initWithFrame:CGRectMake(self.timelineSlider.width-11, -18, 22, rightCap.size.height)];
+    rightSliderCap.image = rightCap;
+    [self.timelineSlider addSubview:rightSliderCap];
     
     //setup timeline slider values
     float diff = MAX_TIMELINE_YEAR-MIN_TIMELINE_YEAR;
@@ -218,13 +226,18 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
     self.isHandlingLongPress = NO;
 
-    [self.controller handleTouchDownAtPoint:[[touches anyObject] locationInView:self.view]];
+    [self.controller handleTouchDownAtPoint:[touch locationInView:self.view]];
 }
 
 -(void)handleTap:(UITapGestureRecognizer*)gestureRecognizer {
     [self.controller resetIdleTimer];
     [self dismissNodeInfoPopover];
-    [self.controller selectHoveredNode];
+    if (![self.controller selectHoveredNode]) { //couldn't select node
+        
+        [self dismissNodeInfoPopover];
+        [self.controller clearHighlightLines];
+        [self.controller deselectCurrentNode];
+    }
 }
 
 - (void)handleDoubleTap:(UIGestureRecognizer*)gestureRecongizer {
@@ -366,7 +379,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 
 - (BOOL)shouldDoIdleAnimation{
-    return !self.tracerouteHops && !UIGestureRecognizerStateIsActive(self.longPressGestureRecognizer.state) && !UIGestureRecognizerStateIsActive(self.pinchRecognizer.state) && !UIGestureRecognizerStateIsActive(self.panRecognizer.state);
+    return !UIGestureRecognizerStateIsActive(self.longPressGestureRecognizer.state) && !UIGestureRecognizerStateIsActive(self.pinchRecognizer.state) && !UIGestureRecognizerStateIsActive(self.panRecognizer.state);
 }
 
 
@@ -489,6 +502,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.timelineButton.selected = YES;
         self.playButton.hidden = NO;
         self.timelineLabel.hidden = NO;
+        [self dismissNodeInfoPopover];
     } else {
         [self leaveTimelineMode];
     }
@@ -621,10 +635,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 #pragma mark - NodeInfo delegate
 
 - (void)dismissNodeInfoPopover {
-    self.youAreHereButton.selected = NO;
-    [self.nodeInformationPopover dismissPopoverAnimated:YES];
     [self.tracer stop];
     self.tracer = nil;
+    self.youAreHereButton.selected = NO;
+    [self.nodeInformationPopover dismissPopoverAnimated:YES];
     [self.nodeInformationViewController.tracerouteTimer invalidate];
     if (self.tracerouteHops) {
         self.tracerouteHops = nil;
@@ -653,26 +667,25 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     NodeWrapper* node = [self.controller nodeAtIndex:self.controller.targetNode];
     if (node.importance > 0.006) {
         [self.controller rotateAnimated:GLKMatrix4Identity duration:3];
-    }else {
+    } else {
         [self.controller rotateAnimated:GLKMatrix4MakeRotation(M_PI, 0, 1, 0) duration:3];
     }
     
-    if(self.controller.lastSearchIP) {
-        self.tracer = [SCTraceroute tracerouteWithAddress:self.controller.lastSearchIP ofType:kICMP]; //we need ip for node!
+    if(self.controller.lastSearchIP && ![self.controller.lastSearchIP isEqualToString:@""]) {
+        self.tracer = [SCTracerouteUtility tracerouteWithAddress:self.controller.lastSearchIP]; //we need ip for node!
         self.tracer.delegate = self;
         [self.tracer start];
-    }
-    else {
+    } else {
         NodeWrapper* node = [self.controller nodeAtIndex:self.controller.targetNode];
         int asn = [node.asn intValue];
         if (asn) {
             [ASNRequest fetchForASN:asn responseBlock:^(NSArray *asn) {
                 if (asn[0] != [NSNull null]) {
                     NSLog(@"starting tracerout with IP: %@", asn[0]);
-                    self.tracer = [SCTraceroute tracerouteWithAddress:asn[0] ofType:kICMP];
+                    self.tracer = [SCTracerouteUtility tracerouteWithAddress:asn[0]];
                     self.tracer.delegate = self;
                     [self.tracer start];
-                }else {
+                } else {
                     NSLog(@"asn couldn't be resolved to IP");
                     self.nodeInformationViewController.tracerouteTextView.textColor = [UIColor redColor];
                     self.nodeInformationViewController.tracerouteTextView.text = @"Error: ASN couldn't be resolved into IP.";
@@ -704,7 +717,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     return YES;
 }
 
-#pragma mark - SCTraceroute Delegate
+#pragma mark - SCTracerouteUtility Delegate
 
 - (void)tracerouteDidFindHop:(NSString*)report withHops:(NSArray *)hops{
     

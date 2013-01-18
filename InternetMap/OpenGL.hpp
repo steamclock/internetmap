@@ -13,7 +13,7 @@
 
 extern PFNGLMAPBUFFEROESPROC glMapBufferOES;
 extern PFNGLUNMAPBUFFEROESPROC glUnmapBufferOES;
-
+extern bool gHasMapBuffer;
 bool InitOpenGLExtensions(void);
 
 #else
@@ -22,6 +22,7 @@ bool InitOpenGLExtensions(void);
 #include <OpenGLES/ES2/glext.h>
 
 static bool InitOpenGLExtensions(void) {return true;}
+static const bool gHasMapBuffer = true;
 #endif
 
 #endif

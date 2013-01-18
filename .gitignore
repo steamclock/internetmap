@@ -7,8 +7,9 @@
 project.xcworkspace
 xcuserdata
 .idea
+*.iml
 
 Android/bin
 Android/gen
-Android/libs
+Android/libs/armeabi
 Android/obj

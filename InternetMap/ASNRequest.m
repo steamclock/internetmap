@@ -23,17 +23,17 @@
 @end
 
 void callbackCurrent (
-               DNSServiceRef sdRef,
-               DNSServiceFlags flags,
-               uint32_t interfaceIndex,
-               DNSServiceErrorType errorCode,
-               const char *fullname,
-               uint16_t rrtype,
-               uint16_t rrclass,
-               uint16_t rdlen,
-               const void *rdata,
-               uint32_t ttl,
-               void *context ) {
+                      DNSServiceRef sdRef,
+                      DNSServiceFlags flags,
+                      uint32_t interfaceIndex,
+                      DNSServiceErrorType errorCode,
+                      const char *fullname,
+                      uint16_t rrtype,
+                      uint16_t rrclass,
+                      uint16_t rdlen,
+                      const void *rdata,
+                      uint32_t ttl,
+                      void *context ) {
     
     NSData* data = [NSData dataWithBytes:rdata length:strlen(rdata)+1];
     NSString* string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
@@ -105,7 +105,7 @@ void callbackCurrent (
             }];
         }
     }];
-
+    
 }
 
 - (void)fetchASNForIP:(NSString*)ip index:(int)index{
@@ -136,33 +136,33 @@ void callbackCurrent (
     /*
      // trying to use select, so we have a timeout, just calling DNSServiceProcessREsult
      // can block forever, but doesn't work
-    int dns_sd_fd = DNSServiceRefSockFD(sdRef);
-    fd_set readfds;
-    struct timeval tv;
-    
-    FD_ZERO(&readfds);
-    FD_SET(dns_sd_fd, &readfds);
-    tv.tv_sec = 10;
-    tv.tv_usec = 0;
-    int result = select(1, &readfds, (fd_set*)NULL, (fd_set*)NULL, &tv);
-    if ((result > 0) && FD_ISSET(dns_sd_fd, &readfds)) {
-         DNSServiceProcessResult(sdRef);
-    }
-    else {
-        [self failedFetchingASNForIndex:index error:@"Couldn't resolve DNS."];
-    }
+     int dns_sd_fd = DNSServiceRefSockFD(sdRef);
+     fd_set readfds;
+     struct timeval tv;
+     
+     FD_ZERO(&readfds);
+     FD_SET(dns_sd_fd, &readfds);
+     tv.tv_sec = 10;
+     tv.tv_usec = 0;
+     int result = select(1, &readfds, (fd_set*)NULL, (fd_set*)NULL, &tv);
+     if ((result > 0) && FD_ISSET(dns_sd_fd, &readfds)) {
+     DNSServiceProcessResult(sdRef);
+     }
+     else {
+     [self failedFetchingASNForIndex:index error:@"Couldn't resolve DNS."];
+     }
      */
     
     DNSServiceRefDeallocate(sdRef);
 }
 
 - (void)finishedFetchingASN:(int)asn forIndex:(int)index {
-    NSLog(@"ASN fetched for index %i: %i", index, asn);
+    //NSLog(@"ASN fetched for index %i: %i", index, asn);
     [self.result replaceObjectAtIndex:index withObject:[NSNumber numberWithInt:asn]];
 }
 
 - (void)failedFetchingASNForIndex:(int)index error:(NSString*)error {
-    NSLog(@"Failed for index: %i, error: %@", index, error);
+    //NSLog(@"Failed for index: %i, error: %@", index, error);
 }
 
 +(void)fetchForAddresses:(NSArray*)addresses responseBlock:(ASNResponseBlock)response {
@@ -181,7 +181,7 @@ void callbackCurrent (
         }else {
             response(@[[NSNull null]]);
         }
-
+        
     }];
     [request startAsynchronous];
 }
@@ -249,7 +249,7 @@ void callbackCurrent (
                 [ASNRequest fetchForAddresses:@[ip] responseBlock:response];
             }
         } failedBlock:error];
-
+        
     }];
 }
 
