@@ -108,13 +108,10 @@
 		A6F3F5841640F1FB0070E6AE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F3F5831640F1FB0070E6AE /* ViewController.m */; };
 		A6F3F5871640F1FB0070E6AE /* ViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6F3F5851640F1FB0070E6AE /* ViewController_iPhone.xib */; };
 		A6F3F58A1640F1FB0070E6AE /* ViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6F3F5881640F1FB0070E6AE /* ViewController_iPad.xib */; };
-		A6F3F5911640F7080070E6AE /* data.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6F3F5901640F7080070E6AE /* data.txt */; };
 		D414E21A1697839000C41CFC /* SCIcmpPacketUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = D414E2191697839000C41CFC /* SCIcmpPacketUtility.m */; };
 		D414E21D169783C300C41CFC /* SCTracerouteUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = D414E21C169783C300C41CFC /* SCTracerouteUtility.m */; };
 		D414E220169783F200C41CFC /* SCPacketRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = D414E21F169783F200C41CFC /* SCPacketRecord.m */; };
 		D4548E1E16A63DD700C20CE9 /* MapController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1180CF3C169B4D5500F1FB73 /* MapController.cpp */; };
-		D46808FD1679560A00A2C1CC /* SCPacketUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = D46808FA1679560A00A2C1CC /* SCPacketUtility.m */; };
-		D46808FE1679560A00A2C1CC /* SCTraceroute.m in Sources */ = {isa = PBXBuildFile; fileRef = D46808FC1679560A00A2C1CC /* SCTraceroute.m */; };
 		D468090416795D4600A2C1CC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D468090216795CC200A2C1CC /* SystemConfiguration.framework */; };
 		D468090516795D4D00A2C1CC /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D468090016795CB700A2C1CC /* CFNetwork.framework */; };
 		D4CEA32C16694E65004B8E8A /* eye.png in Resources */ = {isa = PBXBuildFile; fileRef = D4CEA32216694E65004B8E8A /* eye.png */; };
@@ -307,7 +304,6 @@
 		A6F3F5831640F1FB0070E6AE /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		A6F3F5861640F1FB0070E6AE /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPhone.xib; sourceTree = "<group>"; };
 		A6F3F5891640F1FB0070E6AE /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPad.xib; sourceTree = "<group>"; };
-		A6F3F5901640F7080070E6AE /* data.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = data.txt; path = InternetMap/data.txt; sourceTree = "<group>"; };
 		D414E2181697839000C41CFC /* SCIcmpPacketUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCIcmpPacketUtility.h; sourceTree = "<group>"; };
 		D414E2191697839000C41CFC /* SCIcmpPacketUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCIcmpPacketUtility.m; sourceTree = "<group>"; };
 		D414E21B169783C300C41CFC /* SCTracerouteUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCTracerouteUtility.h; sourceTree = "<group>"; };
@@ -315,10 +311,6 @@
 		D414E21E169783F200C41CFC /* SCPacketRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPacketRecord.h; sourceTree = "<group>"; };
 		D414E21F169783F200C41CFC /* SCPacketRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPacketRecord.m; sourceTree = "<group>"; };
 		D414E2211697923A00C41CFC /* SCPacketDeclarations.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCPacketDeclarations.h; sourceTree = "<group>"; };
-		D46808F91679560A00A2C1CC /* SCPacketUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPacketUtility.h; sourceTree = "<group>"; };
-		D46808FA1679560A00A2C1CC /* SCPacketUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPacketUtility.m; sourceTree = "<group>"; };
-		D46808FB1679560A00A2C1CC /* SCTraceroute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCTraceroute.h; sourceTree = "<group>"; };
-		D46808FC1679560A00A2C1CC /* SCTraceroute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCTraceroute.m; sourceTree = "<group>"; };
 		D468090016795CB700A2C1CC /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		D468090216795CC200A2C1CC /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		D4CEA32216694E65004B8E8A /* eye.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = eye.png; path = Images/eye.png; sourceTree = "<group>"; };
@@ -672,10 +664,6 @@
 			children = (
 				D414E21616977D2300C41CFC /* SCNetworkingUtility */,
 				1180CF54169B80E300F1FB73 /* Fonts */,
-				D46808F91679560A00A2C1CC /* SCPacketUtility.h */,
-				D46808FA1679560A00A2C1CC /* SCPacketUtility.m */,
-				D46808FB1679560A00A2C1CC /* SCTraceroute.h */,
-				D46808FC1679560A00A2C1CC /* SCTraceroute.m */,
 				D4F65DD9166D56A90077BF5A /* 3rd Party Code */,
 				A6F3F5751640F1FB0070E6AE /* AppDelegate.h */,
 				A6F3F5761640F1FB0070E6AE /* AppDelegate.mm */,
@@ -915,8 +903,6 @@
 				A6E6DB681676A0CE00B78F44 /* Lines.cpp in Sources */,
 				A6E6DB6C1676B6C800B78F44 /* Connection.cpp in Sources */,
 				11D4CFC41677DAE400ED328D /* IndexBox.cpp in Sources */,
-				D46808FD1679560A00A2C1CC /* SCPacketUtility.m in Sources */,
-				D46808FE1679560A00A2C1CC /* SCTraceroute.m in Sources */,
 				113D861916795AB900A15888 /* ASNRequest.m in Sources */,
 				114DD472167AA62D0061CB36 /* ASIAuthenticationDialog.m in Sources */,
 				114DD473167AA62D0061CB36 /* ASIDataCompressor.m in Sources */,
