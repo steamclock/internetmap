@@ -179,6 +179,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     public native void nativeStartMomentumZoomWithVelocity(float velocity);
     public native void nativeRotateRadiansZ(float radians);
     public native void nativeStartMomentumRotationWithVelocity(float velocity);
+    public native boolean nativeSelectHoveredNode();
 
     static {
         System.loadLibrary("internetmaprenderer");
@@ -186,7 +187,6 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
     //simple one-finger gestures (eg. pan)
     class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
-        
         private float distance2radians(float distance) {
             return -0.01f * distance;
         }
@@ -214,6 +214,16 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                 float velocityX, float velocityY) {
             Log.d(TAG, String.format("onFling: vx %f vy %f", velocityX, velocityY));
             nativeStartMomentumPanWithVelocity(velocityAdjust(velocityX), velocityAdjust(velocityY));
+            return true;
+        }
+
+        @Override
+        //note: if double tap is used this should probably s/Up/Confirmed
+        public boolean onSingleTapUp(MotionEvent e) {
+            Log.d(TAG, "tap!");
+            nativeSelectHoveredNode();
+            //TODO: iOS does some deselect stuff if that call failed.
+            //but, I think maybe that should just happen inside the controller automatically.
             return true;
         }
     }

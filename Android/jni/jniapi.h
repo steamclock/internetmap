@@ -22,6 +22,7 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeRotateRadian
         float radians);
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeStartMomentumRotationWithVelocity(JNIEnv* jenv, jobject obj,
         float velocity);
+JNIEXPORT bool JNICALL Java_com_peer1_internetmap_InternetMap_nativeSelectHoveredNode(JNIEnv* jenv, jobject obj);
 };
 
 #endif // JNIAPI_H

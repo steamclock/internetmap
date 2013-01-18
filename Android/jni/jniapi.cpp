@@ -110,6 +110,10 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeStartMomentu
     renderer->_mapController->display->camera->startMomentumRotationWithVelocity(velocity);
 }
 
+JNIEXPORT bool JNICALL Java_com_peer1_internetmap_InternetMap_nativeSelectHoveredNode(JNIEnv* jenv, jobject obj) {
+    return renderer->_mapController->selectHoveredNode();
+}
+
 void DetachThreadFromVM(void) {
     javaVM->DetachCurrentThread();
 }
