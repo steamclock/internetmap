@@ -177,6 +177,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     public native void nativeHandleTouchDownAtPoint(float x, float y);
     public native void nativeZoomByScale(float scale);
     public native void nativeStartMomentumZoomWithVelocity(float velocity);
+    public native void nativeRotateRadiansZ(float radians);
+    public native void nativeStartMomentumRotationWithVelocity(float velocity);
 
     static {
         System.loadLibrary("internetmaprenderer");
@@ -238,17 +240,17 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     private class RotateListener extends RotateGestureDetector.SimpleOnRotateGestureListener {
         @Override
         public boolean onRotate(RotateGestureDetector detector) {
-            float scale = detector.getRotateFactor();
-            Log.d(TAG, String.format("!!rotate: %f", scale));
-            //nativeZoomByScale(scale);
+            float rotate = detector.getRotateFactor();
+            Log.d(TAG, String.format("!!rotate: %f", rotate));
+            nativeRotateRadiansZ(-rotate);
             return true;
         }
 
         @Override
         public void onRotateEnd(RotateGestureDetector detector) {
-            float scale = detector.getRotateFactor();
-            Log.d(TAG, String.format("!!!!rotateEnd: %f", scale));
-            //nativeStartMomentumZoomWithVelocity(scale*50);
+            float velocity = detector.getRotateFactor(); //FIXME not actually velocity. always seems to be 0
+            Log.d(TAG, String.format("!!!!rotateEnd: %f", velocity));
+            nativeStartMomentumRotationWithVelocity(velocity*50);
         }
     }
     

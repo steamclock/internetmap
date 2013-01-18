@@ -18,6 +18,10 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeZoomByScale(
         float scale);
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeStartMomentumZoomWithVelocity(JNIEnv* jenv, jobject obj,
         float velocity);
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeRotateRadiansZ(JNIEnv* jenv, jobject obj,
+        float radians);
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeStartMomentumRotationWithVelocity(JNIEnv* jenv, jobject obj,
+        float velocity);
 };
 
 #endif // JNIAPI_H
