@@ -10,10 +10,10 @@
 #include "MapDisplay.hpp"
 #include "MapData.hpp"
 #include "DefaultVisualization.hpp"
-#include "Nodes.hpp"
+#include "DisplayNodes.hpp"
 #include "Camera.hpp"
 #include "Node.hpp"
-#include "Lines.hpp"
+#include "DisplayLines.hpp"
 #include "Connection.hpp"
 #include "IndexBox.hpp"
 #include "MapUtilities.hpp"
@@ -162,7 +162,7 @@ void MapController::highlightConnections(NodePointer node) {
         return;
     }
     
-    shared_ptr<Lines> lines(new Lines(filteredConnections.size()));
+    shared_ptr<DisplayLines> lines(new DisplayLines(filteredConnections.size()));
     lines->beginUpdate();
     
     Color brightColor = ColorFromRGB(SELECTED_CONNECTION_COLOR_BRIGHT_HEX);
@@ -203,7 +203,7 @@ void MapController::clearHighlightLines() {
         iter++;
     }
     data->visualization->updateDisplayForNodes(display, array);
-    display->highlightLines = shared_ptr<Lines>();
+    display->highlightLines = shared_ptr<DisplayLines>();
 }
 
 void MapController::highlightRoute(std::vector<NodePointer> nodeList) {
@@ -212,7 +212,7 @@ void MapController::highlightRoute(std::vector<NodePointer> nodeList) {
         return;
     }
     
-    shared_ptr<Lines> lines(new Lines(nodeList.size() - 1));
+    shared_ptr<DisplayLines> lines(new DisplayLines(nodeList.size() - 1));
     lines->beginUpdate();
     
     Color lineColor = ColorFromRGB(0xffa300);

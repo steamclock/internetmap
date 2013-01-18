@@ -12,7 +12,6 @@
 #include <common/MapController.hpp>
 #include <common/MapDisplay.hpp>
 #include <common/Camera.hpp>
-#include <common/Nodes.hpp>
 
 void DetachThreadFromVM(void);
 

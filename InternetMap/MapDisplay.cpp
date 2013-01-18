@@ -5,8 +5,8 @@
 
 #include "MapDisplay.hpp"
 #include "Camera.hpp"
-#include "Lines.hpp"
-#include "Nodes.hpp"
+#include "DisplayLines.hpp"
+#include "DisplayNodes.hpp"
 #include "Program.hpp"
 #include "OpenGL.hpp"
 

@@ -5,7 +5,7 @@
 
 #include "MapData.hpp"
 #include "Node.hpp"
-#include "Lines.hpp"
+#include "DisplayLines.hpp"
 #include "Connection.hpp"
 #include "IndexBox.hpp"
 #include "MapDisplay.hpp"

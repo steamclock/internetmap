@@ -9,7 +9,6 @@
 #import "MapControllerWrapper.h"
 #include "MapController.hpp"
 #include "Camera.hpp"
-#include "Nodes.hpp"
 #include "DefaultVisualization.hpp"
 #import "NodeWrapper+CPPHelpers.h"
 

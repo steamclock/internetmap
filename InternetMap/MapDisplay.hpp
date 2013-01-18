@@ -10,10 +10,10 @@
 
 #include "Types.hpp"
 
-class Lines;
 class Camera;
-class Nodes;
 class Program;
+class DisplayNodes;
+class DisplayLines;
 
 class MapDisplay {
     void bindDefaultNodeUniforms(shared_ptr<Program> program);
@@ -31,10 +31,10 @@ public:
     float getDisplayScale() { return _displayScale;}
     
     shared_ptr<Camera> camera;
-    shared_ptr<Nodes> nodes;
-    shared_ptr<Nodes> selectedNodes;
-    shared_ptr<Lines> visualizationLines;
-    shared_ptr<Lines> highlightLines;
+    shared_ptr<DisplayNodes> nodes;
+    shared_ptr<DisplayNodes> selectedNodes;
+    shared_ptr<DisplayLines> visualizationLines;
+    shared_ptr<DisplayLines> highlightLines;
     
     void update(TimeInterval currentTime);
     void draw(void);

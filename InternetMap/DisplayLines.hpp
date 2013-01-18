@@ -1,31 +1,28 @@
 //
-//  Lines.hpp
+//  DisplayLines
 //  InternetMap
 //
 
 // A group of lines to be rendered
 
-#ifndef InternetMap_Lines_hpp
-#define InternetMap_Lines_hpp
+#ifndef InternetMap_DisplayLines_hpp
+#define InternetMap_DisplayLines_hpp
 
 #include "Types.hpp"
+#include "VertexBuffer.hpp"
 
 struct LineVertex;
 
-class Lines {
+class DisplayLines : public VertexBuffer {
     float _width;
     int _count;
-    unsigned int _vertexBuffer;
-    LineVertex* _lockedVertices;
     
+    LineVertex* vertexAtIndex(unsigned int index);
 public:
-    Lines(int initialCount);
-    ~Lines();
+    DisplayLines(int count);
 
     void setWidth(float width) { _width = width; }
     
-    void beginUpdate(void);
-    void endUpdate(void);
     void updateLine(int index, const Point3& start, const Color& startColor, const Point3& end, const Color& endColor);
     void display(void);
 };

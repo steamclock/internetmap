@@ -75,13 +75,14 @@
 		11D4CFBC1677B67200ED328D /* SCDispatchQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 11D4CFBB1677B67200ED328D /* SCDispatchQueue.m */; };
 		11D4CFC41677DAE400ED328D /* IndexBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 11D4CFC31677DAE400ED328D /* IndexBox.cpp */; };
 		11E500D316A4AC8500396FCA /* MapUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 11E500D116A4AC8400396FCA /* MapUtilities.cpp */; };
-		11FFB390167FC3CE00309545 /* Nodes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 11FFB38F167FC3CD00309545 /* Nodes.cpp */; };
+		11FFB390167FC3CE00309545 /* DisplayNodes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 11FFB38F167FC3CD00309545 /* DisplayNodes.cpp */; };
 		3959464C1685343900BAF5CC /* icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 3959464B1685343900BAF5CC /* icon-72.png */; };
 		3959464F1685343C00BAF5CC /* icon-144.png in Resources */ = {isa = PBXBuildFile; fileRef = 3959464E1685343C00BAF5CC /* icon-144.png */; };
 		A600AAC916A0E520003B1028 /* OpenGL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A600AAC716A0E520003B1028 /* OpenGL.cpp */; };
 		A600AAD616A664E1003B1028 /* as2attr.txt in Resources */ = {isa = PBXBuildFile; fileRef = A600AAD316A664DF003B1028 /* as2attr.txt */; };
 		A600AAD716A664E1003B1028 /* asinfo.json in Resources */ = {isa = PBXBuildFile; fileRef = A600AAD416A664E0003B1028 /* asinfo.json */; };
 		A600AAD816A664E1003B1028 /* data.txt in Resources */ = {isa = PBXBuildFile; fileRef = A600AAD516A664E0003B1028 /* data.txt */; };
+		A600AAE516A9D1C6003B1028 /* VertexBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A600AAE316A9D1C5003B1028 /* VertexBuffer.cpp */; };
 		A6B56BF2165AE28A00DDE753 /* Node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B56BF1165AE28A00DDE753 /* Node.cpp */; };
 		A6B56BF9165AF53F00DDE753 /* Program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B56BF8165AF53F00DDE753 /* Program.cpp */; };
 		A6B56BFA165AF98D00DDE753 /* line.fsh in Resources */ = {isa = PBXBuildFile; fileRef = A6B56BF3165AEDF700DDE753 /* line.fsh */; };
@@ -90,7 +91,7 @@
 		A6D54A8F1654532100028B51 /* MapData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6D54A8E1654532100028B51 /* MapData.cpp */; };
 		A6DC6610165E926100EDA4F6 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DC660F165E926100EDA4F6 /* Camera.cpp */; };
 		A6DC6614165EE8FA00EDA4F6 /* DefaultVisualization.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DC6613165EE8F900EDA4F6 /* DefaultVisualization.cpp */; };
-		A6E6DB681676A0CE00B78F44 /* Lines.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6E6DB671676A0CD00B78F44 /* Lines.cpp */; };
+		A6E6DB681676A0CE00B78F44 /* DisplayLines.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6E6DB671676A0CD00B78F44 /* DisplayLines.cpp */; };
 		A6E6DB6C1676B6C800B78F44 /* Connection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6E6DB6B1676B6C700B78F44 /* Connection.cpp */; };
 		A6F3F5631640F1FB0070E6AE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5621640F1FB0070E6AE /* UIKit.framework */; };
 		A6F3F5651640F1FB0070E6AE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5641640F1FB0070E6AE /* Foundation.framework */; };
@@ -234,14 +235,16 @@
 		11E500D116A4AC8400396FCA /* MapUtilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapUtilities.cpp; sourceTree = "<group>"; };
 		11E500D216A4AC8400396FCA /* MapUtilities.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MapUtilities.hpp; sourceTree = "<group>"; };
 		11E500DE16A4C21700396FCA /* NodeWrapper+CPPHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NodeWrapper+CPPHelpers.h"; sourceTree = "<group>"; };
-		11FFB38E167FC3CD00309545 /* Nodes.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Nodes.hpp; sourceTree = "<group>"; };
-		11FFB38F167FC3CD00309545 /* Nodes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Nodes.cpp; sourceTree = "<group>"; };
+		11FFB38E167FC3CD00309545 /* DisplayNodes.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DisplayNodes.hpp; sourceTree = "<group>"; };
+		11FFB38F167FC3CD00309545 /* DisplayNodes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DisplayNodes.cpp; sourceTree = "<group>"; };
 		3959464B1685343900BAF5CC /* icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-72.png"; sourceTree = "<group>"; };
 		3959464E1685343C00BAF5CC /* icon-144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-144.png"; sourceTree = "<group>"; };
 		A600AAC716A0E520003B1028 /* OpenGL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OpenGL.cpp; sourceTree = "<group>"; };
 		A600AAD316A664DF003B1028 /* as2attr.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = as2attr.txt; path = Common/data/as2attr.txt; sourceTree = "<group>"; };
 		A600AAD416A664E0003B1028 /* asinfo.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = asinfo.json; path = Common/data/asinfo.json; sourceTree = "<group>"; };
 		A600AAD516A664E0003B1028 /* data.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = data.txt; path = Common/data/data.txt; sourceTree = "<group>"; };
+		A600AAE316A9D1C5003B1028 /* VertexBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VertexBuffer.cpp; sourceTree = "<group>"; };
+		A600AAE416A9D1C5003B1028 /* VertexBuffer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = VertexBuffer.hpp; sourceTree = "<group>"; };
 		A619182E169CF0FF003A3A4A /* OpenGL.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = OpenGL.hpp; sourceTree = "<group>"; };
 		A619182F169CF1FB003A3A4A /* Types.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Types.hpp; sourceTree = "<group>"; };
 		A6191832169DE85F003A3A4A /* boolInVec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boolInVec.h; sourceTree = "<group>"; };
@@ -279,8 +282,8 @@
 		A6DC6611165EE8D200EDA4F6 /* Visualization.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Visualization.hpp; sourceTree = "<group>"; };
 		A6DC6612165EE8F900EDA4F6 /* DefaultVisualization.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DefaultVisualization.hpp; sourceTree = "<group>"; };
 		A6DC6613165EE8F900EDA4F6 /* DefaultVisualization.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DefaultVisualization.cpp; sourceTree = "<group>"; };
-		A6E6DB661676A0CD00B78F44 /* Lines.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Lines.hpp; sourceTree = "<group>"; };
-		A6E6DB671676A0CD00B78F44 /* Lines.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Lines.cpp; sourceTree = "<group>"; };
+		A6E6DB661676A0CD00B78F44 /* DisplayLines.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DisplayLines.hpp; sourceTree = "<group>"; };
+		A6E6DB671676A0CD00B78F44 /* DisplayLines.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DisplayLines.cpp; sourceTree = "<group>"; };
 		A6E6DB6A1676B6C700B78F44 /* Connection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Connection.hpp; sourceTree = "<group>"; };
 		A6E6DB6B1676B6C700B78F44 /* Connection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Connection.cpp; sourceTree = "<group>"; };
 		A6F3F55E1640F1FB0070E6AE /* internetmap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = internetmap.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -605,15 +608,17 @@
 				A6DC6611165EE8D200EDA4F6 /* Visualization.hpp */,
 				A6DC6612165EE8F900EDA4F6 /* DefaultVisualization.hpp */,
 				A6DC6613165EE8F900EDA4F6 /* DefaultVisualization.cpp */,
-				11FFB38E167FC3CD00309545 /* Nodes.hpp */,
-				11FFB38F167FC3CD00309545 /* Nodes.cpp */,
-				A6E6DB661676A0CD00B78F44 /* Lines.hpp */,
-				A6E6DB671676A0CD00B78F44 /* Lines.cpp */,
+				11FFB38E167FC3CD00309545 /* DisplayNodes.hpp */,
+				11FFB38F167FC3CD00309545 /* DisplayNodes.cpp */,
+				A6E6DB661676A0CD00B78F44 /* DisplayLines.hpp */,
+				A6E6DB671676A0CD00B78F44 /* DisplayLines.cpp */,
 				A619182F169CF1FB003A3A4A /* Types.hpp */,
 				A619182E169CF0FF003A3A4A /* OpenGL.hpp */,
 				A600AAC716A0E520003B1028 /* OpenGL.cpp */,
 				11E500D216A4AC8400396FCA /* MapUtilities.hpp */,
 				11E500D116A4AC8400396FCA /* MapUtilities.cpp */,
+				A600AAE416A9D1C5003B1028 /* VertexBuffer.hpp */,
+				A600AAE316A9D1C5003B1028 /* VertexBuffer.cpp */,
 			);
 			name = Map;
 			path = InternetMap;
@@ -900,7 +905,7 @@
 				D4F65E02166D6D530077BF5A /* NodeSearchViewController.m in Sources */,
 				D4D17D1E166EA613003A489C /* NodeInformationViewController.m in Sources */,
 				11D4CFBC1677B67200ED328D /* SCDispatchQueue.m in Sources */,
-				A6E6DB681676A0CE00B78F44 /* Lines.cpp in Sources */,
+				A6E6DB681676A0CE00B78F44 /* DisplayLines.cpp in Sources */,
 				A6E6DB6C1676B6C800B78F44 /* Connection.cpp in Sources */,
 				11D4CFC41677DAE400ED328D /* IndexBox.cpp in Sources */,
 				113D861916795AB900A15888 /* ASNRequest.m in Sources */,
@@ -919,7 +924,7 @@
 				110F6AF2167BD1AE00D5907E /* WETouchableView.m in Sources */,
 				110F6B1D167BE1F900D5907E /* ErrorInfoView.m in Sources */,
 				116E598116828AC300F653BC /* UIView+Convenience.m in Sources */,
-				11FFB390167FC3CE00309545 /* Nodes.cpp in Sources */,
+				11FFB390167FC3CE00309545 /* DisplayNodes.cpp in Sources */,
 				1186ACE816851DBE0061FA49 /* NodeTooltipViewController.m in Sources */,
 				D414E21A1697839000C41CFC /* SCIcmpPacketUtility.m in Sources */,
 				D414E21D169783C300C41CFC /* SCTracerouteUtility.m in Sources */,
@@ -932,6 +937,7 @@
 				1127C9CE16A0B9D700413FE9 /* ConnectionWrapper.mm in Sources */,
 				1127C9DC16A0D3A500413FE9 /* jsoncpp.cpp in Sources */,
 				11E500D316A4AC8500396FCA /* MapUtilities.cpp in Sources */,
+				A600AAE516A9D1C6003B1028 /* VertexBuffer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

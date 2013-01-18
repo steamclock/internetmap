@@ -6,9 +6,9 @@
 #include "DefaultVisualization.hpp"
 #include "MapDisplay.hpp"
 #include "Node.hpp"
-#include "Lines.hpp"
+#include "DisplayLines.hpp"
 #include "Connection.hpp"
-#include "Nodes.hpp"
+#include "DisplayNodes.hpp"
 #include "MapUtilities.hpp"
 
 bool deviceIsOld();
@@ -92,7 +92,7 @@ void DefaultVisualization::resetDisplayForNodes(shared_ptr<MapDisplay> display, 
         //TODO: get assert back
         //        NSAssert(display->nodes->count == [arrNodes count], @"display->nodes has already been allocated and you just tried to recreate it with a different count");
     }else {
-        shared_ptr<Nodes> theNodes(new Nodes(nodes.size()));
+        shared_ptr<DisplayNodes> theNodes(new DisplayNodes(nodes.size()));
         display->nodes = theNodes;
     }
     updateDisplayForNodes(display, nodes);
@@ -117,7 +117,7 @@ void DefaultVisualization::updateLineDisplay(shared_ptr<MapDisplay> display, std
     
     int skipLines = 10;
     
-    shared_ptr<Lines> lines(new Lines(filteredConnections.size() / skipLines));
+    shared_ptr<DisplayLines> lines(new DisplayLines(filteredConnections.size() / skipLines));
     
     lines->beginUpdate();
     
@@ -171,7 +171,7 @@ void DefaultVisualization::resetDisplayForSelectedNodes(shared_ptr<MapDisplay> d
 
     //TODO: this could be handled better, by reusing the vertex buffer and not recreating every time.
     //doesn't matter too much at this point because there can only be one node selected at the same time
-    shared_ptr<Nodes> theNodes(new Nodes(nodes.size()));
+    shared_ptr<DisplayNodes> theNodes(new DisplayNodes(nodes.size()));
     display->selectedNodes = theNodes;
     
     updateDisplayForSelectedNodes(display, nodes);

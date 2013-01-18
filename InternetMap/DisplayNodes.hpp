@@ -1,5 +1,5 @@
 //
-//  Nodes.h
+//  DisplayNodes.h
 //  InternetMap
 //
 //  Created by Alexander on 17.12.12.
@@ -10,32 +10,27 @@
  Nodes handles drawing a collection of nodes in openGL.
  */
 
-#ifndef InternetMap_Nodes_hpp
-#define InternetMap_Nodes_hpp
+#ifndef InternetMap_DisplayNodes_hpp
+#define InternetMap_DisplayNodes_hpp
 
 #include "Types.hpp"
+#include "VertexBuffer.hpp"
 
 struct RawDisplayNode;
 
-class Nodes {
-    
-    unsigned int _count;
-    unsigned int _vertexBuffer;
-    RawDisplayNode* _lockedNodes;
+class DisplayNodes : public VertexBuffer {
+    int _count;
+    RawDisplayNode* nodeAtIndex(unsigned int index);
     
 public:
-    Nodes(int initialCount);
-    ~Nodes();
+    DisplayNodes(int initialCount);
 
-    void beginUpdate(void);
-    void endUpdate(void);
     void updateNode(int index, const Point3& position, float size, const Color& color);
     void updateNode(int index, const Point3& position);
     void updateNode(int index, float size);
     void updateNode(int index, const Color& color);
     void display(void);
     int count(void);
-
 };
 
 #endif
