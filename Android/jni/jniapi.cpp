@@ -95,6 +95,11 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeZoomByScale(
     renderer->_mapController->display->camera->zoomByScale(scale);
 }
 
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeStartMomentumZoomWithVelocity(JNIEnv* jenv, jobject obj,
+        float velocity) {
+    renderer->_mapController->display->camera->startMomentumZoomWithVelocity(velocity);
+}
+
 void DetachThreadFromVM(void) {
     javaVM->DetachCurrentThread();
 }

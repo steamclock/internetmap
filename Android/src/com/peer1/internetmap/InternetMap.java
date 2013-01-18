@@ -173,6 +173,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     public native void nativeStartMomentumPanWithVelocity(float vX, float vY);
     public native void nativeHandleTouchDownAtPoint(float x, float y);
     public native void nativeZoomByScale(float scale);
+    public native void nativeStartMomentumZoomWithVelocity(float velocity);
 
     static {
         System.loadLibrary("internetmaprenderer");
@@ -217,9 +218,16 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
             float scale = detector.getScaleFactor() - 1;
-            Log.d(TAG, String.format("@@@@@@scale: %f", scale));
+            Log.d(TAG, String.format("scale: %f", scale));
             nativeZoomByScale(scale);
             return true;
+        }
+
+        @Override
+        public void onScaleEnd(ScaleGestureDetector detector) {
+            float scale = detector.getScaleFactor() - 1;
+            Log.d(TAG, String.format("scaleEnd: %f", scale));
+            nativeStartMomentumZoomWithVelocity(scale*50);
         }
     }
     
