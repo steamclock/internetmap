@@ -2,13 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>UIAppFonts</key>
-	<array>
-		<string>ARSMaquettePro-Bold.otf</string>
-		<string>ARSMaquettePro-Light.otf</string>
-		<string>ARSMaquettePro-Medium.otf</string>
-		<string>ARSMaquettePro-Regular.otf</string>
-	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -21,8 +14,11 @@
 		<dict>
 			<key>CFBundleIconFiles</key>
 			<array>
-				<string>icon-72.png</string>
-				<string>icon-144.png</string>
+				<string>Icon-72.png</string>
+				<string>Icon-72@2x.png</string>
+				<string>Icon.png</string>
+				<string>Icon@2x.png</string>
+				<string>Icon-72.png</string>
 			</array>
 			<key>UIPrerenderedIcon</key>
 			<true/>
@@ -44,6 +40,13 @@
 	<string>1.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>ARSMaquettePro-Bold.otf</string>
+		<string>ARSMaquettePro-Light.otf</string>
+		<string>ARSMaquettePro-Medium.otf</string>
+		<string>ARSMaquettePro-Regular.otf</string>
+	</array>
 	<key>UIPrerenderedIcon</key>
 	<true/>
 	<key>UIRequiredDeviceCapabilities</key>
