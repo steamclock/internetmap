@@ -70,7 +70,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (weak, nonatomic) IBOutlet UIButton* timelineButton;
 @property (weak, nonatomic) IBOutlet UISlider* timelineSlider;
 @property (weak, nonatomic) IBOutlet UIButton* playButton;
-@property (weak, nonatomic) IBOutlet UILabel* timelineLabel;
 @property (weak, nonatomic) IBOutlet UIImageView* logo;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* searchActivityIndicator;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* youAreHereActivityIndicator;
@@ -203,11 +202,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.timelineSlider.maximumValue = diff;
     self.timelineSlider.value = diff;
     
-    //customize timeline label
-    self.timelineLabel.textColor = UI_ORANGE_COLOR;
-    self.timelineLabel.font = [HelperMethods deviceIsiPad] ? [UIFont fontWithName:FONT_NAME_REGULAR size:50] : [UIFont fontWithName:FONT_NAME_REGULAR size:40];
-    self.timelineLabel.backgroundColor = [UIColor clearColor];
-    self.timelineLabel.textAlignment = UITextAlignmentRight;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayInformationPopoverForCurrentNode) name:@"cameraMovementFinished" object:nil];
     
@@ -524,7 +518,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.timelineSlider.hidden = NO;
         self.timelineButton.selected = YES;
         self.playButton.hidden = NO;
-        self.timelineLabel.hidden = NO;
         [self dismissNodeInfoPopover];
     } else {
         [self leaveTimelineMode];
@@ -535,7 +528,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.timelineSlider.hidden = YES;
     self.timelineButton.selected = NO;
     self.playButton.hidden = YES;
-    self.timelineLabel.hidden = YES;
 }
 
 -(void)displayInformationPopoverForCurrentNode {
@@ -590,7 +582,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (IBAction)timelineSliderValueChanged:(id)sender {
     int year = (int)(self.minTimelineYear+self.timelineSlider.value*10);
-    self.timelineLabel.text = [NSString stringWithFormat:@"%i", year];
     CGRect thumbRect = [self.timelineSlider thumbRectForBounds:self.timelineSlider.bounds trackRect:[self.timelineSlider trackRectForBounds:self.timelineSlider.bounds] value:self.timelineSlider.value];
     thumbRect = [self.view convertRect:thumbRect fromView:self.timelineSlider];
     
