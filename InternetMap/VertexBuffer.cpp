@@ -5,6 +5,7 @@
 
 #include "VertexBuffer.hpp"
 #include "OpenGL.hpp"
+#include "Types.hpp"
 #include <stdlib.h>
 
 VertexBuffer::VertexBuffer(int size) :

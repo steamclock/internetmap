@@ -43,44 +43,69 @@ void split( std::vector<std::string> & theStringVector,  /* Altered/returned val
     }
 }
 
-void MapData::loadFromString(const std::string& json) {
+static const int MAX_TOKEN_SIZE = 256;
+
+const char* nextToken(const char* source, char* token, bool* lineEnd) {
+    *lineEnd = false;
     
-//    NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
+    while ((*source != ' ') && (*source != '\n') && (*source != 0)) {
+        *token++ = *source++;
+    }
     
-    std::vector<std::string> lines;
-    split(lines, json, "\n");
-    std::vector<std::string> header;
-    split(header, lines[0], "  ");
-    int numNodes;
-    std::stringstream(header[0]) >> numNodes;
-    int numConnections;
-    std::stringstream(header[1]) >> numConnections;
+    *lineEnd |= *source == '\n';
+    
+    *token = 0;
+
+    if(*source != 0) {
+        while ((*source == ' ') || (*source == '\n')) {
+            source++;
+            *lineEnd |= *source == '\n';
+        }
+    }
+    
+    return source;
+}
+
+void MapData::loadFromString(const std::string& text) {
+    const char* sourceText = text.c_str();
+    char token[MAX_TOKEN_SIZE];
+    bool lineEnd;
+    int numNodes, numConnections;
+
+    sourceText = nextToken(sourceText, token, &lineEnd);
+    numNodes = atof(token);
+
+    sourceText = nextToken(sourceText, token, &lineEnd);
+    numConnections = atof(token);
+    
+    nodes.reserve(numNodes);
+    connections.reserve(numConnections);
     
     for (int i = 0; i < numNodes; i++) {
-        std::vector<std::string> nodeDesc;
-        split(nodeDesc, lines[i+1], " ");
-        
         NodePointer node(new Node());
-        node->asn = nodeDesc[0];
+        
+        sourceText = nextToken(sourceText, token, &lineEnd);
+        node->asn = token;
         node->index = i;
-        node->importance = ::atof(nodeDesc[1].c_str());
-        node->positionX = ::atof(nodeDesc[2].c_str());
-        node->positionY = ::atof(nodeDesc[3].c_str());
+        sourceText = nextToken(sourceText, token, &lineEnd);
+        node->importance = atof(token);
+        sourceText = nextToken(sourceText, token, &lineEnd);
+        node->positionX = atof(token);
+        sourceText = nextToken(sourceText, token, &lineEnd);
+        node->positionY = atof(token);
         node->type = AS_UNKNOWN;
         
         nodes.push_back(node);
         nodesByAsn[node->asn] = node;
     }
-    
 
     for (int i = 0; i < numConnections; i++) {
-        std::vector<std::string> connectionDesc;
-        split(connectionDesc, lines[1 + numNodes + i], " ");
-
         ConnectionPointer connection(new Connection());
         
-        connection->first = nodesByAsn[connectionDesc[0]];
-        connection->second = nodesByAsn[connectionDesc[1]];
+        sourceText = nextToken(sourceText, token, &lineEnd);
+        connection->first = nodesByAsn[token];
+        sourceText = nextToken(sourceText, token, &lineEnd);
+        connection->second = nodesByAsn[token];
         connection->first->connections.push_back(connection);
         connection->second->connections.push_back(connection);
         connections.push_back(connection);

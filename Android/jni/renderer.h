@@ -21,10 +21,19 @@ public:
 
     void resume();
     void pause();
+
     void setWindow(ANativeWindow* window, float displayScale);
 
-    MapController* _mapController;
-    
+    // Buffered (non-locking) state changes, use in preference to locking with begin controller modification
+    void bufferedRotationX(float radiansX);
+    void bufferedRotationY(float radiansY);
+    void bufferedRotationZ(float radiansZ);
+    void bufferedZoom(float zoom);
+
+    // Synchronise with the rendering thread to modify the data safely
+    MapController* beginControllerModification(void);
+    void endControllerModification(void);
+
 private:
     pthread_t _threadId;
     pthread_mutex_t _mutex;
@@ -32,6 +41,8 @@ private:
     bool _paused;
     
     ANativeWindow* _window;
+
+    MapController* _mapController;
 
     EGLDisplay _display;
     EGLSurface _surface;
@@ -41,6 +52,8 @@ private:
     float _displayScale;
     double _initialTimeSec;
     double _currentTimeSec;
+
+    float _rotateX, _rotateY, _rotateZ, _zoom;
 
     // RenderLoop is called in a rendering thread started in start() method
     // It creates rendering context and renders scene until stop() is called

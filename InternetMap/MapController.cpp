@@ -26,23 +26,45 @@ void loadTextResource(std::string* resource, const std::string& base, const std:
 
 MapController::MapController() :
     targetNode(INT_MAX),
-    hoveredNodeIndex(INT_MAX) {
+    hoveredNodeIndex(INT_MAX)
+{
         
     data = shared_ptr<MapData>(new MapData());
     display = shared_ptr<MapDisplay>(new MapDisplay());
     data->visualization = VisualizationPointer(new DefaultVisualization());
-        
+    
+    clock_t start = clock();
     std::string dataText;
     loadTextResource(&dataText, "data", "txt");
+
+    LOG("load data.txt: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
+    start = clock();
+
     data->loadFromString(dataText);
-        
+
+    LOG("parse data.txt: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
+    start = clock();
+    
     std::string attrText;
     loadTextResource(&attrText, "as2attr", "txt");
+
+    LOG("load as2attr.txt: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
+    start = clock();
+    
     data->loadFromAttrString(attrText);
+
+    LOG("parse as2attr.txt: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
+    start = clock();
     
     std::string asinfoText;
     loadTextResource(&asinfoText, "asinfo", "json");
+
+    LOG("load asinfo.json: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
+    start = clock();
+    
     data->loadASInfo(asinfoText);
+
+    LOG("parse asinfo.json: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
 }
 
 void MapController::handleTouchDownAtPoint(Vector2 point) {

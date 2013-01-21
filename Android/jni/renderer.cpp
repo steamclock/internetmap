@@ -19,12 +19,17 @@ Renderer::Renderer() {
     LOG_INFO("Renderer instance created");
     pthread_mutex_init(&_mutex, 0);
     _window = NULL;
-    _display = 0;
-    _surface = 0;
-    _context = 0;
+    _display = EGL_NO_DISPLAY;
+    _surface = EGL_NO_SURFACE;
+    _context = EGL_NO_CONTEXT;
 
     _currentTimeSec = double(clock()) / double(CLOCKS_PER_SEC);
     _initialTimeSec = _currentTimeSec;
+
+    _rotateX = 0.0f;
+    _rotateY = 0.0f;
+    _rotateZ = 0.0f;
+    _zoom = 0.0f;
 
     // Lock the mutex to keep the thread from doing anything until we get resumed
     pthread_mutex_lock(&_mutex);
@@ -51,6 +56,7 @@ Renderer::~Renderer() {
 
 void Renderer::resume() {
     assert(_paused);
+    _paused = false;
     pthread_mutex_unlock(&_mutex);
     return;
 }
@@ -58,7 +64,24 @@ void Renderer::resume() {
 void Renderer::pause() {
     assert(!_paused);
     pthread_mutex_lock(&_mutex);
+    _paused = true;
     return;
+}
+
+void Renderer::bufferedRotationX(float radiansX) {
+    _rotateX += radiansX;
+}
+
+void Renderer::bufferedRotationY(float radiansY) {
+    _rotateY += radiansY;
+}
+
+void Renderer::bufferedRotationZ(float radiansZ) {
+    _rotateZ += radiansZ;
+}
+
+void Renderer::bufferedZoom(float zoom) {
+    _zoom += zoom;
 }
 
 void Renderer::setWindow(ANativeWindow *window, float displayScale) {
@@ -81,21 +104,59 @@ void Renderer::renderLoop() {
 
     while (!_done) {
         // TODO: do we need to handle the window changing after creation, don't think so, but not sure
-        if ((_display == 0) && _window) {
+        if ((_display == EGL_NO_DISPLAY) && _window) {
             initialize();
         }
 
+        // Main thread might want to take this context current during the gap below, need to release it here
+        if (_display != EGL_NO_DISPLAY) {
+            if (!eglMakeCurrent(_display, EGL_NO_SURFACE, EGL_NO_SURFACE,
+                    EGL_NO_CONTEXT)) {
+                LOG_ERROR("eglMakeCurrent() returned error %d", eglGetError());
+            }
+        }
+
+        // Let the main thread do any work that it is waiting on us for
         pthread_mutex_unlock(&_mutex);
         pthread_mutex_lock(&_mutex);
 
-        if (_display) {
+        if(_rotateX != 0.0f) {
+            _mapController->display->camera->rotateRadiansX(_rotateX);
+        }
+
+        if(_rotateY != 0.0f) {
+            _mapController->display->camera->rotateRadiansY(_rotateY);
+        }
+
+        if(_rotateZ != 0.0f) {
+            _mapController->display->camera->rotateRadiansZ(_rotateZ);
+        }
+
+        if(_zoom != 0.0f) {
+            _mapController->display->camera->zoomByScale(_zoom);
+        }
+
+        _rotateX = 0.0f;
+        _rotateY = 0.0f;
+        _rotateZ = 0.0f;
+        _zoom = 0.0f;
+
+
+        if (_display != EGL_NO_DISPLAY) {
+            // Take back control of GL context
+            if (!eglMakeCurrent(_display, _surface, _surface, _context)) {
+                LOG_ERROR("eglMakeCurrent() returned error %d", eglGetError());
+                // Hack: this fails when we rotate, delete the context to force a recreation
+                // TODO: need to detect and handle this better
+                destroy();
+            }
+        }
+
+        if (_display != EGL_NO_DISPLAY) {
             drawFrame();
 
             if (!eglSwapBuffers(_display, _surface)) {
                 LOG_ERROR("eglSwapBuffers() returned error %d", eglGetError());
-                // Hack: this fails when we rotate, delete the context to force a recreation
-                // TODO: need to detect and handle this better
-                destroy();
             }
         }
 
@@ -132,6 +193,7 @@ bool Renderer::initialize() {
         LOG_ERROR("eglGetDisplay() returned error %d", eglGetError());
         return false;
     }
+
     if (!eglInitialize(display, 0, 0)) {
         LOG_ERROR("eglInitialize() returned error %d", eglGetError());
         return false;
@@ -183,6 +245,8 @@ bool Renderer::initialize() {
     _width = width;
     _height = height;
 
+    LOG("created GL context");
+
     _mapController = new MapController;
     _mapController->display->camera->setDisplaySize(width, height);
 
@@ -191,6 +255,8 @@ bool Renderer::initialize() {
     _mapController->data->updateDisplay(_mapController->display);
 
     _mapController->display->camera->setAllowIdleAnimation(true);
+
+    LOG("created map controller");
 
     return true;
 }
@@ -213,6 +279,33 @@ void Renderer::destroy() {
     _height = 0;
 
     return;
+}
+
+MapController* Renderer::beginControllerModification(void) {
+    // Wait for render thread to block
+    if (!_paused) {
+        pthread_mutex_lock(&_mutex);
+    }
+
+    // Make context current in this thread
+    if (!eglMakeCurrent(_display, _surface, _surface, _context)) {
+        LOG_ERROR("eglMakeCurrent() returned error %d", eglGetError());
+    }
+
+    return _mapController;
+}
+
+void Renderer::endControllerModification(void) {
+    // Release context so renderer can grab it
+    if (!eglMakeCurrent(_display, EGL_NO_SURFACE, EGL_NO_SURFACE,
+            EGL_NO_CONTEXT)) {
+        LOG_ERROR("eglMakeCurrent() returned error %d", eglGetError());
+    }
+
+    if (!_paused) {
+        // let the renderer go
+        pthread_mutex_unlock(&_mutex);
+    }
 }
 
 void Renderer::drawFrame() {
