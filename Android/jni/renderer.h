@@ -22,9 +22,11 @@ public:
     void resume();
     void pause();
     void setWindow(ANativeWindow* window, float displayScale);
-
-    MapController* _mapController;
     
+    // Synchronise with the rendering thread to modify the data safely
+    MapController* beginControllerModification(void);
+    void endControllerModification(void);
+
 private:
     pthread_t _threadId;
     pthread_mutex_t _mutex;
@@ -32,6 +34,8 @@ private:
     bool _paused;
     
     ANativeWindow* _window;
+
+    MapController* _mapController;
 
     EGLDisplay _display;
     EGLSurface _surface;
