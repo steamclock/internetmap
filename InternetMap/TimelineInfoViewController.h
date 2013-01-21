@@ -10,4 +10,7 @@
 
 @interface TimelineInfoViewController : UIViewController
 
+@property(nonatomic, strong) NSDictionary* jsonDict;
+@property(nonatomic, assign) int year;
+
 @end

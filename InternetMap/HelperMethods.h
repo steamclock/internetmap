@@ -10,6 +10,7 @@
 #define UI_ORANGE_COLOR [UIColor colorWithRed:252.0/255.0 green:161.0/255.0 blue:0 alpha:1]
 #define UI_BLUE_COLOR [UIColor colorWithRed:68.0/255.0 green:144.0/255.0 blue:206.0/255.0 alpha:1.0]
 
+#define FONT_NAME @"ARSMaquettePro"
 #define FONT_NAME_LIGHT @"ARSMaquettePro-Light"
 #define FONT_NAME_MEDIUM @"ARSMaquettePro-Medium"
 #define FONT_NAME_REGULAR @"ARSMaquettePro-Regular"
