@@ -68,6 +68,7 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeSetSurface(J
         window = ANativeWindow_fromSurface(jenv, surface);
         renderer->setWindow(window, scale);
     } else {
+        renderer->setWindow(NULL, scale);
         ANativeWindow_release(window);
     }
 
@@ -76,10 +77,8 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeSetSurface(J
 
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeRotateRadiansXY(JNIEnv* jenv, jobject obj,
 		float radX, float radY) {
-    MapController* controller = renderer->beginControllerModification();
-	controller->display->camera->rotateRadiansX(radX);
-	controller->display->camera->rotateRadiansY(radY);
-	renderer->endControllerModification();
+    renderer->bufferedRotationX(radX);
+    renderer->bufferedRotationY(radY);
 }
 
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeStartMomentumPanWithVelocity(JNIEnv* jenv, jobject obj,
@@ -99,9 +98,8 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeHandleTouchD
 
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeZoomByScale(JNIEnv* jenv, jobject obj,
         float scale) {
-    MapController* controller = renderer->beginControllerModification();
-    controller->display->camera->zoomByScale(scale);
-    renderer->endControllerModification();
+    LOG("zoom");
+    renderer->bufferedZoom(scale);
 }
 
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeStartMomentumZoomWithVelocity(JNIEnv* jenv, jobject obj,
@@ -113,9 +111,7 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeStartMomentu
 
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeRotateRadiansZ(JNIEnv* jenv, jobject obj,
         float radians) {
-    MapController* controller = renderer->beginControllerModification();
-    controller->display->camera->rotateRadiansZ(radians);
-    renderer->endControllerModification();
+    renderer->bufferedRotationZ(radians);
 }
 
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeStartMomentumRotationWithVelocity(JNIEnv* jenv, jobject obj,

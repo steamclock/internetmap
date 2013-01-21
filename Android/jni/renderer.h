@@ -21,8 +21,15 @@ public:
 
     void resume();
     void pause();
+
     void setWindow(ANativeWindow* window, float displayScale);
-    
+
+    // Buffered (non-locking) state changes, use in preference to locking with begin controller modification
+    void bufferedRotationX(float radiansX);
+    void bufferedRotationY(float radiansY);
+    void bufferedRotationZ(float radiansZ);
+    void bufferedZoom(float zoom);
+
     // Synchronise with the rendering thread to modify the data safely
     MapController* beginControllerModification(void);
     void endControllerModification(void);
@@ -45,6 +52,8 @@ private:
     float _displayScale;
     double _initialTimeSec;
     double _currentTimeSec;
+
+    float _rotateX, _rotateY, _rotateZ, _zoom;
 
     // RenderLoop is called in a rendering thread started in start() method
     // It creates rendering context and renders scene until stop() is called

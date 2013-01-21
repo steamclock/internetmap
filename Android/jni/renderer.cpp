@@ -26,6 +26,11 @@ Renderer::Renderer() {
     _currentTimeSec = double(clock()) / double(CLOCKS_PER_SEC);
     _initialTimeSec = _currentTimeSec;
 
+    _rotateX = 0.0f;
+    _rotateY = 0.0f;
+    _rotateZ = 0.0f;
+    _zoom = 0.0f;
+
     // Lock the mutex to keep the thread from doing anything until we get resumed
     pthread_mutex_lock(&_mutex);
     _paused = true;
@@ -63,6 +68,22 @@ void Renderer::pause() {
     return;
 }
 
+void Renderer::bufferedRotationX(float radiansX) {
+    _rotateX += radiansX;
+}
+
+void Renderer::bufferedRotationY(float radiansY) {
+    _rotateY += radiansY;
+}
+
+void Renderer::bufferedRotationZ(float radiansZ) {
+    _rotateZ += radiansZ;
+}
+
+void Renderer::bufferedZoom(float zoom) {
+    _zoom += zoom;
+}
+
 void Renderer::setWindow(ANativeWindow *window, float displayScale) {
     _displayScale = displayScale;
 
@@ -98,6 +119,28 @@ void Renderer::renderLoop() {
         // Let the main thread do any work that it is waiting on us for
         pthread_mutex_unlock(&_mutex);
         pthread_mutex_lock(&_mutex);
+
+        if(_rotateX != 0.0f) {
+            _mapController->display->camera->rotateRadiansX(_rotateX);
+        }
+
+        if(_rotateY != 0.0f) {
+            _mapController->display->camera->rotateRadiansY(_rotateY);
+        }
+
+        if(_rotateZ != 0.0f) {
+            _mapController->display->camera->rotateRadiansZ(_rotateZ);
+        }
+
+        if(_zoom != 0.0f) {
+            _mapController->display->camera->zoomByScale(_zoom);
+        }
+
+        _rotateX = 0.0f;
+        _rotateY = 0.0f;
+        _rotateZ = 0.0f;
+        _zoom = 0.0f;
+
 
         if (_display != EGL_NO_DISPLAY) {
             // Take back control of GL context
@@ -150,6 +193,7 @@ bool Renderer::initialize() {
         LOG_ERROR("eglGetDisplay() returned error %d", eglGetError());
         return false;
     }
+
     if (!eglInitialize(display, 0, 0)) {
         LOG_ERROR("eglInitialize() returned error %d", eglGetError());
         return false;
@@ -201,6 +245,8 @@ bool Renderer::initialize() {
     _width = width;
     _height = height;
 
+    LOG("created GL context");
+
     _mapController = new MapController;
     _mapController->display->camera->setDisplaySize(width, height);
 
@@ -209,6 +255,8 @@ bool Renderer::initialize() {
     _mapController->data->updateDisplay(_mapController->display);
 
     _mapController->display->camera->setAllowIdleAnimation(true);
+
+    LOG("created map controller");
 
     return true;
 }
