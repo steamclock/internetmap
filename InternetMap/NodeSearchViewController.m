@@ -39,8 +39,6 @@
 {
     [super viewDidLoad];
     
-
-    
     self.title = @"Search Nodes";
     
     UIView* orangeBackground = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.contentSizeForViewInPopover.width, 44)];
@@ -56,6 +54,7 @@
     self.textField.textColor = [UIColor blackColor];
     self.textField.delegate = self;
     self.textField.font = [UIFont fontWithName:FONT_NAME_LIGHT size:24];
+    
     [self.view addSubview:self.textField];
     
     UIButton* doneButton = [[UIButton alloc] initWithFrame:CGRectMake(self.textField.x+self.textField.width-10, 2, doneImage.size.width+20, doneImage.size.height+20)];
@@ -70,11 +69,15 @@
     self.tableView.dataSource = self;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:self.tableView];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
     
     [self.textField becomeFirstResponder];
-
-    
 }
+
 
 - (void)didReceiveMemoryWarning
 {
