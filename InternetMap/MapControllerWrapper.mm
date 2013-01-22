@@ -74,7 +74,7 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
 }
 
 - (CGSize)displaySize {
-    return CGSizeMake(_controller->display->camera->displayHeight(), _controller->display->camera->displayWidth());
+    return CGSizeMake(_controller->display->camera->displayWidth(), _controller->display->camera->displayHeight());
 }
 
 - (void)setDisplaySize:(CGSize)displaySize {
