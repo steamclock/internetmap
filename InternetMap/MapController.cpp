@@ -363,7 +363,6 @@ void MapController::setTimelinePoint(const std::string& origName) {
     
     lastTimelinePoint = origName;
     
-    data->clear();
     display->nodes = NULL;
     display->visualizationLines = NULL;
     
@@ -379,36 +378,10 @@ void MapController::setTimelinePoint(const std::string& origName) {
     clock_t start = clock();
     std::string dataText;
     loadTextResource(&dataText, name, "txt");
-    
-    LOG("load data.txt: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
+    data->reloadFromString(dataText);
+    LOG("reloaded for timeline point: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
     start = clock();
-    
-    data->loadFromString(dataText);
-    
-    LOG("parse data.txt: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
-    start = clock();
-    
-    std::string attrText;
-    loadTextResource(&attrText, "as2attr", "txt");
-    
-    LOG("load as2attr.txt: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
-    start = clock();
-    
-    data->loadFromAttrString(attrText);
-    
-    LOG("parse as2attr.txt: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
-    start = clock();
-    
-    std::string asinfoText;
-    loadTextResource(&asinfoText, "asinfo", "json");
-    
-    LOG("load asinfo.json: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
-    start = clock();
-    
-    data->loadASInfo(asinfoText);
-    
-    LOG("parse asinfo.json: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
-
     data->updateDisplay(display);
+    LOG("refreshed display for timeline point: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
 }
 

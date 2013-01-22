@@ -46,6 +46,7 @@ void DefaultVisualization::updateDisplayForNodes(shared_ptr<MapDisplay> display,
     Color eduColor = ColorFromRGB(0x7200ff);
     Color ixColor = ColorFromRGB(0x75787b);
     Color nicColor = ColorFromRGB(0xffffff);
+    Color inactiveColor = ColorFromRGB(0x000000);
     
     
     
@@ -77,6 +78,10 @@ void DefaultVisualization::updateDisplayForNodes(shared_ptr<MapDisplay> display,
             default:
                 color = unknownColor;
                 break;
+        }
+        
+        if(!node->active) {
+            color = inactiveColor;
         }
         
         display->nodes->updateNode(node->index, nodePosition(node), nodeSize(node), color); // use index from node, not in array, so that partiual updates can work

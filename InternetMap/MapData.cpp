@@ -23,13 +23,6 @@ NodePointer MapData::nodeAtIndex(unsigned int index) {
     return nodes[index];
 }
 
-void MapData::clear(void) {
-    nodes .erase(nodes.begin(), nodes.end());
-    connections.erase(connections.begin(), connections.end());
-    boxesForNodes.erase(boxesForNodes.begin(), boxesForNodes.end());
-    nodesByAsn.erase(nodesByAsn.begin(), nodesByAsn.end());
-}
-
 void split( std::vector<std::string> & theStringVector,  /* Altered/returned value */
       const  std::string  & theString,
       const  std::string  & theDelimiter)
@@ -73,6 +66,68 @@ const char* nextToken(const char* source, char* token, bool* lineEnd) {
     return source;
 }
 
+void MapData::reloadFromString(const std::string& text) {
+    connections.erase(connections.begin(), connections.end());
+    boxesForNodes.erase(boxesForNodes.begin(), boxesForNodes.end());
+    for(int i = 0; i < nodes.size(); i++) {
+        nodes[i]->active = false;
+    }
+    
+    const char* sourceText = text.c_str();
+    char token[MAX_TOKEN_SIZE];
+    bool lineEnd;
+    int numNodes, numConnections;
+    
+    sourceText = nextToken(sourceText, token, &lineEnd);
+    numNodes = atof(token);
+    
+    sourceText = nextToken(sourceText, token, &lineEnd);
+    numConnections = atof(token);
+    
+    int missingNodes = 0;
+    for (int i = 0; i < numNodes; i++) {
+        sourceText = nextToken(sourceText, token, &lineEnd);
+        NodePointer node = nodesByAsn[token];
+        if(node) {
+            node->active = true;
+        }
+        else {
+            missingNodes++;
+        }
+        
+        sourceText = nextToken(sourceText, token, &lineEnd);
+        if(node) {
+            node->importance = atof(token);
+        }
+        sourceText = nextToken(sourceText, token, &lineEnd);
+        if(node) {
+            node->positionX = atof(token);
+        }
+        sourceText = nextToken(sourceText, token, &lineEnd);
+        if(node) {
+            node->positionY = atof(token);
+        }
+    }
+    
+    for (int i = 0; i < numConnections; i++) {
+        ConnectionPointer connection(new Connection());
+        
+        sourceText = nextToken(sourceText, token, &lineEnd);
+        connection->first = nodesByAsn[token];
+        sourceText = nextToken(sourceText, token, &lineEnd);
+        connection->second = nodesByAsn[token];
+        
+        if (connection->first && connection->second) {
+            connection->first->connections.push_back(connection);
+            connection->second->connections.push_back(connection);
+            connections.push_back(connection);
+        }
+    }
+    
+    LOG("missing nodes: %d", missingNodes);
+    createNodeBoxes();
+}
+
 void MapData::loadFromString(const std::string& text) {
     const char* sourceText = text.c_str();
     char token[MAX_TOKEN_SIZE];
@@ -90,7 +145,8 @@ void MapData::loadFromString(const std::string& text) {
     
     for (int i = 0; i < numNodes; i++) {
         NodePointer node(new Node());
-        
+        node->active = true;
+
         sourceText = nextToken(sourceText, token, &lineEnd);
         node->asn = token;
         node->index = i;
@@ -210,9 +266,11 @@ void MapData::createNodeBoxes() {
     
     for (unsigned int i = 0; i < nodes.size(); i++) {
         NodePointer ptrNode = nodes.at(i);
-        Point3 pos = visualization->nodePosition(ptrNode);
-        IndexBoxPointer box = indexBoxForPoint(pos);
-        box->indices.insert(i);
+        if(ptrNode->active) {
+            Point3 pos = visualization->nodePosition(ptrNode);
+            IndexBoxPointer box = indexBoxForPoint(pos);
+            box->indices.insert(i);
+        }
     }
 }
 

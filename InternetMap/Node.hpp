@@ -38,6 +38,7 @@ public:
     float positionX;
     float positionY;
     int type;
+    bool active;
     
     std::string typeString;
     std::string name;

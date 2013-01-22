@@ -29,6 +29,7 @@ public:
     
     void clear(void);
     
+    void reloadFromString(const std::string& json);
     void loadFromString(const std::string& json);
     void loadFromAttrString(const std::string& json);
     void loadASInfo(const std::string& json);
