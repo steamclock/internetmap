@@ -242,5 +242,11 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
     _controller->highlightRoute(newList);
 }
 
+#pragma mark - Timeline
+
+- (void)setTimelinePoint:(NSString*)timelinePointName {
+    _controller->setTimelinePoint(std::string([timelinePointName UTF8String]));
+}
+
 
 @end

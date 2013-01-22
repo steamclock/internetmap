@@ -355,3 +355,33 @@ Vector2 MapController::getCoordinatesForNodeAtIndex(int index) {
     return Vector2(coordinates.x, display->camera->displayHeight() - coordinates.y);
 
 }
+
+void MapController::setTimelinePoint(const std::string& origName) {
+    if(origName == lastTimelinePoint) {
+        return;
+    }
+    
+    lastTimelinePoint = origName;
+    
+    display->nodes = NULL;
+    display->visualizationLines = NULL;
+    
+    std::string name = origName == "" ? "data" : origName;
+    
+    // remap a couple of non-jan 1st dates until we figure out a better way to track these
+    if(name == "20000101") name = "20000102";
+    if(name == "20090101") name = "20090103";
+    if(name == "20110101") name = "20110102";
+    if(name == "20120101") name = "20120102";
+    if(name == "20130101") name = "20130102";
+    
+    clock_t start = clock();
+    std::string dataText;
+    loadTextResource(&dataText, name, "txt");
+    data->reloadFromString(dataText);
+    LOG("reloaded for timeline point: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
+    start = clock();
+    data->updateDisplay(display);
+    LOG("refreshed display for timeline point: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
+}
+

@@ -18,7 +18,6 @@
 #import "NodeWrapper.h"
 #import "TimelineInfoViewController.h"
 
-
 //TODO: move this to a better place.
 #define SELECTED_NODE_COLOR UIColorFromRGB(0xffa300)
 
@@ -198,6 +197,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     int max = [[sortedYears lastObject] intValue];
     float diff = max-self.minTimelineYear;
     diff /= 10;
+    diff += 0.99; // If we don't add a buffer, current year is only the very last position on the slider
     self.timelineSlider.minimumValue = 0;
     self.timelineSlider.maximumValue = diff;
     self.timelineSlider.value = diff;
@@ -590,9 +590,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.timelineInfoViewController setYear:year];
     [self.timelinePopover setPopoverContentSize:self.timelineInfoViewController.contentSizeForViewInPopover];
     [self.timelinePopover presentPopoverFromRect:thumbRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];
+    
 }
 
 - (void)timelineSliderTouchUp:(id)sender {
+    int year = (int)(self.minTimelineYear+self.timelineSlider.value*10);
+    [self.controller setTimelinePoint:[NSString stringWithFormat:@"%d0101", year]];
     [self.timelinePopover dismissPopoverAnimated:NO];
 }
 

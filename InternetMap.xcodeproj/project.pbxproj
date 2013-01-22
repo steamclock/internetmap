@@ -92,6 +92,21 @@
 		A600AAD716A664E1003B1028 /* asinfo.json in Resources */ = {isa = PBXBuildFile; fileRef = A600AAD416A664E0003B1028 /* asinfo.json */; };
 		A600AAD816A664E1003B1028 /* data.txt in Resources */ = {isa = PBXBuildFile; fileRef = A600AAD516A664E0003B1028 /* data.txt */; };
 		A600AAE516A9D1C6003B1028 /* VertexBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A600AAE316A9D1C5003B1028 /* VertexBuffer.cpp */; };
+		A686E95E16AE1902009B070E /* 20000102.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E94B16AE1902009B070E /* 20000102.txt */; };
+		A686E95F16AE1902009B070E /* 20010101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E94C16AE1902009B070E /* 20010101.txt */; };
+		A686E96016AE1902009B070E /* 20020101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E94D16AE1902009B070E /* 20020101.txt */; };
+		A686E96116AE1902009B070E /* 20030101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E94E16AE1902009B070E /* 20030101.txt */; };
+		A686E96216AE1902009B070E /* 20040101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E94F16AE1902009B070E /* 20040101.txt */; };
+		A686E96316AE1902009B070E /* 20050101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E95016AE1902009B070E /* 20050101.txt */; };
+		A686E96416AE1902009B070E /* 20060101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E95116AE1902009B070E /* 20060101.txt */; };
+		A686E96516AE1902009B070E /* 20070101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E95216AE1902009B070E /* 20070101.txt */; };
+		A686E96616AE1902009B070E /* 20080101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E95316AE1902009B070E /* 20080101.txt */; };
+		A686E96716AE1902009B070E /* 20080102.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E95416AE1902009B070E /* 20080102.txt */; };
+		A686E96916AE1902009B070E /* 20090103.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E95616AE1902009B070E /* 20090103.txt */; };
+		A686E96A16AE1902009B070E /* 20100101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E95716AE1902009B070E /* 20100101.txt */; };
+		A686E96B16AE1902009B070E /* 20110102.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E95816AE1902009B070E /* 20110102.txt */; };
+		A686E96D16AE1902009B070E /* 20120102.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E95A16AE1902009B070E /* 20120102.txt */; };
+		A686E96F16AE1902009B070E /* 20130102.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E95C16AE1902009B070E /* 20130102.txt */; };
 		A6B56BF2165AE28A00DDE753 /* Node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B56BF1165AE28A00DDE753 /* Node.cpp */; };
 		A6B56BF9165AF53F00DDE753 /* Program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B56BF8165AF53F00DDE753 /* Program.cpp */; };
 		A6B56BFA165AF98D00DDE753 /* line.fsh in Resources */ = {isa = PBXBuildFile; fileRef = A6B56BF3165AEDF700DDE753 /* line.fsh */; };
@@ -287,6 +302,21 @@
 		A6191845169DE85F003A3A4A /* vecidx_aos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vecidx_aos.h; sourceTree = "<group>"; };
 		A6191846169DE85F003A3A4A /* vectormath_aos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vectormath_aos.h; sourceTree = "<group>"; };
 		A6191847169DE85F003A3A4A /* vmInclude.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vmInclude.h; sourceTree = "<group>"; };
+		A686E94B16AE1902009B070E /* 20000102.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20000102.txt; sourceTree = "<group>"; };
+		A686E94C16AE1902009B070E /* 20010101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20010101.txt; sourceTree = "<group>"; };
+		A686E94D16AE1902009B070E /* 20020101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20020101.txt; sourceTree = "<group>"; };
+		A686E94E16AE1902009B070E /* 20030101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20030101.txt; sourceTree = "<group>"; };
+		A686E94F16AE1902009B070E /* 20040101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20040101.txt; sourceTree = "<group>"; };
+		A686E95016AE1902009B070E /* 20050101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20050101.txt; sourceTree = "<group>"; };
+		A686E95116AE1902009B070E /* 20060101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20060101.txt; sourceTree = "<group>"; };
+		A686E95216AE1902009B070E /* 20070101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20070101.txt; sourceTree = "<group>"; };
+		A686E95316AE1902009B070E /* 20080101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20080101.txt; sourceTree = "<group>"; };
+		A686E95416AE1902009B070E /* 20080102.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20080102.txt; sourceTree = "<group>"; };
+		A686E95616AE1902009B070E /* 20090103.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20090103.txt; sourceTree = "<group>"; };
+		A686E95716AE1902009B070E /* 20100101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20100101.txt; sourceTree = "<group>"; };
+		A686E95816AE1902009B070E /* 20110102.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20110102.txt; sourceTree = "<group>"; };
+		A686E95A16AE1902009B070E /* 20120102.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20120102.txt; sourceTree = "<group>"; };
+		A686E95C16AE1902009B070E /* 20130102.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20130102.txt; sourceTree = "<group>"; };
 		A6B56BF0165AE28A00DDE753 /* Node.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Node.hpp; sourceTree = "<group>"; };
 		A6B56BF1165AE28A00DDE753 /* Node.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Node.cpp; sourceTree = "<group>"; };
 		A6B56BF3165AEDF700DDE753 /* line.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = line.fsh; path = Shaders/line.fsh; sourceTree = "<group>"; };
@@ -557,6 +587,7 @@
 			isa = PBXGroup;
 			children = (
 				1175A9FD16AA042400B93031 /* history.json */,
+				A686E94916AE1902009B070E /* timeline */,
 				A600AAD316A664DF003B1028 /* as2attr.txt */,
 				A600AAD416A664E0003B1028 /* asinfo.json */,
 				A600AAD516A664E0003B1028 /* data.txt */,
@@ -613,6 +644,29 @@
 				A6191846169DE85F003A3A4A /* vectormath_aos.h */,
 			);
 			path = sse;
+			sourceTree = "<group>";
+		};
+		A686E94916AE1902009B070E /* timeline */ = {
+			isa = PBXGroup;
+			children = (
+				A686E94B16AE1902009B070E /* 20000102.txt */,
+				A686E94C16AE1902009B070E /* 20010101.txt */,
+				A686E94D16AE1902009B070E /* 20020101.txt */,
+				A686E94E16AE1902009B070E /* 20030101.txt */,
+				A686E94F16AE1902009B070E /* 20040101.txt */,
+				A686E95016AE1902009B070E /* 20050101.txt */,
+				A686E95116AE1902009B070E /* 20060101.txt */,
+				A686E95216AE1902009B070E /* 20070101.txt */,
+				A686E95316AE1902009B070E /* 20080101.txt */,
+				A686E95416AE1902009B070E /* 20080102.txt */,
+				A686E95616AE1902009B070E /* 20090103.txt */,
+				A686E95716AE1902009B070E /* 20100101.txt */,
+				A686E95816AE1902009B070E /* 20110102.txt */,
+				A686E95A16AE1902009B070E /* 20120102.txt */,
+				A686E95C16AE1902009B070E /* 20130102.txt */,
+			);
+			name = timeline;
+			path = Common/data/timeline;
 			sourceTree = "<group>";
 		};
 		A6D54A8616544B3000028B51 /* Map */ = {
@@ -927,6 +981,21 @@
 				1175A9FE16AA042400B93031 /* history.json in Resources */,
 				119E5A7116ADEE1B00F29E3E /* popupArrow-timeline.png in Resources */,
 				119E5A7216ADEE1B00F29E3E /* popupArrow-timeline@2x.png in Resources */,
+				A686E95E16AE1902009B070E /* 20000102.txt in Resources */,
+				A686E95F16AE1902009B070E /* 20010101.txt in Resources */,
+				A686E96016AE1902009B070E /* 20020101.txt in Resources */,
+				A686E96116AE1902009B070E /* 20030101.txt in Resources */,
+				A686E96216AE1902009B070E /* 20040101.txt in Resources */,
+				A686E96316AE1902009B070E /* 20050101.txt in Resources */,
+				A686E96416AE1902009B070E /* 20060101.txt in Resources */,
+				A686E96516AE1902009B070E /* 20070101.txt in Resources */,
+				A686E96616AE1902009B070E /* 20080101.txt in Resources */,
+				A686E96716AE1902009B070E /* 20080102.txt in Resources */,
+				A686E96916AE1902009B070E /* 20090103.txt in Resources */,
+				A686E96A16AE1902009B070E /* 20100101.txt in Resources */,
+				A686E96B16AE1902009B070E /* 20110102.txt in Resources */,
+				A686E96D16AE1902009B070E /* 20120102.txt in Resources */,
+				A686E96F16AE1902009B070E /* 20130102.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
