@@ -49,7 +49,8 @@
 -(CGPoint)getCoordinatesForNodeAtIndex:(int)index;
 - (void)updateTargetForIndex:(int)index;
 - (void)clearHighlightLines;
--(void)highlightRoute:(NSArray*)nodeList;
+- (void)highlightRoute:(NSArray*)nodeList;
+- (void)setTimelinePoint:(NSString*)timelinePointName;
 
 
 

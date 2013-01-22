@@ -23,6 +23,13 @@ NodePointer MapData::nodeAtIndex(unsigned int index) {
     return nodes[index];
 }
 
+void MapData::clear(void) {
+    nodes .erase(nodes.begin(), nodes.end());
+    connections.erase(connections.begin(), connections.end());
+    boxesForNodes.erase(boxesForNodes.begin(), boxesForNodes.end());
+    nodesByAsn.erase(nodesByAsn.begin(), nodesByAsn.end());
+}
+
 void split( std::vector<std::string> & theStringVector,  /* Altered/returned value */
       const  std::string  & theString,
       const  std::string  & theDelimiter)

@@ -18,7 +18,6 @@
 #import "NodeWrapper.h"
 #import "TimelineInfoViewController.h"
 
-
 //TODO: move this to a better place.
 #define SELECTED_NODE_COLOR UIColorFromRGB(0xffa300)
 
@@ -590,6 +589,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.timelineInfoViewController setYear:year];
     [self.timelinePopover setPopoverContentSize:self.timelineInfoViewController.contentSizeForViewInPopover];
     [self.timelinePopover presentPopoverFromRect:thumbRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];
+    
+    [self.controller setTimelinePoint:[NSString stringWithFormat:@"%d0101", year]];
 }
 
 - (void)timelineSliderTouchUp:(id)sender {

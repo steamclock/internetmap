@@ -24,7 +24,7 @@ public:
     unsigned int targetNode;
     std::set<int> highlightedNodes;
     std::string lastSearchIP;
-    
+    std::string lastTimelinePoint;
     
     void hoverNode(int index);
     void unhoverNode();
@@ -37,6 +37,7 @@ public:
     void clearHighlightLines();
     void highlightRoute(std::vector<NodePointer> nodeList);
     void highlightConnections(NodePointer node);
+    void setTimelinePoint(const std::string& name);
     
 private:
     int hoveredNodeIndex;

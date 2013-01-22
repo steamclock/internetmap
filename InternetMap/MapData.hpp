@@ -27,6 +27,8 @@ public:
     std::vector<IndexBoxPointer> boxesForNodes;
     std::vector<ConnectionPointer> connections;
     
+    void clear(void);
+    
     void loadFromString(const std::string& json);
     void loadFromAttrString(const std::string& json);
     void loadASInfo(const std::string& json);

@@ -355,3 +355,60 @@ Vector2 MapController::getCoordinatesForNodeAtIndex(int index) {
     return Vector2(coordinates.x, display->camera->displayHeight() - coordinates.y);
 
 }
+
+void MapController::setTimelinePoint(const std::string& origName) {
+    if(origName == lastTimelinePoint) {
+        return;
+    }
+    
+    lastTimelinePoint = origName;
+    
+    data->clear();
+    display->nodes = NULL;
+    display->visualizationLines = NULL;
+    
+    std::string name = origName == "" ? "data" : origName;
+    
+    // remap a couple of non-jan 1st dates until we figure out a better way to track these
+    if(name == "20000101") name = "20000102";
+    if(name == "20090101") name = "20090103";
+    if(name == "20110101") name = "20110102";
+    if(name == "20120101") name = "20120102";
+    if(name == "20130101") name = "20130102";
+    
+    clock_t start = clock();
+    std::string dataText;
+    loadTextResource(&dataText, name, "txt");
+    
+    LOG("load data.txt: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
+    start = clock();
+    
+    data->loadFromString(dataText);
+    
+    LOG("parse data.txt: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
+    start = clock();
+    
+    std::string attrText;
+    loadTextResource(&attrText, "as2attr", "txt");
+    
+    LOG("load as2attr.txt: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
+    start = clock();
+    
+    data->loadFromAttrString(attrText);
+    
+    LOG("parse as2attr.txt: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
+    start = clock();
+    
+    std::string asinfoText;
+    loadTextResource(&asinfoText, "asinfo", "json");
+    
+    LOG("load asinfo.json: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
+    start = clock();
+    
+    data->loadASInfo(asinfoText);
+    
+    LOG("parse asinfo.json: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
+
+    data->updateDisplay(display);
+}
+
