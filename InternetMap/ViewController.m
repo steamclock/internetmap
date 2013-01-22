@@ -16,9 +16,8 @@
 #import "MapControllerWrapper.h"
 #import "LabelNumberBoxView.h"
 #import "NodeWrapper.h"
+#import "TimelineInfoViewController.h"
 
-#define MIN_TIMELINE_YEAR 1993
-#define MAX_TIMELINE_YEAR 2012
 
 //TODO: move this to a better place.
 #define SELECTED_NODE_COLOR UIColorFromRGB(0xffa300)
@@ -61,6 +60,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 @property (nonatomic) int cachedCurrentASN;
 
+@property (nonatomic) int minTimelineYear;
+
 /* UIKit Overlay */
 @property (weak, nonatomic) IBOutlet UIView* buttonContainerView;
 @property (weak, nonatomic) IBOutlet UIButton* searchButton;
@@ -69,7 +70,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (weak, nonatomic) IBOutlet UIButton* timelineButton;
 @property (weak, nonatomic) IBOutlet UISlider* timelineSlider;
 @property (weak, nonatomic) IBOutlet UIButton* playButton;
-@property (weak, nonatomic) IBOutlet UILabel* timelineLabel;
 @property (weak, nonatomic) IBOutlet UIImageView* logo;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* searchActivityIndicator;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* youAreHereActivityIndicator;
@@ -81,6 +81,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (strong, nonatomic) WEPopoverController* nodeSearchPopover;
 @property (strong, nonatomic) WEPopoverController* nodeInformationPopover;
 @property (weak, nonatomic) NodeInformationViewController* nodeInformationViewController; //this is weak because it's enough for us that the popover retains the controller. this is only a reference to update the ui of the infoViewController on traceroute callbacks, not to signify ownership
+@property (strong, nonatomic) WEPopoverController* timelinePopover;
+@property (weak, nonatomic) TimelineInfoViewController* timelineInfoViewController;
 @property (strong, nonatomic) WEPopoverController* nodeTooltipPopover;
 @property (strong, nonatomic) NodeTooltipViewController* nodeTooltipViewController;
 
@@ -174,24 +176,32 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.timelineSlider setMaximumTrackImage:invisibleImage forState:UIControlStateNormal];
     
     [self.timelineSlider setThumbImage:[UIImage imageNamed:@"timeline-handle"] forState:UIControlStateNormal];
+    [self.timelineSlider addTarget:self action:@selector(timelineSliderTouchUp:) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside | UIControlEventTouchCancel];
     
     UIImageView* trackImageView = [[UIImageView alloc] initWithImage:trackImage];
     trackImageView.frame = CGRectMake(-cap, -19, self.timelineSlider.width+2*cap, trackImage.size.height);
     [self.timelineSlider addSubview:trackImageView];
     
+    if (!self.timelinePopover) {
+        TimelineInfoViewController* tlv = [[TimelineInfoViewController alloc] init];
+        self.timelineInfoViewController = tlv;
+        self.timelinePopover = [[WEPopoverController alloc] initWithContentViewController:self.timelineInfoViewController];
+        WEPopoverContainerViewProperties* prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
+        prop.downArrowImageName = @"popupArrow-timeline";
+        self.timelinePopover.containerViewProperties = prop;
+    }
+    
     //setup timeline slider values
-    float diff = MAX_TIMELINE_YEAR-MIN_TIMELINE_YEAR;
+    NSArray* sortedYears = [self.timelineInfoViewController.jsonDict.allKeys sortedArrayUsingSelector:@selector(compare:)];
+    NSAssert([sortedYears count] >= 2, @"There is not enough data in the history.json file! At least data for two years is required");
+    self.minTimelineYear = [sortedYears[0] intValue];
+    int max = [[sortedYears lastObject] intValue];
+    float diff = max-self.minTimelineYear;
     diff /= 10;
     self.timelineSlider.minimumValue = 0;
     self.timelineSlider.maximumValue = diff;
     self.timelineSlider.value = diff;
-    [self timelineSliderValueChanged:self.timelineSlider];
     
-    //customize timeline label
-    self.timelineLabel.textColor = UI_ORANGE_COLOR;
-    self.timelineLabel.font = [HelperMethods deviceIsiPad] ? [UIFont fontWithName:FONT_NAME_REGULAR size:50] : [UIFont fontWithName:FONT_NAME_REGULAR size:40];
-    self.timelineLabel.backgroundColor = [UIColor clearColor];
-    self.timelineLabel.textAlignment = UITextAlignmentRight;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayInformationPopoverForCurrentNode) name:@"cameraMovementFinished" object:nil];
     
@@ -508,7 +518,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.timelineSlider.hidden = NO;
         self.timelineButton.selected = YES;
         self.playButton.hidden = NO;
-        self.timelineLabel.hidden = NO;
         [self dismissNodeInfoPopover];
     } else {
         [self leaveTimelineMode];
@@ -519,7 +528,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.timelineSlider.hidden = YES;
     self.timelineButton.selected = NO;
     self.playButton.hidden = YES;
-    self.timelineLabel.hidden = YES;
 }
 
 -(void)displayInformationPopoverForCurrentNode {
@@ -570,9 +578,22 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 }
 
-- (IBAction)timelineSliderValueChanged:(id)sender {
-    self.timelineLabel.text = [NSString stringWithFormat:@"%i", (int)(MIN_TIMELINE_YEAR+self.timelineSlider.value*10)];
 
+
+- (IBAction)timelineSliderValueChanged:(id)sender {
+    int year = (int)(self.minTimelineYear+self.timelineSlider.value*10);
+    CGRect thumbRect = [self.timelineSlider thumbRectForBounds:self.timelineSlider.bounds trackRect:[self.timelineSlider trackRectForBounds:self.timelineSlider.bounds] value:self.timelineSlider.value];
+    thumbRect = [self.view convertRect:thumbRect fromView:self.timelineSlider];
+    
+    [self.timelinePopover dismissPopoverAnimated:NO];
+    
+    [self.timelineInfoViewController setYear:year];
+    [self.timelinePopover setPopoverContentSize:self.timelineInfoViewController.contentSizeForViewInPopover];
+    [self.timelinePopover presentPopoverFromRect:thumbRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];
+}
+
+- (void)timelineSliderTouchUp:(id)sender {
+    [self.timelinePopover dismissPopoverAnimated:NO];
 }
 
 #pragma mark - Helper Methods: Current ASN precaching
