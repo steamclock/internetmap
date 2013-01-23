@@ -528,6 +528,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.timelineSlider.hidden = YES;
     self.timelineButton.selected = NO;
     self.playButton.hidden = YES;
+    [self.controller setTimelinePoint:@""];
+    self.timelineSlider.value = self.timelineSlider.maximumValue;
+
 }
 
 -(void)displayInformationPopoverForCurrentNode {
