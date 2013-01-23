@@ -197,7 +197,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     int max = [[sortedYears lastObject] intValue];
     float diff = max-self.minTimelineYear;
     diff /= 10;
-    diff += 0.99; // If we don't add a buffer, current year is only the very last position on the slider
+    diff += 0.099; // If we don't add a buffer, current year is only the very last position on the slider
     self.timelineSlider.minimumValue = 0;
     self.timelineSlider.maximumValue = diff;
     self.timelineSlider.value = diff;
@@ -528,6 +528,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.timelineSlider.hidden = YES;
     self.timelineButton.selected = NO;
     self.playButton.hidden = YES;
+    [self.controller setTimelinePoint:@""];
+    self.timelineSlider.value = self.timelineSlider.maximumValue;
+
 }
 
 -(void)displayInformationPopoverForCurrentNode {

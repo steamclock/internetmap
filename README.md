@@ -7,23 +7,29 @@ Peer1 Map of the Internet
 Android Build Setup Instructions
 ================================
 
-- Install Eclipse and the Android SDK (You can get either a combined version of Eclipse and the Android SDK, or a standalone version of the SDK from here: http://developer.android.com/sdk/index.html)
+1. Install Eclipse and the Android SDK (You can get either a combined version of Eclipse and the Android SDK, or a standalone version of the SDK from here: http://developer.android.com/sdk/index.html)
 
-- Make sure that you have installed the correct SDK via the Android SDK Manager (run tools/android in the location the SDK was installed, make sure that the 4.2 / API 17 version is installed)
+2. Make sure that you have installed the correct SDK via the Android SDK Manager (run tools/android in the location the SDK was installed, make sure that the 4.2 / API 17 version is installed)
 
-- Note that when you create your Eclipse workspace on first startup (if you haven't used eclipse before) it doesn't need to be, and shouldn't be, anywhere near the repo location. You can just stick it in some random directory and then 'import' the project (see later), in spite of the name of the command it'll keep it in the original location.
+3. Note that when you create your Eclipse workspace on first startup (if you haven't used eclipse before) it doesn't need to be, and shouldn't be, anywhere near the repo location. You can just stick it in some random directory and then 'import' the project (see later), in spite of the name of the command it'll keep it in the original location.
 
-- Install the C/C++ Development tools for Eclipse. Go to 'Help -> Install New Software', pick the a site to download from (I used http://download.eclipse.org/releases/indigo, which looked default-ish), and then under 'Programming Languages' pick 'C/C++ Development Tools, and kick off the install.
+4. Install the C/C++ Development tools for Eclipse. Go to 'Help -> Install New Software', pick the a site to download from (I used http://download.eclipse.org/releases/indigo, which looked default-ish), and then under 'Programming Languages' pick 'C/C++ Development Tools, and kick off the install.
 
-- Grab the Android NDK from here: http://developer.android.com/tools/sdk/ndk/index.html
+5. Grab the Android NDK from here: http://developer.android.com/tools/sdk/ndk/index.html
 
-- Locally modify a broken script in the NDK, as per instructions here: https://groups.google.com/forum/?fromgroups=#!topic/android-ndk/b4DSxE1NAS0
+6. Locally modify a broken script in the NDK
 
-- Get the project into your eclipse workspace via the File->Import command (Select Existing project from under general, and point it at the Android directory in the git repo). 
+Edit this file:
+```C:\android-ndk-r8d\build\gmsl\__gmsl```
 
-- In the preferences for Eclipse, define NDKROOT under C/C++ -> Build -> Build Variables to point to the directory that you unpacked the NDK to.
+...and change line 512 to:
+```int_encode = $(__gmsl_tr1)$(wordlist 1,$(words $1),$ (__gmsl_input_int))```
 
-- Congratulations, you have a setup that might conceivably build the Android version of the project!
+7. Get the project into your eclipse workspace via the File->Import command (Select Existing project from under general, and point it at the Android directory in the git repo). 
+
+8. In the preferences for Eclipse, define NDKROOT under C/C++ -> Build -> Build Variables to point to the directory that you unpacked the NDK to. Select 'Directory' from the dropdown menu in the GUI, and NOT 'Path'. Even though you'd think Path is what you'd want. Nopers.
+
+Congratulations, you have a setup that might conceivably build the Android version of the project!
 
 Other Android Gotchas & Advice
 ==============================
