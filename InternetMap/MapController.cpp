@@ -363,8 +363,8 @@ void MapController::setTimelinePoint(const std::string& origName) {
     
     lastTimelinePoint = origName;
     
-    display->nodes = NULL;
-    display->visualizationLines = NULL;
+    display->nodes = shared_ptr<DisplayNodes>();
+    display->visualizationLines = shared_ptr<DisplayLines>();
     
     std::string name = origName == "" ? "data" : origName;
     
