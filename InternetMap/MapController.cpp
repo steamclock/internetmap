@@ -23,6 +23,7 @@
 
 // TODO: clean this up
 void loadTextResource(std::string* resource, const std::string& base, const std::string& extension);
+void lostSelectedNodeCallback(void);
 
 MapController::MapController() :
     targetNode(INT_MAX),
@@ -122,13 +123,20 @@ void MapController::deselectCurrentNode(){
 
 void MapController::updateTargetForIndex(int index) {
     Target target;
+    
     // update current node to default state
     deselectCurrentNode();
+    clearHighlightLines();
     
     //set new node as targeted
     if (index != INT_MAX) {
         targetNode = index;
         NodePointer node = data->nodeAtIndex(targetNode);
+        if (!node->active) {
+            targetNode = INT_MAX;
+            lostSelectedNodeCallback();
+            return;
+        }
         Point3 origTarget = data->visualization->nodePosition(node);
 
         target.vector = Vector3(origTarget.getX(), origTarget.getY(), origTarget.getZ());
@@ -389,5 +397,7 @@ void MapController::setTimelinePoint(const std::string& origName) {
     start = clock();
     data->updateDisplay(display);
     LOG("refreshed display for timeline point: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
+    
+    updateTargetForIndex(targetNode);
 }
 

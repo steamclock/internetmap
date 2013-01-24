@@ -209,8 +209,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.timelineSlider.maximumValue = diff;
     self.timelineSlider.value = diff;
     
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayInformationPopoverForCurrentNode) name:@"cameraMovementFinished" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissNodeInfoPopover) name:@"lostSelectedNode" object:nil];
     
     [self.controller resetIdleTimer];
     
@@ -525,7 +525,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.timelineSlider.hidden = NO;
         self.timelineButton.selected = YES;
         self.playButton.hidden = NO;
-        [self dismissNodeInfoPopover];
     } else {
         [self leaveTimelineMode];
     }
