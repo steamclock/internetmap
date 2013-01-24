@@ -75,13 +75,13 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeSetSurface(J
     return;
 }
 
-JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeRotateRadiansXY(JNIEnv* jenv, jobject obj,
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeRotateRadiansXY(JNIEnv* jenv, jobject obj,
 		float radX, float radY) {
     renderer->bufferedRotationX(radX);
     renderer->bufferedRotationY(radY);
 }
 
-JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeStartMomentumPanWithVelocity(JNIEnv* jenv, jobject obj,
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeStartMomentumPanWithVelocity(JNIEnv* jenv, jobject obj,
         float vX, float vY) {
     MapController* controller = renderer->beginControllerModification();
     controller->display->camera->startMomentumPanWithVelocity(Vector2(vX, vY));
@@ -89,39 +89,39 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeStartMomentu
 
 }
 
-JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeHandleTouchDownAtPoint(JNIEnv* jenv, jobject obj,
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeHandleTouchDownAtPoint(JNIEnv* jenv, jobject obj,
         float x, float y) {
     MapController* controller = renderer->beginControllerModification();
     controller->handleTouchDownAtPoint(Vector2(x, y));
     renderer->endControllerModification();
 }
 
-JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeZoomByScale(JNIEnv* jenv, jobject obj,
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeZoomByScale(JNIEnv* jenv, jobject obj,
         float scale) {
     LOG("zoom");
     renderer->bufferedZoom(scale);
 }
 
-JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeStartMomentumZoomWithVelocity(JNIEnv* jenv, jobject obj,
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeStartMomentumZoomWithVelocity(JNIEnv* jenv, jobject obj,
         float velocity) {
     MapController* controller = renderer->beginControllerModification();
     controller->display->camera->startMomentumZoomWithVelocity(velocity);
     renderer->endControllerModification();
 }
 
-JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeRotateRadiansZ(JNIEnv* jenv, jobject obj,
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeRotateRadiansZ(JNIEnv* jenv, jobject obj,
         float radians) {
     renderer->bufferedRotationZ(radians);
 }
 
-JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeStartMomentumRotationWithVelocity(JNIEnv* jenv, jobject obj,
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeStartMomentumRotationWithVelocity(JNIEnv* jenv, jobject obj,
         float velocity) {
     MapController* controller = renderer->beginControllerModification();
     controller->display->camera->startMomentumRotationWithVelocity(velocity);
     renderer->endControllerModification();
 }
 
-JNIEXPORT bool JNICALL Java_com_peer1_internetmap_InternetMap_nativeSelectHoveredNode(JNIEnv* jenv, jobject obj) {
+JNIEXPORT bool JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeSelectHoveredNode(JNIEnv* jenv, jobject obj) {
     MapController* controller = renderer->beginControllerModification();
     bool ret = controller->selectHoveredNode();
     renderer->endControllerModification();
