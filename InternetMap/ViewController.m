@@ -96,6 +96,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if ([EAGLContext currentContext] == self.context) {
         [EAGLContext setCurrentContext:nil];
     }
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - View Setup
@@ -525,6 +527,13 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.timelineSlider.hidden = NO;
         self.timelineButton.selected = YES;
         self.playButton.hidden = NO;
+        
+        int year = (int)(self.minTimelineYear+self.timelineSlider.value*10);
+        [self.controller setTimelinePoint:[NSString stringWithFormat:@"%d0101", year]];
+
+        // Poke node info popover so it'll switch styles, note: camera move when reselecting node will
+        // show it again
+        [self dismissNodeInfoPopover];
     } else {
         [self leaveTimelineMode];
     }
@@ -536,48 +545,71 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.playButton.hidden = YES;
     [self.controller setTimelinePoint:@""];
     self.timelineSlider.value = self.timelineSlider.maximumValue;
-
+    
+    // Poke node info popover so it'll switch styles, note: camera move when reselecting node will
+    // show it again
+    [self dismissNodeInfoPopover];
 }
 
 -(void)displayInformationPopoverForCurrentNode {
+    NodeWrapper* node;
     
-    //check if node is the current node
-    BOOL isSelectingCurrentNode = NO;
-    if (self.cachedCurrentASN != NSNotFound) {
-        NodeWrapper* node = [self.controller nodeByASN:[NSString stringWithFormat:@"%i", self.cachedCurrentASN]];
-        if (node.index == self.controller.targetNode) {
-            isSelectingCurrentNode = YES;
+    if(self.controller.targetNode != INT_MAX) {
+        node = [self.controller nodeAtIndex:self.controller.targetNode];
+        if(!node) {
+            return;
         }
     }
-
-    NodeWrapper* node = [self.controller nodeAtIndex:self.controller.targetNode];
-    
-    //careful, the local assignment first is necessary, because the property is a weak reference
-    NodeInformationViewController* controller = [[NodeInformationViewController alloc] initWithNode:node isCurrentNode:isSelectingCurrentNode];
-    self.nodeInformationViewController = controller;
-    self.nodeInformationViewController.delegate = self;
-    //NSLog(@"ASN:%@, Text Desc: %@", node.asn, node.textDescription);
-    
-    [self dismissNodeInfoPopover];
-    //this line is important, in case the popover for another node is already visible and traceroute could be being performed
-    self.nodeInformationPopover = [[WEPopoverController alloc] initWithContentViewController:self.nodeInformationViewController];
-    self.nodeInformationPopover.delegate = self;
-    self.nodeInformationPopover.passthroughViews = @[self.view];
-    UIPopoverArrowDirection dir = UIPopoverArrowDirectionLeft;
-
-    if (![HelperMethods deviceIsiPad]) {
-        WEPopoverContainerViewProperties* prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
-        prop.upArrowImageName = nil;
-        self.nodeInformationPopover.containerViewProperties = prop;
-        dir = UIPopoverArrowDirectionUp;
+    else {
+        return;
     }
+    
+    if (self.timelineSlider.hidden == NO) {
+        // in timeline mdoe, we just show tooltip-style popover
+        [self.nodeInformationPopover dismissPopoverAnimated:NO];
+        self.nodeInformationPopover = [[WEPopoverController alloc] initWithContentViewController:[[NodeTooltipViewController alloc] initWithNode:node]];
+        self.nodeInformationPopover.passthroughViews = @[self.view];
+        CGPoint center = [self.controller getCoordinatesForNodeAtIndex:self.controller.targetNode];
+        [self.nodeInformationPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];
+    }
+    else {
+        //check if node is the current node
+        BOOL isSelectingCurrentNode = NO;
+        if (self.cachedCurrentASN != NSNotFound) {
+            NodeWrapper* node = [self.controller nodeByASN:[NSString stringWithFormat:@"%i", self.cachedCurrentASN]];
+            if (node.index == self.controller.targetNode) {
+                isSelectingCurrentNode = YES;
+            }
+        }
+
+        NodeWrapper* node = [self.controller nodeAtIndex:self.controller.targetNode];
         
-    [self.nodeInformationPopover presentPopoverFromRect:[self displayRectForNodeInfoPopover] inView:self.view permittedArrowDirections:dir animated:YES];
-    
-    if(isSelectingCurrentNode) {
-        self.youAreHereButton.selected = YES;
+        //careful, the local assignment first is necessary, because the property is a weak reference
+        NodeInformationViewController* controller = [[NodeInformationViewController alloc] initWithNode:node isCurrentNode:isSelectingCurrentNode];
+        self.nodeInformationViewController = controller;
+        self.nodeInformationViewController.delegate = self;
+        //NSLog(@"ASN:%@, Text Desc: %@", node.asn, node.textDescription);
+        
+        [self dismissNodeInfoPopover];
+        //this line is important, in case the popover for another node is already visible and traceroute could be being performed
+        self.nodeInformationPopover = [[WEPopoverController alloc] initWithContentViewController:self.nodeInformationViewController];
+        self.nodeInformationPopover.delegate = self;
+        self.nodeInformationPopover.passthroughViews = @[self.view];
+        UIPopoverArrowDirection dir = UIPopoverArrowDirectionLeft;
+
+        if (![HelperMethods deviceIsiPad]) {
+            WEPopoverContainerViewProperties* prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
+            prop.upArrowImageName = nil;
+            self.nodeInformationPopover.containerViewProperties = prop;
+            dir = UIPopoverArrowDirectionUp;
+        }
+            
+        [self.nodeInformationPopover presentPopoverFromRect:[self displayRectForNodeInfoPopover] inView:self.view permittedArrowDirections:dir animated:YES];
+        
+        if(isSelectingCurrentNode) {
+            self.youAreHereButton.selected = YES;
+        }
     }
-     
 }
 
 
@@ -608,6 +640,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     int year = (int)(self.minTimelineYear+self.timelineSlider.value*10);
     [self.controller setTimelinePoint:[NSString stringWithFormat:@"%d0101", year]];
     [self.timelinePopover dismissPopoverAnimated:NO];
+    [self dismissNodeInfoPopover];
 }
 
 #pragma mark - Helper Methods: Current ASN precaching

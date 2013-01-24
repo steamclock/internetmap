@@ -398,6 +398,8 @@ void MapController::setTimelinePoint(const std::string& origName) {
     data->updateDisplay(display);
     LOG("refreshed display for timeline point: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
     
-    updateTargetForIndex(targetNode);
+    if(targetNode != INT_MAX) {
+        updateTargetForIndex(targetNode);
+    }
 }
 

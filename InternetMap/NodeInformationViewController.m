@@ -38,7 +38,7 @@
 @implementation NodeInformationViewController
 
 - (void)dealloc {
-    if ([HelperMethods deviceIsiPad]) {
+    if (!	[HelperMethods deviceIsiPad]) {
         [_tracerouteTextView removeObserver:self forKeyPath:@"text"];
     }
 }
