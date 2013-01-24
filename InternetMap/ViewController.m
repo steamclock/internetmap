@@ -17,6 +17,8 @@
 #import "LabelNumberBoxView.h"
 #import "NodeWrapper.h"
 #import "TimelineInfoViewController.h"
+#include <OpenGLES/ES1/gl.h>
+#include <OpenGLES/ES2/gl.h>
 
 //TODO: move this to a better place.
 #define SELECTED_NODE_COLOR UIColorFromRGB(0xffa300)
@@ -67,6 +69,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (weak, nonatomic) IBOutlet UIButton* youAreHereButton;
 @property (weak, nonatomic) IBOutlet UIButton* visualizationsButton;
 @property (weak, nonatomic) IBOutlet UIButton* timelineButton;
+@property (weak, nonatomic) IBOutlet UIButton* screenshotButton;
 @property (weak, nonatomic) IBOutlet UISlider* timelineSlider;
 @property (weak, nonatomic) IBOutlet UIButton* playButton;
 @property (weak, nonatomic) IBOutlet UIImageView* logo;
@@ -218,6 +221,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     self.cachedCurrentASN = NSNotFound;
     [self precacheCurrentASN];
+    
+    self.screenshotButton.hidden = YES;
 }
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -237,6 +242,54 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
     [self.controller draw];
+}
+
+-(void)captureImageToFile:(NSString*)filename {
+    float width = self.view.bounds.size.width * [[UIScreen mainScreen] scale];
+    float height = self.view.bounds.size.height * [[UIScreen mainScreen] scale];
+
+    GLvoid *imageData = malloc(width*height*4);
+    glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
+    
+    CGDataProviderRef dataProviderRef = CGDataProviderCreateWithData(NULL, imageData, width*height*4, nil);
+    CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
+    CGImageRef imageRef = CGImageCreate(width, height, 8 /* bits per component*/, 32 /* bits per pixel*/, width * 4, colorSpaceRef, kCGBitmapByteOrderDefault, dataProviderRef,    NULL, NO, kCGRenderingIntentDefault);
+    
+    
+    UIImage* image = [UIImage imageWithCGImage:imageRef];
+    NSString  *pngPath = [NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/%@",filename]];
+    [UIImagePNGRepresentation(image) writeToFile:pngPath atomically:YES];
+    
+    CGDataProviderRelease(dataProviderRef);
+    CGColorSpaceRelease(colorSpaceRef);
+    CGImageRelease(imageRef);
+}
+
+static const int AXIS_DIVISIONS = 4;
+
+-(IBAction)screenshot:(id)sender {
+    GLint maxDims;
+    glGetIntegerv(GL_MAX_VIEWPORT_DIMS, &maxDims);
+    NSLog(@"viewport max: %d", maxDims);
+    
+    [self.controller draw];
+    [self captureImageToFile:@"master.png"];
+
+    [self.controller setDisplayScale:[[UIScreen mainScreen] scale]*AXIS_DIVISIONS];
+    
+    float width = self.view.bounds.size.width * [[UIScreen mainScreen] scale];
+    float height = self.view.bounds.size.height * [[UIScreen mainScreen] scale];
+    
+    for(int y = 0; y < AXIS_DIVISIONS; y++) {
+        for(int x = 0; x < AXIS_DIVISIONS; x++) {
+            glViewport(-(x * width), -(y * height), width * AXIS_DIVISIONS, height * AXIS_DIVISIONS);
+            [self.controller draw];
+            [self captureImageToFile:[NSString stringWithFormat:@"screenshot%.2d.png",(y * AXIS_DIVISIONS) + x]];
+        }
+    }
+    
+    [self.controller setDisplayScale:[[UIScreen mainScreen] scale]];
+    glViewport(0, 0, width, height);
 }
 
 #pragma mark - Touch and GestureRecognizer handlers

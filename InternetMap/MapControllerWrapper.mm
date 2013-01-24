@@ -85,6 +85,14 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
     _controller->display->camera->setDisplaySize(displaySize.width, displaySize.height);
 }
 
+- (float)displayScale {
+    return _controller->display->getDisplayScale();
+}
+
+- (void)setDisplayScale:(float)displayScale {
+    _controller->display->setDisplayScale(displayScale);
+}
+
 - (float)currentZoom {
     return _controller->display->camera->currentZoom();
 }

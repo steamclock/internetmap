@@ -44,7 +44,7 @@
 						<string key="NSFrame">{{914, 34}, {100, 36}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="395978741"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<int key="IBUIContentMode">4</int>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -269,7 +269,7 @@
 						<string key="NSFrame">{{20, 702}, {57, 57}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
+						<reference key="NSNextKeyView" ref="812170113"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -285,6 +285,28 @@
 							<string key="NSClassName">NSImage</string>
 							<string key="NSResourceName">timeline-play.png</string>
 						</object>
+						<reference key="IBUIFontDescription" ref="622120600"/>
+						<reference key="IBUIFont" ref="402028046"/>
+					</object>
+					<object class="IBUIButton" id="425495677">
+						<reference key="NSNextResponder" ref="191373211"/>
+						<int key="NSvFlags">292</int>
+						<string key="NSFrame">{{908, 16}, {106, 44}}</string>
+						<reference key="NSSuperview" ref="191373211"/>
+						<reference key="NSWindow"/>
+						<string key="NSReuseIdentifierKey">_NS:9</string>
+						<bool key="IBUIOpaque">NO</bool>
+						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+						<int key="IBUIContentHorizontalAlignment">0</int>
+						<int key="IBUIContentVerticalAlignment">0</int>
+						<int key="IBUIButtonType">1</int>
+						<string key="IBUINormalTitle">Screenshot</string>
+						<reference key="IBUIHighlightedTitleColor" ref="695740063"/>
+						<object class="NSColor" key="IBUINormalTitleColor">
+							<int key="NSColorSpace">1</int>
+							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
+						</object>
+						<reference key="IBUINormalTitleShadowColor" ref="179841405"/>
 						<reference key="IBUIFontDescription" ref="622120600"/>
 						<reference key="IBUIFont" ref="402028046"/>
 					</object>
@@ -431,6 +453,14 @@
 					<int key="connectionID">56</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">screenshotButton</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="425495677"/>
+					</object>
+					<int key="connectionID">62</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">searchButtonPressed:</string>
 						<reference key="source" ref="724447255"/>
@@ -484,6 +514,15 @@
 					</object>
 					<int key="connectionID">52</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">screenshot:</string>
+						<reference key="source" ref="425495677"/>
+						<reference key="destination" ref="372490531"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">61</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -501,6 +540,7 @@
 							<reference ref="580833300"/>
 							<reference ref="812170113"/>
 							<reference ref="395978741"/>
+							<reference ref="425495677"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -589,6 +629,11 @@
 						<reference key="object" ref="395978741"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">58</int>
+						<reference key="object" ref="425495677"/>
+						<reference key="parent" ref="191373211"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -615,12 +660,13 @@
 				<string key="41.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="43.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="50.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="58.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">56</int>
+			<int key="maxID">62</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -629,6 +675,7 @@
 					<string key="superclassName">GLKViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="playButtonPressed:">id</string>
+						<string key="screenshot:">id</string>
 						<string key="searchButtonPressed:">id</string>
 						<string key="timelineButtonPressed:">id</string>
 						<string key="timelineSliderValueChanged:">id</string>
@@ -638,6 +685,10 @@
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
 						<object class="IBActionInfo" key="playButtonPressed:">
 							<string key="name">playButtonPressed:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="screenshot:">
+							<string key="name">screenshot:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="searchButtonPressed:">
@@ -665,6 +716,7 @@
 						<string key="buttonContainerView">UIView</string>
 						<string key="logo">UIImageView</string>
 						<string key="playButton">UIButton</string>
+						<string key="screenshotButton">UIButton</string>
 						<string key="searchActivityIndicator">UIActivityIndicatorView</string>
 						<string key="searchButton">UIButton</string>
 						<string key="timelineActivityIndicator">UIActivityIndicatorView</string>
@@ -686,6 +738,10 @@
 						</object>
 						<object class="IBToOneOutletInfo" key="playButton">
 							<string key="name">playButton</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="screenshotButton">
+							<string key="name">screenshotButton</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="searchActivityIndicator">
