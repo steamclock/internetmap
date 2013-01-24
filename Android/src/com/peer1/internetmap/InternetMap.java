@@ -140,6 +140,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                     LayoutParams.WRAP_CONTENT);
             visualizationPopup.setBackgroundDrawable(new ColorDrawable(Color.argb(200, 0, 0, 0)));
             visualizationPopup.setOutsideTouchable(true);
+            visualizationPopup.setFocusable(true);
             visualizationPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 public void onDismiss() {
                     visualizationPopup = null;
@@ -152,8 +153,6 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-
-                    Log.d("INT_MAP", "Tapped row " + position);
                     adapter.selectedRow = position;
                     listView.invalidateViews();
                 }

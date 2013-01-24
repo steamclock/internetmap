@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 public class VisualizationArrayAdapter extends ArrayAdapter<String> {
     public int selectedRow;
@@ -15,12 +16,14 @@ public class VisualizationArrayAdapter extends ArrayAdapter<String> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = super.getView(position, convertView, parent);
+        TextView textView = (TextView) super.getView(position, convertView, parent);
         if (position == selectedRow) {
-            view.setBackgroundColor(Color.RED);
+            textView.setBackgroundColor(Color.RED);
+            textView.setTextColor(Color.BLACK);
         }else {
-            view.setBackgroundColor(Color.parseColor("#80000000"));
+            textView.setBackgroundColor(Color.parseColor("#80000000"));
+            textView.setTextColor(Color.WHITE);
         }
-        return view;
+        return textView;
     }
 }
