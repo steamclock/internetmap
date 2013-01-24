@@ -38,7 +38,7 @@
 @implementation NodeInformationViewController
 
 - (void)dealloc {
-    if (!	[HelperMethods deviceIsiPad]) {
+    if (![HelperMethods deviceIsiPad]) {
         [_tracerouteTextView removeObserver:self forKeyPath:@"text"];
     }
 }
@@ -233,6 +233,10 @@
     self.tracerouteTextView.font = [UIFont fontWithName:FONT_NAME_REGULAR size:12];
     [self.tracerouteContainerView addSubview:self.tracerouteTextView];
     
+    if (![HelperMethods deviceIsiPad]) {
+        [self.tracerouteTextView addObserver:self forKeyPath:@"text" options:NSKeyValueObservingOptionNew context:nil];
+    }
+    
 }
 
 - (IBAction)doneTapped {
@@ -254,9 +258,7 @@
         }
         self.scrollView.contentSize = CGSizeMake(self.contentSizeForViewInPopover.width, contentHeight);
         
-        if (![HelperMethods deviceIsiPad]) {
-            [self.tracerouteTextView addObserver:self forKeyPath:@"text" options:NSKeyValueObservingOptionNew context:nil];
-        }
+
         
         self.tracerouteContainerView.alpha = 0;
         self.tracerouteContainerView.hidden = NO;
