@@ -18,6 +18,10 @@ void cameraMoveFinishedCallback(void) {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"cameraMovementFinished" object:nil];
 }
 
+void lostSelectedNodeCallback(void) {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"lostSelectedNode" object:nil];
+}
+
 void loadTextResource(std::string* resource, const std::string& base, const std::string& extension) {
     NSString* path = [[NSBundle mainBundle] pathForResource:[NSString stringWithCString:base.c_str() encoding:NSUTF8StringEncoding] ofType:[NSString stringWithCString:extension.c_str() encoding:NSUTF8StringEncoding]];
     NSString* contents = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
@@ -74,7 +78,7 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
 }
 
 - (CGSize)displaySize {
-    return CGSizeMake(_controller->display->camera->displayHeight(), _controller->display->camera->displayWidth());
+    return CGSizeMake(_controller->display->camera->displayWidth(), _controller->display->camera->displayHeight());
 }
 
 - (void)setDisplaySize:(CGSize)displaySize {

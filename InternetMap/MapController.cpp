@@ -23,6 +23,7 @@
 
 // TODO: clean this up
 void loadTextResource(std::string* resource, const std::string& base, const std::string& extension);
+void lostSelectedNodeCallback(void);
 
 MapController::MapController() :
     targetNode(INT_MAX),
@@ -122,13 +123,20 @@ void MapController::deselectCurrentNode(){
 
 void MapController::updateTargetForIndex(int index) {
     Target target;
+    
     // update current node to default state
     deselectCurrentNode();
+    clearHighlightLines();
     
     //set new node as targeted
     if (index != INT_MAX) {
         targetNode = index;
         NodePointer node = data->nodeAtIndex(targetNode);
+        if (!node->active) {
+            targetNode = INT_MAX;
+            lostSelectedNodeCallback();
+            return;
+        }
         Point3 origTarget = data->visualization->nodePosition(node);
 
         target.vector = Vector3(origTarget.getX(), origTarget.getY(), origTarget.getZ());
@@ -149,6 +157,24 @@ void MapController::updateTargetForIndex(int index) {
     display->camera->setTarget(target);
 }
 
+static bool importanceCompareConnections(ConnectionPointer i, ConnectionPointer j) {
+    // need a bit of a complicated chain, becasue we want to make sure we are compaing the importance of the nodes that are NOT
+    // the selected node (i.e. the one that is the same for both connections)
+    if(i->first == j->first) {
+        return i->second->importance > j->second->importance;
+    }
+
+    if(i->first == j->second) {
+        return i->second->importance > j->first->importance;
+    }
+
+    if(i->second == j->first) {
+        return i->first->importance > j->second->importance;
+    }
+
+    return i->first->importance > j->first->importance;
+}
+
 void MapController::highlightConnections(NodePointer node) {
     if(node == NULL) {
         clearHighlightLines();
@@ -164,25 +190,13 @@ void MapController::highlightConnections(NodePointer node) {
         }
     }
     
+    static const unsigned int NUM_IMPORTANT_CONNECTIONS = 50;
+    static const unsigned int NUM_RENDERED_CONNECTIONS = 100;
     
-    if (filteredConnections.size() > 100) {
-        // Only show important ones
-        
-        std::vector<ConnectionPointer> importantConnections;
-        
-        for (unsigned int i = 0; i<filteredConnections.size(); i++) {
-            ConnectionPointer connection = filteredConnections[i];
-            if((connection->first->importance > 0.01) && (connection->second->importance > 0.01)) {
-                importantConnections.push_back(connection);
-            }
-        }
-        
-        filteredConnections = importantConnections;
-    }
-    
-    if(filteredConnections.size() == 0 || filteredConnections.size() > 100) {
-        clearHighlightLines();
-        return;
+    if (filteredConnections.size() > NUM_RENDERED_CONNECTIONS) {
+        // show a few of the most important ones, then a random selection from the rest
+        std::sort(filteredConnections.begin(), filteredConnections.end(), importanceCompareConnections);
+        std::random_shuffle(filteredConnections.begin() + NUM_IMPORTANT_CONNECTIONS, filteredConnections.end());
     }
     
     shared_ptr<DisplayLines> lines(new DisplayLines(filteredConnections.size()));
@@ -191,7 +205,7 @@ void MapController::highlightConnections(NodePointer node) {
     Color brightColor = ColorFromRGB(SELECTED_CONNECTION_COLOR_BRIGHT_HEX);
     Color dimColor = ColorFromRGB(SELECTED_CONNECTION_COLOR_DIM_HEX);
 
-    for(unsigned int i = 0; i < filteredConnections.size(); i++) {
+    for(unsigned int i = 0; i < std::min((unsigned int)(filteredConnections.size()), NUM_RENDERED_CONNECTIONS); i++) {
         ConnectionPointer connection = filteredConnections[i];
         NodePointer a = connection->first;
         NodePointer b = connection->second;
@@ -383,5 +397,9 @@ void MapController::setTimelinePoint(const std::string& origName) {
     start = clock();
     data->updateDisplay(display);
     LOG("refreshed display for timeline point: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
+    
+    if(targetNode != INT_MAX) {
+        updateTargetForIndex(targetNode);
+    }
 }
 
