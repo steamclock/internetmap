@@ -128,6 +128,35 @@ JNIEXPORT bool JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeSel
     return ret;
 }
 
+JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeNodeAtIndex(JNIEnv* jenv, jobject obj,
+        int index) {
+    MapController* controller = renderer->beginControllerModification();
+    if (index < 0 || index >= controller->data->nodes.size()) {
+        LOG("node index out of range");
+        renderer->endControllerModification();
+        return 0;
+    }
+    NodePointer node = controller->data->nodes[index];
+    //build a java copy of the data
+    jclass nodeWrapperClass = jenv->FindClass("com/peer1/internetmap/NodeWrapper");
+    jmethodID constructor = jenv->GetMethodID(nodeWrapperClass, "<init>",
+            "(IFILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+    jobject wrapper = jenv->NewObject(nodeWrapperClass, constructor, node->index, node->importance,
+            node->connections.size(), jenv->NewStringUTF(node->asn.c_str()),
+            jenv->NewStringUTF(node->textDescription.c_str()), jenv->NewStringUTF(node->typeString.c_str()));
+
+    renderer->endControllerModification();
+    return wrapper;
+}
+
+JNIEXPORT int JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeTargetNodeIndex(JNIEnv* jenv, jobject obj) {
+    MapController* controller = renderer->beginControllerModification();
+    //not actually modifying anything here... TODO can I have a readonly accessor instead?
+    int ret = controller->targetNode;
+    renderer->endControllerModification();
+    return ret;
+}
+
 void DetachThreadFromVM(void) {
     javaVM->DetachCurrentThread();
 }

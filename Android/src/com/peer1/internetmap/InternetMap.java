@@ -220,6 +220,16 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             mController.nativeSelectHoveredNode();
             //TODO: iOS does some deselect stuff if that call failed.
             //but, I think maybe that should just happen inside the controller automatically.
+            
+            //test nodewrapper things
+            int index = mController.nativeTargetNodeIndex();
+            Log.d(TAG, String.format("node at index %d", index));
+            NodeWrapper node = mController.nativeNodeAtIndex(index);
+            if (node == null) {
+                Log.d(TAG, "is null");
+            } else {
+                Log.d(TAG, String.format("has index %d and asn %s", node.index, node.asn));
+            }
             return true;
         }
     }

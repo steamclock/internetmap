@@ -9,4 +9,6 @@ public class MapControllerWrapper {
     public native void nativeRotateRadiansZ(float radians);
     public native void nativeStartMomentumRotationWithVelocity(float velocity);
     public native boolean nativeSelectHoveredNode();
+    public native NodeWrapper nativeNodeAtIndex(int index);
+    public native int nativeTargetNodeIndex();
 }

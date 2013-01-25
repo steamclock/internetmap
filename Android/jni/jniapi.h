@@ -25,6 +25,8 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeRot
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeStartMomentumRotationWithVelocity(JNIEnv* jenv, jobject obj,
         float velocity);
 JNIEXPORT bool JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeSelectHoveredNode(JNIEnv* jenv, jobject obj);
+JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeNodeAtIndex(JNIEnv* jenv, jobject obj, int index);
+JNIEXPORT int JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeTargetNodeIndex(JNIEnv* jenv, jobject obj);
 };
 
 #endif // JNIAPI_H
