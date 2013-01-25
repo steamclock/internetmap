@@ -133,12 +133,12 @@
 		A6F3F5841640F1FB0070E6AE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F3F5831640F1FB0070E6AE /* ViewController.m */; };
 		A6F3F5871640F1FB0070E6AE /* ViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6F3F5851640F1FB0070E6AE /* ViewController_iPhone.xib */; };
 		A6F3F58A1640F1FB0070E6AE /* ViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6F3F5881640F1FB0070E6AE /* ViewController_iPad.xib */; };
-		D414E21A1697839000C41CFC /* SCIcmpPacketUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = D414E2191697839000C41CFC /* SCIcmpPacketUtility.m */; };
-		D414E21D169783C300C41CFC /* SCTracerouteUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = D414E21C169783C300C41CFC /* SCTracerouteUtility.m */; };
-		D414E220169783F200C41CFC /* SCPacketRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = D414E21F169783F200C41CFC /* SCPacketRecord.m */; };
 		D4548E1E16A63DD700C20CE9 /* MapController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1180CF3C169B4D5500F1FB73 /* MapController.cpp */; };
 		D468090416795D4600A2C1CC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D468090216795CC200A2C1CC /* SystemConfiguration.framework */; };
 		D468090516795D4D00A2C1CC /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D468090016795CB700A2C1CC /* CFNetwork.framework */; };
+		D4C1083116B2043D00CA4A0E /* SCIcmpPacketUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = D4C1082B16B2043D00CA4A0E /* SCIcmpPacketUtility.m */; };
+		D4C1083216B2043D00CA4A0E /* SCPacketRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = D4C1082E16B2043D00CA4A0E /* SCPacketRecord.m */; };
+		D4C1083316B2043D00CA4A0E /* SCTracerouteUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = D4C1083016B2043D00CA4A0E /* SCTracerouteUtility.m */; };
 		D4CEA32C16694E65004B8E8A /* eye.png in Resources */ = {isa = PBXBuildFile; fileRef = D4CEA32216694E65004B8E8A /* eye.png */; };
 		D4CEA32D16694E65004B8E8A /* eye@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D4CEA32316694E65004B8E8A /* eye@2x.png */; };
 		D4CEA32E16694E65004B8E8A /* peer1-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = D4CEA32416694E65004B8E8A /* peer1-logo.png */; };
@@ -357,15 +357,15 @@
 		A6F3F5831640F1FB0070E6AE /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		A6F3F5861640F1FB0070E6AE /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPhone.xib; sourceTree = "<group>"; };
 		A6F3F5891640F1FB0070E6AE /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPad.xib; sourceTree = "<group>"; };
-		D414E2181697839000C41CFC /* SCIcmpPacketUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCIcmpPacketUtility.h; sourceTree = "<group>"; };
-		D414E2191697839000C41CFC /* SCIcmpPacketUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCIcmpPacketUtility.m; sourceTree = "<group>"; };
-		D414E21B169783C300C41CFC /* SCTracerouteUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCTracerouteUtility.h; sourceTree = "<group>"; };
-		D414E21C169783C300C41CFC /* SCTracerouteUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCTracerouteUtility.m; sourceTree = "<group>"; };
-		D414E21E169783F200C41CFC /* SCPacketRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCPacketRecord.h; sourceTree = "<group>"; };
-		D414E21F169783F200C41CFC /* SCPacketRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCPacketRecord.m; sourceTree = "<group>"; };
-		D414E2211697923A00C41CFC /* SCPacketDeclarations.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCPacketDeclarations.h; sourceTree = "<group>"; };
 		D468090016795CB700A2C1CC /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		D468090216795CC200A2C1CC /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		D4C1082A16B2043D00CA4A0E /* SCIcmpPacketUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCIcmpPacketUtility.h; path = "External Code/SCPinions/SCPacketUtility/SCIcmpPacketUtility.h"; sourceTree = SOURCE_ROOT; };
+		D4C1082B16B2043D00CA4A0E /* SCIcmpPacketUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCIcmpPacketUtility.m; path = "External Code/SCPinions/SCPacketUtility/SCIcmpPacketUtility.m"; sourceTree = SOURCE_ROOT; };
+		D4C1082C16B2043D00CA4A0E /* SCPacketDeclarations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPacketDeclarations.h; path = "External Code/SCPinions/SCPacketUtility/SCPacketDeclarations.h"; sourceTree = SOURCE_ROOT; };
+		D4C1082D16B2043D00CA4A0E /* SCPacketRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPacketRecord.h; path = "External Code/SCPinions/SCPacketUtility/SCPacketRecord.h"; sourceTree = SOURCE_ROOT; };
+		D4C1082E16B2043D00CA4A0E /* SCPacketRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPacketRecord.m; path = "External Code/SCPinions/SCPacketUtility/SCPacketRecord.m"; sourceTree = SOURCE_ROOT; };
+		D4C1082F16B2043D00CA4A0E /* SCTracerouteUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCTracerouteUtility.h; path = "External Code/SCPinions/SCPacketUtility/SCTracerouteUtility.h"; sourceTree = SOURCE_ROOT; };
+		D4C1083016B2043D00CA4A0E /* SCTracerouteUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCTracerouteUtility.m; path = "External Code/SCPinions/SCPacketUtility/SCTracerouteUtility.m"; sourceTree = SOURCE_ROOT; };
 		D4CEA32216694E65004B8E8A /* eye.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = eye.png; path = Images/eye.png; sourceTree = "<group>"; };
 		D4CEA32316694E65004B8E8A /* eye@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "eye@2x.png"; path = "Images/eye@2x.png"; sourceTree = "<group>"; };
 		D4CEA32416694E65004B8E8A /* peer1-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "peer1-logo.png"; path = "Images/peer1-logo.png"; sourceTree = "<group>"; };
@@ -470,6 +470,7 @@
 		114DD459167AA62D0061CB36 /* ExternalCode */ = {
 			isa = PBXGroup;
 			children = (
+				D414E21616977D2300C41CFC /* SCPacketUtility */,
 				119E5A6A16ADE28700F29E3E /* TTTAttributedLabel */,
 				1127C9D616A0D3A500413FE9 /* jsoncpp */,
 				A6191830169DE85F003A3A4A /* vectormath */,
@@ -761,7 +762,6 @@
 		A6F3F56C1640F1FB0070E6AE /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				D414E21616977D2300C41CFC /* SCNetworkingUtility */,
 				1180CF54169B80E300F1FB73 /* Fonts */,
 				D4F65DD9166D56A90077BF5A /* 3rd Party Code */,
 				A6F3F5751640F1FB0070E6AE /* AppDelegate.h */,
@@ -814,18 +814,19 @@
 			path = InternetMap;
 			sourceTree = "<group>";
 		};
-		D414E21616977D2300C41CFC /* SCNetworkingUtility */ = {
+		D414E21616977D2300C41CFC /* SCPacketUtility */ = {
 			isa = PBXGroup;
 			children = (
-				D414E2181697839000C41CFC /* SCIcmpPacketUtility.h */,
-				D414E2191697839000C41CFC /* SCIcmpPacketUtility.m */,
-				D414E21B169783C300C41CFC /* SCTracerouteUtility.h */,
-				D414E21C169783C300C41CFC /* SCTracerouteUtility.m */,
-				D414E21E169783F200C41CFC /* SCPacketRecord.h */,
-				D414E21F169783F200C41CFC /* SCPacketRecord.m */,
-				D414E2211697923A00C41CFC /* SCPacketDeclarations.h */,
+				D4C1082A16B2043D00CA4A0E /* SCIcmpPacketUtility.h */,
+				D4C1082B16B2043D00CA4A0E /* SCIcmpPacketUtility.m */,
+				D4C1082C16B2043D00CA4A0E /* SCPacketDeclarations.h */,
+				D4C1082D16B2043D00CA4A0E /* SCPacketRecord.h */,
+				D4C1082E16B2043D00CA4A0E /* SCPacketRecord.m */,
+				D4C1082F16B2043D00CA4A0E /* SCTracerouteUtility.h */,
+				D4C1083016B2043D00CA4A0E /* SCTracerouteUtility.m */,
 			);
-			name = SCNetworkingUtility;
+			name = SCPacketUtility;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		D4CEA32016694E53004B8E8A /* Images */ = {
@@ -1041,9 +1042,6 @@
 				116E598116828AC300F653BC /* UIView+Convenience.m in Sources */,
 				11FFB390167FC3CE00309545 /* DisplayNodes.cpp in Sources */,
 				1186ACE816851DBE0061FA49 /* NodeTooltipViewController.m in Sources */,
-				D414E21A1697839000C41CFC /* SCIcmpPacketUtility.m in Sources */,
-				D414E21D169783C300C41CFC /* SCTracerouteUtility.m in Sources */,
-				D414E220169783F200C41CFC /* SCPacketRecord.m in Sources */,
 				D4548E1E16A63DD700C20CE9 /* MapController.cpp in Sources */,
 				11754302169BA790008150BB /* LabelNumberBoxView.m in Sources */,
 				A600AAC916A0E520003B1028 /* OpenGL.cpp in Sources */,
@@ -1055,6 +1053,9 @@
 				A600AAE516A9D1C6003B1028 /* VertexBuffer.cpp in Sources */,
 				1175A9F716A9FC0500B93031 /* TimelineInfoViewController.m in Sources */,
 				119E5A6D16ADE28700F29E3E /* TTTAttributedLabel.m in Sources */,
+				D4C1083116B2043D00CA4A0E /* SCIcmpPacketUtility.m in Sources */,
+				D4C1083216B2043D00CA4A0E /* SCPacketRecord.m in Sources */,
+				D4C1083316B2043D00CA4A0E /* SCTracerouteUtility.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

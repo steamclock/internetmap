@@ -8,21 +8,23 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeOnPause(JNIE
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeOnStop(JNIEnv* jenv, jobject obj);
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeSetSurface(JNIEnv* jenv, jobject obj,
         jobject surface, float scale);
-JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeRotateRadiansXY(JNIEnv* jenv, jobject obj,
+
+//mapcontroller
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeRotateRadiansXY(JNIEnv* jenv, jobject obj,
         float radX, float radY);
-JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeStartMomentumPanWithVelocity(JNIEnv* jenv, jobject obj,
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeStartMomentumPanWithVelocity(JNIEnv* jenv, jobject obj,
         float vX, float vY);
-JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeHandleTouchDownAtPoint(JNIEnv* jenv, jobject obj,
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeHandleTouchDownAtPoint(JNIEnv* jenv, jobject obj,
         float x, float y);
-JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeZoomByScale(JNIEnv* jenv, jobject obj,
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeZoomByScale(JNIEnv* jenv, jobject obj,
         float scale);
-JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeStartMomentumZoomWithVelocity(JNIEnv* jenv, jobject obj,
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeStartMomentumZoomWithVelocity(JNIEnv* jenv, jobject obj,
         float velocity);
-JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeRotateRadiansZ(JNIEnv* jenv, jobject obj,
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeRotateRadiansZ(JNIEnv* jenv, jobject obj,
         float radians);
-JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeStartMomentumRotationWithVelocity(JNIEnv* jenv, jobject obj,
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeStartMomentumRotationWithVelocity(JNIEnv* jenv, jobject obj,
         float velocity);
-JNIEXPORT bool JNICALL Java_com_peer1_internetmap_InternetMap_nativeSelectHoveredNode(JNIEnv* jenv, jobject obj);
+JNIEXPORT bool JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeSelectHoveredNode(JNIEnv* jenv, jobject obj);
 };
 
 #endif // JNIAPI_H
