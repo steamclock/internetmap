@@ -16,7 +16,6 @@
 
 @property (nonatomic) NSUInteger targetNode;
 @property (nonatomic) CGSize displaySize;
-@property (nonatomic) float displayScale;
 @property (nonatomic, readonly) float currentZoom;
 @property (nonatomic, strong) NSString* lastSearchIP;
 
@@ -54,5 +53,6 @@
 - (void)setTimelinePoint:(NSString*)timelinePointName;
 
 
+- (void)setViewSubregion:(CGRect)rect;
 
 @end

@@ -263,33 +263,29 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     CGDataProviderRelease(dataProviderRef);
     CGColorSpaceRelease(colorSpaceRef);
     CGImageRelease(imageRef);
+    free(imageData);
 }
 
-static const int AXIS_DIVISIONS = 4;
+static const int AXIS_DIVISIONS = 8;
 
 -(IBAction)screenshot:(id)sender {
-    GLint maxDims;
-    glGetIntegerv(GL_MAX_VIEWPORT_DIMS, &maxDims);
-    NSLog(@"viewport max: %d", maxDims);
-    
+    NSTimeInterval time = [NSDate timeIntervalSinceReferenceDate];
+
     [self.controller draw];
     [self captureImageToFile:@"master.png"];
-
-    [self.controller setDisplayScale:[[UIScreen mainScreen] scale]*AXIS_DIVISIONS];
-    
-    float width = self.view.bounds.size.width * [[UIScreen mainScreen] scale];
-    float height = self.view.bounds.size.height * [[UIScreen mainScreen] scale];
-    
+        
     for(int y = 0; y < AXIS_DIVISIONS; y++) {
         for(int x = 0; x < AXIS_DIVISIONS; x++) {
-            glViewport(-(x * width), -(y * height), width * AXIS_DIVISIONS, height * AXIS_DIVISIONS);
+            CGRect subregion = CGRectMake((float)x / (float)AXIS_DIVISIONS, (float)y / (float)AXIS_DIVISIONS, 1.0f / (float)AXIS_DIVISIONS, 1.0f / (float)AXIS_DIVISIONS);
+            [self.controller setViewSubregion:subregion];
+            [self.controller update:time];
             [self.controller draw];
             [self captureImageToFile:[NSString stringWithFormat:@"screenshot%.2d.png",(y * AXIS_DIVISIONS) + x]];
         }
     }
     
-    [self.controller setDisplayScale:[[UIScreen mainScreen] scale]];
-    glViewport(0, 0, width, height);
+    CGRect subregion = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
+    [self.controller setViewSubregion:subregion];
 }
 
 #pragma mark - Touch and GestureRecognizer handlers

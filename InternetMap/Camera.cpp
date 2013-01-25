@@ -38,12 +38,19 @@ Camera::Camera() :
     _rotationVelocity(0.0f),
     _rotationEndTime(0.0f),
     _rotationStartTime(0.0f),
-    _rotationDuration(0.0f)
+    _rotationDuration(0.0f),
+    _subregionX(0.0f),
+    _subregionY(0.0f),
+    _subregionWidth(1.0f),
+    _subregionHeight(1.0f)
 {
     _rotationMatrix = Matrix4::identity();
     _panVelocity.x = 0.0f;
     _panVelocity.y = 0.0f;
 }
+
+static const float NEAR_PLANE = 0.1f;
+static const float FAR_PLANE = 100.0f;
 
 void Camera::update(TimeInterval currentTime) {
     TimeInterval delta = currentTime - _updateTime;
@@ -61,7 +68,21 @@ void Camera::update(TimeInterval currentTime) {
     Matrix4 model = _rotationMatrix * Matrix4::translation(Vector3(-currentTarget.getX(), -currentTarget.getY(), -currentTarget.getZ()));
     Matrix4 view = Matrix4::translation(Vector3(0.0f, 0.0f, _zoom));
     Matrix4 modelView = view * model;
-    Matrix4 projectionMatrix = Matrix4::perspective(DegreesToRadians(65.0f), aspect, 0.1f, 100.0f);
+    Matrix4 projectionMatrix;
+    
+    if((_subregionX == 0.0f) && (_subregionY == 0.0f) && (_subregionWidth == 1.0f) && (_subregionHeight == 1.0f)) {
+       projectionMatrix = Matrix4::perspective(DegreesToRadians(65.0f), aspect, NEAR_PLANE, FAR_PLANE);
+    }
+    else {
+        float halfX = (float)tan( double( DegreesToRadians(65.0f) * 0.5 ) ) * NEAR_PLANE;
+        float halfY = halfX / aspect;
+        
+        projectionMatrix = Matrix4::frustum(-halfX + (_subregionX * halfX * 2),
+                                            -halfX + (_subregionX * halfX * 2) + (_subregionWidth * halfX * 2),
+                                            -halfY + (_subregionY * halfY * 2),
+                                            -halfY + (_subregionY * halfY * 2) + (_subregionHeight * halfY * 2),
+                                            NEAR_PLANE, FAR_PLANE);
+    }
     
     _projectionMatrix = projectionMatrix;
     _modelViewMatrix = modelView;
@@ -343,3 +364,15 @@ void Camera::stopMomentumRotation(void) {
 void Camera::resetIdleTimer() {
     _idleStartTime = _updateTime;
 }
+
+void Camera::setViewSubregion(float x, float y, float w, float h) {
+    _subregionX = x;
+    _subregionY = y;
+    _subregionWidth = w;
+    _subregionHeight = h;    
+}
+
+float Camera::getSubregionScale(void) {
+    return 1.0f / _subregionWidth;
+}
+

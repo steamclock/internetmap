@@ -61,3 +61,29 @@ Other Android Gotchas & Advice
 - If all else fails, restart Eclipse
 
 
+Taking high-res screenshots
+===========================
+
+To take a print resolution screenshot, you need to do the following:
+
+- Turn the screenshot button on locally by commenting out the line "self.screenshotButton.hidden = YES;" in ViewController.m
+
+- If necessary modify the number of subdivisions to do by changing AXIS_DIVISIONS in ViewController.m (the default is 8, whihc will produce a 16k shot on a retina iPad, different values may be needed for other devices to get the desired resolutions).
+
+- Run the application, set up the intended view, and hit the screenshot button in the upper right hand corner.
+
+- Download the data from the app
+  - Open the Organizer window in XCode 
+  - Go to the devices tab
+  - Find the current device
+  - Click on the "Applications" section
+  - Hit download at the bottom of the window and pick a location
+
+- If you don't have it install Imagemagick (with homebrew, you can do 'brew install imagemagick')
+
+- Open up a terminal and go to the AppData/Documetn directory inside the bundle you downloaded 
+
+- Run the following command : montage screenshot*.png -mode concatenate -tile 8x8 final.png
+  - You may need to change "8x8" if you changed AXIS_DIVISIONS earlier
+
+

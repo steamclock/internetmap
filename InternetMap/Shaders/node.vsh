@@ -24,12 +24,12 @@ void main()
 {
     fragColor = color;
     vec4 transformed = modelViewMatrix * position;
-    vec4 projectedPoint = projectionMatrix * vec4(size, 0, transformed.z, 1);
-    float sizeInPixels = projectedPoint.x * screenWidth / (projectedPoint.w*2.0);
+    vec4 projectedOrigin = projectionMatrix * transformed;
+    vec4 projectedPoint = projectionMatrix * vec4(transformed.x + size, transformed.y, transformed.z, 1);
+    float sizeInPixels = (projectedPoint.x - projectedOrigin.x) * screenWidth / (projectedPoint.w*2.0);
     if(sizeInPixels < minSize) {
         sizeInPixels = minSize;
     }
-    vec4 projectedOrigin = projectionMatrix * transformed;
     
     sharpness = clamp( 1.0 - ((abs(transformed.z) - maxSharpDist) / (minSharpDist - maxSharpDist)), 0.0, 1.0);
     gl_Position = projectedOrigin;
