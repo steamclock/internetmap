@@ -181,8 +181,10 @@
 }
 -(void)timeExceededForPacket:(NSData*)packet {
     NSInteger sequenceNumber = [self getSequenceNumberForPacket:packet];
+    
     int numberOfTimeoutsForIP = 0;
-    for (SCPacketRecord* packetRecord in [self.packetUtility.packetRecords copy]) {
+    
+    for (SCPacketRecord* packetRecord in self.packetUtility.packetRecords) {
         if (packetRecord.sequenceNumber == sequenceNumber) {
             packetRecord.timedOut = YES;
         }
@@ -192,7 +194,7 @@
         }
     }
     
-    if (numberOfTimeoutsForIP > 2) {
+    if (numberOfTimeoutsForIP > 1) {
         if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:withHops:)]) {
             NSArray* hops = self.hopsForCurrentIP;
             [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: * * * Hop did not reply or timed out.", self.ttlCount] withHops:hops];
@@ -237,7 +239,7 @@
 
 -(NSString*)getIpFromIPHeader:(NSData*)packet{
     const IPHeader* IPHeader = (const struct IPHeader *) ((const uint8_t *)[packet bytes]);
-    NSString* ip = [NSString stringWithFormat:@"%d.%d.%d.%d", IPHeader->sourceAddress[0], IPHeader->sourceAddress[1], IPHeader->sourceAddress[3], IPHeader->sourceAddress[4]];
+    NSString* ip = [NSString stringWithFormat:@"%d.%d.%d.%d", IPHeader->sourceAddress[0], IPHeader->sourceAddress[1], IPHeader->sourceAddress[2], IPHeader->sourceAddress[3]];
     return ip;
 }
 
