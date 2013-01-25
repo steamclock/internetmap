@@ -60,6 +60,8 @@ Other Android Gotchas & Advice
 
 - If all else fails, restart Eclipse
 
+- If you get a crash in native code on Android, you can extract a callstack via the following (note, env variables are not defined by default, you need to either define them, or replace with actual paths):
+  $(ANDROIDSDK)/platform-tools/adb logcat | $(NDKROOT)/ndk-stack -sym $(PROJECTROOT)/obj/local/armeabi 
 
 Taking high-res screenshots
 ===========================
