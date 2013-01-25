@@ -130,27 +130,39 @@
     }
 }
 
+
 -(void)processErrorICMPPacket:(NSData *)packet arrivedAt:(NSDate*)dateTime{
     
     // Get sequence number
     NSInteger sequenceNumber = [self getSequenceNumberForPacket:packet];
     
     //Get IP for machine the packet originated from
-    NSString* IP = [self getIpFromIPHeader:packet];
+    NSString* ipInPacket = [self getIpFromIPHeader:packet];
     
-    int numberOfRepliesForIP = 0;
+    //Tracks number of packets we've received that are from the same IP
+    int numberOfRepliesForIP = 0;    
+    //If we have a packet record with a response address that matches our IP, then we increment our number of replies
+    for (SCPacketRecord* packetRecord in self.packetUtility.packetRecords) {
+        if ([packetRecord.responseAddress isEqualToString:ipInPacket]) {
+            numberOfRepliesForIP++;
+        }
+    }
     
-    for (SCPacketRecord* packetRecord in [self.packetUtility.packetRecords copy]) {
+    //Check if the sequence number matches for any packetrecord that we have
+    for (SCPacketRecord* packetRecord in self.packetUtility.packetRecords) {
+
         if ((packetRecord.sequenceNumber == sequenceNumber) && !packetRecord.timedOut) {
             // If the sequence numbers match, record the time the packet arrived & rtt
             packetRecord.arrival = dateTime;
             packetRecord.rtt = [packetRecord.arrival timeIntervalSinceDate:packetRecord.departure] * 1000;
-            packetRecord.responseAddress = IP;
+            packetRecord.responseAddress = ipInPacket;
             
             if (numberOfRepliesForIP == 0) {
-                [self foundNewIP:IP withReport:[NSString stringWithFormat:@"%d: %@  %.2fms", self.ttlCount, IP, packetRecord.rtt]];
-                if ([IP isEqualToString:self.targetIP]) {
-                    // YAY DONE.
+                
+                [self foundNewIP:ipInPacket withReport:[NSString stringWithFormat:@"%d: %@  %.2fms", self.ttlCount, ipInPacket, packetRecord.rtt]];
+                
+                if ([ipInPacket isEqualToString:self.targetIP]) {
+                    // We're done the traceroute! Woo. 
                     if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidComplete:)]) {
                         NSArray* hops = self.hopsForCurrentIP;
                         [self.delegate tracerouteDidComplete:hops];
@@ -159,16 +171,12 @@
                 }
             }
         }
-        
-        if ([packetRecord.responseAddress isEqualToString:IP]) {
-            numberOfRepliesForIP++;
-        }
+    }
     
-        if (numberOfRepliesForIP == 3) {
-            // If we got back all three packets, that's great
-            self.ttlCount++;
-            [self sendPackets:nil];
-        } 
+    if (numberOfRepliesForIP == 2) {
+        // If we got back all three packets, that's great
+        self.ttlCount++;
+        [self sendPackets:nil];
     }
 }
 -(void)timeExceededForPacket:(NSData*)packet {
@@ -244,7 +252,7 @@
 - (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didSendPacket:(NSData *)packet{
     
     //If we just don't get ANY packets back after a whole two seconds, bail on the hop
-    [self performSelector:@selector(timeExceededForPacket:) withObject:packet afterDelay:5];
+    [self performSelector:@selector(timeExceededForPacket:) withObject:packet afterDelay:0.5];
     
     
 }
