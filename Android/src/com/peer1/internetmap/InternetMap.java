@@ -33,7 +33,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     
     private MapControllerWrapper mController;
 
-    private PopupWindow visualizationPopup;
+    private VisualizationPopupWindow visualizationPopup;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -131,34 +131,14 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
     public void visualizationsButtonPressed(View view) {
         if (visualizationPopup == null) {
-
-            LayoutInflater layoutInflater
-                    = (LayoutInflater)getBaseContext()
-                    .getSystemService(LAYOUT_INFLATER_SERVICE);
+            LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
             View popupView = layoutInflater.inflate(R.layout.visualizationview, null);
-            visualizationPopup = new PopupWindow(popupView, LayoutParams.WRAP_CONTENT,
-                    LayoutParams.WRAP_CONTENT);
-            visualizationPopup.setBackgroundDrawable(new ColorDrawable(Color.argb(200, 0, 0, 0)));
-            visualizationPopup.setOutsideTouchable(true);
-            visualizationPopup.setFocusable(true);
+            visualizationPopup = new VisualizationPopupWindow(this, popupView);
             visualizationPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 public void onDismiss() {
                     visualizationPopup = null;
                 }
             });
-            final ListView listView = (ListView)popupView.findViewById(R.id.visualizationList);
-            String[] values = new String[] {"Network View", "Globe View"};
-            final VisualizationArrayAdapter adapter = new VisualizationArrayAdapter(this, android.R.layout.simple_list_item_1, android.R.id.text1, values);
-            listView.setAdapter(adapter);
-
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                    adapter.selectedRow = position;
-                    listView.invalidateViews();
-                }
-            });
-
-
             visualizationPopup.showAsDropDown(findViewById(R.id.visualizationsButton));
         }
     }
