@@ -4,6 +4,7 @@ import java.io.InputStream;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Point;
 import android.os.Build;
 import android.graphics.Color;
@@ -23,6 +24,7 @@ import android.view.SurfaceHolder;
 import android.view.View;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 
 public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
@@ -48,7 +50,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         setContentView(R.layout.main);
         SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceview);
         surfaceView.getHolder().addCallback(this);
-        
+
         mGestureDetector = new GestureDetectorCompat(this, new MyGestureListener());
         mScaleDetector = new ScaleGestureDetector(this, new ScaleListener());
         mRotateDetector = new RotateGestureDetector(this, new RotateListener());
@@ -171,7 +173,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
         @Override
         public boolean onDown(MotionEvent event) { 
-            Log.d(TAG,"onDown");
+            Log.d(TAG, "onDown");
             mController.nativeHandleTouchDownAtPoint(event.getX(), event.getY());
             return true;
         }
@@ -227,7 +229,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         public void onScaleEnd(ScaleGestureDetector detector) {
             float scale = detector.getScaleFactor() - 1;
             Log.d(TAG, String.format("scaleEnd: %f", scale));
-            mController.nativeStartMomentumZoomWithVelocity(scale*50);
+            mController.nativeStartMomentumZoomWithVelocity(scale * 50);
         }
     }
 
@@ -245,7 +247,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         public void onRotateEnd(RotateGestureDetector detector) {
             float velocity = detector.getRotateFactor(); //FIXME not actually velocity. always seems to be 0
             Log.d(TAG, String.format("!!!!rotateEnd: %f", velocity));
-            mController.nativeStartMomentumRotationWithVelocity(velocity*50);
+            mController.nativeStartMomentumRotationWithVelocity(velocity * 50);
         }
     }
     
