@@ -36,6 +36,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     private MapControllerWrapper mController;
 
     private VisualizationPopupWindow visualizationPopup;
+    private NodePopup nodePopup;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -145,6 +146,21 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         }
     }
 
+    public void makeNodePopup(NodeWrapper node) {
+        if (nodePopup == null) {
+            LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+            View popupView = layoutInflater.inflate(R.layout.nodeview, null);
+            nodePopup = new NodePopup(this, popupView, node);
+            nodePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                public void onDismiss() {
+                    nodePopup = null;
+                }
+            });
+            nodePopup.showAsDropDown(findViewById(R.id.visualizationsButton)); //FIXME show by node
+        } else {
+            //TODO reuse it, or what?
+        }
+    }
 
     //native wrappers
     public native void nativeOnCreate();
@@ -208,8 +224,10 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             NodeWrapper node = mController.nativeNodeAtIndex(index);
             if (node == null) {
                 Log.d(TAG, "is null");
+                //TODO dismiss popup??
             } else {
                 Log.d(TAG, String.format("has index %d and asn %s", node.index, node.asn));
+                makeNodePopup(node);
             }
             return true;
         }
