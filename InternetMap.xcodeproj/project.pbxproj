@@ -85,21 +85,6 @@
 		A686EA2916B62A9D009B070E /* youarehere-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9FD16B62A9D009B070E /* youarehere-icon@2x.png */; };
 		A686EA2A16B62A9D009B070E /* youarehere.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9FE16B62A9D009B070E /* youarehere.png */; };
 		A686EA2B16B62A9D009B070E /* youarehere@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9FF16B62A9D009B070E /* youarehere@2x.png */; };
-		A686EA3B16B62AD6009B070E /* popoverArrowDown.png in Resources */ = {isa = PBXBuildFile; fileRef = A686EA2C16B62AD6009B070E /* popoverArrowDown.png */; };
-		A686EA3C16B62AD6009B070E /* popoverArrowDown@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A686EA2D16B62AD6009B070E /* popoverArrowDown@2x.png */; };
-		A686EA3D16B62AD6009B070E /* popoverArrowDownSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = A686EA2E16B62AD6009B070E /* popoverArrowDownSimple.png */; };
-		A686EA3E16B62AD6009B070E /* popoverArrowLeft.png in Resources */ = {isa = PBXBuildFile; fileRef = A686EA2F16B62AD6009B070E /* popoverArrowLeft.png */; };
-		A686EA3F16B62AD6009B070E /* popoverArrowLeft@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A686EA3016B62AD6009B070E /* popoverArrowLeft@2x.png */; };
-		A686EA4016B62AD6009B070E /* popoverArrowLeftSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = A686EA3116B62AD6009B070E /* popoverArrowLeftSimple.png */; };
-		A686EA4116B62AD6009B070E /* popoverArrowRight.png in Resources */ = {isa = PBXBuildFile; fileRef = A686EA3216B62AD6009B070E /* popoverArrowRight.png */; };
-		A686EA4216B62AD6009B070E /* popoverArrowRight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A686EA3316B62AD6009B070E /* popoverArrowRight@2x.png */; };
-		A686EA4316B62AD6009B070E /* popoverArrowRightSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = A686EA3416B62AD6009B070E /* popoverArrowRightSimple.png */; };
-		A686EA4416B62AD6009B070E /* popoverArrowUp.png in Resources */ = {isa = PBXBuildFile; fileRef = A686EA3516B62AD6009B070E /* popoverArrowUp.png */; };
-		A686EA4516B62AD6009B070E /* popoverArrowUp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A686EA3616B62AD6009B070E /* popoverArrowUp@2x.png */; };
-		A686EA4616B62AD6009B070E /* popoverArrowUpSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = A686EA3716B62AD6009B070E /* popoverArrowUpSimple.png */; };
-		A686EA4716B62AD6009B070E /* popoverBg.png in Resources */ = {isa = PBXBuildFile; fileRef = A686EA3816B62AD6009B070E /* popoverBg.png */; };
-		A686EA4816B62AD6009B070E /* popoverBg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A686EA3916B62AD6009B070E /* popoverBg@2x.png */; };
-		A686EA4916B62AD6009B070E /* popoverBgSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = A686EA3A16B62AD6009B070E /* popoverBgSimple.png */; };
 		A686EA4E16B62B23009B070E /* ViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A686EA4A16B62B23009B070E /* ViewController_iPad.xib */; };
 		A686EA4F16B62B23009B070E /* ViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = A686EA4C16B62B23009B070E /* ViewController_iPhone.xib */; };
 		A686EA7116B62B61009B070E /* ASNRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EA6116B62B61009B070E /* ASNRequest.m */; };
@@ -253,21 +238,6 @@
 		A686E9FD16B62A9D009B070E /* youarehere-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "youarehere-icon@2x.png"; path = "iOS/Images/youarehere-icon@2x.png"; sourceTree = SOURCE_ROOT; };
 		A686E9FE16B62A9D009B070E /* youarehere.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = youarehere.png; path = iOS/Images/youarehere.png; sourceTree = SOURCE_ROOT; };
 		A686E9FF16B62A9D009B070E /* youarehere@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "youarehere@2x.png"; path = "iOS/Images/youarehere@2x.png"; sourceTree = SOURCE_ROOT; };
-		A686EA2C16B62AD6009B070E /* popoverArrowDown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = popoverArrowDown.png; path = "External Code/WEPopover/popoverArrowDown.png"; sourceTree = SOURCE_ROOT; };
-		A686EA2D16B62AD6009B070E /* popoverArrowDown@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "popoverArrowDown@2x.png"; path = "External Code/WEPopover/popoverArrowDown@2x.png"; sourceTree = SOURCE_ROOT; };
-		A686EA2E16B62AD6009B070E /* popoverArrowDownSimple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = popoverArrowDownSimple.png; path = "External Code/WEPopover/popoverArrowDownSimple.png"; sourceTree = SOURCE_ROOT; };
-		A686EA2F16B62AD6009B070E /* popoverArrowLeft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = popoverArrowLeft.png; path = "External Code/WEPopover/popoverArrowLeft.png"; sourceTree = SOURCE_ROOT; };
-		A686EA3016B62AD6009B070E /* popoverArrowLeft@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "popoverArrowLeft@2x.png"; path = "External Code/WEPopover/popoverArrowLeft@2x.png"; sourceTree = SOURCE_ROOT; };
-		A686EA3116B62AD6009B070E /* popoverArrowLeftSimple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = popoverArrowLeftSimple.png; path = "External Code/WEPopover/popoverArrowLeftSimple.png"; sourceTree = SOURCE_ROOT; };
-		A686EA3216B62AD6009B070E /* popoverArrowRight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = popoverArrowRight.png; path = "External Code/WEPopover/popoverArrowRight.png"; sourceTree = SOURCE_ROOT; };
-		A686EA3316B62AD6009B070E /* popoverArrowRight@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "popoverArrowRight@2x.png"; path = "External Code/WEPopover/popoverArrowRight@2x.png"; sourceTree = SOURCE_ROOT; };
-		A686EA3416B62AD6009B070E /* popoverArrowRightSimple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = popoverArrowRightSimple.png; path = "External Code/WEPopover/popoverArrowRightSimple.png"; sourceTree = SOURCE_ROOT; };
-		A686EA3516B62AD6009B070E /* popoverArrowUp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = popoverArrowUp.png; path = "External Code/WEPopover/popoverArrowUp.png"; sourceTree = SOURCE_ROOT; };
-		A686EA3616B62AD6009B070E /* popoverArrowUp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "popoverArrowUp@2x.png"; path = "External Code/WEPopover/popoverArrowUp@2x.png"; sourceTree = SOURCE_ROOT; };
-		A686EA3716B62AD6009B070E /* popoverArrowUpSimple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = popoverArrowUpSimple.png; path = "External Code/WEPopover/popoverArrowUpSimple.png"; sourceTree = SOURCE_ROOT; };
-		A686EA3816B62AD6009B070E /* popoverBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = popoverBg.png; path = "External Code/WEPopover/popoverBg.png"; sourceTree = SOURCE_ROOT; };
-		A686EA3916B62AD6009B070E /* popoverBg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "popoverBg@2x.png"; path = "External Code/WEPopover/popoverBg@2x.png"; sourceTree = SOURCE_ROOT; };
-		A686EA3A16B62AD6009B070E /* popoverBgSimple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = popoverBgSimple.png; path = "External Code/WEPopover/popoverBgSimple.png"; sourceTree = SOURCE_ROOT; };
 		A686EA4B16B62B23009B070E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = iOS/en.lproj/ViewController_iPad.xib; sourceTree = SOURCE_ROOT; };
 		A686EA4D16B62B23009B070E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = iOS/en.lproj/ViewController_iPhone.xib; sourceTree = SOURCE_ROOT; };
 		A686EA5016B62B52009B070E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = iOS/AppDelegate.h; sourceTree = SOURCE_ROOT; };
@@ -450,32 +420,8 @@
 				A686EAEF16B62D40009B070E /* WEPopoverParentView.h */,
 				A686EAF016B62D40009B070E /* WETouchableView.h */,
 				A686EAF116B62D40009B070E /* WETouchableView.m */,
-				110F6B12167BD1CC00D5907E /* Images */,
 			);
 			path = WEPopover;
-			sourceTree = "<group>";
-		};
-		110F6B12167BD1CC00D5907E /* Images */ = {
-			isa = PBXGroup;
-			children = (
-				A686EA2C16B62AD6009B070E /* popoverArrowDown.png */,
-				A686EA2D16B62AD6009B070E /* popoverArrowDown@2x.png */,
-				A686EA2E16B62AD6009B070E /* popoverArrowDownSimple.png */,
-				A686EA2F16B62AD6009B070E /* popoverArrowLeft.png */,
-				A686EA3016B62AD6009B070E /* popoverArrowLeft@2x.png */,
-				A686EA3116B62AD6009B070E /* popoverArrowLeftSimple.png */,
-				A686EA3216B62AD6009B070E /* popoverArrowRight.png */,
-				A686EA3316B62AD6009B070E /* popoverArrowRight@2x.png */,
-				A686EA3416B62AD6009B070E /* popoverArrowRightSimple.png */,
-				A686EA3516B62AD6009B070E /* popoverArrowUp.png */,
-				A686EA3616B62AD6009B070E /* popoverArrowUp@2x.png */,
-				A686EA3716B62AD6009B070E /* popoverArrowUpSimple.png */,
-				A686EA3816B62AD6009B070E /* popoverBg.png */,
-				A686EA3916B62AD6009B070E /* popoverBg@2x.png */,
-				A686EA3A16B62AD6009B070E /* popoverBgSimple.png */,
-			);
-			name = Images;
-			path = ../..;
 			sourceTree = "<group>";
 		};
 		1127C9CF16A0BBFB00413FE9 /* Objective-C++ Wrappers */ = {
@@ -1036,21 +982,6 @@
 				A686EA2916B62A9D009B070E /* youarehere-icon@2x.png in Resources */,
 				A686EA2A16B62A9D009B070E /* youarehere.png in Resources */,
 				A686EA2B16B62A9D009B070E /* youarehere@2x.png in Resources */,
-				A686EA3B16B62AD6009B070E /* popoverArrowDown.png in Resources */,
-				A686EA3C16B62AD6009B070E /* popoverArrowDown@2x.png in Resources */,
-				A686EA3D16B62AD6009B070E /* popoverArrowDownSimple.png in Resources */,
-				A686EA3E16B62AD6009B070E /* popoverArrowLeft.png in Resources */,
-				A686EA3F16B62AD6009B070E /* popoverArrowLeft@2x.png in Resources */,
-				A686EA4016B62AD6009B070E /* popoverArrowLeftSimple.png in Resources */,
-				A686EA4116B62AD6009B070E /* popoverArrowRight.png in Resources */,
-				A686EA4216B62AD6009B070E /* popoverArrowRight@2x.png in Resources */,
-				A686EA4316B62AD6009B070E /* popoverArrowRightSimple.png in Resources */,
-				A686EA4416B62AD6009B070E /* popoverArrowUp.png in Resources */,
-				A686EA4516B62AD6009B070E /* popoverArrowUp@2x.png in Resources */,
-				A686EA4616B62AD6009B070E /* popoverArrowUpSimple.png in Resources */,
-				A686EA4716B62AD6009B070E /* popoverBg.png in Resources */,
-				A686EA4816B62AD6009B070E /* popoverBg@2x.png in Resources */,
-				A686EA4916B62AD6009B070E /* popoverBgSimple.png in Resources */,
 				A686EA4E16B62B23009B070E /* ViewController_iPad.xib in Resources */,
 				A686EA4F16B62B23009B070E /* ViewController_iPhone.xib in Resources */,
 			);
