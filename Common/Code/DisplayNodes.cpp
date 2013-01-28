@@ -13,6 +13,8 @@
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
+static const int MAX_DISPLAY_NODES = 40000;
+
 // GL vertex data for nodes
 struct RawDisplayNode {
     RawVector3 position;
@@ -21,7 +23,7 @@ struct RawDisplayNode {
 };
 
 DisplayNodes::DisplayNodes(int count) :
-    VertexBuffer(count * sizeof(RawDisplayNode)),
+    VertexBuffer(MAX_DISPLAY_NODES * sizeof(RawDisplayNode)),
     _count(count)
 {
 }
@@ -71,4 +73,16 @@ void DisplayNodes::updateNode(int index, float size) {
 void DisplayNodes::updateNode(int index, const Color& color) {
     RawDisplayNode* node = nodeAtIndex(index);
     node->color = color;
+}
+
+int DisplayNodes::count(void) {
+    return _count;
+}
+void DisplayNodes::setCount(int count) {
+    if(_count < MAX_DISPLAY_NODES) {
+        _count = count;
+    }
+    else {
+        LOG("ERROR: trying to extend display nodes beyond vertex buffer size");
+    }
 }

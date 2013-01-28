@@ -31,6 +31,7 @@ public:
     void updateNode(int index, const Color& color);
     void display(void);
     int count(void);
+    void setCount(int);
 };
 
 #endif
