@@ -150,16 +150,15 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         if (nodePopup == null) {
             LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
             View popupView = layoutInflater.inflate(R.layout.nodeview, null);
-            nodePopup = new NodePopup(this, popupView, node);
+            nodePopup = new NodePopup(this, popupView);
             nodePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 public void onDismiss() {
                     nodePopup = null;
                 }
             });
-            nodePopup.showAsDropDown(findViewById(R.id.visualizationsButton)); //FIXME show by node
-        } else {
-            //TODO reuse it, or what?
         }
+        nodePopup.setNode(node);
+        nodePopup.showAsDropDown(findViewById(R.id.visualizationsButton)); //FIXME show by node
     }
 
     //native wrappers
@@ -224,7 +223,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             NodeWrapper node = mController.nativeNodeAtIndex(index);
             if (node == null) {
                 Log.d(TAG, "is null");
-                //TODO dismiss popup??
+                nodePopup.dismiss();
             } else {
                 Log.d(TAG, String.format("has index %d and asn %s", node.index, node.asn));
                 makeNodePopup(node);
