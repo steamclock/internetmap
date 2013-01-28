@@ -45,6 +45,8 @@
 @property(nonatomic, assign) NSInteger leftBgCapSize;
 @property(nonatomic, assign) CGFloat arrowMargin;
 
++ (WEPopoverContainerViewProperties *)defaultContainerViewProperties;
+
 @end
 
 @class WEPopoverContainerView;
