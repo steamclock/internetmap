@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Internet Map</string>
+    <color name="orange">#FCA100</color>
+    <string name="youarehere">You are here.</string>
+    <string name="nodata">No additional data.</string>
 </resources>
