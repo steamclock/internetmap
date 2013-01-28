@@ -14,7 +14,7 @@
 
 // TODO: figure out how to do this right
 #ifdef ANDROID
-#include "ExternalCode/jsoncpp/json.h"
+#include "jsoncpp/json.h"
 #else
 #include "json.h"
 #endif
