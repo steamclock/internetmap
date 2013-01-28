@@ -94,9 +94,9 @@ void DefaultVisualization::updateDisplayForNodes(shared_ptr<MapDisplay> display,
 
 void DefaultVisualization::resetDisplayForNodes(shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes) {
     if (display->nodes) {
-        //TODO: get assert back
-        //        NSAssert(display->nodes->count == [arrNodes count], @"display->nodes has already been allocated and you just tried to recreate it with a different count");
-    }else {
+        display->nodes->setCount(nodes.size());
+    }
+    else {
         shared_ptr<DisplayNodes> theNodes(new DisplayNodes(nodes.size()));
         display->nodes = theNodes;
     }

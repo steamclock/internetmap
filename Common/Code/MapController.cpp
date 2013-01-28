@@ -392,7 +392,7 @@ void MapController::setTimelinePoint(const std::string& origName) {
     clock_t start = clock();
     std::string dataText;
     loadTextResource(&dataText, name, "txt");
-    data->reloadFromString(dataText);
+    data->loadFromString(dataText);
     LOG("reloaded for timeline point: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
     start = clock();
     data->updateDisplay(display);

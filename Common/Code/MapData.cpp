@@ -66,9 +66,12 @@ const char* nextToken(const char* source, char* token, bool* lineEnd) {
     return source;
 }
 
-void MapData::reloadFromString(const std::string& text) {
+void MapData::loadFromString(const std::string& text) {
+    // Connections an boxes are always fully regenerated
     connections.erase(connections.begin(), connections.end());
     boxesForNodes.erase(boxesForNodes.begin(), boxesForNodes.end());
+    
+    // Mark all nodes as inactive (they will be reactivated if they are in the current data set)
     for(int i = 0; i < nodes.size(); i++) {
         nodes[i]->active = false;
     }
@@ -78,6 +81,7 @@ void MapData::reloadFromString(const std::string& text) {
     bool lineEnd;
     int numNodes, numConnections;
     
+    // Grab header data (node and connection counts)
     sourceText = nextToken(sourceText, token, &lineEnd);
     numNodes = atof(token);
     
@@ -86,15 +90,31 @@ void MapData::reloadFromString(const std::string& text) {
     
     int missingNodes = 0;
     for (int i = 0; i < numNodes; i++) {
+        // Grab asn
         sourceText = nextToken(sourceText, token, &lineEnd);
+        
+        // check for matching existing node
         NodePointer node = nodesByAsn[token];
+        
         if(node) {
+            // already thre, just mark as active
             node->active = true;
         }
         else {
+            // Not there, create
             missingNodes++;
+            
+            node = NodePointer(new Node());
+            node->asn = token;
+            node->index = nodes.size();
+            node->type = AS_UNKNOWN;
+            node->active = true;
+            
+            nodes.push_back(node);
+            nodesByAsn[node->asn] = node;
         }
         
+        // Refill data that is unique to a particualar timeline position
         sourceText = nextToken(sourceText, token, &lineEnd);
         if(node) {
             node->importance = atof(token);
@@ -109,6 +129,7 @@ void MapData::reloadFromString(const std::string& text) {
         }
     }
     
+    // Load connections
     for (int i = 0; i < numConnections; i++) {
         ConnectionPointer connection(new Connection());
         
@@ -124,60 +145,9 @@ void MapData::reloadFromString(const std::string& text) {
         }
     }
     
-    LOG("missing nodes: %d", missingNodes);
+    LOG("loaded data: %d nodes (this load), %d nodes (total), %d connections", missingNodes, (int)(nodes.size()), numConnections);
+    
     createNodeBoxes();
-}
-
-void MapData::loadFromString(const std::string& text) {
-    const char* sourceText = text.c_str();
-    char token[MAX_TOKEN_SIZE];
-    bool lineEnd;
-    int numNodes, numConnections;
-
-    sourceText = nextToken(sourceText, token, &lineEnd);
-    numNodes = atof(token);
-
-    sourceText = nextToken(sourceText, token, &lineEnd);
-    numConnections = atof(token);
-    
-    nodes.reserve(numNodes);
-    connections.reserve(numConnections);
-    
-    for (int i = 0; i < numNodes; i++) {
-        NodePointer node(new Node());
-        node->active = true;
-
-        sourceText = nextToken(sourceText, token, &lineEnd);
-        node->asn = token;
-        node->index = i;
-        sourceText = nextToken(sourceText, token, &lineEnd);
-        node->importance = atof(token);
-        sourceText = nextToken(sourceText, token, &lineEnd);
-        node->positionX = atof(token);
-        sourceText = nextToken(sourceText, token, &lineEnd);
-        node->positionY = atof(token);
-        node->type = AS_UNKNOWN;
-        
-        nodes.push_back(node);
-        nodesByAsn[node->asn] = node;
-    }
-
-    for (int i = 0; i < numConnections; i++) {
-        ConnectionPointer connection(new Connection());
-        
-        sourceText = nextToken(sourceText, token, &lineEnd);
-        connection->first = nodesByAsn[token];
-        sourceText = nextToken(sourceText, token, &lineEnd);
-        connection->second = nodesByAsn[token];
-        connection->first->connections.push_back(connection);
-        connection->second->connections.push_back(connection);
-        connections.push_back(connection);
-    }
-
-    createNodeBoxes();
-    
-    LOG("Loaded %d nodes, %d connections", numNodes, numConnections);
-//    NSLog(@"load : %.2fms", ([NSDate timeIntervalSinceReferenceDate] - start) * 1000.0f);
 }
 
 void MapData::loadFromAttrString(const std::string& json){
