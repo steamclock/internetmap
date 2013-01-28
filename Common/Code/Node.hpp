@@ -31,6 +31,7 @@ enum
 class Node {
     
 public:
+    Node();
     
     std::string asn;
     unsigned int index;
@@ -52,6 +53,10 @@ public:
     
     std::vector<ConnectionPointer> connections;
     
+    std::string friendlyDescription(); //textDescription with some cleanup applied
+private:
+    std::string mFriendlyDescription;
+    bool mInitializedFriendly;
 };
 
 
