@@ -38,6 +38,7 @@ public:
     void highlightRoute(std::vector<NodePointer> nodeList);
     void highlightConnections(NodePointer node);
     void setTimelinePoint(const std::string& name);
+    void update(TimeInterval currentTime);
     
 private:
     int hoveredNodeIndex;

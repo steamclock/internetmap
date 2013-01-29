@@ -313,7 +313,7 @@ void Renderer::endControllerModification(void) {
 
 void Renderer::drawFrame() {
     _currentTimeSec = double(clock()) / double(CLOCKS_PER_SEC);
-    _mapController->display->update(_currentTimeSec - _initialTimeSec);
+    _mapController->update(_currentTimeSec - _initialTimeSec);
     _mapController->display->draw();
 }
 

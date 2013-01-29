@@ -110,7 +110,7 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
 #pragma mark - Camera: Misc
 
 - (void)update:(NSTimeInterval)now{
-    _controller->display->camera->update(now);
+    _controller->update(now);
 }
 
 - (void)setAllowIdleAnimation:(BOOL)allow{

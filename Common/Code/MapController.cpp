@@ -403,3 +403,23 @@ void MapController::setTimelinePoint(const std::string& origName) {
     }
 }
 
+// mmmm, magic numbers
+float BASE_SIZE = 0.8; // default scaledown factor for highlighted nodes from the visualzation, TODO: share properly
+float EXPAND_PORTION = 0.2f; // portion of full size that it is expanded by
+float EXPAND_TIME_SCALE = 0.5f; // pulses per second
+
+void MapController::update(TimeInterval currentTime) {
+    display->camera->update(currentTime);
+    
+    float wrappedTime = (currentTime * EXPAND_TIME_SCALE) - floor(currentTime * EXPAND_TIME_SCALE);
+    float expand = BASE_SIZE + ((0.5f - fabs(wrappedTime - 0.5f)) * EXPAND_PORTION * 2.0f);
+    if(targetNode != INT_MAX) {
+        NodePointer node = data->nodeAtIndex(targetNode);
+        float baseSize = data->visualization->nodeSize(node);
+        float expandedSize = baseSize * expand;
+        display->nodes->beginUpdate();
+        display->nodes->updateNode(node->index, data->visualization->nodePosition(node), expandedSize, ColorFromRGB(SELECTED_NODE_COLOR_HEX));
+        display->nodes->endUpdate();
+    }
+}
+
