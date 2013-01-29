@@ -20,10 +20,10 @@ Android Build Setup Instructions
 6. Locally modify a broken script in the NDK
 
 Edit this file:
-```C:\android-ndk-r8d\build\gmsl\__gmsl```
+  C:\android-ndk-r8d\build\gmsl\__gmsl
 
 ...and change line 512 to:
-```int_encode = $(__gmsl_tr1)$(wordlist 1,$(words $1),$ (__gmsl_input_int))```
+  int_encode = $(__gmsl_tr1)$(wordlist 1,$(words $1),$ (__gmsl_input_int))
 
 7. Get the project into your eclipse workspace via the File->Import command (Select Existing project from under general, and point it at the Android directory in the git repo). 
 
