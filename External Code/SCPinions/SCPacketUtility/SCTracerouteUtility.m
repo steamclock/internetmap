@@ -187,7 +187,7 @@
         [self sendPackets:nil];
     }
     
-    NSLog(@"Number of replies for IP %@ is %d, Number of replies for sequence number %d is %d", ipInPacket, numberOfRepliesForIP, sequenceNumber, numberOfRepliesForSequenceNumber);
+    //NSLog(@"Number of replies for IP %@ is %d, Number of replies for sequence number %d is %d", ipInPacket, numberOfRepliesForIP, sequenceNumber, numberOfRepliesForSequenceNumber);
 
 }
 
@@ -222,7 +222,12 @@
             [self sendPackets:nil];
         }
         
-        if (self.totalHopsTimedOut >= 2) {
+        if (self.totalHopsTimedOut >= 3) {
+            [self.hopsForCurrentIP insertObject:[NSNull null] atIndex:sequenceNumber];
+            NSArray* hops = self.hopsForCurrentIP;
+            [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: * * * Hop did not reply or timed out.", self.hopsForCurrentIP.count] withHops:hops];
+            
+            
             if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidTimeout)]) {
                 [self.delegate tracerouteDidTimeout];
             }
