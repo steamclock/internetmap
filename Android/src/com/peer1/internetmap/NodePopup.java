@@ -26,6 +26,10 @@ public class NodePopup extends PopupWindow {
         super(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mContext = context;
         setBackgroundDrawable(new ColorDrawable(Color.argb(200, 0, 0, 0))); //black bg, a teensy bit translucent
+        
+        //FIXME calculate appropriate size
+        setWidth(300);
+        setHeight(200);
     }
     
     public void setNode(NodeWrapper node) {
