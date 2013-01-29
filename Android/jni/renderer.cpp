@@ -118,6 +118,9 @@ void Renderer::renderLoop() {
 
         // Let the main thread do any work that it is waiting on us for
         pthread_mutex_unlock(&_mutex);
+        // sched_yield();
+        //the scheduler is being flaky, force sleep long enough for the main thread to wake
+        usleep(1000);
         pthread_mutex_lock(&_mutex);
 
         if(_rotateX != 0.0f) {

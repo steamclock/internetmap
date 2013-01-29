@@ -143,7 +143,7 @@ JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_native
             "(IFILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
     jobject wrapper = jenv->NewObject(nodeWrapperClass, constructor, node->index, node->importance,
             node->connections.size(), jenv->NewStringUTF(node->asn.c_str()),
-            jenv->NewStringUTF(node->textDescription.c_str()), jenv->NewStringUTF(node->typeString.c_str()));
+            jenv->NewStringUTF(node->friendlyDescription().c_str()), jenv->NewStringUTF(node->typeString.c_str()));
 
     renderer->endControllerModification();
     return wrapper;

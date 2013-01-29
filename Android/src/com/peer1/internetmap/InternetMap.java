@@ -150,16 +150,24 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         if (nodePopup == null) {
             LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
             View popupView = layoutInflater.inflate(R.layout.nodeview, null);
-            nodePopup = new NodePopup(this, popupView, node);
+            nodePopup = new NodePopup(this, popupView);
             nodePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 public void onDismiss() {
                     nodePopup = null;
                 }
             });
-            nodePopup.showAsDropDown(findViewById(R.id.visualizationsButton)); //FIXME show by node
-        } else {
-            //TODO reuse it, or what?
         }
+        nodePopup.setNode(node);
+        nodePopup.showAsDropDown(findViewById(R.id.visualizationsButton)); //FIXME show by node
+    }
+    
+    //callbacks from the nodePopup UI
+    public void dismissNodePopup(View unused) {
+        nodePopup.dismiss();
+    }
+    
+    public void runTraceroute(View unused){
+        Log.d(TAG, "TODO: traceroute");
     }
 
     //native wrappers
@@ -217,14 +225,17 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             mController.nativeSelectHoveredNode();
             //TODO: iOS does some deselect stuff if that call failed.
             //but, I think maybe that should just happen inside the controller automatically.
-            
+
+            Log.d(TAG, "selected hovernode");
             //test nodewrapper things
             int index = mController.nativeTargetNodeIndex();
             Log.d(TAG, String.format("node at index %d", index));
             NodeWrapper node = mController.nativeNodeAtIndex(index);
             if (node == null) {
                 Log.d(TAG, "is null");
-                //TODO dismiss popup??
+                if (nodePopup != null) {
+                    nodePopup.dismiss();
+                }
             } else {
                 Log.d(TAG, String.format("has index %d and asn %s", node.index, node.asn));
                 makeNodePopup(node);

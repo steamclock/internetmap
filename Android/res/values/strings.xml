@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Internet Map</string>
+    <color name="orange">#FCA100</color>
+    <string name="youarehere">You are here.</string>
+    <string name="nodata">No additional data.</string>
+    <string name="oneconnection">One Connection</string>
+    <string name="nconnections">%d Connections</string>
+    <string name="dotraceroute">Perform Traceroute</string>
 </resources>
