@@ -36,18 +36,14 @@ void callbackCurrent (
                       void *context ) {
     
     NSData* data = [NSData dataWithBytes:rdata length:strlen(rdata)+1];
-    NSString* string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    int value;
-    NSCharacterSet* nonDigits = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
-    BOOL success = [[NSScanner scannerWithString:[string stringByTrimmingCharactersInSet:nonDigits]] scanInteger:&value];
-    
+    NSString* string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];  
     NSDictionary* dict = (__bridge NSDictionary*)context;
     
     ASNRequest* request = [dict objectForKey:@"request"];
     int index = [[dict objectForKey:@"index"] intValue];
     
-    if (success) {
-        [request finishedFetchingASN:value forIndex:index];
+    if (![string isEqualToString:@""]) {
+        [request finishedFetchingASN:string forIndex:index];
     }
     else {
         [request failedFetchingASNForIndex:index error: @"Couldn't resolve DNS."];
@@ -109,12 +105,9 @@ void callbackCurrent (
 }
 
 - (void)fetchASNForIP:(NSString*)ip index:(int)index{
-//    __weak ASIHTTPRequest* request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:@"http://http://72.51.24.24:8080/iptoasn"]];
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"http://72.51.24.24:8080/iptoasn"]];
     [request setRequestMethod:@"POST"];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
-    
-    //__weak NSString *ipToAsn = ip;
     
     NSString *dataString = [NSString stringWithFormat:@"{\"ip\":\"%@\"}", ip];
     [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
