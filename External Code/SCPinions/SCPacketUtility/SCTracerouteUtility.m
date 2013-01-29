@@ -155,6 +155,8 @@
     for (SCPacketRecord* packetRecord in self.packetUtility.packetRecords) {
         if ((numberOfRepliesForIP == 0) && (numberOfRepliesForSequenceNumber == 1)) {
             
+            [NSObject cancelPreviousPerformRequestsWithTarget:self];
+            
             // Handles first packet back for a sequence numnber
             
             numberOfRepliesForIP++;
@@ -185,7 +187,7 @@
         [self sendPackets:nil];
     }
     
-    //NSLog(@"Number of replies for IP %@ is %d, Number of replies for sequence number %d is %d", ipInPacket, numberOfRepliesForIP, sequenceNumber, numberOfRepliesForSequenceNumber);
+    NSLog(@"Number of replies for IP %@ is %d, Number of replies for sequence number %d is %d", ipInPacket, numberOfRepliesForIP, sequenceNumber, numberOfRepliesForSequenceNumber);
 
 }
 
@@ -208,10 +210,10 @@
         }
     }
     
-    if (numberOfTimeoutsForIP > 1) {
+    if (numberOfTimeoutsForIP > 0) {
         if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:withHops:)]) {
             NSArray* hops = self.hopsForCurrentIP;
-            [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: * * * Hop did not reply or timed out.", self.ttlCount] withHops:hops];
+            [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: * * * Hop did not reply or timed out.", (self.hopsForCurrentIP.count + 1)] withHops:hops];
             self.totalHopsTimedOut++;
             
             //Send m0ar packets?
@@ -219,7 +221,7 @@
             [self sendPackets:nil];
         }
         
-        if (self.totalHopsTimedOut >= 3) {
+        if (self.totalHopsTimedOut >= 2) {
             if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidTimeout)]) {
                 [self.delegate tracerouteDidTimeout];
             }
@@ -231,11 +233,6 @@
     BOOL alreadyContainsIP = [self.hopsForCurrentIP containsObject:ip];
     if (!alreadyContainsIP) {
         [self.hopsForCurrentIP addObject:ip];
-        
-//        This for-in is just for debugging, can safely be removed
-//        for (NSString* ip in self.hopsForCurrentIP) {
-//            NSLog(@"Hop in array: %@", ip);
-//        }
         
         NSString* reported = [NSString stringWithFormat:@"%d: %@", self.hopsForCurrentIP.count, report];
         if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:withHops:)]) {
@@ -280,15 +277,12 @@
 - (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didSendPacket:(NSData *)packet{
     
     //If we just don't get ANY packets back after a whole two seconds, bail on the hop
-    [self performSelector:@selector(timeExceededForPacket:) withObject:packet afterDelay:0.5];
+    [self performSelector:@selector(timeExceededForPacket:) withObject:packet afterDelay:1];
     
     
 }
 
 - (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didReceiveResponsePacket:(NSData *)packet arrivedAt:(NSDate *)dateTime{
-    
-    // If we have even one packet, we don't have an outright failure/timeout ...yet?
-    [NSObject cancelPreviousPerformRequestsWithTarget:self];
     
     // Check what kind of packet from header
     int typeOfPacket = [self processICMPPacket:packet];
