@@ -146,6 +146,36 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         }
     }
 
+    public void youAreHereButtonPressed(View view) {
+        //do an ASN request to get the user's ASN
+        ASNRequest.fetchCurrentASNWithResponseHandler(new AsyncHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                // Initiated the request
+                Log.d(TAG, "asnrequest start");
+            }
+
+            @Override
+            public void onSuccess(String response) {
+                // Successfully got a response
+                Log.d(TAG, String.format("asnrequest success: %s", response));
+            }
+        
+            @Override
+            public void onFailure(Throwable e, String response) {
+                // Response failed :(
+                Log.d(TAG, String.format("asnrequest fail: %s", response));
+            }
+
+            @Override
+            public void onFinish() {
+                // Completed the request (either success or failure)
+                Log.d(TAG, "asnrequest finish");
+            }
+        });
+        Log.d(TAG, "TODO: youarehere");
+    }
+
     public void makeNodePopup(NodeWrapper node) {
         if (nodePopup == null) {
             LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
