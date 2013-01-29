@@ -40,7 +40,7 @@
     }else {
         
         
-        label.text = [HelperMethods truncatedNodeDetailStringFromString:self.node.textDescription];
+        label.text = self.node.friendlyDescription;
     }
     [self.view addSubview:label];
 }

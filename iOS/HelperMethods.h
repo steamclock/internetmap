@@ -27,6 +27,5 @@ extern void SCLogRect(CGRect rect);
 + (UIImage*)imageFromView:(UIView*)view;
 + (BOOL)deviceHasInternetConnection;
 + (BOOL)isStringEmptyOrNil:(NSString*)string;
-+ (NSString*)truncatedNodeDetailStringFromString:(NSString*)string;
 
 @end

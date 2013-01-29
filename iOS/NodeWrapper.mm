@@ -40,6 +40,10 @@
     return [NSString stringWithUTF8String:_node->textDescription.c_str()];
 }
 
+- (NSString*)friendlyDescription {
+    return [NSString stringWithUTF8String:_node->friendlyDescription().c_str()];
+}
+
 - (NSString*)typeString {
     return [NSString stringWithUTF8String:_node->typeString.c_str()];
 }

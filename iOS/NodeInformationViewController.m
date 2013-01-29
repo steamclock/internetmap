@@ -59,7 +59,7 @@
         NSString* asnText = [NSString stringWithFormat:@"AS%@", self.node.asn];
         self.firstGroupOfStrings = [NSMutableArray array];
         
-        NSString* textDescription = [HelperMethods truncatedNodeDetailStringFromString:self.node.textDescription];
+        NSString* textDescription = self.node.friendlyDescription;
 
 
         if (self.isDisplayingCurrentNode) {

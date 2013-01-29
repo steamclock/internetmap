@@ -12,6 +12,7 @@
 
 @property (nonatomic) NSString* asn;
 @property (nonatomic) NSString* textDescription;
+@property (nonatomic, readonly) NSString* friendlyDescription;
 @property (nonatomic) NSString* typeString;
 @property (nonatomic) int index;
 @property (nonatomic) float importance;
