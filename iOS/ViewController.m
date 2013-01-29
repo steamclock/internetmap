@@ -59,7 +59,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (nonatomic) NSTimeInterval updateTime;
 
 
-@property (nonatomic) int cachedCurrentASN;
+@property (nonatomic) NSString* cachedCurrentASN;
 
 @property (nonatomic) int minTimelineYear;
 
@@ -219,7 +219,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     [self.controller resetIdleTimer];
     
-    self.cachedCurrentASN = NSNotFound;
+    self.cachedCurrentASN = nil;
     [self precacheCurrentASN];
     
     self.screenshotButton.hidden = YES;
@@ -464,8 +464,8 @@ static const int AXIS_DIVISIONS = 8;
 }
 
 
-- (void)selectNodeForASN:(int)asn {
-    NodeWrapper* node = [self.controller nodeByASN:[NSString stringWithFormat:@"%i", asn]];
+- (void)selectNodeForASN:(NSString*)asn {
+    NodeWrapper* node = [self.controller nodeByASN:asn];
     if (node) {
         [self updateTargetForIndex:node.index];
     }else {
@@ -529,19 +529,18 @@ static const int AXIS_DIVISIONS = 8;
             };
             
             [ASNRequest fetchCurrentASNWithResponseBlock:^(NSArray *asn) {
-                NSNumber* myASN = asn[0];
+                NSString* myASN = asn[0];
                 if([myASN isEqual:[NSNull null]]) {
                     error();
                 }
                 else {
-                    int asn = [myASN intValue];
-                    NSLog(@"ASN fetched: %i", asn);
+                    NSLog(@"ASN fetched: %@", myASN);
                     self.isCurrentlyFetchingASN = NO;
                     [self.youAreHereActivityIndicator stopAnimating];
                     self.youAreHereActivityIndicator.hidden = YES;
                     self.youAreHereButton.hidden = NO;
-                    self.cachedCurrentASN = asn;
-                    [self selectNodeForASN:asn];
+                    self.cachedCurrentASN = myASN;
+                    [self selectNodeForASN:myASN];
                 }
             } errorBlock:error];
         }
@@ -624,8 +623,8 @@ static const int AXIS_DIVISIONS = 8;
     else {
         //check if node is the current node
         BOOL isSelectingCurrentNode = NO;
-        if (self.cachedCurrentASN != NSNotFound) {
-            NodeWrapper* node = [self.controller nodeByASN:[NSString stringWithFormat:@"%i", self.cachedCurrentASN]];
+        if (!self.cachedCurrentASN) {
+            NodeWrapper* node = [self.controller nodeByASN:[NSString stringWithFormat:@"%@", self.cachedCurrentASN]];
             if (node.index == self.controller.targetNode) {
                 isSelectingCurrentNode = YES;
             }
@@ -702,13 +701,12 @@ static const int AXIS_DIVISIONS = 8;
     
     
     [ASNRequest fetchCurrentASNWithResponseBlock:^(NSArray *asn) {
-        NSNumber* myASN = asn[0];
+        NSString* myASN = asn[0];
         if([myASN isEqual:[NSNull null]]) {
             error();
         }
         else {
-            int asn = [myASN intValue];
-            self.cachedCurrentASN = asn;
+            self.cachedCurrentASN = myASN;
         }
     } errorBlock:error];
 }
@@ -736,12 +734,12 @@ static const int AXIS_DIVISIONS = 8;
                 [ASNRequest fetchForAddresses:@[addresses[0]] responseBlock:^(NSArray *asn) {
                     [self.searchActivityIndicator stopAnimating];
                     self.searchButton.hidden = NO;
-                    NSNumber* myASN = asn[0];
+                    NSString* myASN = asn[0];
                     if([myASN isEqual:[NSNull null]]) {
                         [self.errorInfoView setErrorString:@"Couldn't resolve address for hostname."];
                     }
                     else {
-                        [self selectNodeForASN:[myASN intValue]];
+                        [self selectNodeForASN:myASN];
                     }
                 }];
             }
@@ -812,9 +810,8 @@ static const int AXIS_DIVISIONS = 8;
         [self.tracer start];
     } else {
         NodeWrapper* node = [self.controller nodeAtIndex:self.controller.targetNode];
-        int asn = [node.asn intValue];
-        if (asn) {
-            [ASNRequest fetchForASN:asn responseBlock:^(NSArray *asn) {
+        if (node.asn) {
+            [ASNRequest fetchForASN:node.asn responseBlock:^(NSArray *asn) {
                 if (asn[0] != [NSNull null]) {
                     NSLog(@"starting tracerout with IP: %@", asn[0]);
                     self.tracer = [SCTracerouteUtility tracerouteWithAddress:asn[0]];

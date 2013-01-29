@@ -8,7 +8,7 @@
 
 #import "ASNRequest.h"
 #import <dns_sd.h>
-#import "ASIHTTPRequest.h"
+#import "ASIFormDataRequest.h"
 #import <arpa/inet.h>
 #import <netdb.h>
 
@@ -17,7 +17,7 @@
 @property (nonatomic, readwrite) NSMutableArray* result;
 @property (nonatomic, strong) ASNResponseBlock response;
 
-- (void)finishedFetchingASN:(int)asn forIndex:(int)index;
+- (void)finishedFetchingASN:(NSString*)asn forIndex:(int)index;
 - (void)failedFetchingASNForIndex:(int)index error:(NSString*)error;
 
 @end
@@ -109,56 +109,33 @@ void callbackCurrent (
 }
 
 - (void)fetchASNForIP:(NSString*)ip index:(int)index{
-    NSArray* ipComponents = [ip componentsSeparatedByString:@"."];
-    NSString* dnsString = [NSString stringWithFormat:@"origin.asn.cymru.com"];
-    for (NSString* component in ipComponents) {
-        dnsString = [NSString stringWithFormat:@"%@.%@", component, dnsString];
-    }
-    DNSServiceRef sdRef;
-    DNSServiceErrorType res;
+//    __weak ASIHTTPRequest* request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:@"http://http://72.51.24.24:8080/iptoasn"]];
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"http://72.51.24.24:8080/iptoasn"]];
+    [request setRequestMethod:@"POST"];
+    [request addRequestHeader:@"Content-Type" value:@"application/json"];
     
-    NSDictionary* context = @{@"request" : self, @"index" : [NSNumber numberWithInt:index]};
+    //__weak NSString *ipToAsn = ip;
     
-    res = DNSServiceQueryRecord(
-                                &sdRef, 0, 0,
-                                [dnsString cStringUsingEncoding:NSUTF8StringEncoding],
-                                kDNSServiceType_TXT,
-                                kDNSServiceClass_IN,
-                                callbackCurrent,
-                                (__bridge void *)context
-                                );
+    NSString *dataString = [NSString stringWithFormat:@"{\"ip\":\"%@\"}", ip];
+    [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setCompletionBlock:^{
+        NSError* error = request.error;
+        NSDictionary* jsonResponse = [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingAllowFragments error:&error];
+        NSLog(@"%@", [jsonResponse objectForKey:@"payload"]);
+        
+    }];
     
-    if (res != kDNSServiceErr_NoError) {
-        [self failedFetchingASNForIndex:index error:@"Couldn't resolve DNS."];
-    }
-    
-    DNSServiceProcessResult(sdRef);
-    /*
-     // trying to use select, so we have a timeout, just calling DNSServiceProcessREsult
-     // can block forever, but doesn't work
-     int dns_sd_fd = DNSServiceRefSockFD(sdRef);
-     fd_set readfds;
-     struct timeval tv;
-     
-     FD_ZERO(&readfds);
-     FD_SET(dns_sd_fd, &readfds);
-     tv.tv_sec = 10;
-     tv.tv_usec = 0;
-     int result = select(1, &readfds, (fd_set*)NULL, (fd_set*)NULL, &tv);
-     if ((result > 0) && FD_ISSET(dns_sd_fd, &readfds)) {
-     DNSServiceProcessResult(sdRef);
-     }
-     else {
-     [self failedFetchingASNForIndex:index error:@"Couldn't resolve DNS."];
-     }
-     */
-    
-    DNSServiceRefDeallocate(sdRef);
+    [request setFailedBlock:^{
+        
+        NSLog(@"%@", request.error);
+    }];
+
+    [request startAsynchronous];
 }
 
-- (void)finishedFetchingASN:(int)asn forIndex:(int)index {
+- (void)finishedFetchingASN:(NSString*)asn forIndex:(int)index {
     //NSLog(@"ASN fetched for index %i: %i", index, asn);
-    [self.result replaceObjectAtIndex:index withObject:[NSNumber numberWithInt:asn]];
+    [self.result replaceObjectAtIndex:index withObject:asn];
 }
 
 - (void)failedFetchingASNForIndex:(int)index error:(NSString*)error {
@@ -171,8 +148,8 @@ void callbackCurrent (
     [request startFetchingASNsForIPs:addresses];
 }
 
-+(void)fetchForASN:(int)asn responseBlock:(ASNResponseBlock)response {
-    __weak ASIHTTPRequest* request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://bgp.he.net/AS%i", asn]]];
++(void)fetchForASN:(NSString*)asn responseBlock:(ASNResponseBlock)response {
+    __weak ASIHTTPRequest* request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://bgp.he.net/AS%@", asn]]];
     [request setCompletionBlock:^{
         NSRange range = [[request responseString] rangeOfString:@"/net/.*?/" options:NSRegularExpressionSearch];
         if(range.location != NSNotFound) {
