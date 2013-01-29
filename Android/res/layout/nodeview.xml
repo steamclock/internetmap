@@ -27,10 +27,11 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <Button
-            android:id="@+id/button1"
+            android:id="@+id/closeBtn"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="dismissNodePopup"
             android:text="X" />
 
     </LinearLayout>
@@ -41,5 +42,12 @@
         android:layout_height="wrap_content"
         android:text="&lt;content>"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/tracerouteBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="runTraceroute"
+        android:text="@string/dotraceroute" />
 
 </LinearLayout>

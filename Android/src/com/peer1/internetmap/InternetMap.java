@@ -160,6 +160,15 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         nodePopup.setNode(node);
         nodePopup.showAsDropDown(findViewById(R.id.visualizationsButton)); //FIXME show by node
     }
+    
+    //callbacks from the nodePopup UI
+    public void dismissNodePopup(View unused) {
+        nodePopup.dismiss();
+    }
+    
+    public void runTraceroute(View unused){
+        Log.d(TAG, "TODO: traceroute");
+    }
 
     //native wrappers
     public native void nativeOnCreate();

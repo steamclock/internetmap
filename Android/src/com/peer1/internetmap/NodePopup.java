@@ -11,8 +11,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -20,6 +22,7 @@ import android.widget.TextView;
  * TODO: document your custom view class.
  */
 public class NodePopup extends PopupWindow {
+    private static String TAG = "NodePopup";
     private Context mContext;
     
     public NodePopup(Context context, View view) {
@@ -48,6 +51,13 @@ public class NodePopup extends PopupWindow {
         if (!node.typeString.isEmpty()) {
             strings.add(node.typeString);
         }
+        //FIXME show # connections only on tablets..?
+        if (node.numberOfConnections == 1) {
+            strings.add(mContext.getString(R.string.oneconnection));
+        } else {
+            //<num> connections
+            strings.add(String.format(mContext.getString(R.string.nconnections), node.numberOfConnections));
+        }
         
         //split into title/rest
         String title = strings.get(0);
@@ -68,6 +78,10 @@ public class NodePopup extends PopupWindow {
         TextView titleView = (TextView) getContentView().findViewById(R.id.titleView);
         titleView.setText(title);
         TextView mainTextView = (TextView) getContentView().findViewById(R.id.mainTextView);
-        mainTextView.setText(mainText); 
+        mainTextView.setText(mainText);
+        
+        //show traceroute for all but user's current node
+        Button tracerouteBtn = (Button) getContentView().findViewById(R.id.tracerouteBtn);
+        tracerouteBtn.setVisibility(isUsersNode ? android.view.View.GONE : android.view.View.VISIBLE);
     }
 }
