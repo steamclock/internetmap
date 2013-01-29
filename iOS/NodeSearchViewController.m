@@ -219,7 +219,7 @@
 {
     self.showHostLookup = searchText.length != 0;
     self.searchResults = nil; // First clear the filtered array.
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(textDescription contains[cd] %@) OR (asn contains[cd] %@)", searchText, searchText];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(rawTextDescription contains[cd] %@) OR (asn contains[cd] %@)", searchText, searchText];
     self.searchResults = [self.allItems filteredArrayUsingPredicate:predicate];
     
     [self.tableView reloadData];

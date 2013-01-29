@@ -43,7 +43,7 @@ public:
     
     std::string typeString;
     std::string name;
-    std::string textDescription;
+    std::string rawTextDescription; //raw node description; do not use in the UI (use friendlyDescription instead)
     std::string dateRegistered;
     std::string address;
     std::string city;
@@ -53,7 +53,7 @@ public:
     
     std::vector<ConnectionPointer> connections;
     
-    std::string friendlyDescription(); //textDescription with some cleanup applied
+    std::string friendlyDescription(); //rawTextDescription with some cleanup applied
 private:
     std::string mFriendlyDescription;
     bool mInitializedFriendly;

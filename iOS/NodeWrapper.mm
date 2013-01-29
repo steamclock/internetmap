@@ -36,8 +36,8 @@
     return [NSString stringWithUTF8String:_node->asn.c_str()];
 }
 
-- (NSString*)textDescription {
-    return [NSString stringWithUTF8String:_node->textDescription.c_str()];
+- (NSString*)rawTextDescription {
+    return [NSString stringWithUTF8String:_node->rawTextDescription.c_str()];
 }
 
 - (NSString*)friendlyDescription {
@@ -62,10 +62,6 @@
 
 - (void)setAsn:(NSString *)asn {
     _node->asn = std::string([asn UTF8String]);
-}
-
-- (void)setTextDescription:(NSString *)textDescription {
-    _node->textDescription = std::string([textDescription UTF8String]);
 }
 
 - (void)setTypeString:(NSString *)typeString {
