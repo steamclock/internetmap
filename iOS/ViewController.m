@@ -865,31 +865,33 @@ static const int AXIS_DIVISIONS = 8;
         return;
     }
     //    NSLog(@"%@", hops);
-
-    [ASNRequest fetchForAddresses:@[[hops lastObject]] responseBlock:^(NSArray *asns) {
-        NodeWrapper* last = [self.tracerouteHops lastObject];
-        for(NSNumber* asn in asns) {
-            if(![asn isEqual:[NSNull null]]) {
-                NodeWrapper* current =  [self.controller nodeByASN:[NSString stringWithFormat:@"%i", [asn intValue]]];
-                if(current && current != last) {
-                    [self.tracerouteHops addObject:current];
+    if ([hops lastObject] != [NSNull null]) {
+        [ASNRequest fetchForAddresses:@[[hops lastObject]] responseBlock:^(NSArray *asns) {
+            NodeWrapper* last = [self.tracerouteHops lastObject];
+            for(NSNumber* asn in asns) {
+                if(![asn isEqual:[NSNull null]]) {
+                    NodeWrapper* current =  [self.controller nodeByASN:[NSString stringWithFormat:@"%i", [asn intValue]]];
+                    if(current && current != last) {
+                        [self.tracerouteHops addObject:current];
+                    }
                 }
             }
-        }
-        
-        if ([self.tracerouteHops count] >= 2) {
-            [self.controller highlightRoute:self.tracerouteHops];
-        }
-        
-        //update node info label for number of unique ASN Hops
-        NSMutableSet* asnSet = [NSMutableSet set];
-        for (int i = 0; i < [self.tracerouteHops count]; i++) {
-            NodeWrapper* node = self.tracerouteHops[i];
-            [asnSet addObject:node.asn];
-        }
-        self.nodeInformationViewController.box2.numberLabel.text = [NSString stringWithFormat:@"%i", [asnSet count]];
+            
+            if ([self.tracerouteHops count] >= 2) {
+                [self.controller highlightRoute:self.tracerouteHops];
+            }
+            
+            //update node info label for number of unique ASN Hops
+            NSMutableSet* asnSet = [NSMutableSet set];
+            for (int i = 0; i < [self.tracerouteHops count]; i++) {
+                NodeWrapper* node = self.tracerouteHops[i];
+                [asnSet addObject:node.asn];
+            }
+            self.nodeInformationViewController.box2.numberLabel.text = [NSString stringWithFormat:@"%i", [asnSet count]];
+            
+        }];
+    }
 
-    }];
 }
 
 - (void)tracerouteDidComplete:(NSMutableArray*)hops{

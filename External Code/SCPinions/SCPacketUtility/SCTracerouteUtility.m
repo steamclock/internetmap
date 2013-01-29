@@ -167,7 +167,7 @@
             packetRecord.responseAddress = ipInPacket;
             
             // Report find
-            [self foundNewIP:ipInPacket withReport:[NSString stringWithFormat:@"%@  %.2fms", ipInPacket, packetRecord.rtt]];
+            [self foundNewIP:ipInPacket withReport:[NSString stringWithFormat:@"%@  %.2fms", ipInPacket, packetRecord.rtt] withSequenceNumber:sequenceNumber];
             
             doneTraceroute = [self reachedTargetIP:ipInPacket];
             
@@ -212,8 +212,9 @@
     
     if (numberOfTimeoutsForIP > 0) {
         if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:withHops:)]) {
+            [self.hopsForCurrentIP insertObject:[NSNull null] atIndex:sequenceNumber];
             NSArray* hops = self.hopsForCurrentIP;
-            [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: * * * Hop did not reply or timed out.", (self.hopsForCurrentIP.count + 1)] withHops:hops];
+            [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: * * * Hop did not reply or timed out.", self.hopsForCurrentIP.count] withHops:hops];
             self.totalHopsTimedOut++;
             
             //Send m0ar packets?
@@ -229,10 +230,11 @@
     }
 }
 
--(void)foundNewIP:(NSString*)ip withReport:(NSString*)report{
+-(void)foundNewIP:(NSString*)ip withReport:(NSString*)report withSequenceNumber:(int)sequenceNumber{
     BOOL alreadyContainsIP = [self.hopsForCurrentIP containsObject:ip];
     if (!alreadyContainsIP) {
-        [self.hopsForCurrentIP addObject:ip];
+        //[self.hopsForCurrentIP addObject:ip];
+        [self.hopsForCurrentIP insertObject:ip atIndex:sequenceNumber];
         
         NSString* reported = [NSString stringWithFormat:@"%d: %@", self.hopsForCurrentIP.count, report];
         if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:withHops:)]) {
