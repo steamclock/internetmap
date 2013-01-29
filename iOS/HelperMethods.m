@@ -86,4 +86,25 @@ void SCLogRect(CGRect rect) {
     return !string || [string isEqualToString:@""];
 }
 
++ (NSString*)truncatedNodeDetailStringFromString:(NSString*)string {
+    
+    //most nodes have this format for their textdescription: "signet-as signet internet"
+    //here, we strip the first word, if it has a dash in it, or it is the same as the second word
+    //then, we capitalize the words after that.
+    NSMutableString* textDescription = [string mutableCopy];
+    NSArray* components = [textDescription componentsSeparatedByString:@" "];
+    if ([components count] > 1) {
+        NSString* firstWord = components[0];
+        if ([firstWord rangeOfString:@"-"].location != NSNotFound || [firstWord isEqualToString:components[1]]) {
+            textDescription = [NSMutableString string];
+            for (int i = 1; i<[components count]; i++) {
+                [textDescription appendFormat:@"%@ ", components[i]];
+            }
+            textDescription = [[textDescription capitalizedString] mutableCopy];
+        }
+    }
+    
+    return textDescription;
+}
+
 @end
