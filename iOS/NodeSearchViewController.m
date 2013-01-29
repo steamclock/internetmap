@@ -174,11 +174,11 @@
             cell.textLabel.text = @"No results found";
         }else {
             NodeWrapper* node = self.searchResults[row];
-            cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", node.asn, node.textDescription];
+            cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", node.asn, node.friendlyDescription];
         }
     } else {
         NodeWrapper* node = self.allItems[indexPath.row];
-        cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", node.asn, node.textDescription];
+        cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", node.asn, node.friendlyDescription];
     }
     
     return cell;
