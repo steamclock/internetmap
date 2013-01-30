@@ -26,6 +26,7 @@ class MapDisplay {
     float _displayScale;
     TimeInterval _currentTime;
     
+    TimeInterval _pendingBlendTime;
     TimeInterval _startBlend;
     TimeInterval _endBlend;
 

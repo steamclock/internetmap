@@ -20,12 +20,18 @@ MapDisplay::MapDisplay() :
     _displayScale(1.0f),
     camera(new Camera()),
     _startBlend(0.0f),
-    _endBlend(0.0f)
+    _endBlend(0.0f),
+    _pendingBlendTime(0.0f)
 {
     InitOpenGLExtensions();
 }
 
 void MapDisplay::update(TimeInterval currentTime) {
+    if(_pendingBlendTime != 0.0f) {
+        _startBlend = currentTime;
+        _endBlend = currentTime + _pendingBlendTime;
+        _pendingBlendTime = 0.0f;
+    }
     _currentTime = currentTime;
     camera->update(currentTime);
 }
@@ -115,7 +121,6 @@ void MapDisplay::draw(void)
 }
 
 void MapDisplay::startBlend(TimeInterval blend) {
-    _startBlend = _currentTime;
-    _endBlend = _currentTime + blend;
+    _pendingBlendTime = blend;
 }
 
