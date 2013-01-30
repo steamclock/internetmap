@@ -8,6 +8,7 @@
 
 #import "NodeSearchViewController.h"
 #import "NodeWrapper.h"
+#import "SCDispatchQueue.h"
 
 #define ASNS_AT_TOP @[@13768, @23498, @3, @15169, @714, @32934, @7847] //Peer1, Cogeco, MIT, google, apple, facebook, NASA
 
@@ -211,21 +212,30 @@
 {
     if(searchText.length == 0) {
         self.searchResults = self.allItems;
+        [self.tableView reloadData];
     }
     else {
-        bool hasDot = [searchText rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"."]].location != NSNotFound;
-
-        self.showHostLookup = ((searchText.length != 0) && hasDot);
-        self.searchResults = nil; // First clear the filtered array.
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(rawTextDescription contains[cd] %@) OR (asn contains[cd] %@)", searchText, searchText];
-        self.searchResults = [self.allItems filteredArrayUsingPredicate:predicate];
+        __weak NodeSearchViewController* weakSelf = self;
+        NSString* localSearchText = [searchText copy];
+        NSArray* localAllItems = self.allItems;
         
-        if(self.searchResults.count == 0) {
-            self.showHostLookup = YES;
-        }
+        [[SCDispatchQueue defaultPriorityQueue] dispatchAsync:^{
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(rawTextDescription contains[cd] %@) OR (asn contains[cd] %@)", searchText, searchText];
+            NSArray* searchResults = [localAllItems filteredArrayUsingPredicate:predicate];
+
+            [[SCDispatchQueue mainQueue] dispatchAsync:^{
+                if((weakSelf.allItems == localAllItems) && [localSearchText isEqualToString:weakSelf.textField.text])
+                 {
+                     bool hasDot = [localSearchText rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"."]].location != NSNotFound;
+                     
+                     weakSelf.showHostLookup = ((localSearchText.length != 0) && hasDot) ||  (searchResults.count == 0);
+                     
+                     weakSelf.searchResults = searchResults;
+                     [self.tableView reloadData];
+                 }
+            }];
+        }];
     }
-    
-    [self.tableView reloadData];
 }
 
 @end
