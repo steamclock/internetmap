@@ -80,21 +80,23 @@ void callbackCurrent (
 
 - (void)startFetchingASNsForIPs:(NSArray*)theIPs{
     self.result = [NSMutableArray arrayWithCapacity:theIPs.count];
+    int numberOfIPs = [theIPs count];
     
-    for (int i = 0; i < theIPs.count; i++) {
+    for (int i = 0; i < numberOfIPs; i++) {
         [self.result addObject:[NSNull null]];
     }
     
     [[SCDispatchQueue defaultPriorityQueue] dispatchAsync:^{
-        for (int i = 0; i < [theIPs count]; i++) {
+        for (int i = 0; i < numberOfIPs; i++) {
             NSString* ip = [theIPs objectAtIndex:i];
             if (!ip || [self isInvalidOrPrivate:ip]) {
-                [self failedFetchingASNForIndex:i error:@"Couldn't resolve DNS."];
-            }else {
+                [self failedFetchingASNForIndex:i error:@"Couldn't get ASN for IP"];
+            } else {
                 [self fetchASNForIP:ip index:i];
             }
         }
         
+        NSLog(@"Result after fetching for IPs: %@", self.result);
         if (self.response) {
             [[SCDispatchQueue mainQueue] dispatchAsync:^{
                 self.response(self.result);
@@ -116,25 +118,26 @@ void callbackCurrent (
     [request setCompletionBlock:^{
         NSError* error = request.error;
         NSDictionary* jsonResponse = [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingAllowFragments error:&error];
+        NSLog(@"JSON PAYLOAD: %@", [jsonResponse objectForKey:@"payload"]);
         [self finishedFetchingASN:[jsonResponse objectForKey:@"payload"] forIndex:index];
         
     }];
     
     [request setFailedBlock:^{
         
-        NSLog(@"%@", request.error);
+        [self failedFetchingASNForIndex:index error:[NSString stringWithFormat:@"%@", request.error]];
     }];
 
     [request startAsynchronous];
 }
 
 - (void)finishedFetchingASN:(NSString*)asn forIndex:(int)index {
-    //NSLog(@"ASN fetched for index %i: %i", index, asn);
+    NSLog(@"ASN fetched for index %i: %@", index, asn);
     [self.result replaceObjectAtIndex:index withObject:asn];
 }
 
 - (void)failedFetchingASNForIndex:(int)index error:(NSString*)error {
-    //NSLog(@"Failed for index: %i, error: %@", index, error);
+    NSLog(@"Failed for index: %i, error: %@", index, error);
 }
 
 +(void)fetchForAddresses:(NSArray*)addresses responseBlock:(ASNResponseBlock)response {

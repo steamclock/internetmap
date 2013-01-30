@@ -744,7 +744,7 @@ static const int AXIS_DIVISIONS = 8;
                 }];
             }
         }];
-    }else {
+    } else {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No Internet connection" message:@"Please connect to the internet." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
         [alert show];
     }
@@ -813,18 +813,18 @@ static const int AXIS_DIVISIONS = 8;
         if (node.asn) {
             [ASNRequest fetchForASN:node.asn responseBlock:^(NSArray *asn) {
                 if (asn[0] != [NSNull null]) {
-                    NSLog(@"starting tracerout with IP: %@", asn[0]);
+                    NSLog(@"Starting tracerout with IP: %@", asn[0]);
                     self.tracer = [SCTracerouteUtility tracerouteWithAddress:asn[0]];
                     self.tracer.delegate = self;
                     [self.tracer start];
                 } else {
-                    NSLog(@"asn couldn't be resolved to IP");
+                    NSLog(@"Asn couldn't be resolved to IP");
                     self.nodeInformationViewController.tracerouteTextView.textColor = [UIColor redColor];
                     self.nodeInformationViewController.tracerouteTextView.text = @"Error: ASN couldn't be resolved into IP.";
                 }
             }];
         } else {
-            NSLog(@"asn is not an int");
+            NSLog(@"asn is not an int"); //TODO: ASN should always be a string, refactor this
             self.nodeInformationViewController.tracerouteTextView.textColor = [UIColor redColor];
             self.nodeInformationViewController.tracerouteTextView.text = @"Error: ASN couldn't be resolved into IP.";
         }
@@ -853,7 +853,7 @@ static const int AXIS_DIVISIONS = 8;
 
 - (void)tracerouteDidFindHop:(NSString*)report withHops:(NSArray *)hops{
     
-    NSLog(@"%@", report);
+    //NSLog(@"%@", report);
     
     self.nodeInformationViewController.tracerouteTextView.text = [[NSString stringWithFormat:@"%@\n%@", self.nodeInformationViewController.tracerouteTextView.text, report] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     [self.nodeInformationViewController.box1 incrementNumber];
@@ -861,13 +861,12 @@ static const int AXIS_DIVISIONS = 8;
     if ([hops count] <= 0) {
         return;
     }
-    //    NSLog(@"%@", hops);
     if ([hops lastObject] != [NSNull null]) {
         [ASNRequest fetchForAddresses:@[[hops lastObject]] responseBlock:^(NSArray *asns) {
             NodeWrapper* last = [self.tracerouteHops lastObject];
-            for(NSNumber* asn in asns) {
+            for(NSString* asn in asns) {
                 if(![asn isEqual:[NSNull null]]) {
-                    NodeWrapper* current =  [self.controller nodeByASN:[NSString stringWithFormat:@"%i", [asn intValue]]];
+                    NodeWrapper* current =  [self.controller nodeByASN:[NSString stringWithFormat:@"%@", asn]];
                     if(current && current != last) {
                         [self.tracerouteHops addObject:current];
                     }
