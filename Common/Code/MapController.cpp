@@ -423,13 +423,16 @@ void MapController::update(TimeInterval currentTime) {
 }
 
 void MapController::updateDisplay(bool blend) {
+    display->nodes->setCount(data->nodes.size());
+    display->targetNodes->setCount(data->nodes.size());
+    
     if(blend) {
-        data->visualization->resetDisplayForNodes(display->targetNodes, data->nodes);
+        data->visualization->updateDisplayForNodes(display->targetNodes, data->nodes);
         data->visualization->updateLineDisplay(display, data->connections);
-        display->startBlend(4.0f);
+        display->startBlend(1.0f);
     }
     else {
-        data->visualization->resetDisplayForNodes(display->nodes, data->nodes);
+        data->visualization->updateDisplayForNodes(display->nodes, data->nodes);
         data->visualization->updateLineDisplay(display, data->connections);
     }
 }

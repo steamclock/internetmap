@@ -68,8 +68,6 @@ void MapDisplay::draw(void)
                 blend = 1.0f;
             }
             
-            LOG("%.2f", blend);
-            
             _blendNodeProgram->bind();
             bindDefaultNodeUniforms(_blendNodeProgram);
             glUniform1f(_blendNodeProgram->uniformForName("minSize"), 2.0f);

@@ -20,7 +20,6 @@ class DefaultVisualization : public Visualization {
     virtual float nodeSize(NodePointer node);
     virtual float nodeZoom(NodePointer node);
     virtual void updateDisplayForNodes(shared_ptr<DisplayNodes> display, std::vector<NodePointer> nodes);
-    virtual void resetDisplayForNodes(shared_ptr<DisplayNodes> display, std::vector<NodePointer> nodes);
     virtual void updateDisplayForSelectedNodes(shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes);
     virtual void resetDisplayForSelectedNodes(shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes);
     virtual void updateLineDisplay(shared_ptr<MapDisplay> display, std::vector<ConnectionPointer>connections);

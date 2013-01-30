@@ -90,13 +90,6 @@ void DefaultVisualization::updateDisplayForNodes(shared_ptr<DisplayNodes> displa
     display->endUpdate();
 }
 
-
-void DefaultVisualization::resetDisplayForNodes(shared_ptr<DisplayNodes> display, std::vector<NodePointer> nodes) {
-    display->setCount(nodes.size());
-    updateDisplayForNodes(display, nodes);
-}
-
-
 void DefaultVisualization::updateLineDisplay(shared_ptr<MapDisplay> display, std::vector<ConnectionPointer>connections) {
     // Disabling default lines entirely for now, but leaving th code in case we want to renable it (in some cases) later
     return;
