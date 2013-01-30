@@ -7,4 +7,6 @@
     <string name="oneconnection">One Connection</string>
     <string name="nconnections">%d Connections</string>
     <string name="dotraceroute">Perform Traceroute</string>
+    <string name="asnfail">ASN Failure: %s</string>
+    <string name="asnBadResponse">ASN Failure: unexpected response.</string>
 </resources>
