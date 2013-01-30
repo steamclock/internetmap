@@ -255,7 +255,7 @@ bool Renderer::initialize() {
 
     _mapController->display->setDisplayScale(_displayScale);
 
-    _mapController->data->updateDisplay(_mapController->display);
+    _mapController->updateDisplay(false);
 
     _mapController->display->camera->setAllowIdleAnimation(true);
 
