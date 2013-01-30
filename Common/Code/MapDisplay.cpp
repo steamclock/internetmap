@@ -11,10 +11,10 @@
 #include "OpenGL.hpp"
 
 MapDisplay::MapDisplay() :
-    _nodeProgram(new Program("node", "node", ATTRIB_VERTEX | ATTRIB_COLOR | ATTRIB_SIZE)),
-    _blendNodeProgram(new Program("node", "nodeBlend", ATTRIB_VERTEX | ATTRIB_COLOR | ATTRIB_SIZE | ATTRIB_VERTEXTARGET | ATTRIB_COLORTARGET | ATTRIB_SIZETARGET)),
-    _selectedNodeProgram(new Program("selectedNode", "node", ATTRIB_VERTEX | ATTRIB_COLOR | ATTRIB_SIZE)),
-    _connectionProgram (new Program("line", ATTRIB_VERTEX | ATTRIB_COLOR)),
+    _nodeProgram(new Program("node", "node", VERTEX_NODE)),
+    _blendNodeProgram(new Program("node", "nodeBlend", VERTEX_BLEND_NODE)),
+    _selectedNodeProgram(new Program("selectedNode", "node", VERTEX_NODE)),
+    _connectionProgram (new Program("line",VERTEX_LINE)),
     nodes(new DisplayNodes(0)),
     targetNodes(new DisplayNodes(0)),
     _displayScale(1.0f),
@@ -77,7 +77,7 @@ void MapDisplay::draw(void)
             targetNodes->bindBlendTarget();
             nodes->display();
             
-            glDisableVertexAttribArray(ATTRIB_VERTEXTARGET);
+            glDisableVertexAttribArray(ATTRIB_POSITIONTARGET);
             glDisableVertexAttribArray(ATTRIB_SIZETARGET);
             glDisableVertexAttribArray(ATTRIB_COLORTARGET);
             
