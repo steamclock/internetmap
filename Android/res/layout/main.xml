@@ -27,7 +27,8 @@
             android:id="@+id/youAreHereButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/youareherebutton"/>
+            android:background="@drawable/youareherebutton"
+            android:onClick="youAreHereButtonPressed"/>
 
     <Button
             android:id="@+id/visualizationsButton"

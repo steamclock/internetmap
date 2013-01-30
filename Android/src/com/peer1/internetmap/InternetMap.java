@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 import android.view.ScaleGestureDetector;
 import android.view.ViewGroup.LayoutParams;
 import android.view.GestureDetector;
@@ -143,6 +144,64 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                 }
             });
             visualizationPopup.showAsDropDown(findViewById(R.id.visualizationsButton));
+        }
+    }
+
+    public void youAreHereButtonPressed(View view) {
+        //TODO: stop timeline if active
+        //TODO: animate button while fetching
+        //do an ASN request to get the user's ASN
+        ASNRequest.fetchCurrentASNWithResponseHandler(new AsyncHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                // Initiated the request
+                Log.d(TAG, "asnrequest start");
+            }
+            @Override
+            public void onFinish() {
+                // Initiated the request
+                Log.d(TAG, "asnrequest finish");
+            }
+
+            @Override
+            public void onSuccess(String response) {
+                //expected response format: {"payload":"ASxxxx"}
+                //quick&dirty parsing FIXME ASNRequest should handle this, and do proper JSON deserialization
+                try {
+                    String asnString = response.substring(14, response.length()-2);
+                    Log.d(TAG, String.format("asn: %s", asnString));
+                    //yay, an ASN! hand it back to InternetMap
+                    selectNodeForASN(asnString);
+                } catch (IndexOutOfBoundsException e) {
+                    //TODO toast failure message
+                    Log.d(TAG, String.format("can't parse response: %s", response));
+                    showError(getString(R.string.asnBadResponse));
+                } finally {}
+            }
+        
+            @Override
+            public void onFailure(Throwable e, String response) {
+                //tell the user
+                //FIXME: outputting the raw error response is bad. how can we make it userfriendly?
+                String message = String.format(getString(R.string.asnfail), response);
+                showError(message);
+                Log.d(TAG, message);
+            }
+        });
+    }
+    
+    public void showError(String message) {
+        //TODO: I'm not sure if a dialog or a toast is most appropriate for errors.
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+    
+    public void selectNodeForASN(String asn) {
+        NodeWrapper node = mController.nativeNodeByAsn(asn);
+        if (node != null) {
+            Log.d(TAG, "TODO selectNodeForASN");
+            //TODO: target that node
+        } else {
+            showError(String.format(getString(R.string.asnNullNode), asn));
         }
     }
 

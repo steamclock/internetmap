@@ -174,7 +174,7 @@ void MapData::loadFromAttrString(const std::string& json){
             
             node->type = asTypeDict[aDesc[7]];
             node->typeString = aDesc[7];
-            node->textDescription = aDesc[1];
+            node->rawTextDescription = aDesc[1];
         }
     }
 
@@ -194,7 +194,7 @@ void MapData::loadASInfo(const std::string& json){
             if (node) {
                 Json::Value as = root[members[i]];
                 node->name = as[1].asString();
-                node->textDescription = as[5].asString();
+                node->rawTextDescription = as[5].asString();
                 node->dateRegistered = as[3].asString();
                 node->address = as[7].asString();
                 node->city = as[8].asString();

@@ -174,11 +174,11 @@
             cell.textLabel.text = @"No results found";
         }else {
             NodeWrapper* node = self.searchResults[row];
-            cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", node.asn, node.textDescription];
+            cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", node.asn, node.friendlyDescription];
         }
     } else {
         NodeWrapper* node = self.allItems[indexPath.row];
-        cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", node.asn, node.textDescription];
+        cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", node.asn, node.friendlyDescription];
     }
     
     return cell;
@@ -219,7 +219,7 @@
 {
     self.showHostLookup = searchText.length != 0;
     self.searchResults = nil; // First clear the filtered array.
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(textDescription contains[cd] %@) OR (asn contains[cd] %@)", searchText, searchText];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(rawTextDescription contains[cd] %@) OR (asn contains[cd] %@)", searchText, searchText];
     self.searchResults = [self.allItems filteredArrayUsingPredicate:predicate];
     
     [self.tableView reloadData];

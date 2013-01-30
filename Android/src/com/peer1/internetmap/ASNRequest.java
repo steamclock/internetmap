@@ -1,20 +1,11 @@
 package com.peer1.internetmap;
 
-import android.content.Context;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.protocol.HTTP;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.xml.sax.InputSource;
 
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-
+//Requests the user's ASN from the internet.
 public class ASNRequest {
     //this uses loopj-async-http-request
     //http://loopj.com/android-async-http/
@@ -25,6 +16,7 @@ public class ASNRequest {
 
     private static String getAbsoluteUrl(String relativeUrl) {
         return BASE_URL + relativeUrl;
+        //return BASE_URL + "invalid";
     }
 
     private static void fetchGlobalIPWithResponseHandler(AsyncHttpResponseHandler handler){
@@ -34,6 +26,7 @@ public class ASNRequest {
 
     public static void fetchCurrentASNWithResponseHandler(AsyncHttpResponseHandler handler) {
         final AsyncHttpResponseHandler finHandler = handler;
+        //TODO: check the network connection first.
         fetchGlobalIPWithResponseHandler(new AsyncHttpResponseHandler() {
 
             @Override

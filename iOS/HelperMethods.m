@@ -86,4 +86,5 @@ void SCLogRect(CGRect rect) {
     return !string || [string isEqualToString:@""];
 }
 
+
 @end

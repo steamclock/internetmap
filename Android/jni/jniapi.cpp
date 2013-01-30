@@ -28,6 +28,20 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved)
     return JNI_VERSION_1_6;
 }
 
+//helper function for wrappers returning a node
+jobject wrapNode(JNIEnv* jenv, NodePointer node) {
+    if (!node) return 0;
+
+    jclass nodeWrapperClass = jenv->FindClass("com/peer1/internetmap/NodeWrapper");
+    jmethodID constructor = jenv->GetMethodID(nodeWrapperClass, "<init>",
+            "(IFILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+    //note: if you change this code, triple-check that the argument order matches NodeWrapper.
+    jobject wrapper = jenv->NewObject(nodeWrapperClass, constructor, node->index, node->importance,
+            node->connections.size(), jenv->NewStringUTF(node->asn.c_str()),
+            jenv->NewStringUTF(node->friendlyDescription().c_str()), jenv->NewStringUTF(node->typeString.c_str()));
+    return wrapper;
+}
+
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeOnCreate(JNIEnv* jenv, jobject obj)
 {
     LOG("OnCreate");
@@ -137,13 +151,20 @@ JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_native
         return 0;
     }
     NodePointer node = controller->data->nodes[index];
-    //build a java copy of the data
-    jclass nodeWrapperClass = jenv->FindClass("com/peer1/internetmap/NodeWrapper");
-    jmethodID constructor = jenv->GetMethodID(nodeWrapperClass, "<init>",
-            "(IFILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
-    jobject wrapper = jenv->NewObject(nodeWrapperClass, constructor, node->index, node->importance,
-            node->connections.size(), jenv->NewStringUTF(node->asn.c_str()),
-            jenv->NewStringUTF(node->friendlyDescription().c_str()), jenv->NewStringUTF(node->typeString.c_str()));
+    jobject wrapper = wrapNode(jenv, node);
+
+    renderer->endControllerModification();
+    return wrapper;
+}
+
+JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeNodeByAsn(JNIEnv* jenv, jobject obj,
+        jstring asn) {
+    MapController* controller = renderer->beginControllerModification();
+
+    const char *asnCstr = jenv->GetStringUTFChars(asn, 0);
+    NodePointer node = controller->data->nodesByAsn[asnCstr];
+    jenv->ReleaseStringUTFChars(asn, asnCstr);
+    jobject wrapper = wrapNode(jenv, node);
 
     renderer->endControllerModification();
     return wrapper;

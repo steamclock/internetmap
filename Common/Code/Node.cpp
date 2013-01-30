@@ -14,32 +14,32 @@ Node::Node()
 
 std::string Node::friendlyDescription() {
     if (!mInitializedFriendly) {
-        if (!textDescription.empty()) {
-            LOG("original: %s", textDescription.c_str());
+        if (!rawTextDescription.empty()) {
+            LOG("original: %s", rawTextDescription.c_str());
             //if the description starts with "signet-as signet..." or "signet signet..."
             //then strip the redundant first word.
             bool stripFirst = false;
-            int firstWordEnd = textDescription.find(' ');
+            int firstWordEnd = rawTextDescription.find(' ');
             if (firstWordEnd != std::string::npos) {
-                std::string firstWord = textDescription.substr(0, firstWordEnd);
+                std::string firstWord = rawTextDescription.substr(0, firstWordEnd);
                 if (firstWord.find('-') != std::string::npos) {
                     //it has a dash, assume it's signet-as
                     stripFirst = true;
                 } else {
                     //compare to second word
                     int secondWordStart = firstWordEnd + 1; //note: assuming singlespacing
-                    int secondWordEnd = textDescription.find(' ', secondWordStart);
+                    int secondWordEnd = rawTextDescription.find(' ', secondWordStart);
                     int secondWordLen = (secondWordEnd == std::string::npos) ? std::string::npos : (secondWordEnd-secondWordStart);
-                    if (textDescription.compare(secondWordStart, secondWordLen, firstWord) == 0) {
+                    if (rawTextDescription.compare(secondWordStart, secondWordLen, firstWord) == 0) {
                         stripFirst = true;
                     }
                 }
             }
 
             if (stripFirst) {
-                mFriendlyDescription = textDescription.substr(firstWordEnd + 1);
+                mFriendlyDescription = rawTextDescription.substr(firstWordEnd + 1);
             } else {
-                mFriendlyDescription = textDescription;
+                mFriendlyDescription = rawTextDescription;
             }
 
             //LOG("before upper: %s", mFriendlyDescription.c_str());
