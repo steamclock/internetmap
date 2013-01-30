@@ -178,6 +178,12 @@ JNIEXPORT int JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeTarg
     return ret;
 }
 
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeUpdateTargetForIndex(JNIEnv* jenv, jobject obj, int index) {
+    MapController* controller = renderer->beginControllerModification();
+    controller->updateTargetForIndex(index);
+    renderer->endControllerModification();
+}
+
 void DetachThreadFromVM(void) {
     javaVM->DetachCurrentThread();
 }

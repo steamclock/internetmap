@@ -29,7 +29,7 @@ public:
     void hoverNode(int index);
     void unhoverNode();
     void deselectCurrentNode();
-    void updateTargetForIndex(int index);
+    void updateTargetForIndex(int index); //target the node at the given index
     void handleTouchDownAtPoint(Vector2 point);
     bool selectHoveredNode();
     int indexForNodeAtPoint(Vector2 pointInView);

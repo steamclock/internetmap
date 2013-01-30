@@ -199,13 +199,19 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         NodeWrapper node = mController.nativeNodeByAsn(asn);
         if (node != null) {
             Log.d(TAG, "TODO selectNodeForASN");
+            selectNode(node);
             //TODO: target that node
         } else {
             showError(String.format(getString(R.string.asnNullNode), asn));
         }
     }
+    
+    public void selectNode(NodeWrapper node) {
+        //FIXME: what shows the node popup? do we need to do nodeSearchDelegateDone?
+        mController.nativeUpdateTargetForIndex(node.index);
+    }
 
-    public void makeNodePopup(NodeWrapper node) {
+    public void showNodePopup(NodeWrapper node) {
         if (nodePopup == null) {
             LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
             View popupView = layoutInflater.inflate(R.layout.nodeview, null);
@@ -297,7 +303,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                 }
             } else {
                 Log.d(TAG, String.format("has index %d and asn %s", node.index, node.asn));
-                makeNodePopup(node);
+                showNodePopup(node);
             }
             return true;
         }
