@@ -16,7 +16,6 @@
 @property (strong, nonatomic) UITextField* textField;
 @property (strong, nonatomic) NSArray* searchResults;
 @property BOOL showHostLookup;
-@property BOOL isSearching;
 @end
 
 @implementation NodeSearchViewController
@@ -54,6 +53,8 @@
     self.textField.textColor = [UIColor blackColor];
     self.textField.delegate = self;
     self.textField.font = [UIFont fontWithName:FONT_NAME_LIGHT size:24];
+    self.textField.returnKeyType = UIReturnKeyGo;
+    [self.textField setEnablesReturnKeyAutomatically:YES];
 
     // Attributed strings in iOS 6 only
     if([self.textField respondsToSelector:@selector(setAttributedPlaceholder:)]) {
@@ -82,18 +83,17 @@
     [self.view addSubview:self.tableView];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-    
-    [self.textField becomeFirstResponder];
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.textField.text = @"";
+    self.searchResults = self.allItems;
+    self.showHostLookup = NO;
+    [self.tableView reloadData];
 }
 
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self.textField becomeFirstResponder];
 }
 
 - (void)setAllItems:(NSMutableArray *)allItems {
@@ -116,18 +116,8 @@
     [self filterContentForSearchText:sender.text];
 }
 
-
-- (void)textFieldDidBeginEditing:(UITextField *)textField {
-    self.isSearching = YES;
-}
-
-- (void)textFieldDidEndEditing:(UITextField *)textField {
-    self.isSearching = NO;
-    [self.tableView reloadData];
-}
-
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    [textField resignFirstResponder];
+    [self tableView:self.tableView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
     return YES;
 }
 
@@ -140,11 +130,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (self.isSearching && self.textField.text != nil && ![self.textField.text isEqualToString:@""]) {
-        return (self.searchResults.count ? self.searchResults.count : 1) + (self.showHostLookup ? 1 : 0);
-    } else {
-        return self.allItems.count;
-    }
+    return (self.searchResults.count ? self.searchResults.count : 1) + (self.showHostLookup ? 1 : 0);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -166,30 +152,31 @@
 
     }
     
-    if (self.isSearching && self.textField.text != nil && ![self.textField.text isEqualToString:@""]) {
-        int row = indexPath.row;
-        
-        if(self.showHostLookup) {
-            if(row == 0) {
-                
-                cell.textLabel.text = [NSString stringWithFormat:@"Find host '%@'", [self.textField.text lowercaseString] ];
-                return cell;
-            }
-            else
-            {
-                row--;
-            }
+    cell.textLabel.textColor = [UIColor whiteColor];
+
+    int row = indexPath.row;
+    
+    if(self.showHostLookup) {
+        if(row == 0) {
+            cell.textLabel.text = [NSString stringWithFormat:@"Find host '%@'", [self.textField.text lowercaseString] ];
+            cell.textLabel.textColor = UI_ORANGE_COLOR;
+            return cell;
         }
-        
-        if (row >= self.searchResults.count) {
-            cell.textLabel.text = @"No results found";
-        }else {
-            NodeWrapper* node = self.searchResults[row];
-            cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", node.asn, node.friendlyDescription];
+        else
+        {
+            row--;
         }
-    } else {
-        NodeWrapper* node = self.allItems[indexPath.row];
+    }
+    
+    if (row >= self.searchResults.count) {
+        cell.textLabel.text = @"No results found";
+    }else {
+        NodeWrapper* node = self.searchResults[row];
         cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", node.asn, node.friendlyDescription];
+    }
+    
+    if((row == 0) && (self.textField.text.length != 0) && !self.showHostLookup) {
+        cell.textLabel.textColor = UI_ORANGE_COLOR;
     }
     
     return cell;
@@ -203,35 +190,40 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
-    if (self.isSearching && self.textField.text != nil && ![self.textField.text isEqualToString:@""]) {
-        int row = indexPath.row;
-        
-        if(self.showHostLookup) {
-            if(row == 0) {
-                [self.delegate selectNodeByHostLookup:[self.textField.text lowercaseString]];
-                return;
-            }
-            else{
-                row--;
-            }
+    int row = indexPath.row;
+    
+    if(self.showHostLookup) {
+        if(row == 0) {
+            [self.delegate selectNodeByHostLookup:[self.textField.text lowercaseString]];
+            return;
         }
-
-        NodeWrapper* node = self.searchResults[row];
-        [self.delegate nodeSelected:node];
-    } else {
-        NodeWrapper* node = self.allItems[indexPath.row];
-        [self.delegate nodeSelected:node];
+        else{
+            row--;
+        }
     }
+
+    NodeWrapper* node = self.searchResults[row];
+    [self.delegate nodeSelected:node];
 }
 
 
 - (void)filterContentForSearchText:(NSString*)searchText
 {
-    self.showHostLookup = searchText.length != 0;
-    self.searchResults = nil; // First clear the filtered array.
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(rawTextDescription contains[cd] %@) OR (asn contains[cd] %@)", searchText, searchText];
-    self.searchResults = [self.allItems filteredArrayUsingPredicate:predicate];
+    if(searchText.length == 0) {
+        self.searchResults = self.allItems;
+    }
+    else {
+        bool hasDot = [searchText rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"."]].location != NSNotFound;
+
+        self.showHostLookup = ((searchText.length != 0) && hasDot);
+        self.searchResults = nil; // First clear the filtered array.
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(rawTextDescription contains[cd] %@) OR (asn contains[cd] %@)", searchText, searchText];
+        self.searchResults = [self.allItems filteredArrayUsingPredicate:predicate];
+        
+        if(self.searchResults.count == 0) {
+            self.showHostLookup = YES;
+        }
+    }
     
     [self.tableView reloadData];
 }

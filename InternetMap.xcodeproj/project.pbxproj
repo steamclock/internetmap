@@ -141,7 +141,6 @@
 		A686EB1516B63290009B070E /* node.fsh in Resources */ = {isa = PBXBuildFile; fileRef = A686EAA216B62BDD009B070E /* node.fsh */; };
 		A686EB1616B63290009B070E /* node.vsh in Resources */ = {isa = PBXBuildFile; fileRef = A686EAA316B62BDD009B070E /* node.vsh */; };
 		A686EB1716B63290009B070E /* selectedNode.fsh in Resources */ = {isa = PBXBuildFile; fileRef = A686EAA416B62BDD009B070E /* selectedNode.fsh */; };
-		A686EB2016B895F3009B070E /* nodeBlend.vsh in Sources */ = {isa = PBXBuildFile; fileRef = A686EB1F16B895F3009B070E /* nodeBlend.vsh */; };
 		A686EB2216B89601009B070E /* nodeBlend.vsh in Resources */ = {isa = PBXBuildFile; fileRef = A686EB1F16B895F3009B070E /* nodeBlend.vsh */; };
 		A6F3F5631640F1FB0070E6AE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5621640F1FB0070E6AE /* UIKit.framework */; };
 		A6F3F5651640F1FB0070E6AE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5641640F1FB0070E6AE /* Foundation.framework */; };
@@ -1048,7 +1047,6 @@
 				A686EA7F16B62B61009B070E /* MapControllerWrapper.mm in Sources */,
 				A686EA8016B62B61009B070E /* NodeWrapper.mm in Sources */,
 				A686EAE816B62D05009B070E /* SCDispatchQueue.m in Sources */,
-				A686EB2016B895F3009B070E /* nodeBlend.vsh in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
