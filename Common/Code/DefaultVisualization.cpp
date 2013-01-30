@@ -54,36 +54,44 @@ void DefaultVisualization::updateDisplayForNodes(shared_ptr<DisplayNodes> displa
         NodePointer node = nodes[i];
         
         Color color;
-        switch(node->type) {
-            case AS_T1:
-                color = t1Color;
-                break;
-            case AS_T2:
-                color = t2Color;
-                break;
-            case AS_COMP:
-                color = compColor;
-                break;
-            case AS_EDU:
-                color = eduColor;
-                break;
-            case AS_IX:
-                color = ixColor;
-                break;
-            case AS_NIC:
-                color = nicColor;
-                break;
-            default:
-                color = unknownColor;
-                break;
+        Point3 position;
+        float size;
+
+        if(node->active) {
+            position = nodePosition(node);
+            size = nodeSize(node);
+            
+            switch(node->type) {
+                case AS_T1:
+                    color = t1Color;
+                    break;
+                case AS_T2:
+                    color = t2Color;
+                    break;
+                case AS_COMP:
+                    color = compColor;
+                    break;
+                case AS_EDU:
+                    color = eduColor;
+                    break;
+                case AS_IX:
+                    color = ixColor;
+                    break;
+                case AS_NIC:
+                    color = nicColor;
+                    break;
+                default:
+                    color = unknownColor;
+                    break;
+            }
         }
-        
-        
-        if(!node->active) {
+        else {
             color = inactiveColor;
+            position = nodePosition(node);
+            size = 0.0f;
         }
-                
-        display->updateNode(node->index, nodePosition(node), nodeSize(node), color); // use index from node, not in array, so that partiual updates can work
+        
+        display->updateNode(node->index, position, size, color); // use index from node, not in array, so that partiual updates can work
         
     }
     
