@@ -23,6 +23,7 @@ class MapDisplay {
     shared_ptr<Program> _connectionProgram;
 
     float _displayScale;
+    TimeInterval _currentTime;
 
 public:
     MapDisplay();
@@ -32,6 +33,7 @@ public:
     
     shared_ptr<Camera> camera;
     shared_ptr<DisplayNodes> nodes;
+    shared_ptr<DisplayNodes> targetNodes;
     shared_ptr<DisplayNodes> selectedNodes;
     shared_ptr<DisplayLines> visualizationLines;
     shared_ptr<DisplayLines> highlightLines;

@@ -11,7 +11,7 @@
 #include "OpenGL.hpp"
 
 MapDisplay::MapDisplay() :
-    _nodeProgram(new Program("node", ATTRIB_VERTEX | ATTRIB_COLOR | ATTRIB_SIZE)),
+    _nodeProgram(new Program("node", "nodeBlend", ATTRIB_VERTEX | ATTRIB_COLOR | ATTRIB_SIZE | ATTRIB_VERTEXTARGET | ATTRIB_COLORTARGET | ATTRIB_SIZETARGET)),
     _selectedNodeProgram(new Program("selectedNode", "node", ATTRIB_VERTEX | ATTRIB_COLOR | ATTRIB_SIZE)),
     _connectionProgram (new Program("line", ATTRIB_VERTEX | ATTRIB_COLOR)),
     _displayScale(1.0f),
@@ -21,6 +21,7 @@ MapDisplay::MapDisplay() :
 }
 
 void MapDisplay::update(TimeInterval currentTime) {
+    _currentTime = currentTime;
     camera->update(currentTime);
 }
 
@@ -56,10 +57,17 @@ void MapDisplay::draw(void)
     glDepthMask(GL_FALSE); //disable z writing only
 
     if (nodes) {
+        float blend = _currentTime - floor(_currentTime);
         _nodeProgram->bind();
         bindDefaultNodeUniforms(_nodeProgram);
         glUniform1f(_nodeProgram->uniformForName("minSize"), 2.0f);
+        glUniform1f(_nodeProgram->uniformForName("blend"), blend);
+        targetNodes->bindBlendTarget();
         nodes->display();
+        
+        glDisableVertexAttribArray(ATTRIB_VERTEXTARGET);
+        glDisableVertexAttribArray(ATTRIB_SIZETARGET);
+        glDisableVertexAttribArray(ATTRIB_COLORTARGET);
     }
 
     Matrix4 mvp = camera->currentModelViewProjection();

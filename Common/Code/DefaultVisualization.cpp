@@ -89,16 +89,31 @@ void DefaultVisualization::updateDisplayForNodes(shared_ptr<MapDisplay> display,
     }
     
     display->nodes->endUpdate();
+
+    
+    display->targetNodes->beginUpdate();
+    
+    for(unsigned int i = 0; i < nodes.size(); i++) {
+        NodePointer node = nodes[i];
+        display->targetNodes->updateNode(node->index, nodePosition(node), nodeSize(node),  ColorFromRGB(0xffffff)); // use index from node, not in array, so that partiual updates can work
+        
+    }
+    
+    display->targetNodes->endUpdate();
 }
 
 
 void DefaultVisualization::resetDisplayForNodes(shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes) {
     if (display->nodes) {
         display->nodes->setCount(nodes.size());
+        display->targetNodes->setCount(nodes.size());
     }
     else {
         shared_ptr<DisplayNodes> theNodes(new DisplayNodes(nodes.size()));
         display->nodes = theNodes;
+
+        shared_ptr<DisplayNodes> targetNodes(new DisplayNodes(nodes.size()));
+        display->targetNodes = targetNodes;
     }
     updateDisplayForNodes(display, nodes);
 }

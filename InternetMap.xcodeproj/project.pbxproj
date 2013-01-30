@@ -141,6 +141,8 @@
 		A686EB1516B63290009B070E /* node.fsh in Resources */ = {isa = PBXBuildFile; fileRef = A686EAA216B62BDD009B070E /* node.fsh */; };
 		A686EB1616B63290009B070E /* node.vsh in Resources */ = {isa = PBXBuildFile; fileRef = A686EAA316B62BDD009B070E /* node.vsh */; };
 		A686EB1716B63290009B070E /* selectedNode.fsh in Resources */ = {isa = PBXBuildFile; fileRef = A686EAA416B62BDD009B070E /* selectedNode.fsh */; };
+		A686EB2016B895F3009B070E /* nodeBlend.vsh in Sources */ = {isa = PBXBuildFile; fileRef = A686EB1F16B895F3009B070E /* nodeBlend.vsh */; };
+		A686EB2216B89601009B070E /* nodeBlend.vsh in Resources */ = {isa = PBXBuildFile; fileRef = A686EB1F16B895F3009B070E /* nodeBlend.vsh */; };
 		A6F3F5631640F1FB0070E6AE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5621640F1FB0070E6AE /* UIKit.framework */; };
 		A6F3F5651640F1FB0070E6AE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5641640F1FB0070E6AE /* Foundation.framework */; };
 		A6F3F5671640F1FB0070E6AE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5661640F1FB0070E6AE /* CoreGraphics.framework */; };
@@ -367,6 +369,7 @@
 		A686EAEF16B62D40009B070E /* WEPopoverParentView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WEPopoverParentView.h; path = "External Code/WEPopover/Classes/Popover/WEPopoverParentView.h"; sourceTree = SOURCE_ROOT; };
 		A686EAF016B62D40009B070E /* WETouchableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WETouchableView.h; path = "External Code/WEPopover/Classes/Popover/WETouchableView.h"; sourceTree = SOURCE_ROOT; };
 		A686EAF116B62D40009B070E /* WETouchableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = WETouchableView.m; path = "External Code/WEPopover/Classes/Popover/WETouchableView.m"; sourceTree = SOURCE_ROOT; };
+		A686EB1F16B895F3009B070E /* nodeBlend.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = nodeBlend.vsh; sourceTree = "<group>"; };
 		A6F3F55E1640F1FB0070E6AE /* internetmap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = internetmap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6F3F5621640F1FB0070E6AE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		A6F3F5641640F1FB0070E6AE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -572,6 +575,7 @@
 				A686EAA116B62BDD009B070E /* line.vsh */,
 				A686EAA216B62BDD009B070E /* node.fsh */,
 				A686EAA316B62BDD009B070E /* node.vsh */,
+				A686EB1F16B895F3009B070E /* nodeBlend.vsh */,
 				A686EAA416B62BDD009B070E /* selectedNode.fsh */,
 			);
 			name = Shaders;
@@ -902,6 +906,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A686EB2216B89601009B070E /* nodeBlend.vsh in Resources */,
 				A686EB1316B63290009B070E /* line.fsh in Resources */,
 				A686EB1416B63290009B070E /* line.vsh in Resources */,
 				A686EB1516B63290009B070E /* node.fsh in Resources */,
@@ -1043,6 +1048,7 @@
 				A686EA7F16B62B61009B070E /* MapControllerWrapper.mm in Sources */,
 				A686EA8016B62B61009B070E /* NodeWrapper.mm in Sources */,
 				A686EAE816B62D05009B070E /* SCDispatchQueue.m in Sources */,
+				A686EB2016B895F3009B070E /* nodeBlend.vsh in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

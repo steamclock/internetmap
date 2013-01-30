@@ -71,6 +71,18 @@ void Program::setup(const std::string& fragmentName, const std::string& vertexNa
         glBindAttribLocation(_program, ATTRIB_COLOR, "color");
     }
     
+    if(_activeAttributes & ATTRIB_VERTEX) {
+        glBindAttribLocation(_program, ATTRIB_VERTEXTARGET, "positionTarget");
+    }
+    
+    if(_activeAttributes & ATTRIB_SIZETARGET) {
+        glBindAttribLocation(_program, ATTRIB_SIZETARGET, "sizeTarget");
+    }
+    
+    if(_activeAttributes & ATTRIB_COLORTARGET) {
+        glBindAttribLocation(_program, ATTRIB_COLORTARGET, "colorTarget");
+    }
+    
     // Link program.
     if (!linkProgram(_program)) {
         LOG("Failed to link program: %d", _program);
