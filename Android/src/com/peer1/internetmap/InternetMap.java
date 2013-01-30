@@ -40,6 +40,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     private VisualizationPopupWindow visualizationPopup;
     private NodePopup nodePopup;
     private Handler mHandler; //handles threadsafe messages
+    
+    private int mUserNodeIndex = -1; //cache user's node from "you are here"
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -173,8 +175,14 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                 try {
                     String asnString = response.substring(14, response.length()-2);
                     Log.d(TAG, String.format("asn: %s", asnString));
-                    //yay, an ASN! hand it back to InternetMap
-                    selectNodeForASN(asnString);
+                    //yay, an ASN! turn it into a node so we can target it.
+                    NodeWrapper node = mController.nativeNodeByAsn(asnString);
+                    if (node != null) {
+                        mUserNodeIndex = node.index;
+                        selectNode(node);
+                    } else {
+                        showError(String.format(getString(R.string.asnNullNode), asnString));
+                    }
                 } catch (IndexOutOfBoundsException e) {
                     //TODO toast failure message
                     Log.d(TAG, String.format("can't parse response: %s", response));
@@ -198,19 +206,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
     
-    public void selectNodeForASN(String asn) {
-        NodeWrapper node = mController.nativeNodeByAsn(asn);
-        if (node != null) {
-            Log.d(TAG, "TODO selectNodeForASN");
-            selectNode(node);
-            //TODO: target that node
-        } else {
-            showError(String.format(getString(R.string.asnNullNode), asn));
-        }
-    }
-    
     public void selectNode(NodeWrapper node) {
-        //FIXME: what shows the node popup? do we need to do nodeSearchDelegateDone?
         mController.nativeUpdateTargetForIndex(node.index);
     }
 
@@ -239,7 +235,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                     }
                 });
             }
-            nodePopup.setNode(node);
+            boolean isUserNode = (node.index == mUserNodeIndex);
+            nodePopup.setNode(node, isUserNode);
             nodePopup.showAsDropDown(findViewById(R.id.visualizationsButton)); //FIXME show by node
         }
     }
