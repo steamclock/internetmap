@@ -192,14 +192,12 @@ void loadTextResource(std::string* resource, const std::string& base, const std:
     // Cannot share a JNIEnv between threads. Need to store the JavaVM, and use JavaVM->GetEnv to discover the thread's JNIEnv
     JNIEnv *env = NULL;
     int status = javaVM->GetEnv((void **)&env, JNI_VERSION_1_6);
-    if(status < 0)
-    {
-        LOG_ERROR("failed to get JNI environment, assuming native thread");
+    if (status < 0) { //should only happen the first time
         status = javaVM->AttachCurrentThread(&env, NULL);
-        if(status < 0)
-        {
+        if (status < 0) { //really shouldn't happen
             LOG_ERROR("failed to attach current thread");
             *resource = "";
+            return;
         }
     }
 
@@ -228,4 +226,27 @@ void loadTextResource(std::string* resource, const std::string& base, const std:
 
 bool deviceIsOld() {
     return false;
+}
+
+//note: we can only call specifically threadsafe functions here
+void cameraMoveFinishedCallback(void) {
+    LOG("cameraMoveFinishedCallback");
+    JNIEnv *env = NULL;
+    int status = javaVM->GetEnv((void **)&env, JNI_VERSION_1_6);
+    if (status < 0) { //shouldn't happen
+        LOG_ERROR("failed to get JNI environment, assuming native thread");
+        status = javaVM->AttachCurrentThread(&env, NULL);
+        if (status < 0) { //really shouldn't happen
+            LOG_ERROR("failed to attach current thread");
+            return;
+        }
+    }
+
+    jclass klass = env->GetObjectClass(activity);
+    jmethodID methodID = env->GetMethodID(klass, "threadsafeShowNodePopup", "()V");
+    env->CallObjectMethod(activity, methodID);
+}
+
+// TODO
+void lostSelectedNodeCallback(void) {
 }

@@ -326,10 +326,3 @@ void* Renderer::threadStartCallback(void *myself) {
     return 0;
 }
 
-// TODO
-void cameraMoveFinishedCallback(void) {
-}
-
-void lostSelectedNodeCallback(void) {
-}
-

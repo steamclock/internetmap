@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Build;
+import android.os.Handler;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -38,6 +39,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
     private VisualizationPopupWindow visualizationPopup;
     private NodePopup nodePopup;
+    private Handler mHandler; //handles threadsafe messages
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         mRotateDetector = new RotateGestureDetector(this, new RotateListener());
         
         mController = new MapControllerWrapper();
+        mHandler = new Handler();
     }
 
     public String readFileAsString(String filePath) throws java.io.IOException {
@@ -211,19 +214,34 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         mController.nativeUpdateTargetForIndex(node.index);
     }
 
-    public void showNodePopup(NodeWrapper node) {
-        if (nodePopup == null) {
-            LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-            View popupView = layoutInflater.inflate(R.layout.nodeview, null);
-            nodePopup = new NodePopup(this, popupView);
-            nodePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                public void onDismiss() {
-                    nodePopup = null;
-                }
-            });
+    //called from c++
+    public void showNodePopup() {
+        Log.d(TAG, "showNodePopup");
+        //get the current node
+        int index = mController.nativeTargetNodeIndex();
+        Log.d(TAG, String.format("node at index %d", index));
+        NodeWrapper node = mController.nativeNodeAtIndex(index);
+        if (node == null) {
+            Log.d(TAG, "is null");
+            if (nodePopup != null) {
+                nodePopup.dismiss();
+            }
+        } else {
+            //node is ok; show the popup
+            Log.d(TAG, String.format("has index %d and asn %s", node.index, node.asn));
+            if (nodePopup == null) {
+                LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                View popupView = layoutInflater.inflate(R.layout.nodeview, null);
+                nodePopup = new NodePopup(this, popupView);
+                nodePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    public void onDismiss() {
+                        nodePopup = null;
+                    }
+                });
+            }
+            nodePopup.setNode(node);
+            nodePopup.showAsDropDown(findViewById(R.id.visualizationsButton)); //FIXME show by node
         }
-        nodePopup.setNode(node);
-        nodePopup.showAsDropDown(findViewById(R.id.visualizationsButton)); //FIXME show by node
     }
     
     //callbacks from the nodePopup UI
@@ -237,14 +255,19 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
     //native wrappers
     public native void nativeOnCreate();
-
     public native void nativeOnResume();
-
     public native void nativeOnPause();
-
     public native void nativeOnStop();
-
     public native void nativeSetSurface(Surface surface, float density);
+    
+    //threadsafe callbacks for c++
+    public void threadsafeShowNodePopup() {
+        mHandler.post(new Runnable() {
+            public void run() {
+                showNodePopup();
+            }
+        });
+    }
     
 
     static {
@@ -290,21 +313,6 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             mController.nativeSelectHoveredNode();
             //TODO: iOS does some deselect stuff if that call failed.
             //but, I think maybe that should just happen inside the controller automatically.
-
-            Log.d(TAG, "selected hovernode");
-            //test nodewrapper things
-            int index = mController.nativeTargetNodeIndex();
-            Log.d(TAG, String.format("node at index %d", index));
-            NodeWrapper node = mController.nativeNodeAtIndex(index);
-            if (node == null) {
-                Log.d(TAG, "is null");
-                if (nodePopup != null) {
-                    nodePopup.dismiss();
-                }
-            } else {
-                Log.d(TAG, String.format("has index %d and asn %s", node.index, node.asn));
-                showNodePopup(node);
-            }
             return true;
         }
     }
