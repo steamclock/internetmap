@@ -11,6 +11,7 @@
 #include "Node.hpp"
 #include "Connection.hpp"
 
+class DisplayNodes;
 class MapDisplay;
 
 class Visualization {
@@ -24,10 +25,10 @@ public:
     // Update the properties of the nodes in the MapDisplay
     // Note: can pass a subset of nodes and it will only update the specified
     // nodes and leave the others unchanged
-    virtual void updateDisplayForNodes(shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes) = 0;
+    virtual void updateDisplayForNodes(shared_ptr<DisplayNodes> display, std::vector<NodePointer> nodes) = 0;
     
     //same as updateDisplay:forNodes:, but will replace all nodes
-    virtual void resetDisplayForNodes(shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes) = 0;
+    virtual void resetDisplayForNodes(shared_ptr<DisplayNodes> display, std::vector<NodePointer> nodes) = 0;
     
     virtual void updateDisplayForSelectedNodes(shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes) = 0;
     

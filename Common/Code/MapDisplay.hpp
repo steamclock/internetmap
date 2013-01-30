@@ -19,11 +19,15 @@ class MapDisplay {
     void bindDefaultNodeUniforms(shared_ptr<Program> program);
 
     shared_ptr<Program> _nodeProgram;
+    shared_ptr<Program> _blendNodeProgram;
     shared_ptr<Program> _selectedNodeProgram;
     shared_ptr<Program> _connectionProgram;
 
     float _displayScale;
     TimeInterval _currentTime;
+    
+    TimeInterval _startBlend;
+    TimeInterval _endBlend;
 
 public:
     MapDisplay();
@@ -40,6 +44,8 @@ public:
     
     void update(TimeInterval currentTime);
     void draw(void);
+    
+    void startBlend(TimeInterval blend);
 };
 
 #endif

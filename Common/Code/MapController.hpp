@@ -39,6 +39,7 @@ public:
     void highlightConnections(NodePointer node);
     void setTimelinePoint(const std::string& name);
     void update(TimeInterval currentTime);
+    void updateDisplay(bool blend);
     
 private:
     int hoveredNodeIndex;

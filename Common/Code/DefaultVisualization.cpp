@@ -29,7 +29,7 @@ float DefaultVisualization::nodeZoom(NodePointer node) {
 }
 
 
-void DefaultVisualization::updateDisplayForNodes(shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes) {
+void DefaultVisualization::updateDisplayForNodes(shared_ptr<DisplayNodes> display, std::vector<NodePointer> nodes) {
 //    UIColor* t1Color = UIColorFromRGB(0x548dff); // Changed to blue in style guide
 //    UIColor* t2Color = UIColorFromRGB(0x375ca6); // Slightly darker blue than in style guide
 //    UIColor* unknownColor = UIColorFromRGB(0x7ce346); // slightly brighter green than style guide
@@ -48,9 +48,7 @@ void DefaultVisualization::updateDisplayForNodes(shared_ptr<MapDisplay> display,
     Color nicColor = ColorFromRGB(0xffffff);
     Color inactiveColor = ColorFromRGB(0x000000);
     
-    
-    
-    display->nodes->beginUpdate();
+    display->beginUpdate();
     
     for(unsigned int i = 0; i < nodes.size(); i++) {
         NodePointer node = nodes[i];
@@ -80,41 +78,21 @@ void DefaultVisualization::updateDisplayForNodes(shared_ptr<MapDisplay> display,
                 break;
         }
         
+        
         if(!node->active) {
             color = inactiveColor;
         }
-        
-        display->nodes->updateNode(node->index, nodePosition(node), nodeSize(node), color); // use index from node, not in array, so that partiual updates can work
-        
-    }
-    
-    display->nodes->endUpdate();
-
-    
-    display->targetNodes->beginUpdate();
-    
-    for(unsigned int i = 0; i < nodes.size(); i++) {
-        NodePointer node = nodes[i];
-        display->targetNodes->updateNode(node->index, nodePosition(node), nodeSize(node),  ColorFromRGB(0xffffff)); // use index from node, not in array, so that partiual updates can work
+                
+        display->updateNode(node->index, nodePosition(node), nodeSize(node), color); // use index from node, not in array, so that partiual updates can work
         
     }
     
-    display->targetNodes->endUpdate();
+    display->endUpdate();
 }
 
 
-void DefaultVisualization::resetDisplayForNodes(shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes) {
-    if (display->nodes) {
-        display->nodes->setCount(nodes.size());
-        display->targetNodes->setCount(nodes.size());
-    }
-    else {
-        shared_ptr<DisplayNodes> theNodes(new DisplayNodes(nodes.size()));
-        display->nodes = theNodes;
-
-        shared_ptr<DisplayNodes> targetNodes(new DisplayNodes(nodes.size()));
-        display->targetNodes = targetNodes;
-    }
+void DefaultVisualization::resetDisplayForNodes(shared_ptr<DisplayNodes> display, std::vector<NodePointer> nodes) {
+    display->setCount(nodes.size());
     updateDisplayForNodes(display, nodes);
 }
 

@@ -206,17 +206,6 @@ void MapData::loadASInfo(const std::string& json){
     }
 }
 
-void MapData::updateDisplay(shared_ptr<MapDisplay> display){
-
-
-//    NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
-    visualization->resetDisplayForNodes(display, nodes);
-    visualization->updateLineDisplay(display, connections);
-//    NSLog(@"update display : %.2fms", ([NSDate timeIntervalSinceReferenceDate] - start) * 1000.0f);
-
-}
-
-
 void MapData::createNodeBoxes() {
     
     for (int k = 0; k < numberOfCellsZ; k++) {
