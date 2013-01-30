@@ -54,6 +54,17 @@
     self.textField.textColor = [UIColor blackColor];
     self.textField.delegate = self;
     self.textField.font = [UIFont fontWithName:FONT_NAME_LIGHT size:24];
+
+    // Attributed strings in iOS 6 only
+    if([self.textField respondsToSelector:@selector(setAttributedPlaceholder:)]) {
+        UIColor *color = [UIColor darkGrayColor];
+        self.textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Type a company or domain..." attributes:@{NSForegroundColorAttributeName: color}];
+    }
+    else {
+        // On iOS 5, we can set the colour (easily) and the default is pretty ugly, so
+        // we're just gonna let it be blank for now
+        //self.textField.placeholder = @"Type a company or domain...";
+    }
     
     [self.view addSubview:self.textField];
     
