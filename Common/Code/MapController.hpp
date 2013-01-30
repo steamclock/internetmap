@@ -37,7 +37,7 @@ public:
     void clearHighlightLines();
     void highlightRoute(std::vector<NodePointer> nodeList);
     void highlightConnections(NodePointer node);
-    void setTimelinePoint(const std::string& name);
+    void setTimelinePoint(const std::string& name, bool blend = true);
     void update(TimeInterval currentTime);
     void updateDisplay(bool blend);
     

@@ -29,23 +29,14 @@ MapController::MapController() :
     targetNode(INT_MAX),
     hoveredNodeIndex(INT_MAX)
 {
-        
     data = shared_ptr<MapData>(new MapData());
     display = shared_ptr<MapDisplay>(new MapDisplay());
     data->visualization = VisualizationPointer(new DefaultVisualization());
     
-    clock_t start = clock();
-    std::string dataText;
-    loadTextResource(&dataText, "data", "txt");
-
-    LOG("load data.txt: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
-    start = clock();
-
-    data->loadFromString(dataText);
-
-    LOG("parse data.txt: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
-    start = clock();
+    setTimelinePoint("", false);
     
+    clock_t start = clock();
+   
     std::string attrText;
     loadTextResource(&attrText, "as2attr", "txt");
 
@@ -370,16 +361,16 @@ Vector2 MapController::getCoordinatesForNodeAtIndex(int index) {
 
 }
 
-void MapController::setTimelinePoint(const std::string& origName) {
-    if(origName == lastTimelinePoint) {
+void MapController::setTimelinePoint(const std::string& origName, bool blend) {
+    std::string name = (origName == "") ? "20130101" : origName;
+    
+    if(name == lastTimelinePoint) {
         return;
     }
     
-    lastTimelinePoint = origName;
+    lastTimelinePoint = name;
     
     display->visualizationLines = shared_ptr<DisplayLines>();
-    
-    std::string name = origName == "" ? "data" : origName;
     
     // remap a couple of non-jan 1st dates until we figure out a better way to track these
     if(name == "20000101") name = "20000102";
@@ -394,7 +385,7 @@ void MapController::setTimelinePoint(const std::string& origName) {
     data->loadFromString(dataText);
     LOG("reloaded for timeline point: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
     start = clock();
-    updateDisplay(true);
+    updateDisplay(blend);
     LOG("refreshed display for timeline point: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
     
     if(targetNode != INT_MAX) {
