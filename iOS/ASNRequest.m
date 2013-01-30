@@ -106,6 +106,8 @@ void callbackCurrent (
 
 - (void)fetchASNForIP:(NSString*)ip index:(int)index{
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"http://72.51.24.24:8080/iptoasn"]];
+    [request setShouldAttemptPersistentConnection:YES];
+    [request setTimeOutSeconds:60];
     [request setRequestMethod:@"POST"];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
     
@@ -114,7 +116,7 @@ void callbackCurrent (
     [request setCompletionBlock:^{
         NSError* error = request.error;
         NSDictionary* jsonResponse = [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingAllowFragments error:&error];
-        NSLog(@"%@", [jsonResponse objectForKey:@"payload"]);
+        [self finishedFetchingASN:[jsonResponse objectForKey:@"payload"] forIndex:index];
         
     }];
     
