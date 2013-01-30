@@ -170,6 +170,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                 try {
                     String asnString = response.substring(14, response.length()-2);
                     Log.d(TAG, String.format("asn: %s", asnString));
+                    //yay, an ASN! hand it back to InternetMap
                     selectNodeForASN(asnString);
                 } catch (IndexOutOfBoundsException e) {
                     //TODO toast failure message
@@ -195,7 +196,13 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
     
     public void selectNodeForASN(String asn) {
-        Log.d(TAG, "TODO selectNodeForASN");
+        NodeWrapper node = mController.nativeNodeByAsn(asn);
+        if (node != null) {
+            Log.d(TAG, "TODO selectNodeForASN");
+            //TODO: target that node
+        } else {
+            showError(String.format(getString(R.string.asnNullNode), asn));
+        }
     }
 
     public void makeNodePopup(NodeWrapper node) {

@@ -27,6 +27,7 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeSta
 JNIEXPORT bool JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeSelectHoveredNode(JNIEnv* jenv, jobject obj);
 JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeNodeAtIndex(JNIEnv* jenv, jobject obj, int index);
 JNIEXPORT int JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeTargetNodeIndex(JNIEnv* jenv, jobject obj);
+JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeNodeByAsn(JNIEnv* jenv, jobject obj, jstring asn);
 };
 
 #endif // JNIAPI_H

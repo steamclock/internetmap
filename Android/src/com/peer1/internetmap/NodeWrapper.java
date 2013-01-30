@@ -13,6 +13,9 @@ public class NodeWrapper {
     public final float importance;
     public final int numberOfConnections;
     
+    /** This constructor should ONLY be called by wrapNode() in jniapi.cpp!
+     * it's really ugly and easy to mess up, but it was the least ugly option for c++/java bindings :(
+     */
     NodeWrapper(int index, float importance, int numberOfConnections, String asn, String textDescription, String typeString) {
         this.index = index;
         this.importance = importance;
