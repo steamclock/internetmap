@@ -28,11 +28,26 @@ DisplayNodes::DisplayNodes(int count) :
 {
 }
 
+void DisplayNodes::bindBlendTarget() {
+    glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
+    
+    glEnableVertexAttribArray(ATTRIB_POSITIONTARGET);
+    glVertexAttribPointer(ATTRIB_POSITIONTARGET, 3, GL_FLOAT, GL_FALSE, sizeof(RawDisplayNode), BUFFER_OFFSET(0));
+    
+    glEnableVertexAttribArray(ATTRIB_SIZETARGET);
+    glVertexAttribPointer(ATTRIB_SIZETARGET, 1, GL_FLOAT, GL_FALSE, sizeof(RawDisplayNode), BUFFER_OFFSET(sizeof(float) * 3));
+    
+    glEnableVertexAttribArray(ATTRIB_COLORTARGET);
+    glVertexAttribPointer(ATTRIB_COLORTARGET, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(RawDisplayNode), BUFFER_OFFSET(sizeof(float) * 4));
+    
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
 void DisplayNodes::display() {
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
 
-    glEnableVertexAttribArray(ATTRIB_VERTEX);
-    glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, GL_FALSE, sizeof(RawDisplayNode), BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(ATTRIB_POSITION);
+    glVertexAttribPointer(ATTRIB_POSITION, 3, GL_FLOAT, GL_FALSE, sizeof(RawDisplayNode), BUFFER_OFFSET(0));
     
     glEnableVertexAttribArray(ATTRIB_SIZE);
     glVertexAttribPointer(ATTRIB_SIZE, 1, GL_FLOAT, GL_FALSE, sizeof(RawDisplayNode), BUFFER_OFFSET(sizeof(float) * 3));
@@ -40,13 +55,14 @@ void DisplayNodes::display() {
     glEnableVertexAttribArray(ATTRIB_COLOR);
     glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(RawDisplayNode), BUFFER_OFFSET(sizeof(float) * 4));
     
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
     glDrawArrays(GL_POINTS, 0, _count);
     
-    glDisableVertexAttribArray(ATTRIB_VERTEX);
+    glDisableVertexAttribArray(ATTRIB_POSITION);
     glDisableVertexAttribArray(ATTRIB_SIZE);
     glDisableVertexAttribArray(ATTRIB_COLOR);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 }
 
 RawDisplayNode* DisplayNodes::nodeAtIndex(unsigned int index) {

@@ -29,7 +29,7 @@ float DefaultVisualization::nodeZoom(NodePointer node) {
 }
 
 
-void DefaultVisualization::updateDisplayForNodes(shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes) {
+void DefaultVisualization::updateDisplayForNodes(shared_ptr<DisplayNodes> display, std::vector<NodePointer> nodes) {
 //    UIColor* t1Color = UIColorFromRGB(0x548dff); // Changed to blue in style guide
 //    UIColor* t2Color = UIColorFromRGB(0x375ca6); // Slightly darker blue than in style guide
 //    UIColor* unknownColor = UIColorFromRGB(0x7ce346); // slightly brighter green than style guide
@@ -48,61 +48,55 @@ void DefaultVisualization::updateDisplayForNodes(shared_ptr<MapDisplay> display,
     Color nicColor = ColorFromRGB(0xffffff);
     Color inactiveColor = ColorFromRGB(0x000000);
     
-    
-    
-    display->nodes->beginUpdate();
+    display->beginUpdate();
     
     for(unsigned int i = 0; i < nodes.size(); i++) {
         NodePointer node = nodes[i];
         
         Color color;
-        switch(node->type) {
-            case AS_T1:
-                color = t1Color;
-                break;
-            case AS_T2:
-                color = t2Color;
-                break;
-            case AS_COMP:
-                color = compColor;
-                break;
-            case AS_EDU:
-                color = eduColor;
-                break;
-            case AS_IX:
-                color = ixColor;
-                break;
-            case AS_NIC:
-                color = nicColor;
-                break;
-            default:
-                color = unknownColor;
-                break;
+        Point3 position;
+        float size;
+
+        if(node->active) {
+            position = nodePosition(node);
+            size = nodeSize(node);
+            
+            switch(node->type) {
+                case AS_T1:
+                    color = t1Color;
+                    break;
+                case AS_T2:
+                    color = t2Color;
+                    break;
+                case AS_COMP:
+                    color = compColor;
+                    break;
+                case AS_EDU:
+                    color = eduColor;
+                    break;
+                case AS_IX:
+                    color = ixColor;
+                    break;
+                case AS_NIC:
+                    color = nicColor;
+                    break;
+                default:
+                    color = unknownColor;
+                    break;
+            }
         }
-        
-        if(!node->active) {
+        else {
             color = inactiveColor;
+            position = nodePosition(node);
+            size = 0.0f;
         }
         
-        display->nodes->updateNode(node->index, nodePosition(node), nodeSize(node), color); // use index from node, not in array, so that partiual updates can work
+        display->updateNode(node->index, position, size, color); // use index from node, not in array, so that partiual updates can work
         
     }
     
-    display->nodes->endUpdate();
+    display->endUpdate();
 }
-
-
-void DefaultVisualization::resetDisplayForNodes(shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes) {
-    if (display->nodes) {
-        display->nodes->setCount(nodes.size());
-    }
-    else {
-        shared_ptr<DisplayNodes> theNodes(new DisplayNodes(nodes.size()));
-        display->nodes = theNodes;
-    }
-    updateDisplayForNodes(display, nodes);
-}
-
 
 void DefaultVisualization::updateLineDisplay(shared_ptr<MapDisplay> display, std::vector<ConnectionPointer>connections) {
     // Disabling default lines entirely for now, but leaving th code in case we want to renable it (in some cases) later

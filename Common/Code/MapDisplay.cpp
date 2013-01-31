@@ -11,16 +11,28 @@
 #include "OpenGL.hpp"
 
 MapDisplay::MapDisplay() :
-    _nodeProgram(new Program("node", ATTRIB_VERTEX | ATTRIB_COLOR | ATTRIB_SIZE)),
-    _selectedNodeProgram(new Program("selectedNode", "node", ATTRIB_VERTEX | ATTRIB_COLOR | ATTRIB_SIZE)),
-    _connectionProgram (new Program("line", ATTRIB_VERTEX | ATTRIB_COLOR)),
+    _nodeProgram(new Program("node", "node", VERTEX_NODE)),
+    _blendNodeProgram(new Program("node", "nodeBlend", VERTEX_BLEND_NODE)),
+    _selectedNodeProgram(new Program("selectedNode", "node", VERTEX_NODE)),
+    _connectionProgram (new Program("line",VERTEX_LINE)),
+    nodes(new DisplayNodes(0)),
+    targetNodes(new DisplayNodes(0)),
     _displayScale(1.0f),
-    camera(new Camera())
+    camera(new Camera()),
+    _startBlend(0.0f),
+    _endBlend(0.0f),
+    _pendingBlendTime(0.0f)
 {
     InitOpenGLExtensions();
 }
 
 void MapDisplay::update(TimeInterval currentTime) {
+    if(_pendingBlendTime != 0.0f) {
+        _startBlend = currentTime;
+        _endBlend = currentTime + _pendingBlendTime;
+        _pendingBlendTime = 0.0f;
+    }
+    _currentTime = currentTime;
     camera->update(currentTime);
 }
 
@@ -56,10 +68,36 @@ void MapDisplay::draw(void)
     glDepthMask(GL_FALSE); //disable z writing only
 
     if (nodes) {
-        _nodeProgram->bind();
-        bindDefaultNodeUniforms(_nodeProgram);
-        glUniform1f(_nodeProgram->uniformForName("minSize"), 2.0f);
-        nodes->display();
+        if(_startBlend != _endBlend) {
+            float blend = (_currentTime - _startBlend) / (_endBlend - _startBlend);
+            if(blend >= 1.0f) {
+                blend = 1.0f;
+            }
+            
+            _blendNodeProgram->bind();
+            bindDefaultNodeUniforms(_blendNodeProgram);
+            glUniform1f(_blendNodeProgram->uniformForName("minSize"), 2.0f);
+            glUniform1f(_blendNodeProgram->uniformForName("blend"), blend);
+            targetNodes->bindBlendTarget();
+            nodes->display();
+            
+            glDisableVertexAttribArray(ATTRIB_POSITIONTARGET);
+            glDisableVertexAttribArray(ATTRIB_SIZETARGET);
+            glDisableVertexAttribArray(ATTRIB_COLORTARGET);
+            
+            if(blend >= 1.0f) {
+                _startBlend = _endBlend = 0.0f;
+                shared_ptr<DisplayNodes> tmp = nodes;
+                nodes = targetNodes;
+                targetNodes = tmp;
+            }
+        }
+        else {
+            _nodeProgram->bind();
+            bindDefaultNodeUniforms(_nodeProgram);
+            glUniform1f(_nodeProgram->uniformForName("minSize"), 2.0f);
+            nodes->display();
+        }
     }
 
     Matrix4 mvp = camera->currentModelViewProjection();
@@ -81,3 +119,8 @@ void MapDisplay::draw(void)
     glDepthMask(GL_TRUE);
     
 }
+
+void MapDisplay::startBlend(TimeInterval blend) {
+    _pendingBlendTime = blend;
+}
+

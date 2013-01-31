@@ -29,6 +29,7 @@ public:
     void updateNode(int index, const Point3& position);
     void updateNode(int index, float size);
     void updateNode(int index, const Color& color);
+    void bindBlendTarget(void);
     void display(void);
     int count(void);
     void setCount(int);

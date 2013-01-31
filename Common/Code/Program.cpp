@@ -15,14 +15,14 @@ void loadTextResource(std::string* resource, const std::string& base, const std:
 
 Program::Program(const std::string& name, unsigned int attributes)  :
     _program(0),
-    _activeAttributes(0)
+    _activeAttributesMask(0)
 {
     setup(name, name, attributes);
 }
 
 Program::Program(const std::string& fragmentName, const std::string& vertexName, unsigned int attributes) :
     _program(0),
-    _activeAttributes(0)
+    _activeAttributesMask(0)
 {
     setup(fragmentName, vertexName, attributes);
 }
@@ -30,7 +30,7 @@ Program::Program(const std::string& fragmentName, const std::string& vertexName,
 void Program::setup(const std::string& fragmentName, const std::string& vertexName, unsigned int attributes) {
     GLuint vertShader, fragShader;
     
-    _activeAttributes = attributes;
+    _activeAttributesMask = attributes;
     
     // Create and compile vertex shader.
     std::string vertShaderCode;
@@ -59,16 +59,28 @@ void Program::setup(const std::string& fragmentName, const std::string& vertexNa
     
     // Bind attribute locations.
     // This needs to be done prior to linking.
-    if(_activeAttributes & ATTRIB_VERTEX) {
-        glBindAttribLocation(_program, ATTRIB_VERTEX, "position");
+    if(_activeAttributesMask & ATTRIB_MASK(ATTRIB_POSITION)) {
+        glBindAttribLocation(_program, ATTRIB_POSITION, "position");
     }
     
-    if(_activeAttributes & ATTRIB_SIZE) {
+    if(_activeAttributesMask & ATTRIB_MASK(ATTRIB_SIZE)) {
         glBindAttribLocation(_program, ATTRIB_SIZE, "size");
     }
     
-    if(_activeAttributes & ATTRIB_COLOR) {
+    if(_activeAttributesMask & ATTRIB_MASK(ATTRIB_COLOR)) {
         glBindAttribLocation(_program, ATTRIB_COLOR, "color");
+    }
+    
+    if(_activeAttributesMask & ATTRIB_MASK(ATTRIB_POSITIONTARGET)) {
+        glBindAttribLocation(_program, ATTRIB_POSITIONTARGET, "positionTarget");
+    }
+    
+    if(_activeAttributesMask & ATTRIB_MASK(ATTRIB_SIZETARGET)) {
+        glBindAttribLocation(_program, ATTRIB_SIZETARGET, "sizeTarget");
+    }
+    
+    if(_activeAttributesMask & ATTRIB_MASK(ATTRIB_COLORTARGET)) {
+        glBindAttribLocation(_program, ATTRIB_COLORTARGET, "colorTarget");
     }
     
     // Link program.

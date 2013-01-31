@@ -15,22 +15,6 @@
 		1175AA3416AA117F00B93031 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1175AA3316AA117F00B93031 /* ImageIO.framework */; };
 		A600AAD616A664E1003B1028 /* as2attr.txt in Resources */ = {isa = PBXBuildFile; fileRef = A600AAD316A664DF003B1028 /* as2attr.txt */; };
 		A600AAD716A664E1003B1028 /* asinfo.json in Resources */ = {isa = PBXBuildFile; fileRef = A600AAD416A664E0003B1028 /* asinfo.json */; };
-		A600AAD816A664E1003B1028 /* data.txt in Resources */ = {isa = PBXBuildFile; fileRef = A600AAD516A664E0003B1028 /* data.txt */; };
-		A686E95E16AE1902009B070E /* 20000102.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E94B16AE1902009B070E /* 20000102.txt */; };
-		A686E95F16AE1902009B070E /* 20010101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E94C16AE1902009B070E /* 20010101.txt */; };
-		A686E96016AE1902009B070E /* 20020101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E94D16AE1902009B070E /* 20020101.txt */; };
-		A686E96116AE1902009B070E /* 20030101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E94E16AE1902009B070E /* 20030101.txt */; };
-		A686E96216AE1902009B070E /* 20040101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E94F16AE1902009B070E /* 20040101.txt */; };
-		A686E96316AE1902009B070E /* 20050101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E95016AE1902009B070E /* 20050101.txt */; };
-		A686E96416AE1902009B070E /* 20060101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E95116AE1902009B070E /* 20060101.txt */; };
-		A686E96516AE1902009B070E /* 20070101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E95216AE1902009B070E /* 20070101.txt */; };
-		A686E96616AE1902009B070E /* 20080101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E95316AE1902009B070E /* 20080101.txt */; };
-		A686E96716AE1902009B070E /* 20080102.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E95416AE1902009B070E /* 20080102.txt */; };
-		A686E96916AE1902009B070E /* 20090103.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E95616AE1902009B070E /* 20090103.txt */; };
-		A686E96A16AE1902009B070E /* 20100101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E95716AE1902009B070E /* 20100101.txt */; };
-		A686E96B16AE1902009B070E /* 20110102.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E95816AE1902009B070E /* 20110102.txt */; };
-		A686E96D16AE1902009B070E /* 20120102.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E95A16AE1902009B070E /* 20120102.txt */; };
-		A686E96F16AE1902009B070E /* 20130102.txt in Resources */ = {isa = PBXBuildFile; fileRef = A686E95C16AE1902009B070E /* 20130102.txt */; };
 		A686E9BA16B62915009B070E /* history.json in Resources */ = {isa = PBXBuildFile; fileRef = A686E9B916B62915009B070E /* history.json */; };
 		A686E9BE16B6294B009B070E /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9BB16B6294B009B070E /* Default-568h@2x.png */; };
 		A686E9BF16B6294B009B070E /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9BC16B6294B009B070E /* Default.png */; };
@@ -141,6 +125,23 @@
 		A686EB1516B63290009B070E /* node.fsh in Resources */ = {isa = PBXBuildFile; fileRef = A686EAA216B62BDD009B070E /* node.fsh */; };
 		A686EB1616B63290009B070E /* node.vsh in Resources */ = {isa = PBXBuildFile; fileRef = A686EAA316B62BDD009B070E /* node.vsh */; };
 		A686EB1716B63290009B070E /* selectedNode.fsh in Resources */ = {isa = PBXBuildFile; fileRef = A686EAA416B62BDD009B070E /* selectedNode.fsh */; };
+		A686EB2216B89601009B070E /* nodeBlend.vsh in Resources */ = {isa = PBXBuildFile; fileRef = A686EB1F16B895F3009B070E /* nodeBlend.vsh */; };
+		A6E1D5B416B9DA2A00D8B26F /* 20000102.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5A516B9DA2A00D8B26F /* 20000102.txt */; };
+		A6E1D5B516B9DA2A00D8B26F /* 20010101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5A616B9DA2A00D8B26F /* 20010101.txt */; };
+		A6E1D5B616B9DA2A00D8B26F /* 20020101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5A716B9DA2A00D8B26F /* 20020101.txt */; };
+		A6E1D5B716B9DA2A00D8B26F /* 20030101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5A816B9DA2A00D8B26F /* 20030101.txt */; };
+		A6E1D5B816B9DA2A00D8B26F /* 20040101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5A916B9DA2A00D8B26F /* 20040101.txt */; };
+		A6E1D5B916B9DA2A00D8B26F /* 20050101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5AA16B9DA2A00D8B26F /* 20050101.txt */; };
+		A6E1D5BA16B9DA2A00D8B26F /* 20060101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5AB16B9DA2A00D8B26F /* 20060101.txt */; };
+		A6E1D5BB16B9DA2A00D8B26F /* 20070101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5AC16B9DA2A00D8B26F /* 20070101.txt */; };
+		A6E1D5BC16B9DA2A00D8B26F /* 20080101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5AD16B9DA2A00D8B26F /* 20080101.txt */; };
+		A6E1D5BD16B9DA2A00D8B26F /* 20080102.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5AE16B9DA2A00D8B26F /* 20080102.txt */; };
+		A6E1D5BE16B9DA2A00D8B26F /* 20090103.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5AF16B9DA2A00D8B26F /* 20090103.txt */; };
+		A6E1D5BF16B9DA2A00D8B26F /* 20100101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5B016B9DA2A00D8B26F /* 20100101.txt */; };
+		A6E1D5C016B9DA2A00D8B26F /* 20110102.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5B116B9DA2A00D8B26F /* 20110102.txt */; };
+		A6E1D5C116B9DA2A00D8B26F /* 20120102.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5B216B9DA2A00D8B26F /* 20120102.txt */; };
+		A6E1D5C216B9DA2A00D8B26F /* 20130102.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5B316B9DA2A00D8B26F /* 20130102.txt */; };
+		A6E1D5C516B9EC7100D8B26F /* ExpandedSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = A6E1D5C416B9EC7100D8B26F /* ExpandedSlider.m */; };
 		A6F3F5631640F1FB0070E6AE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5621640F1FB0070E6AE /* UIKit.framework */; };
 		A6F3F5651640F1FB0070E6AE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5641640F1FB0070E6AE /* Foundation.framework */; };
 		A6F3F5671640F1FB0070E6AE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5661640F1FB0070E6AE /* CoreGraphics.framework */; };
@@ -162,22 +163,6 @@
 		1175AA3316AA117F00B93031 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		A600AAD316A664DF003B1028 /* as2attr.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = as2attr.txt; path = Common/data/as2attr.txt; sourceTree = "<group>"; };
 		A600AAD416A664E0003B1028 /* asinfo.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = asinfo.json; path = Common/data/asinfo.json; sourceTree = "<group>"; };
-		A600AAD516A664E0003B1028 /* data.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = data.txt; path = Common/data/data.txt; sourceTree = "<group>"; };
-		A686E94B16AE1902009B070E /* 20000102.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20000102.txt; sourceTree = "<group>"; };
-		A686E94C16AE1902009B070E /* 20010101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20010101.txt; sourceTree = "<group>"; };
-		A686E94D16AE1902009B070E /* 20020101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20020101.txt; sourceTree = "<group>"; };
-		A686E94E16AE1902009B070E /* 20030101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20030101.txt; sourceTree = "<group>"; };
-		A686E94F16AE1902009B070E /* 20040101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20040101.txt; sourceTree = "<group>"; };
-		A686E95016AE1902009B070E /* 20050101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20050101.txt; sourceTree = "<group>"; };
-		A686E95116AE1902009B070E /* 20060101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20060101.txt; sourceTree = "<group>"; };
-		A686E95216AE1902009B070E /* 20070101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20070101.txt; sourceTree = "<group>"; };
-		A686E95316AE1902009B070E /* 20080101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20080101.txt; sourceTree = "<group>"; };
-		A686E95416AE1902009B070E /* 20080102.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20080102.txt; sourceTree = "<group>"; };
-		A686E95616AE1902009B070E /* 20090103.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20090103.txt; sourceTree = "<group>"; };
-		A686E95716AE1902009B070E /* 20100101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20100101.txt; sourceTree = "<group>"; };
-		A686E95816AE1902009B070E /* 20110102.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20110102.txt; sourceTree = "<group>"; };
-		A686E95A16AE1902009B070E /* 20120102.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20120102.txt; sourceTree = "<group>"; };
-		A686E95C16AE1902009B070E /* 20130102.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 20130102.txt; sourceTree = "<group>"; };
 		A686E9B916B62915009B070E /* history.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = history.json; path = Common/Data/history.json; sourceTree = "<group>"; };
 		A686E9BB16B6294B009B070E /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "iOS/Default-568h@2x.png"; sourceTree = SOURCE_ROOT; };
 		A686E9BC16B6294B009B070E /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = iOS/Default.png; sourceTree = SOURCE_ROOT; };
@@ -367,6 +352,24 @@
 		A686EAEF16B62D40009B070E /* WEPopoverParentView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WEPopoverParentView.h; path = "External Code/WEPopover/Classes/Popover/WEPopoverParentView.h"; sourceTree = SOURCE_ROOT; };
 		A686EAF016B62D40009B070E /* WETouchableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WETouchableView.h; path = "External Code/WEPopover/Classes/Popover/WETouchableView.h"; sourceTree = SOURCE_ROOT; };
 		A686EAF116B62D40009B070E /* WETouchableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = WETouchableView.m; path = "External Code/WEPopover/Classes/Popover/WETouchableView.m"; sourceTree = SOURCE_ROOT; };
+		A686EB1F16B895F3009B070E /* nodeBlend.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = nodeBlend.vsh; sourceTree = "<group>"; };
+		A6E1D5A516B9DA2A00D8B26F /* 20000102.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20000102.txt; path = Common/Data/20000102.txt; sourceTree = "<group>"; };
+		A6E1D5A616B9DA2A00D8B26F /* 20010101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20010101.txt; path = Common/Data/20010101.txt; sourceTree = "<group>"; };
+		A6E1D5A716B9DA2A00D8B26F /* 20020101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20020101.txt; path = Common/Data/20020101.txt; sourceTree = "<group>"; };
+		A6E1D5A816B9DA2A00D8B26F /* 20030101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20030101.txt; path = Common/Data/20030101.txt; sourceTree = "<group>"; };
+		A6E1D5A916B9DA2A00D8B26F /* 20040101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20040101.txt; path = Common/Data/20040101.txt; sourceTree = "<group>"; };
+		A6E1D5AA16B9DA2A00D8B26F /* 20050101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20050101.txt; path = Common/Data/20050101.txt; sourceTree = "<group>"; };
+		A6E1D5AB16B9DA2A00D8B26F /* 20060101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20060101.txt; path = Common/Data/20060101.txt; sourceTree = "<group>"; };
+		A6E1D5AC16B9DA2A00D8B26F /* 20070101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20070101.txt; path = Common/Data/20070101.txt; sourceTree = "<group>"; };
+		A6E1D5AD16B9DA2A00D8B26F /* 20080101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20080101.txt; path = Common/Data/20080101.txt; sourceTree = "<group>"; };
+		A6E1D5AE16B9DA2A00D8B26F /* 20080102.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20080102.txt; path = Common/Data/20080102.txt; sourceTree = "<group>"; };
+		A6E1D5AF16B9DA2A00D8B26F /* 20090103.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20090103.txt; path = Common/Data/20090103.txt; sourceTree = "<group>"; };
+		A6E1D5B016B9DA2A00D8B26F /* 20100101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20100101.txt; path = Common/Data/20100101.txt; sourceTree = "<group>"; };
+		A6E1D5B116B9DA2A00D8B26F /* 20110102.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20110102.txt; path = Common/Data/20110102.txt; sourceTree = "<group>"; };
+		A6E1D5B216B9DA2A00D8B26F /* 20120102.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20120102.txt; path = Common/Data/20120102.txt; sourceTree = "<group>"; };
+		A6E1D5B316B9DA2A00D8B26F /* 20130102.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20130102.txt; path = Common/Data/20130102.txt; sourceTree = "<group>"; };
+		A6E1D5C316B9EC7100D8B26F /* ExpandedSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExpandedSlider.h; path = iOS/ExpandedSlider.h; sourceTree = SOURCE_ROOT; };
+		A6E1D5C416B9EC7100D8B26F /* ExpandedSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ExpandedSlider.m; path = iOS/ExpandedSlider.m; sourceTree = SOURCE_ROOT; };
 		A6F3F55E1640F1FB0070E6AE /* internetmap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = internetmap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6F3F5621640F1FB0070E6AE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		A6F3F5641640F1FB0070E6AE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -534,35 +537,25 @@
 			isa = PBXGroup;
 			children = (
 				A686E9B916B62915009B070E /* history.json */,
-				A686E94916AE1902009B070E /* timeline */,
 				A600AAD316A664DF003B1028 /* as2attr.txt */,
 				A600AAD416A664E0003B1028 /* asinfo.json */,
-				A600AAD516A664E0003B1028 /* data.txt */,
+				A6E1D5A516B9DA2A00D8B26F /* 20000102.txt */,
+				A6E1D5A616B9DA2A00D8B26F /* 20010101.txt */,
+				A6E1D5A716B9DA2A00D8B26F /* 20020101.txt */,
+				A6E1D5A816B9DA2A00D8B26F /* 20030101.txt */,
+				A6E1D5A916B9DA2A00D8B26F /* 20040101.txt */,
+				A6E1D5AA16B9DA2A00D8B26F /* 20050101.txt */,
+				A6E1D5AB16B9DA2A00D8B26F /* 20060101.txt */,
+				A6E1D5AC16B9DA2A00D8B26F /* 20070101.txt */,
+				A6E1D5AD16B9DA2A00D8B26F /* 20080101.txt */,
+				A6E1D5AE16B9DA2A00D8B26F /* 20080102.txt */,
+				A6E1D5AF16B9DA2A00D8B26F /* 20090103.txt */,
+				A6E1D5B016B9DA2A00D8B26F /* 20100101.txt */,
+				A6E1D5B116B9DA2A00D8B26F /* 20110102.txt */,
+				A6E1D5B216B9DA2A00D8B26F /* 20120102.txt */,
+				A6E1D5B316B9DA2A00D8B26F /* 20130102.txt */,
 			);
 			name = Data;
-			sourceTree = "<group>";
-		};
-		A686E94916AE1902009B070E /* timeline */ = {
-			isa = PBXGroup;
-			children = (
-				A686E94B16AE1902009B070E /* 20000102.txt */,
-				A686E94C16AE1902009B070E /* 20010101.txt */,
-				A686E94D16AE1902009B070E /* 20020101.txt */,
-				A686E94E16AE1902009B070E /* 20030101.txt */,
-				A686E94F16AE1902009B070E /* 20040101.txt */,
-				A686E95016AE1902009B070E /* 20050101.txt */,
-				A686E95116AE1902009B070E /* 20060101.txt */,
-				A686E95216AE1902009B070E /* 20070101.txt */,
-				A686E95316AE1902009B070E /* 20080101.txt */,
-				A686E95416AE1902009B070E /* 20080102.txt */,
-				A686E95616AE1902009B070E /* 20090103.txt */,
-				A686E95716AE1902009B070E /* 20100101.txt */,
-				A686E95816AE1902009B070E /* 20110102.txt */,
-				A686E95A16AE1902009B070E /* 20120102.txt */,
-				A686E95C16AE1902009B070E /* 20130102.txt */,
-			);
-			name = timeline;
-			path = Common/data/timeline;
 			sourceTree = "<group>";
 		};
 		A686EA9F16B62BDD009B070E /* Shaders */ = {
@@ -572,6 +565,7 @@
 				A686EAA116B62BDD009B070E /* line.vsh */,
 				A686EAA216B62BDD009B070E /* node.fsh */,
 				A686EAA316B62BDD009B070E /* node.vsh */,
+				A686EB1F16B895F3009B070E /* nodeBlend.vsh */,
 				A686EAA416B62BDD009B070E /* selectedNode.fsh */,
 			);
 			name = Shaders;
@@ -752,6 +746,8 @@
 				A686EA6C16B62B61009B070E /* VisualizationsTableViewController.m */,
 				1127C9CF16A0BBFB00413FE9 /* Objective-C++ Wrappers */,
 				D4D17D20166EA621003A489C /* XIBs */,
+				A6E1D5C316B9EC7100D8B26F /* ExpandedSlider.h */,
+				A6E1D5C416B9EC7100D8B26F /* ExpandedSlider.m */,
 			);
 			name = UI;
 			path = InternetMap;
@@ -902,6 +898,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A686EB2216B89601009B070E /* nodeBlend.vsh in Resources */,
 				A686EB1316B63290009B070E /* line.fsh in Resources */,
 				A686EB1416B63290009B070E /* line.vsh in Resources */,
 				A686EB1516B63290009B070E /* node.fsh in Resources */,
@@ -913,22 +910,6 @@
 				A686EB1216B63282009B070E /* ARSMaquettePro-Regular.otf in Resources */,
 				A600AAD616A664E1003B1028 /* as2attr.txt in Resources */,
 				A600AAD716A664E1003B1028 /* asinfo.json in Resources */,
-				A600AAD816A664E1003B1028 /* data.txt in Resources */,
-				A686E95E16AE1902009B070E /* 20000102.txt in Resources */,
-				A686E95F16AE1902009B070E /* 20010101.txt in Resources */,
-				A686E96016AE1902009B070E /* 20020101.txt in Resources */,
-				A686E96116AE1902009B070E /* 20030101.txt in Resources */,
-				A686E96216AE1902009B070E /* 20040101.txt in Resources */,
-				A686E96316AE1902009B070E /* 20050101.txt in Resources */,
-				A686E96416AE1902009B070E /* 20060101.txt in Resources */,
-				A686E96516AE1902009B070E /* 20070101.txt in Resources */,
-				A686E96616AE1902009B070E /* 20080101.txt in Resources */,
-				A686E96716AE1902009B070E /* 20080102.txt in Resources */,
-				A686E96916AE1902009B070E /* 20090103.txt in Resources */,
-				A686E96A16AE1902009B070E /* 20100101.txt in Resources */,
-				A686E96B16AE1902009B070E /* 20110102.txt in Resources */,
-				A686E96D16AE1902009B070E /* 20120102.txt in Resources */,
-				A686E96F16AE1902009B070E /* 20130102.txt in Resources */,
 				A686E9BA16B62915009B070E /* history.json in Resources */,
 				A686E9BE16B6294B009B070E /* Default-568h@2x.png in Resources */,
 				A686E9BF16B6294B009B070E /* Default.png in Resources */,
@@ -984,6 +965,21 @@
 				A686EA2B16B62A9D009B070E /* youarehere@2x.png in Resources */,
 				A686EA4E16B62B23009B070E /* ViewController_iPad.xib in Resources */,
 				A686EA4F16B62B23009B070E /* ViewController_iPhone.xib in Resources */,
+				A6E1D5B416B9DA2A00D8B26F /* 20000102.txt in Resources */,
+				A6E1D5B516B9DA2A00D8B26F /* 20010101.txt in Resources */,
+				A6E1D5B616B9DA2A00D8B26F /* 20020101.txt in Resources */,
+				A6E1D5B716B9DA2A00D8B26F /* 20030101.txt in Resources */,
+				A6E1D5B816B9DA2A00D8B26F /* 20040101.txt in Resources */,
+				A6E1D5B916B9DA2A00D8B26F /* 20050101.txt in Resources */,
+				A6E1D5BA16B9DA2A00D8B26F /* 20060101.txt in Resources */,
+				A6E1D5BB16B9DA2A00D8B26F /* 20070101.txt in Resources */,
+				A6E1D5BC16B9DA2A00D8B26F /* 20080101.txt in Resources */,
+				A6E1D5BD16B9DA2A00D8B26F /* 20080102.txt in Resources */,
+				A6E1D5BE16B9DA2A00D8B26F /* 20090103.txt in Resources */,
+				A6E1D5BF16B9DA2A00D8B26F /* 20100101.txt in Resources */,
+				A6E1D5C016B9DA2A00D8B26F /* 20110102.txt in Resources */,
+				A6E1D5C116B9DA2A00D8B26F /* 20120102.txt in Resources */,
+				A6E1D5C216B9DA2A00D8B26F /* 20130102.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1043,6 +1039,7 @@
 				A686EA7F16B62B61009B070E /* MapControllerWrapper.mm in Sources */,
 				A686EA8016B62B61009B070E /* NodeWrapper.mm in Sources */,
 				A686EAE816B62D05009B070E /* SCDispatchQueue.m in Sources */,
+				A6E1D5C516B9EC7100D8B26F /* ExpandedSlider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -29,7 +29,7 @@ public:
     void hoverNode(int index);
     void unhoverNode();
     void deselectCurrentNode();
-    void updateTargetForIndex(int index);
+    void updateTargetForIndex(int index); //target the node at the given index
     void handleTouchDownAtPoint(Vector2 point);
     bool selectHoveredNode();
     int indexForNodeAtPoint(Vector2 pointInView);
@@ -37,7 +37,9 @@ public:
     void clearHighlightLines();
     void highlightRoute(std::vector<NodePointer> nodeList);
     void highlightConnections(NodePointer node);
-    void setTimelinePoint(const std::string& name);
+    void setTimelinePoint(const std::string& name, bool blend = true);
+    void update(TimeInterval currentTime);
+    void updateDisplay(bool blend);
     
 private:
     int hoveredNodeIndex;

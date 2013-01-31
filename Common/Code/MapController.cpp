@@ -29,23 +29,14 @@ MapController::MapController() :
     targetNode(INT_MAX),
     hoveredNodeIndex(INT_MAX)
 {
-        
     data = shared_ptr<MapData>(new MapData());
     display = shared_ptr<MapDisplay>(new MapDisplay());
     data->visualization = VisualizationPointer(new DefaultVisualization());
     
-    clock_t start = clock();
-    std::string dataText;
-    loadTextResource(&dataText, "data", "txt");
-
-    LOG("load data.txt: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
-    start = clock();
-
-    data->loadFromString(dataText);
-
-    LOG("parse data.txt: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
-    start = clock();
+    setTimelinePoint("", false);
     
+    clock_t start = clock();
+   
     std::string attrText;
     loadTextResource(&attrText, "as2attr", "txt");
 
@@ -105,7 +96,7 @@ void MapController::unhoverNode(){
         NodePointer node = data->nodeAtIndex(hoveredNodeIndex);
         std::vector<NodePointer> nodes;
         nodes.push_back(node);
-        data->visualization->updateDisplayForNodes(display, nodes);
+        data->visualization->updateDisplayForNodes(display->nodes, nodes);
         hoveredNodeIndex = INT_MAX;
     }
 
@@ -116,7 +107,7 @@ void MapController::deselectCurrentNode(){
         NodePointer node = data->nodeAtIndex(targetNode);
         std::vector<NodePointer> nodes;
         nodes.push_back(node);
-        data->visualization->updateDisplayForNodes(display, nodes);
+        data->visualization->updateDisplayForNodes(display->nodes, nodes);
         data->visualization->resetDisplayForSelectedNodes(display, std::vector<NodePointer>());
     }
 }
@@ -239,7 +230,7 @@ void MapController::clearHighlightLines() {
         array.push_back(node);
         iter++;
     }
-    data->visualization->updateDisplayForNodes(display, array);
+    data->visualization->updateDisplayForNodes(display->nodes, array);
     display->highlightLines = shared_ptr<DisplayLines>();
 }
 
@@ -370,17 +361,16 @@ Vector2 MapController::getCoordinatesForNodeAtIndex(int index) {
 
 }
 
-void MapController::setTimelinePoint(const std::string& origName) {
-    if(origName == lastTimelinePoint) {
+void MapController::setTimelinePoint(const std::string& origName, bool blend) {
+    std::string name = (origName == "") ? "20130101" : origName;
+    
+    if(name == lastTimelinePoint) {
         return;
     }
     
-    lastTimelinePoint = origName;
+    lastTimelinePoint = name;
     
-    display->nodes = shared_ptr<DisplayNodes>();
     display->visualizationLines = shared_ptr<DisplayLines>();
-    
-    std::string name = origName == "" ? "data" : origName;
     
     // remap a couple of non-jan 1st dates until we figure out a better way to track these
     if(name == "20000101") name = "20000102";
@@ -395,11 +385,46 @@ void MapController::setTimelinePoint(const std::string& origName) {
     data->loadFromString(dataText);
     LOG("reloaded for timeline point: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
     start = clock();
-    data->updateDisplay(display);
+    updateDisplay(blend);
     LOG("refreshed display for timeline point: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
     
     if(targetNode != INT_MAX) {
         updateTargetForIndex(targetNode);
+    }
+}
+
+// mmmm, magic numbers
+float BASE_SIZE = 0.8; // default scaledown factor for highlighted nodes from the visualzation, TODO: share properly
+float EXPAND_PORTION = 0.2f; // portion of full size that it is expanded by
+float EXPAND_TIME_SCALE = 0.5f; // pulses per second
+
+void MapController::update(TimeInterval currentTime) {
+    display->update(currentTime);
+    
+    float wrappedTime = (currentTime * EXPAND_TIME_SCALE) - floor(currentTime * EXPAND_TIME_SCALE);
+    float expand = BASE_SIZE + ((0.5f - fabs(wrappedTime - 0.5f)) * EXPAND_PORTION * 2.0f);
+    if(targetNode != INT_MAX) {
+        NodePointer node = data->nodeAtIndex(targetNode);
+        float baseSize = data->visualization->nodeSize(node);
+        float expandedSize = baseSize * expand;
+        display->nodes->beginUpdate();
+        display->nodes->updateNode(node->index, data->visualization->nodePosition(node), expandedSize, ColorFromRGB(SELECTED_NODE_COLOR_HEX));
+        display->nodes->endUpdate();
+    }
+}
+
+void MapController::updateDisplay(bool blend) {
+    display->nodes->setCount(data->nodes.size());
+    display->targetNodes->setCount(data->nodes.size());
+    
+    if(blend) {
+        data->visualization->updateDisplayForNodes(display->targetNodes, data->nodes);
+        data->visualization->updateLineDisplay(display, data->connections);
+        display->startBlend(1.0f);
+    }
+    else {
+        data->visualization->updateDisplayForNodes(display->nodes, data->nodes);
+        data->visualization->updateLineDisplay(display, data->connections);
     }
 }
 

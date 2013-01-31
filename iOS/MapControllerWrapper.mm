@@ -56,7 +56,7 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
     if (self = [super init]) {
         _controller = new MapController();
         _controller->display->setDisplayScale([[UIScreen mainScreen] scale]);
-        _controller->data->updateDisplay(_controller->display);
+        _controller->updateDisplay(false);
         
     }
     
@@ -110,7 +110,7 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
 #pragma mark - Camera: Misc
 
 - (void)update:(NSTimeInterval)now{
-    _controller->display->camera->update(now);
+    _controller->update(now);
 }
 
 - (void)setAllowIdleAnimation:(BOOL)allow{

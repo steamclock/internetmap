@@ -44,8 +44,8 @@ public class NodePopup extends PopupWindow {
         if (isUsersNode) {
             strings.add(mContext.getString(R.string.youarehere));
         }
-        if (!node.textDescription.isEmpty()) {
-            strings.add(node.textDescription);
+        if (!node.friendlyDescription.isEmpty()) {
+            strings.add(node.friendlyDescription);
         }
         strings.add("AS" + node.asn);
         if (!node.typeString.isEmpty()) {

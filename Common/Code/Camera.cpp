@@ -10,7 +10,7 @@ static const float MOVE_TIME = 1.0f;
 static const float MIN_ZOOM = -10.0f;
 //we need a bound on the max. zoom because on small nodes the calculated max puts the target behind the camera.
 //this might be a bug in targeting...?
-static const float MAX_MAX_ZOOM = -0.2f;
+static const float MAX_MAX_ZOOM = -0.06f;
 
 // TODO: better way to register this
 void cameraMoveFinishedCallback(void);
@@ -49,7 +49,7 @@ Camera::Camera() :
     _panVelocity.y = 0.0f;
 }
 
-static const float NEAR_PLANE = 0.1f;
+static const float NEAR_PLANE = 0.05f;
 static const float FAR_PLANE = 100.0f;
 
 void Camera::update(TimeInterval currentTime) {
