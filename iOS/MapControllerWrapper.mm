@@ -254,6 +254,17 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
 
 #pragma mark - Visualizaitons
 
+- (NSArray*)visualizationNames {
+    std::vector<std::string> names = _controller->visualizationNames();
+    NSMutableArray* result = [NSMutableArray new];
+    
+    for(int i = 0; i < names.size(); i++) {
+        [result addObject:[NSString stringWithCString:names[i].c_str() encoding:NSUTF8StringEncoding]];
+    }
+    
+    return result;
+}
+
 - (void)setVisualization:(int)vis {
     _controller->setVisualization(vis);
 }

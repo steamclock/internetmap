@@ -32,7 +32,12 @@ MapController::MapController() :
 {
     data = shared_ptr<MapData>(new MapData());
     display = shared_ptr<MapDisplay>(new MapDisplay());
-    data->visualization = VisualizationPointer(new DefaultVisualization());
+
+    _visualizations.push_back(VisualizationPointer(new DefaultVisualization()));
+    _visualizations.push_back(VisualizationPointer(new TypeVisualization("EDU", AS_EDU)));
+    _visualizations.push_back(VisualizationPointer(new TypeVisualization("T1", AS_T1)));
+    
+    data->visualization = _visualizations[0];
     
     setTimelinePoint("", false);
     
@@ -429,18 +434,21 @@ void MapController::updateDisplay(bool blend) {
     }
 }
 
-void MapController::setVisualization(int visualization) {
-    switch(visualization) {
-        case 0:
-            data->visualization = VisualizationPointer(new DefaultVisualization());
-            break;
-        case 1:
-            data->visualization = VisualizationPointer(new TypeVisualization(AS_EDU));
-            break;
-        default:
-            data->visualization = VisualizationPointer(new DefaultVisualization());
-            break;
+std::vector<std::string> MapController::visualizationNames(void) {
+    std::vector<std::string> result;
+    for(int i = 0; i < _visualizations.size(); i++) {
+        result.push_back(_visualizations[i]->name());
     }
     
+    return result;
+}
+
+
+void MapController::setVisualization(int visualization) {
+    if (visualization >= _visualizations.size()) {
+        visualization = 0;
+    }
+
+    data->visualization = _visualizations[visualization];
     updateDisplay(true);
 }

@@ -40,9 +40,14 @@ public:
     void setTimelinePoint(const std::string& name, bool blend = true);
     void update(TimeInterval currentTime);
     void updateDisplay(bool blend);
+    
+    std::vector<std::string> visualizationNames(void);
     void setVisualization(int visualization);
+    
 private:
+    
     int hoveredNodeIndex;
+    std::vector<VisualizationPointer> _visualizations;
 };
 
 #endif

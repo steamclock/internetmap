@@ -23,8 +23,6 @@
     self = [super initWithStyle:style];
     if (self) {
         self.contentSizeForViewInPopover = CGSizeMake(320, 150);
-        
-        self.visualizationOptions = @[@"Network View", @"EDU"];
     }
     return self;
 }
@@ -35,6 +33,11 @@
     
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.visualizationOptions = [self.mapController visualizationNames];
 }
 
 - (void)didReceiveMemoryWarning

@@ -13,11 +13,15 @@
 
 class TypeVisualization : public DefaultVisualization {
 public:
-    TypeVisualization(int typeToHighlight);
+    TypeVisualization(const std::string& name, int typeToHighlight);
+    
     virtual Color nodeColor(NodePointer node);
+    
+    virtual std::string name(void) { return _name; }
     
 private:
     int _typeToHighlight;
+    std::string _name;
 };
 
 #endif /* defined(__InternetMap__TypeVisualization__) */

@@ -17,6 +17,9 @@
 
 class DefaultVisualization : public Visualization {
 public:
+
+    virtual std::string name(void) { return "Network View"; }
+
     virtual Point3 nodePosition(NodePointer node);
     virtual float nodeSize(NodePointer node);
     virtual float nodeZoom(NodePointer node);

@@ -52,6 +52,7 @@
 - (void)highlightRoute:(NSArray*)nodeList;
 - (void)setTimelinePoint:(NSString*)timelinePointName;
 
+- (NSArray*)visualizationNames;
 - (void)setVisualization:(int)vis;
 
 - (void)setViewSubregion:(CGRect)rect;

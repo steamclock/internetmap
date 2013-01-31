@@ -8,8 +8,9 @@
 
 #include "TypeVisualization.hpp"
 
-TypeVisualization::TypeVisualization(int typeToHighlight) :
-    _typeToHighlight(typeToHighlight)
+TypeVisualization::TypeVisualization(const std::string& name, int typeToHighlight) :
+    _typeToHighlight(typeToHighlight),
+    _name(name)
 {
     
 }
