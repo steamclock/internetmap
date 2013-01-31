@@ -811,34 +811,36 @@ static const int AXIS_DIVISIONS = 8;
     } else {
         NodeWrapper* node = [self.controller nodeAtIndex:self.controller.targetNode];
         if (node.asn) {
-            [ASNRequest fetchIPsForASN:node.asn responseBlock:^(NSArray *ips) {
+            [ASNRequest fetchIPsForASN:node.asn responseBlock:^(NSArray *ipsFromWire) {
                 //We arbitrarily select any of the prefix IPs and try for a traceroute using it
                 //We do this because we have no reliable way of knowing what machines will reslond to our ICMP packets
                 //So, if we can contact even one machine within an ASN - any one at all - we know we travel through that ASN
                 //We select randomly because why the heck not? It's all a guess as to which will respond. :)
-                NSLog(@"ASN ARRAY: %@", ips[0]);
+                
+                NSArray* ips = ipsFromWire[0];
+                NSLog(@"ASN ARRAY: %@", ips);
                 uint32_t rnd = arc4random_uniform([ips count]);
-                NSLog(@"Random: %u", rnd);
-                NSString* arbitraryIP = [NSString stringWithFormat:@"%@", ips[rnd]];
-                NSLog(@"Arbitrary IP is %@", arbitraryIP);
-                if (arbitraryIP != @"") {
+                if ([ips count]) {
+                    NSString* arbitraryIP = [NSString stringWithFormat:@"%@", ips[rnd]];
                     NSLog(@"Starting traceroute with IP: %@", arbitraryIP );
                     self.tracer = [SCTracerouteUtility tracerouteWithAddress:arbitraryIP];
                     self.tracer.delegate = self;
                     [self.tracer start];
                 } else {
-                    NSLog(@"Asn couldn't be resolved to IP");
-                    self.nodeInformationViewController.tracerouteTextView.textColor = [UIColor redColor];
-                    self.nodeInformationViewController.tracerouteTextView.text = @"Error: ASN couldn't be resolved into IP.";
+                    [self couldntResolveIP];
                 }
             }];
+            
         } else {
-            NSLog(@"asn is not an int"); //TODO: ASN should always be a string, refactor this
-            self.nodeInformationViewController.tracerouteTextView.textColor = [UIColor redColor];
-            self.nodeInformationViewController.tracerouteTextView.text = @"Error: ASN couldn't be resolved into IP.";
+            [self couldntResolveIP];
         }
     }
      
+}
+
+-(void)couldntResolveIP{
+    self.nodeInformationViewController.tracerouteTextView.textColor = [UIColor redColor];
+    self.nodeInformationViewController.tracerouteTextView.text = @"Error: ASN couldn't be resolved into IP. Please try another node!";
 }
 
 -(void)doneTapped{

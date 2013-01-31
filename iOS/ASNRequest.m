@@ -48,7 +48,7 @@
     }
     
     // Probably loopback, we should ignore
-    if ((a == 172) && (b == 255)) {
+    if ([ipAddress isEqualToString:@"127.255.255.255"]) {
         return TRUE;
     }
     
@@ -135,16 +135,17 @@
     [request setCompletionBlock:^{
         NSError* error = request.error;
         NSDictionary* jsonResponse = [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingAllowFragments error:&error];
-        NSArray* payload = [jsonResponse objectForKey:@"payload"];
-        
+        NSArray* offTheWire = [jsonResponse objectForKey:@"payload"];
         // We clean the array for any reserved ip spaces (sometimes 127.x.x.x shows up for loopback interfaces)
         NSMutableArray* responseArray = [[NSMutableArray alloc] init];
-        for (NSString* ip in payload) {
+        for (NSString* ip in offTheWire) {
             if (![ASNRequest isInvalidOrPrivate:ip]) {
                 [responseArray addObject:ip];
+                NSLog(@"Added ip %@", ip);
+            } else {
+                NSLog(@"Failed to add %@, was reserved IP.", ip);
             }
         }
-        NSLog(@"RESPONSE: %@", responseArray);
         response(@[responseArray]);
     }];
     
