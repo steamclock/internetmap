@@ -2,6 +2,8 @@ package com.peer1.internetmap;
 
 import java.io.InputStream;
 
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -27,6 +29,7 @@ import android.view.View;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.peer1.internetmap.ASNRequest.ASNResponseHandler;
 
 public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
@@ -156,24 +159,21 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         //TODO: stop timeline if active
         //TODO: animate button while fetching
         //do an ASN request to get the user's ASN
-        ASNRequest.fetchCurrentASNWithResponseHandler(new AsyncHttpResponseHandler() {
-            @Override
+        ASNRequest.fetchCurrentASNWithResponseHandler(new ASNResponseHandler() {
             public void onStart() {
                 // Initiated the request
                 Log.d(TAG, "asnrequest start");
             }
-            @Override
             public void onFinish() {
                 // Initiated the request
                 Log.d(TAG, "asnrequest finish");
             }
 
-            @Override
-            public void onSuccess(String response) {
+            public void onSuccess(JSONObject response) {
                 //expected response format: {"payload":"ASxxxx"}
-                //quick&dirty parsing FIXME ASNRequest should handle this, and do proper JSON deserialization
                 try {
-                    String asnString = response.substring(14, response.length()-2);
+                    String asnWithAS = response.getString("payload");
+                    String asnString = asnWithAS.substring(2);
                     Log.d(TAG, String.format("asn: %s", asnString));
                     //yay, an ASN! turn it into a node so we can target it.
                     NodeWrapper node = mController.nativeNodeByAsn(asnString);
@@ -183,14 +183,12 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                     } else {
                         showError(String.format(getString(R.string.asnNullNode), asnString));
                     }
-                } catch (IndexOutOfBoundsException e) {
-                    //TODO toast failure message
-                    Log.d(TAG, String.format("can't parse response: %s", response));
+                } catch (Exception e) {
+                    Log.d(TAG, String.format("can't parse response: %s", response.toString()));
                     showError(getString(R.string.asnBadResponse));
-                } finally {}
+                }
             }
         
-            @Override
             public void onFailure(Throwable e, String response) {
                 //tell the user
                 //FIXME: outputting the raw error response is bad. how can we make it userfriendly?

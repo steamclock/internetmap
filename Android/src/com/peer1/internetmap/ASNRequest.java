@@ -1,14 +1,30 @@
 package com.peer1.internetmap;
 
+import java.io.UnsupportedEncodingException;
+
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import org.apache.http.entity.StringEntity;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-//Requests the user's ASN from the internet.
+/**
+ * Requests the user's ASN from the internet.
+ *
+ * to get the ASN, call ASNRequest.fetchCurrentASNWithResponseHandler()
+ * and pass in your ASNResponseHandler (which is almost the same as AsyncHttpResponseHandler, but returns a JSONObject on success)
+ *
+ */
 public class ASNRequest {
     //this uses loopj-async-http-request
     //http://loopj.com/android-async-http/
+    
+    public interface ASNResponseHandler {
+        public void onStart();
+        public void onFinish();
+        public void onSuccess(JSONObject response);
+        public void onFailure(Throwable error, String content);
+    }
 
     private static final String BASE_URL = "http://72.51.24.24:8080/";
 
@@ -19,13 +35,37 @@ public class ASNRequest {
         //return BASE_URL + "invalid";
     }
 
-    private static void fetchGlobalIPWithResponseHandler(AsyncHttpResponseHandler handler){
+    private static void fetchGlobalIPWithResponseHandler(AsyncHttpResponseHandler handler) {
 
         client.get(getAbsoluteUrl("ip"), handler);
     }
+    
+    private static void fetchASNForIP(String ip, final ASNResponseHandler finHandler) throws JSONException, UnsupportedEncodingException {
+        JSONObject postData = new JSONObject();
+        postData.put("ip", ip);
+        StringEntity entity = new StringEntity(postData.toString());
+        entity.setContentType("application/json");
+        client.post(null, getAbsoluteUrl("iptoasn"), entity, "application/json", new AsyncHttpResponseHandler(){
+            @Override
+            public void onSuccess(String response) {
+                try {
+                    finHandler.onSuccess(new JSONObject(response));
+                } catch (JSONException e) {
+                    onFailure(new Throwable(e.getMessage()), null);
+                }
+            }
+            @Override
+            public void onFailure(Throwable error, String content) {
+                finHandler.onFailure(error, content);
+            }
+            @Override
+            public void onFinish() {
+                finHandler.onFinish();
+            }
+        });
+    }
 
-    public static void fetchCurrentASNWithResponseHandler(AsyncHttpResponseHandler handler) {
-        final AsyncHttpResponseHandler finHandler = handler;
+    public static void fetchCurrentASNWithResponseHandler(final ASNResponseHandler finHandler) {
         //TODO: check the network connection first.
         fetchGlobalIPWithResponseHandler(new AsyncHttpResponseHandler() {
 
@@ -42,12 +82,8 @@ public class ASNRequest {
                         JSONObject jsonObject = new JSONObject(response);
                         String ip = jsonObject.getString("payload");
                         if (ip != null && !ip.isEmpty()) {
-                            JSONObject postData = new JSONObject();
-                            postData.put("ip", ip);
-                            StringEntity entity = new StringEntity(postData.toString());
-                            entity.setContentType("application/json");
-                            client.post(null, getAbsoluteUrl("iptoasn"), entity, "application/json", finHandler);
-                        }else {
+                            fetchASNForIP(ip, finHandler);
+                        } else {
                             onFailure(new Throwable(errorString), null);
                         }
                     } catch (Exception e) {
@@ -62,10 +98,7 @@ public class ASNRequest {
             @Override
             public void onFailure(Throwable error, String content) {
                 finHandler.onFailure(error, content);
-            }
-
-            @Override
-            public void onFinish() {
+                //if request #1 failed, then request #2 never started, so we're responsible for cleanup.
                 finHandler.onFinish();
             }
         });
