@@ -141,6 +141,7 @@
 		A6E1D5C016B9DA2A00D8B26F /* 20110102.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5B116B9DA2A00D8B26F /* 20110102.txt */; };
 		A6E1D5C116B9DA2A00D8B26F /* 20120102.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5B216B9DA2A00D8B26F /* 20120102.txt */; };
 		A6E1D5C216B9DA2A00D8B26F /* 20130102.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5B316B9DA2A00D8B26F /* 20130102.txt */; };
+		A6E1D5C516B9EC7100D8B26F /* ExpandedSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = A6E1D5C416B9EC7100D8B26F /* ExpandedSlider.m */; };
 		A6F3F5631640F1FB0070E6AE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5621640F1FB0070E6AE /* UIKit.framework */; };
 		A6F3F5651640F1FB0070E6AE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5641640F1FB0070E6AE /* Foundation.framework */; };
 		A6F3F5671640F1FB0070E6AE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5661640F1FB0070E6AE /* CoreGraphics.framework */; };
@@ -367,6 +368,8 @@
 		A6E1D5B116B9DA2A00D8B26F /* 20110102.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20110102.txt; path = Common/Data/20110102.txt; sourceTree = "<group>"; };
 		A6E1D5B216B9DA2A00D8B26F /* 20120102.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20120102.txt; path = Common/Data/20120102.txt; sourceTree = "<group>"; };
 		A6E1D5B316B9DA2A00D8B26F /* 20130102.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20130102.txt; path = Common/Data/20130102.txt; sourceTree = "<group>"; };
+		A6E1D5C316B9EC7100D8B26F /* ExpandedSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExpandedSlider.h; path = iOS/ExpandedSlider.h; sourceTree = SOURCE_ROOT; };
+		A6E1D5C416B9EC7100D8B26F /* ExpandedSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ExpandedSlider.m; path = iOS/ExpandedSlider.m; sourceTree = SOURCE_ROOT; };
 		A6F3F55E1640F1FB0070E6AE /* internetmap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = internetmap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6F3F5621640F1FB0070E6AE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		A6F3F5641640F1FB0070E6AE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -743,6 +746,8 @@
 				A686EA6C16B62B61009B070E /* VisualizationsTableViewController.m */,
 				1127C9CF16A0BBFB00413FE9 /* Objective-C++ Wrappers */,
 				D4D17D20166EA621003A489C /* XIBs */,
+				A6E1D5C316B9EC7100D8B26F /* ExpandedSlider.h */,
+				A6E1D5C416B9EC7100D8B26F /* ExpandedSlider.m */,
 			);
 			name = UI;
 			path = InternetMap;
@@ -1034,6 +1039,7 @@
 				A686EA7F16B62B61009B070E /* MapControllerWrapper.mm in Sources */,
 				A686EA8016B62B61009B070E /* NodeWrapper.mm in Sources */,
 				A686EAE816B62D05009B070E /* SCDispatchQueue.m in Sources */,
+				A6E1D5C516B9EC7100D8B26F /* ExpandedSlider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -17,8 +17,7 @@
 #import "LabelNumberBoxView.h"
 #import "NodeWrapper.h"
 #import "TimelineInfoViewController.h"
-#include <OpenGLES/ES1/gl.h>
-#include <OpenGLES/ES2/gl.h>
+#import "ExpandedSlider.h"
 
 //TODO: move this to a better place.
 #define SELECTED_NODE_COLOR UIColorFromRGB(0xffa300)
