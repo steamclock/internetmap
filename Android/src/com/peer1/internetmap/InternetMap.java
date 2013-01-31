@@ -37,11 +37,11 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     private RotateGestureDetector mRotateDetector;
     
     private MapControllerWrapper mController;
-
-    private VisualizationPopupWindow visualizationPopup;
-    private SearchPopup mSearchPopup;
-    private NodePopup nodePopup;
     private Handler mHandler; //handles threadsafe messages
+
+    private VisualizationPopupWindow mVisualizationPopup;
+    private SearchPopup mSearchPopup;
+    private NodePopup mNodePopup;
     
     private int mUserNodeIndex = -1; //cache user's node from "you are here"
 
@@ -141,16 +141,16 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
 
     public void visualizationsButtonPressed(View view) {
-        if (visualizationPopup == null) {
+        if (mVisualizationPopup == null) {
             LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
             View popupView = layoutInflater.inflate(R.layout.visualizationview, null);
-            visualizationPopup = new VisualizationPopupWindow(this, popupView);
-            visualizationPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            mVisualizationPopup = new VisualizationPopupWindow(this, popupView);
+            mVisualizationPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 public void onDismiss() {
-                    visualizationPopup = null;
+                    mVisualizationPopup = null;
                 }
             });
-            visualizationPopup.showAsDropDown(findViewById(R.id.visualizationsButton));
+            mVisualizationPopup.showAsDropDown(findViewById(R.id.visualizationsButton));
         }
     }
 
@@ -250,31 +250,31 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         NodeWrapper node = mController.nodeAtIndex(index);
         if (node == null) {
             Log.d(TAG, "is null");
-            if (nodePopup != null) {
-                nodePopup.dismiss();
+            if (mNodePopup != null) {
+                mNodePopup.dismiss();
             }
         } else {
             //node is ok; show the popup
             Log.d(TAG, String.format("has index %d and asn %s", node.index, node.asn));
-            if (nodePopup == null) {
+            if (mNodePopup == null) {
                 LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                 View popupView = layoutInflater.inflate(R.layout.nodeview, null);
-                nodePopup = new NodePopup(this, popupView);
-                nodePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                mNodePopup = new NodePopup(this, popupView);
+                mNodePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     public void onDismiss() {
-                        nodePopup = null;
+                        mNodePopup = null;
                     }
                 });
             }
             boolean isUserNode = (node.index == mUserNodeIndex);
-            nodePopup.setNode(node, isUserNode);
-            nodePopup.showAsDropDown(findViewById(R.id.visualizationsButton)); //FIXME show by node
+            mNodePopup.setNode(node, isUserNode);
+            mNodePopup.showAsDropDown(findViewById(R.id.visualizationsButton)); //FIXME show by node
         }
     }
     
     //callbacks from the nodePopup UI
     public void dismissNodePopup(View unused) {
-        nodePopup.dismiss();
+        mNodePopup.dismiss();
     }
     
     public void runTraceroute(View unused){
