@@ -797,6 +797,7 @@ static const int AXIS_DIVISIONS = 8;
     [self.controller zoomAnimated:-3 duration:3];
     
     NodeWrapper* node = [self.controller nodeAtIndex:self.controller.targetNode];
+    // Ask Alex what this does - best guess is adjusts the camera distance/focal length?
     if (node.importance > 0.006) {
         [self.controller rotateAnimated:GLKMatrix4Identity duration:3];
     } else {
@@ -804,16 +805,20 @@ static const int AXIS_DIVISIONS = 8;
     }
     
     if(self.controller.lastSearchIP && ![self.controller.lastSearchIP isEqualToString:@""]) {
-        self.tracer = [SCTracerouteUtility tracerouteWithAddress:self.controller.lastSearchIP]; //we need ip for node!
+        self.tracer = [SCTracerouteUtility tracerouteWithAddress:self.controller.lastSearchIP];
         self.tracer.delegate = self;
         [self.tracer start];
     } else {
         NodeWrapper* node = [self.controller nodeAtIndex:self.controller.targetNode];
         if (node.asn) {
-            [ASNRequest fetchForASN:node.asn responseBlock:^(NSArray *asn) {
-                if (asn[0] != [NSNull null]) {
-                    NSLog(@"Starting traceroute with IP: %@", asn[0]);
-                    self.tracer = [SCTracerouteUtility tracerouteWithAddress:asn[0]];
+            [ASNRequest fetchIPsForASN:node.asn responseBlock:^(NSArray *ips) {
+                NSLog(@"ASN ARRAY: %@", ips[0]);
+                
+                NSString* arbitraryIP = ips[0][0];
+                
+                if (arbitraryIP != @"") {
+                    NSLog(@"Starting traceroute with IP: %@", arbitraryIP );
+                    self.tracer = [SCTracerouteUtility tracerouteWithAddress:arbitraryIP];
                     self.tracer.delegate = self;
                     [self.tracer start];
                 } else {
@@ -865,15 +870,11 @@ static const int AXIS_DIVISIONS = 8;
         NodeWrapper* last = [self.tracerouteHops lastObject];
         
         for(NSString* asn in asns) {
-            NSLog(@"most recent ASN: %@", asn);
             NodeWrapper* current =  [self.controller nodeByASN:[NSString stringWithFormat:@"%@", asn]];
-            NSLog(@"Node for ASN we get back is: %@", current);
             if(current && current != last) {
                 [self.tracerouteHops addObject:current];
             }
         }
-        
-        NSLog(@"TRACEROUTE HOPS: %@", self.tracerouteHops);
         
         if ([self.tracerouteHops count] >= 2) {
             [self.controller highlightRoute:self.tracerouteHops];

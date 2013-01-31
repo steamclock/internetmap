@@ -25,6 +25,7 @@
 @implementation ASNRequest
 
 -(BOOL)isInvalidOrPrivate:(NSString*)ipAddress {
+    // This checks if our IP is in a reserved address space (eg. 192.168.1.1)
     NSArray* components = [ipAddress componentsSeparatedByString:@"."];
     
     if(components.count != 4) {
@@ -62,6 +63,7 @@
         NSString* ip = [theIPs objectAtIndex:i];
         
         if ([ip isEqual:[NSNull null]]) {
+            //Nulls are stored where there would have been an IP in the case of a timed-out traceroute hop
             [self failedFetchingASNForIndex:i error:@"No ASN needed, this was a timed out hop."];
         } else if ([self isInvalidOrPrivate:ip]){
             [self failedFetchingASNForIndex:i error:@"No ASN, this was an invalid or private address."];
@@ -106,7 +108,7 @@
 
 - (void)failedFetchingASNForIndex:(int)index error:(NSString*)error {
     // Really only need to print this for debugging
-    // NSLog(@"Failed for index: %i, Error msg: %@", index, error);
+    NSLog(@"Failed for index: %i, Error msg: %@", index, error);
 }
 
 +(void)fetchForAddresses:(NSArray*)addresses responseBlock:(ASNResponseBlock)response {
@@ -115,19 +117,30 @@
     [request startFetchingASNsForIPs:addresses];
 }
 
-+(void)fetchForASN:(NSString*)asn responseBlock:(ASNResponseBlock)response {
-    __weak ASIHTTPRequest* request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://bgp.he.net/AS%@", asn]]];
++(void)fetchIPsForASN:(NSString*)asn responseBlock:(ASNResponseBlock)response {
+    
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"http://72.51.24.24:8080/asntoips"]];
+    [request setShouldAttemptPersistentConnection:YES];
+    [request setTimeOutSeconds:60];
+    [request setRequestMethod:@"POST"];
+    [request addRequestHeader:@"Content-Type" value:@"application/json"];
+    
+    NSString *dataString = [NSString stringWithFormat:@"{\"asn\":\"%@\"}",asn];
+    [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
     [request setCompletionBlock:^{
-        NSRange range = [[request responseString] rangeOfString:@"/net/.*?/" options:NSRegularExpressionSearch];
-        if(range.location != NSNotFound) {
-            NSString* string = [[request responseString] substringWithRange:NSMakeRange(range.location+5, range.length-6)];
-            response(@[string]);
-        } else {
-            response(@[[NSNull null]]);
-        }
-        
+        NSError* error = request.error;
+        NSDictionary* jsonResponse = [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingAllowFragments error:&error];
+        NSArray* payload = [jsonResponse objectForKey:@"payload"];
+        response(@[payload]);
     }];
-    [request startAsynchronous];
+    
+    [request setFailedBlock:^{
+        response(@[@""]);
+        NSLog(@"%@", request.error);
+    }];
+    
+    [request start];
+
 }
 
 // Get a set of IP addresses for a given host name
