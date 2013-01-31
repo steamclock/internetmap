@@ -397,7 +397,7 @@ static const int AXIS_DIVISIONS = 8;
         } else if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
             if (isnan(gestureRecognizer.velocity)) {
                 [self.controller stopMomentumRotation];
-            }else {
+            } else {
                 [self.controller startMomentumRotationWithVelocity:-gestureRecognizer.velocity*0.5];
             }
 
@@ -412,15 +412,15 @@ static const int AXIS_DIVISIONS = 8;
         if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
             [self.controller unhoverNode];
             self.lastScale = gestureRecognizer.scale;
-        }else if([gestureRecognizer state] == UIGestureRecognizerStateChanged)
+        } else if([gestureRecognizer state] == UIGestureRecognizerStateChanged)
         {
             float deltaZoom = gestureRecognizer.scale - self.lastScale;
             self.lastScale = gestureRecognizer.scale;
             [self.controller zoomByScale:deltaZoom];
-        }else if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
+        } else if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
             if (isnan(gestureRecognizer.velocity)) {
                 [self.controller stopMomentumZoom];
-            }else {
+            } else {
                 [self.controller startMomentumZoomWithVelocity:gestureRecognizer.velocity*0.5];
             }
         }
@@ -467,7 +467,7 @@ static const int AXIS_DIVISIONS = 8;
     NodeWrapper* node = [self.controller nodeByASN:asn];
     if (node) {
         [self updateTargetForIndex:node.index];
-    }else {
+    } else {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error locating your node", nil) message:@"Couldn't find a node associated with your IP." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"ok", nil];
         [alert show];
     }
@@ -812,10 +812,15 @@ static const int AXIS_DIVISIONS = 8;
         NodeWrapper* node = [self.controller nodeAtIndex:self.controller.targetNode];
         if (node.asn) {
             [ASNRequest fetchIPsForASN:node.asn responseBlock:^(NSArray *ips) {
+                //We arbitrarily select any of the prefix IPs and try for a traceroute using it
+                //We do this because we have no reliable way of knowing what machines will reslond to our ICMP packets
+                //So, if we can contact even one machine within an ASN - any one at all - we know we travel through that ASN
+                //We select randomly because why the heck not? It's all a guess as to which will respond. :)
                 NSLog(@"ASN ARRAY: %@", ips[0]);
-                
-                NSString* arbitraryIP = ips[0][0];
-                
+                uint32_t rnd = arc4random_uniform([ips count]);
+                NSLog(@"Random: %u", rnd);
+                NSString* arbitraryIP = [NSString stringWithFormat:@"%@", ips[rnd]];
+                NSLog(@"Arbitrary IP is %@", arbitraryIP);
                 if (arbitraryIP != @"") {
                     NSLog(@"Starting traceroute with IP: %@", arbitraryIP );
                     self.tracer = [SCTracerouteUtility tracerouteWithAddress:arbitraryIP];
@@ -857,7 +862,7 @@ static const int AXIS_DIVISIONS = 8;
 
 - (void)tracerouteDidFindHop:(NSString*)report withHops:(NSArray *)hops{
     
-    //NSLog(@"%@", report);
+    NSLog(@"%@", report);
     
     self.nodeInformationViewController.tracerouteTextView.text = [[NSString stringWithFormat:@"%@\n%@", self.nodeInformationViewController.tracerouteTextView.text, report] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     [self.nodeInformationViewController.box1 incrementNumber];

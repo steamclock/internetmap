@@ -47,6 +47,11 @@
         return TRUE;
     }
     
+    // Probably loopback, we should ignore
+    if ((a == 172) && (b == 255)) {
+        return TRUE;
+    }
+    
     return FALSE;
 }
 
@@ -65,7 +70,7 @@
         if ([ip isEqual:[NSNull null]]) {
             //Nulls are stored where there would have been an IP in the case of a timed-out traceroute hop
             [self failedFetchingASNForIndex:i error:@"No ASN needed, this was a timed out hop."];
-        } else if ([self isInvalidOrPrivate:ip]){
+        } else if ([ASNRequest isInvalidOrPrivate:ip]){
             [self failedFetchingASNForIndex:i error:@"No ASN, this was an invalid or private address."];
         } else {
             [self fetchASNForIP:ip index:i];
@@ -108,7 +113,7 @@
 
 - (void)failedFetchingASNForIndex:(int)index error:(NSString*)error {
     // Really only need to print this for debugging
-    NSLog(@"Failed for index: %i, Error msg: %@", index, error);
+    //NSLog(@"Failed for index: %i, Error msg: %@", index, error);
 }
 
 +(void)fetchForAddresses:(NSArray*)addresses responseBlock:(ASNResponseBlock)response {
@@ -133,13 +138,13 @@
         NSArray* payload = [jsonResponse objectForKey:@"payload"];
         
         // We clean the array for any reserved ip spaces (sometimes 127.x.x.x shows up for loopback interfaces)
-        NSMutableArray* responseArray;
+        NSMutableArray* responseArray = [[NSMutableArray alloc] init];
         for (NSString* ip in payload) {
             if (![ASNRequest isInvalidOrPrivate:ip]) {
                 [responseArray addObject:ip];
             }
         }
-        
+        NSLog(@"RESPONSE: %@", responseArray);
         response(@[responseArray]);
     }];
     
