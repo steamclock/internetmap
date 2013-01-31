@@ -8,6 +8,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Handler;
 import android.graphics.Color;
@@ -158,6 +160,15 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
 
     public void youAreHereButtonPressed(View view) {
+        //check internet status
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = (activeNetwork == null) ? false : activeNetwork.isConnectedOrConnecting();
+        if (!isConnected) {
+            showError(getString(R.string.noInternet));
+            return;
+        }
+
         //TODO: stop timeline if active
         //do an ASN request to get the user's ASN
         ASNRequest.fetchCurrentASNWithResponseHandler(new ASNResponseHandler() {

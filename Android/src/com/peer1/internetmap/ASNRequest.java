@@ -66,7 +66,6 @@ public class ASNRequest {
     }
 
     public static void fetchCurrentASNWithResponseHandler(final ASNResponseHandler finHandler) {
-        //TODO: check the network connection first.
         fetchGlobalIPWithResponseHandler(new AsyncHttpResponseHandler() {
 
             @Override
