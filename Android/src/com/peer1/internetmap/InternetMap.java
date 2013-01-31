@@ -196,7 +196,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                     String asnString = asnWithAS.substring(2);
                     Log.d(TAG, String.format("asn: %s", asnString));
                     //yay, an ASN! turn it into a node so we can target it.
-                    NodeWrapper node = mController.nativeNodeByAsn(asnString);
+                    NodeWrapper node = mController.nodeByAsn(asnString);
                     if (node != null) {
                         mUserNodeIndex = node.index;
                         selectNode(node);
@@ -225,16 +225,16 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
     
     public void selectNode(NodeWrapper node) {
-        mController.nativeUpdateTargetForIndex(node.index);
+        mController.updateTargetForIndex(node.index);
     }
 
     //called from c++
     public void showNodePopup() {
         Log.d(TAG, "showNodePopup");
         //get the current node
-        int index = mController.nativeTargetNodeIndex();
+        int index = mController.targetNodeIndex();
         Log.d(TAG, String.format("node at index %d", index));
-        NodeWrapper node = mController.nativeNodeAtIndex(index);
+        NodeWrapper node = mController.nodeAtIndex(index);
         if (node == null) {
             Log.d(TAG, "is null");
             if (nodePopup != null) {
@@ -301,7 +301,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         @Override
         public boolean onDown(MotionEvent event) { 
             Log.d(TAG, "onDown");
-            mController.nativeHandleTouchDownAtPoint(event.getX(), event.getY());
+            mController.handleTouchDownAtPoint(event.getX(), event.getY());
             return true;
         }
 
@@ -309,7 +309,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
                 float distanceY) {
             Log.d(TAG, String.format("onScroll: x %f y %f", distanceX, distanceY));
-            mController.nativeRotateRadiansXY(distance2radians(distanceX), distance2radians(distanceY));
+            mController.rotateRadiansXY(distance2radians(distanceX), distance2radians(distanceY));
             return true;
         }
         
@@ -317,7 +317,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         public boolean onFling(MotionEvent event1, MotionEvent event2, 
                 float velocityX, float velocityY) {
             Log.d(TAG, String.format("onFling: vx %f vy %f", velocityX, velocityY));
-            mController.nativeStartMomentumPanWithVelocity(velocityAdjust(velocityX), velocityAdjust(velocityY));
+            mController.startMomentumPanWithVelocity(velocityAdjust(velocityX), velocityAdjust(velocityY));
             return true;
         }
 
@@ -325,7 +325,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         //note: if double tap is used this should probably s/Up/Confirmed
         public boolean onSingleTapUp(MotionEvent e) {
             Log.d(TAG, "tap!");
-            mController.nativeSelectHoveredNode();
+            mController.selectHoveredNode();
             //TODO: iOS does some deselect stuff if that call failed.
             //but, I think maybe that should just happen inside the controller automatically.
             return true;
@@ -338,7 +338,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         public boolean onScale(ScaleGestureDetector detector) {
             float scale = detector.getScaleFactor() - 1;
             Log.d(TAG, String.format("scale: %f", scale));
-            mController.nativeZoomByScale(scale);
+            mController.zoomByScale(scale);
             return true;
         }
 
@@ -346,7 +346,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         public void onScaleEnd(ScaleGestureDetector detector) {
             float scale = detector.getScaleFactor() - 1;
             Log.d(TAG, String.format("scaleEnd: %f", scale));
-            mController.nativeStartMomentumZoomWithVelocity(scale * 50);
+            mController.startMomentumZoomWithVelocity(scale * 50);
         }
     }
 
@@ -356,7 +356,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         public boolean onRotate(RotateGestureDetector detector) {
             float rotate = detector.getRotateFactor();
             Log.d(TAG, String.format("!!rotate: %f", rotate));
-            mController.nativeRotateRadiansZ(-rotate);
+            mController.rotateRadiansZ(-rotate);
             return true;
         }
 
@@ -364,7 +364,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         public void onRotateEnd(RotateGestureDetector detector) {
             float velocity = detector.getRotateFactor(); //FIXME not actually velocity. always seems to be 0
             Log.d(TAG, String.format("!!!!rotateEnd: %f", velocity));
-            mController.nativeStartMomentumRotationWithVelocity(velocity * 50);
+            mController.startMomentumRotationWithVelocity(velocity * 50);
         }
     }
     
