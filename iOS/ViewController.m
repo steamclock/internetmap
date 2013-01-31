@@ -556,6 +556,7 @@ static const int AXIS_DIVISIONS = 8;
     }
     if (!self.visualizationSelectionPopover) {
         VisualizationsTableViewController *tableforPopover = [[VisualizationsTableViewController alloc] initWithStyle:UITableViewStylePlain];
+        tableforPopover.mapController = self.controller;
         self.visualizationSelectionPopover = [[WEPopoverController alloc] initWithContentViewController:tableforPopover];
         self.visualizationSelectionPopover.delegate = self;
         [self.visualizationSelectionPopover setPopoverContentSize:tableforPopover.contentSizeForViewInPopover];

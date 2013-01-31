@@ -142,6 +142,8 @@
 		A6E1D5C116B9DA2A00D8B26F /* 20120102.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5B216B9DA2A00D8B26F /* 20120102.txt */; };
 		A6E1D5C216B9DA2A00D8B26F /* 20130102.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5B316B9DA2A00D8B26F /* 20130102.txt */; };
 		A6E1D5C516B9EC7100D8B26F /* ExpandedSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = A6E1D5C416B9EC7100D8B26F /* ExpandedSlider.m */; };
+		A6E1D5CC16B9EFFB00D8B26F /* TypeVisualization.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6E1D5CA16B9EFFB00D8B26F /* TypeVisualization.cpp */; };
+		A6E1D5D416BAEFEA00D8B26F /* GlobeVisualization.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6E1D5D216BAEFEA00D8B26F /* GlobeVisualization.cpp */; };
 		A6F3F5631640F1FB0070E6AE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5621640F1FB0070E6AE /* UIKit.framework */; };
 		A6F3F5651640F1FB0070E6AE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5641640F1FB0070E6AE /* Foundation.framework */; };
 		A6F3F5671640F1FB0070E6AE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5661640F1FB0070E6AE /* CoreGraphics.framework */; };
@@ -370,6 +372,10 @@
 		A6E1D5B316B9DA2A00D8B26F /* 20130102.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20130102.txt; path = Common/Data/20130102.txt; sourceTree = "<group>"; };
 		A6E1D5C316B9EC7100D8B26F /* ExpandedSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExpandedSlider.h; path = iOS/ExpandedSlider.h; sourceTree = SOURCE_ROOT; };
 		A6E1D5C416B9EC7100D8B26F /* ExpandedSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ExpandedSlider.m; path = iOS/ExpandedSlider.m; sourceTree = SOURCE_ROOT; };
+		A6E1D5CA16B9EFFB00D8B26F /* TypeVisualization.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TypeVisualization.cpp; path = Common/Code/TypeVisualization.cpp; sourceTree = SOURCE_ROOT; };
+		A6E1D5CB16B9EFFB00D8B26F /* TypeVisualization.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = TypeVisualization.hpp; path = Common/Code/TypeVisualization.hpp; sourceTree = SOURCE_ROOT; };
+		A6E1D5D216BAEFEA00D8B26F /* GlobeVisualization.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GlobeVisualization.cpp; path = Common/Code/GlobeVisualization.cpp; sourceTree = SOURCE_ROOT; };
+		A6E1D5D316BAEFEA00D8B26F /* GlobeVisualization.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GlobeVisualization.hpp; path = Common/Code/GlobeVisualization.hpp; sourceTree = SOURCE_ROOT; };
 		A6F3F55E1640F1FB0070E6AE /* internetmap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = internetmap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6F3F5621640F1FB0070E6AE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		A6F3F5641640F1FB0070E6AE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -644,6 +650,10 @@
 				A686EA8416B62BD5009B070E /* Connection.hpp */,
 				A686EA8516B62BD5009B070E /* DefaultVisualization.cpp */,
 				A686EA8616B62BD5009B070E /* DefaultVisualization.hpp */,
+				A6E1D5CB16B9EFFB00D8B26F /* TypeVisualization.hpp */,
+				A6E1D5CA16B9EFFB00D8B26F /* TypeVisualization.cpp */,
+				A6E1D5D316BAEFEA00D8B26F /* GlobeVisualization.hpp */,
+				A6E1D5D216BAEFEA00D8B26F /* GlobeVisualization.cpp */,
 				A686EA8716B62BD5009B070E /* DisplayLines.cpp */,
 				A686EA8816B62BD5009B070E /* DisplayLines.hpp */,
 				A686EA8916B62BD5009B070E /* DisplayNodes.cpp */,
@@ -1040,6 +1050,8 @@
 				A686EA8016B62B61009B070E /* NodeWrapper.mm in Sources */,
 				A686EAE816B62D05009B070E /* SCDispatchQueue.m in Sources */,
 				A6E1D5C516B9EC7100D8B26F /* ExpandedSlider.m in Sources */,
+				A6E1D5CC16B9EFFB00D8B26F /* TypeVisualization.cpp in Sources */,
+				A6E1D5D416BAEFEA00D8B26F /* GlobeVisualization.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

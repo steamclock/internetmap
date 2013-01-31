@@ -10,6 +10,8 @@
 #include "MapDisplay.hpp"
 #include "MapData.hpp"
 #include "DefaultVisualization.hpp"
+#include "TypeVisualization.hpp"
+#include "GlobeVisualization.hpp"
 #include "DisplayNodes.hpp"
 #include "Camera.hpp"
 #include "Node.hpp"
@@ -31,7 +33,13 @@ MapController::MapController() :
 {
     data = shared_ptr<MapData>(new MapData());
     display = shared_ptr<MapDisplay>(new MapDisplay());
-    data->visualization = VisualizationPointer(new DefaultVisualization());
+
+    _visualizations.push_back(VisualizationPointer(new DefaultVisualization()));
+    _visualizations.push_back(VisualizationPointer(new GlobeVisualization()));
+    _visualizations.push_back(VisualizationPointer(new TypeVisualization("EDU", AS_EDU)));
+    _visualizations.push_back(VisualizationPointer(new TypeVisualization("T1", AS_T1)));
+    
+    data->visualization = _visualizations[0];
     
     setTimelinePoint("", false);
     
@@ -387,10 +395,6 @@ void MapController::setTimelinePoint(const std::string& origName, bool blend) {
     start = clock();
     updateDisplay(blend);
     LOG("refreshed display for timeline point: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
-    
-    if(targetNode != INT_MAX) {
-        updateTargetForIndex(targetNode);
-    }
 }
 
 // mmmm, magic numbers
@@ -426,5 +430,27 @@ void MapController::updateDisplay(bool blend) {
         data->visualization->updateDisplayForNodes(display->nodes, data->nodes);
         data->visualization->updateLineDisplay(display, data->connections);
     }
+    
+    if(targetNode != INT_MAX) {
+        updateTargetForIndex(targetNode);
+    }
 }
 
+std::vector<std::string> MapController::visualizationNames(void) {
+    std::vector<std::string> result;
+    for(int i = 0; i < _visualizations.size(); i++) {
+        result.push_back(_visualizations[i]->name());
+    }
+    
+    return result;
+}
+
+
+void MapController::setVisualization(int visualization) {
+    if (visualization >= _visualizations.size()) {
+        visualization = 0;
+    }
+
+    data->visualization = _visualizations[visualization];
+    updateDisplay(true);
+}
