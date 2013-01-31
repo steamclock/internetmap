@@ -22,35 +22,6 @@
 
 @end
 
-void callbackCurrent (
-                      DNSServiceRef sdRef,
-                      DNSServiceFlags flags,
-                      uint32_t interfaceIndex,
-                      DNSServiceErrorType errorCode,
-                      const char *fullname,
-                      uint16_t rrtype,
-                      uint16_t rrclass,
-                      uint16_t rdlen,
-                      const void *rdata,
-                      uint32_t ttl,
-                      void *context ) {
-    
-    NSData* data = [NSData dataWithBytes:rdata length:strlen(rdata)+1];
-    NSString* string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];  
-    NSDictionary* dict = (__bridge NSDictionary*)context;
-    
-    ASNRequest* request = [dict objectForKey:@"request"];
-    int index = [[dict objectForKey:@"index"] intValue];
-    
-    if (![string isEqualToString:@""]) {
-        [request finishedFetchingASN:string forIndex:index];
-    }
-    else {
-        [request failedFetchingASNForIndex:index error: @"Couldn't resolve DNS."];
-    }
-}
-
-
 @implementation ASNRequest
 
 -(BOOL)isInvalidOrPrivate:(NSString*)ipAddress {
@@ -86,23 +57,18 @@ void callbackCurrent (
         [self.result addObject:[NSNull null]];
     }
     
-    [[SCDispatchQueue defaultPriorityQueue] dispatchAsync:^{
-        for (int i = 0; i < numberOfIPs; i++) {
-            NSString* ip = [theIPs objectAtIndex:i];
-            if (!ip || [self isInvalidOrPrivate:ip]) {
-                [self failedFetchingASNForIndex:i error:@"Couldn't get ASN for IP"];
-            } else {
-                [self fetchASNForIP:ip index:i];
-            }
-        }
+    for (int i = 0; i < numberOfIPs; i++) {
         
-        NSLog(@"Result after fetching for IPs: %@", self.result);
-        if (self.response) {
-            [[SCDispatchQueue mainQueue] dispatchAsync:^{
-                self.response(self.result);
-            }];
+        NSString* ip = [theIPs objectAtIndex:i];
+        
+        if ([ip isEqual:[NSNull null]]) {
+            [self failedFetchingASNForIndex:i error:@"No ASN needed, this was a timed out hop."];
+        } else if ([self isInvalidOrPrivate:ip]){
+            [self failedFetchingASNForIndex:i error:@"No ASN, this was an invalid or private address."];
+        } else {
+            [self fetchASNForIP:ip index:i];
         }
-    }];
+    }
     
 }
 
@@ -118,26 +84,29 @@ void callbackCurrent (
     [request setCompletionBlock:^{
         NSError* error = request.error;
         NSDictionary* jsonResponse = [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingAllowFragments error:&error];
-        NSLog(@"JSON PAYLOAD: %@", [jsonResponse objectForKey:@"payload"]);
-        [self finishedFetchingASN:[jsonResponse objectForKey:@"payload"] forIndex:index];
+        NSString* payload = [jsonResponse objectForKey:@"payload"];
+        NSString* asnWithoutPrefix = [payload substringWithRange:NSMakeRange(2, payload.length -2)];
+        [self finishedFetchingASN:asnWithoutPrefix forIndex:index];
         
     }];
     
     [request setFailedBlock:^{
-        
         [self failedFetchingASNForIndex:index error:[NSString stringWithFormat:@"%@", request.error]];
     }];
 
-    [request startAsynchronous];
+    [request start];
 }
 
 - (void)finishedFetchingASN:(NSString*)asn forIndex:(int)index {
-    NSLog(@"ASN fetched for index %i: %@", index, asn);
     [self.result replaceObjectAtIndex:index withObject:asn];
+    if (self.response) {
+        self.response(self.result);
+    }
 }
 
 - (void)failedFetchingASNForIndex:(int)index error:(NSString*)error {
-    NSLog(@"Failed for index: %i, error: %@", index, error);
+    // Really only need to print this for debugging
+    // NSLog(@"Failed for index: %i, Error msg: %@", index, error);
 }
 
 +(void)fetchForAddresses:(NSArray*)addresses responseBlock:(ASNResponseBlock)response {
@@ -153,7 +122,7 @@ void callbackCurrent (
         if(range.location != NSNotFound) {
             NSString* string = [[request responseString] substringWithRange:NSMakeRange(range.location+5, range.length-6)];
             response(@[string]);
-        }else {
+        } else {
             response(@[[NSNull null]]);
         }
         

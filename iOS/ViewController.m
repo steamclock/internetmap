@@ -534,7 +534,7 @@ static const int AXIS_DIVISIONS = 8;
                     error();
                 }
                 else {
-                    NSLog(@"ASN fetched: %@", myASN);
+                    //NSLog(@"ASN fetched: %@", myASN);
                     self.isCurrentlyFetchingASN = NO;
                     [self.youAreHereActivityIndicator stopAnimating];
                     self.youAreHereActivityIndicator.hidden = YES;
@@ -813,7 +813,7 @@ static const int AXIS_DIVISIONS = 8;
         if (node.asn) {
             [ASNRequest fetchForASN:node.asn responseBlock:^(NSArray *asn) {
                 if (asn[0] != [NSNull null]) {
-                    NSLog(@"Starting tracerout with IP: %@", asn[0]);
+                    NSLog(@"Starting traceroute with IP: %@", asn[0]);
                     self.tracer = [SCTracerouteUtility tracerouteWithAddress:asn[0]];
                     self.tracer.delegate = self;
                     [self.tracer start];
@@ -861,32 +861,34 @@ static const int AXIS_DIVISIONS = 8;
     if ([hops count] <= 0) {
         return;
     }
-    if ([hops lastObject] != [NSNull null]) {
-        [ASNRequest fetchForAddresses:@[[hops lastObject]] responseBlock:^(NSArray *asns) {
-            NodeWrapper* last = [self.tracerouteHops lastObject];
-            for(NSString* asn in asns) {
-                if(![asn isEqual:[NSNull null]]) {
-                    NodeWrapper* current =  [self.controller nodeByASN:[NSString stringWithFormat:@"%@", asn]];
-                    if(current && current != last) {
-                        [self.tracerouteHops addObject:current];
-                    }
-                }
+    
+    [ASNRequest fetchForAddresses:@[[hops lastObject]] responseBlock:^(NSArray *asns) {
+        NodeWrapper* last = [self.tracerouteHops lastObject];
+        
+        for(NSString* asn in asns) {
+            NSLog(@"most recent ASN: %@", asn);
+            NodeWrapper* current =  [self.controller nodeByASN:[NSString stringWithFormat:@"%@", asn]];
+            NSLog(@"Node for ASN we get back is: %@", current);
+            if(current && current != last) {
+                [self.tracerouteHops addObject:current];
             }
-            
-            if ([self.tracerouteHops count] >= 2) {
-                [self.controller highlightRoute:self.tracerouteHops];
-            }
-            
-            //update node info label for number of unique ASN Hops
-            NSMutableSet* asnSet = [NSMutableSet set];
-            for (int i = 0; i < [self.tracerouteHops count]; i++) {
-                NodeWrapper* node = self.tracerouteHops[i];
-                [asnSet addObject:node.asn];
-            }
-            self.nodeInformationViewController.box2.numberLabel.text = [NSString stringWithFormat:@"%i", [asnSet count]];
-            
-        }];
-    }
+        }
+        
+        NSLog(@"TRACEROUTE HOPS: %@", self.tracerouteHops);
+        
+        if ([self.tracerouteHops count] >= 2) {
+            [self.controller highlightRoute:self.tracerouteHops];
+        }
+        
+        //update node info label for number of unique ASN Hops
+        NSMutableSet* asnSet = [NSMutableSet set];
+        for (int i = 0; i < [self.tracerouteHops count]; i++) {
+            NodeWrapper* node = self.tracerouteHops[i];
+            [asnSet addObject:node.asn];
+        }
+        self.nodeInformationViewController.box2.numberLabel.text = [NSString stringWithFormat:@"%i", [asnSet count]];
+        
+    }];
 
 }
 
