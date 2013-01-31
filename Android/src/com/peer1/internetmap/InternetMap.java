@@ -14,8 +14,10 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.view.ScaleGestureDetector;
 import android.view.ViewGroup.LayoutParams;
@@ -157,16 +159,23 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
     public void youAreHereButtonPressed(View view) {
         //TODO: stop timeline if active
-        //TODO: animate button while fetching
         //do an ASN request to get the user's ASN
         ASNRequest.fetchCurrentASNWithResponseHandler(new ASNResponseHandler() {
             public void onStart() {
-                // Initiated the request
                 Log.d(TAG, "asnrequest start");
+                //animate
+                ProgressBar progress = (ProgressBar) findViewById(R.id.youAreHereProgressBar);
+                Button button = (Button) findViewById(R.id.youAreHereButton);
+                progress.setVisibility(View.VISIBLE);
+                button.setVisibility(View.INVISIBLE);
             }
             public void onFinish() {
-                // Initiated the request
                 Log.d(TAG, "asnrequest finish");
+                //stop animating
+                ProgressBar progress = (ProgressBar) findViewById(R.id.youAreHereProgressBar);
+                Button button = (Button) findViewById(R.id.youAreHereButton);
+                progress.setVisibility(View.INVISIBLE);
+                button.setVisibility(View.VISIBLE);
             }
 
             public void onSuccess(JSONObject response) {
