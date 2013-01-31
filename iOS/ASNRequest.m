@@ -24,7 +24,7 @@
 
 @implementation ASNRequest
 
--(BOOL)isInvalidOrPrivate:(NSString*)ipAddress {
++(BOOL)isInvalidOrPrivate:(NSString*)ipAddress {
     // This checks if our IP is in a reserved address space (eg. 192.168.1.1)
     NSArray* components = [ipAddress componentsSeparatedByString:@"."];
     
@@ -125,13 +125,22 @@
     [request setRequestMethod:@"POST"];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
     
-    NSString *dataString = [NSString stringWithFormat:@"{\"asn\":\"%@\"}",asn];
+    NSString *dataString = [NSString stringWithFormat:@"{\"asn\":\"%@\"}", asn];
     [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
     [request setCompletionBlock:^{
         NSError* error = request.error;
         NSDictionary* jsonResponse = [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingAllowFragments error:&error];
         NSArray* payload = [jsonResponse objectForKey:@"payload"];
-        response(@[payload]);
+        
+        // We clean the array for any reserved ip spaces (sometimes 127.x.x.x shows up for loopback interfaces)
+        NSMutableArray* responseArray;
+        for (NSString* ip in payload) {
+            if (![ASNRequest isInvalidOrPrivate:ip]) {
+                [responseArray addObject:ip];
+            }
+        }
+        
+        response(@[responseArray]);
     }];
     
     [request setFailedBlock:^{
