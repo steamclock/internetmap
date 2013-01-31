@@ -395,10 +395,6 @@ void MapController::setTimelinePoint(const std::string& origName, bool blend) {
     start = clock();
     updateDisplay(blend);
     LOG("refreshed display for timeline point: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
-    
-    if(targetNode != INT_MAX) {
-        updateTargetForIndex(targetNode);
-    }
 }
 
 // mmmm, magic numbers
@@ -433,6 +429,10 @@ void MapController::updateDisplay(bool blend) {
     else {
         data->visualization->updateDisplayForNodes(display->nodes, data->nodes);
         data->visualization->updateLineDisplay(display, data->connections);
+    }
+    
+    if(targetNode != INT_MAX) {
+        updateTargetForIndex(targetNode);
     }
 }
 
