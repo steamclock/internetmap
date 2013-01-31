@@ -818,7 +818,6 @@ static const int AXIS_DIVISIONS = 8;
                 //We select randomly because why the heck not? It's all a guess as to which will respond. :)
                 
                 NSArray* ips = ipsFromWire[0];
-                NSLog(@"ASN ARRAY: %@", ips);
                 uint32_t rnd = arc4random_uniform([ips count]);
                 if ([ips count]) {
                     NSString* arbitraryIP = [NSString stringWithFormat:@"%@", ips[rnd]];

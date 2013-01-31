@@ -123,7 +123,7 @@
 }
 
 +(void)fetchIPsForASN:(NSString*)asn responseBlock:(ASNResponseBlock)response {
-    
+
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"http://72.51.24.24:8080/asntoips"]];
     [request setShouldAttemptPersistentConnection:YES];
     [request setTimeOutSeconds:60];
@@ -141,7 +141,6 @@
         for (NSString* ip in offTheWire) {
             if (![ASNRequest isInvalidOrPrivate:ip]) {
                 [responseArray addObject:ip];
-                NSLog(@"Added ip %@", ip);
             } else {
                 NSLog(@"Failed to add %@, was reserved IP.", ip);
             }
@@ -154,7 +153,7 @@
         NSLog(@"%@", request.error);
     }];
     
-    [request start];
+    [request startAsynchronous];
 
 }
 
@@ -204,10 +203,18 @@
 
 
 + (void)fetchGlobalIPWithCompletionBlock:(void (^)(NSString* ip))completion failedBlock:(void(^)(void))failedBlock {
-    __weak ASIHTTPRequest* request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:@"http://stage.steamclocksw.com/ip.php"]];
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"http://72.51.24.24:8080/ip"]];
+    [request setShouldAttemptPersistentConnection:YES];
+    [request setTimeOutSeconds:60];
+    [request setRequestMethod:@"POST"];
+    [request addRequestHeader:@"Content-Type" value:@"application/json"];
     [request setCompletionBlock:^{
-        completion([request responseString]);
+        NSError* error = request.error;
+        NSDictionary* jsonResponse = [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingAllowFragments error:&error];
+        NSString* offTheWire = [jsonResponse objectForKey:@"payload"];
+        completion(offTheWire);
     }];
+    
     [request setFailedBlock:failedBlock];
     [request startAsynchronous];
 }
