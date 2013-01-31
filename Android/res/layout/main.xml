@@ -20,7 +20,8 @@
             android:id="@+id/searchButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/searchbutton" />
+            android:background="@drawable/searchbutton"
+            android:onClick="searchButtonPressed" />
 
         <RelativeLayout
             android:id="@+id/youAreHereLayout"

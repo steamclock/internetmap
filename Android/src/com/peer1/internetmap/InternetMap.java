@@ -12,17 +12,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Handler;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.view.ScaleGestureDetector;
-import android.view.ViewGroup.LayoutParams;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -32,7 +27,6 @@ import android.view.SurfaceHolder;
 import android.view.View;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.peer1.internetmap.ASNRequest.ASNResponseHandler;
 
 public class InternetMap extends Activity implements SurfaceHolder.Callback {
@@ -45,6 +39,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     private MapControllerWrapper mController;
 
     private VisualizationPopupWindow visualizationPopup;
+    private SearchPopup mSearchPopup;
     private NodePopup nodePopup;
     private Handler mHandler; //handles threadsafe messages
     
@@ -157,6 +152,24 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             });
             visualizationPopup.showAsDropDown(findViewById(R.id.visualizationsButton));
         }
+    }
+
+    public void searchButtonPressed(View view) {
+        if (mSearchPopup == null) {
+            LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+            View popupView = layoutInflater.inflate(R.layout.searchview, null);
+            mSearchPopup = new SearchPopup(this, popupView);
+            mSearchPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                public void onDismiss() {
+                    mSearchPopup = null;
+                }
+            });
+            mSearchPopup.showAsDropDown(findViewById(R.id.searchButton));
+        }
+    }
+    
+    public void dismissSearchPopup(View unused) {
+        mSearchPopup.dismiss();
     }
 
     public void youAreHereButtonPressed(View view) {

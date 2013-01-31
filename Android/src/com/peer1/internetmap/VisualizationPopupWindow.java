@@ -37,7 +37,7 @@ public class VisualizationPopupWindow extends PopupWindow{
     public VisualizationPopupWindow(Context context, View view) {
         super(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         this.context = context;
-        setBackgroundDrawable(new ColorDrawable(Color.argb(200, 0, 0, 0)));
+        setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.translucentBlack)));
         setOutsideTouchable(true);
         setFocusable(true);
 

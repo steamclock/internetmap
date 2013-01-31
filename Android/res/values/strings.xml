@@ -11,4 +11,5 @@
     <string name="asnBadResponse">ASN Failure: unexpected response.</string>
     <string name="asnNullNode">ASN Failure: %s does not exist.</string>
     <string name="noInternet">This feature requires internet access.</string>
+    <color name="translucentBlack">#C8000000</color>
 </resources>
