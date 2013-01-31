@@ -16,9 +16,11 @@
 //#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
 class DefaultVisualization : public Visualization {
+public:
     virtual Point3 nodePosition(NodePointer node);
     virtual float nodeSize(NodePointer node);
     virtual float nodeZoom(NodePointer node);
+    virtual Color nodeColor(NodePointer node);
     virtual void updateDisplayForNodes(shared_ptr<DisplayNodes> display, std::vector<NodePointer> nodes);
     virtual void updateDisplayForSelectedNodes(shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes);
     virtual void resetDisplayForSelectedNodes(shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes);

@@ -28,25 +28,27 @@ float DefaultVisualization::nodeZoom(NodePointer node) {
     return zoom;
 }
 
+Color DefaultVisualization::nodeColor(NodePointer node) {
+    switch(node->type) {
+        case AS_T1:
+            return ColorFromRGB(0x548dff);
+        case AS_T2:
+            return ColorFromRGB(0x375ca6);
+        case AS_COMP:
+            return ColorFromRGB(0x4490ce);
+        case AS_EDU:
+            return ColorFromRGB(0x7200ff);
+        case AS_IX:
+            return ColorFromRGB(0x75787b);
+        case AS_NIC:
+            return ColorFromRGB(0xffffff);
+        default:
+            return ColorFromRGB(0x7ce346);
+    }
+}
+
 
 void DefaultVisualization::updateDisplayForNodes(shared_ptr<DisplayNodes> display, std::vector<NodePointer> nodes) {
-//    UIColor* t1Color = UIColorFromRGB(0x548dff); // Changed to blue in style guide
-//    UIColor* t2Color = UIColorFromRGB(0x375ca6); // Slightly darker blue than in style guide
-//    UIColor* unknownColor = UIColorFromRGB(0x7ce346); // slightly brighter green than style guide
-//    UIColor* compColor = UIColorFromRGB(0x4490ce); //some other blue
-//    UIColor* eduColor = UIColorFromRGB(0x7200ff); //purpley
-//    UIColor* ixColor = UIColorFromRGB(0x75787b); //slate
-//    UIColor* nicColor = UIColorFromRGB(0xffffff); //white, obvs
-    
-    
-    Color t1Color = ColorFromRGB(0x548dff);
-    Color t2Color = ColorFromRGB(0x375ca6);
-    Color unknownColor = ColorFromRGB(0x7ce346);
-    Color compColor = ColorFromRGB(0x4490ce);
-    Color eduColor = ColorFromRGB(0x7200ff);
-    Color ixColor = ColorFromRGB(0x75787b);
-    Color nicColor = ColorFromRGB(0xffffff);
-    Color inactiveColor = ColorFromRGB(0x000000);
     
     display->beginUpdate();
     
@@ -60,33 +62,10 @@ void DefaultVisualization::updateDisplayForNodes(shared_ptr<DisplayNodes> displa
         if(node->active) {
             position = nodePosition(node);
             size = nodeSize(node);
-            
-            switch(node->type) {
-                case AS_T1:
-                    color = t1Color;
-                    break;
-                case AS_T2:
-                    color = t2Color;
-                    break;
-                case AS_COMP:
-                    color = compColor;
-                    break;
-                case AS_EDU:
-                    color = eduColor;
-                    break;
-                case AS_IX:
-                    color = ixColor;
-                    break;
-                case AS_NIC:
-                    color = nicColor;
-                    break;
-                default:
-                    color = unknownColor;
-                    break;
-            }
+            color = nodeColor(node);
         }
         else {
-            color = inactiveColor;
+            color = ColorFromRGB(0x000000);
             position = nodePosition(node);
             size = 0.0f;
         }

@@ -7,6 +7,7 @@
 //
 
 #import "VisualizationsTableViewController.h"
+#import "MapControllerWrapper.h"
 
 @interface VisualizationsTableViewController ()
 
@@ -23,7 +24,7 @@
     if (self) {
         self.contentSizeForViewInPopover = CGSizeMake(320, 150);
         
-        self.visualizationOptions = @[@"Network View", @"Globe View"];
+        self.visualizationOptions = @[@"Network View", @"EDU"];
     }
     return self;
 }
@@ -110,6 +111,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [self.mapController setVisualization:indexPath.row];
     self.selectedRow = indexPath.row;
     [self.tableView reloadData];
 }

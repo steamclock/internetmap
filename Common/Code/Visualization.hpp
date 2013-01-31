@@ -21,6 +21,7 @@ public:
     virtual Point3 nodePosition(NodePointer node) = 0;
     virtual float nodeSize(NodePointer node) = 0;
     virtual float nodeZoom(NodePointer node) = 0;
+    virtual Color nodeColor(NodePointer node) = 0;
     
     // Update the properties of the nodes in the MapDisplay
     // Note: can pass a subset of nodes and it will only update the specified

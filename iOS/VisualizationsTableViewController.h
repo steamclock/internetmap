@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@class MapControllerWrapper;
+
 @interface VisualizationsTableViewController : UITableViewController
+
+@property (strong) MapControllerWrapper* mapController;
 
 @end

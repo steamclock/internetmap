@@ -10,6 +10,7 @@
 #include "MapDisplay.hpp"
 #include "MapData.hpp"
 #include "DefaultVisualization.hpp"
+#include "TypeVisualization.hpp"
 #include "DisplayNodes.hpp"
 #include "Camera.hpp"
 #include "Node.hpp"
@@ -428,3 +429,18 @@ void MapController::updateDisplay(bool blend) {
     }
 }
 
+void MapController::setVisualization(int visualization) {
+    switch(visualization) {
+        case 0:
+            data->visualization = VisualizationPointer(new DefaultVisualization());
+            break;
+        case 1:
+            data->visualization = VisualizationPointer(new TypeVisualization(AS_EDU));
+            break;
+        default:
+            data->visualization = VisualizationPointer(new DefaultVisualization());
+            break;
+    }
+    
+    updateDisplay(true);
+}

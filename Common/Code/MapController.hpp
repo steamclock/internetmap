@@ -40,7 +40,7 @@ public:
     void setTimelinePoint(const std::string& name, bool blend = true);
     void update(TimeInterval currentTime);
     void updateDisplay(bool blend);
-    
+    void setVisualization(int visualization);
 private:
     int hoveredNodeIndex;
 };

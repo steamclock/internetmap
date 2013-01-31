@@ -252,6 +252,11 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
     _controller->setTimelinePoint(std::string([timelinePointName UTF8String]));
 }
 
+#pragma mark - Visualizaitons
+
+- (void)setVisualization:(int)vis {
+    _controller->setVisualization(vis);
+}
 
 #pragma mark - Screenshots
 
