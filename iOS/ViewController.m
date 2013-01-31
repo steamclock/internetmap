@@ -58,7 +58,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (nonatomic) NSTimeInterval updateTime;
 
 
-@property (nonatomic) int cachedCurrentASN;
+@property (nonatomic) NSString* cachedCurrentASN;
 
 @property (nonatomic) int minTimelineYear;
 
@@ -218,7 +218,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     [self.controller resetIdleTimer];
     
-    self.cachedCurrentASN = NSNotFound;
+    self.cachedCurrentASN = nil;
     [self precacheCurrentASN];
     
     self.screenshotButton.hidden = YES;
@@ -463,8 +463,8 @@ static const int AXIS_DIVISIONS = 8;
 }
 
 
-- (void)selectNodeForASN:(int)asn {
-    NodeWrapper* node = [self.controller nodeByASN:[NSString stringWithFormat:@"%i", asn]];
+- (void)selectNodeForASN:(NSString*)asn {
+    NodeWrapper* node = [self.controller nodeByASN:asn];
     if (node) {
         [self updateTargetForIndex:node.index];
     }else {
@@ -528,19 +528,18 @@ static const int AXIS_DIVISIONS = 8;
             };
             
             [ASNRequest fetchCurrentASNWithResponseBlock:^(NSArray *asn) {
-                NSNumber* myASN = asn[0];
+                NSString* myASN = asn[0];
                 if([myASN isEqual:[NSNull null]]) {
                     error();
                 }
                 else {
-                    int asn = [myASN intValue];
-                    NSLog(@"ASN fetched: %i", asn);
+                    //NSLog(@"ASN fetched: %@", myASN);
                     self.isCurrentlyFetchingASN = NO;
                     [self.youAreHereActivityIndicator stopAnimating];
                     self.youAreHereActivityIndicator.hidden = YES;
                     self.youAreHereButton.hidden = NO;
-                    self.cachedCurrentASN = asn;
-                    [self selectNodeForASN:asn];
+                    self.cachedCurrentASN = myASN;
+                    [self selectNodeForASN:myASN];
                 }
             } errorBlock:error];
         }
@@ -624,8 +623,8 @@ static const int AXIS_DIVISIONS = 8;
     else {
         //check if node is the current node
         BOOL isSelectingCurrentNode = NO;
-        if (self.cachedCurrentASN != NSNotFound) {
-            NodeWrapper* node = [self.controller nodeByASN:[NSString stringWithFormat:@"%i", self.cachedCurrentASN]];
+        if (!self.cachedCurrentASN) {
+            NodeWrapper* node = [self.controller nodeByASN:[NSString stringWithFormat:@"%@", self.cachedCurrentASN]];
             if (node.index == self.controller.targetNode) {
                 isSelectingCurrentNode = YES;
             }
@@ -702,13 +701,12 @@ static const int AXIS_DIVISIONS = 8;
     
     
     [ASNRequest fetchCurrentASNWithResponseBlock:^(NSArray *asn) {
-        NSNumber* myASN = asn[0];
+        NSString* myASN = asn[0];
         if([myASN isEqual:[NSNull null]]) {
             error();
         }
         else {
-            int asn = [myASN intValue];
-            self.cachedCurrentASN = asn;
+            self.cachedCurrentASN = myASN;
         }
     } errorBlock:error];
 }
@@ -736,17 +734,17 @@ static const int AXIS_DIVISIONS = 8;
                 [ASNRequest fetchForAddresses:@[addresses[0]] responseBlock:^(NSArray *asn) {
                     [self.searchActivityIndicator stopAnimating];
                     self.searchButton.hidden = NO;
-                    NSNumber* myASN = asn[0];
+                    NSString* myASN = asn[0];
                     if([myASN isEqual:[NSNull null]]) {
                         [self.errorInfoView setErrorString:@"Couldn't resolve address for hostname."];
                     }
                     else {
-                        [self selectNodeForASN:[myASN intValue]];
+                        [self selectNodeForASN:myASN];
                     }
                 }];
             }
         }];
-    }else {
+    } else {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No Internet connection" message:@"Please connect to the internet." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
         [alert show];
     }
@@ -812,22 +810,21 @@ static const int AXIS_DIVISIONS = 8;
         [self.tracer start];
     } else {
         NodeWrapper* node = [self.controller nodeAtIndex:self.controller.targetNode];
-        int asn = [node.asn intValue];
-        if (asn) {
-            [ASNRequest fetchForASN:asn responseBlock:^(NSArray *asn) {
+        if (node.asn) {
+            [ASNRequest fetchForASN:node.asn responseBlock:^(NSArray *asn) {
                 if (asn[0] != [NSNull null]) {
-                    NSLog(@"starting tracerout with IP: %@", asn[0]);
+                    NSLog(@"Starting traceroute with IP: %@", asn[0]);
                     self.tracer = [SCTracerouteUtility tracerouteWithAddress:asn[0]];
                     self.tracer.delegate = self;
                     [self.tracer start];
                 } else {
-                    NSLog(@"asn couldn't be resolved to IP");
+                    NSLog(@"Asn couldn't be resolved to IP");
                     self.nodeInformationViewController.tracerouteTextView.textColor = [UIColor redColor];
                     self.nodeInformationViewController.tracerouteTextView.text = @"Error: ASN couldn't be resolved into IP.";
                 }
             }];
         } else {
-            NSLog(@"asn is not an int");
+            NSLog(@"asn is not an int"); //TODO: ASN should always be a string, refactor this
             self.nodeInformationViewController.tracerouteTextView.textColor = [UIColor redColor];
             self.nodeInformationViewController.tracerouteTextView.text = @"Error: ASN couldn't be resolved into IP.";
         }
@@ -856,7 +853,7 @@ static const int AXIS_DIVISIONS = 8;
 
 - (void)tracerouteDidFindHop:(NSString*)report withHops:(NSArray *)hops{
     
-    NSLog(@"%@", report);
+    //NSLog(@"%@", report);
     
     self.nodeInformationViewController.tracerouteTextView.text = [[NSString stringWithFormat:@"%@\n%@", self.nodeInformationViewController.tracerouteTextView.text, report] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     [self.nodeInformationViewController.box1 incrementNumber];
@@ -864,33 +861,34 @@ static const int AXIS_DIVISIONS = 8;
     if ([hops count] <= 0) {
         return;
     }
-    //    NSLog(@"%@", hops);
-    if ([hops lastObject] != [NSNull null]) {
-        [ASNRequest fetchForAddresses:@[[hops lastObject]] responseBlock:^(NSArray *asns) {
-            NodeWrapper* last = [self.tracerouteHops lastObject];
-            for(NSNumber* asn in asns) {
-                if(![asn isEqual:[NSNull null]]) {
-                    NodeWrapper* current =  [self.controller nodeByASN:[NSString stringWithFormat:@"%i", [asn intValue]]];
-                    if(current && current != last) {
-                        [self.tracerouteHops addObject:current];
-                    }
-                }
+    
+    [ASNRequest fetchForAddresses:@[[hops lastObject]] responseBlock:^(NSArray *asns) {
+        NodeWrapper* last = [self.tracerouteHops lastObject];
+        
+        for(NSString* asn in asns) {
+            NSLog(@"most recent ASN: %@", asn);
+            NodeWrapper* current =  [self.controller nodeByASN:[NSString stringWithFormat:@"%@", asn]];
+            NSLog(@"Node for ASN we get back is: %@", current);
+            if(current && current != last) {
+                [self.tracerouteHops addObject:current];
             }
-            
-            if ([self.tracerouteHops count] >= 2) {
-                [self.controller highlightRoute:self.tracerouteHops];
-            }
-            
-            //update node info label for number of unique ASN Hops
-            NSMutableSet* asnSet = [NSMutableSet set];
-            for (int i = 0; i < [self.tracerouteHops count]; i++) {
-                NodeWrapper* node = self.tracerouteHops[i];
-                [asnSet addObject:node.asn];
-            }
-            self.nodeInformationViewController.box2.numberLabel.text = [NSString stringWithFormat:@"%i", [asnSet count]];
-            
-        }];
-    }
+        }
+        
+        NSLog(@"TRACEROUTE HOPS: %@", self.tracerouteHops);
+        
+        if ([self.tracerouteHops count] >= 2) {
+            [self.controller highlightRoute:self.tracerouteHops];
+        }
+        
+        //update node info label for number of unique ASN Hops
+        NSMutableSet* asnSet = [NSMutableSet set];
+        for (int i = 0; i < [self.tracerouteHops count]; i++) {
+            NodeWrapper* node = self.tracerouteHops[i];
+            [asnSet addObject:node.asn];
+        }
+        self.nodeInformationViewController.box2.numberLabel.text = [NSString stringWithFormat:@"%i", [asnSet count]];
+        
+    }];
 
 }
 

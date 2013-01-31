@@ -13,7 +13,7 @@
 
 void SCLogRect(CGRect rect) {
 
-    NSLog(@"%@", NSStringFromCGRect(rect));
+    //NSLog(@"%@", NSStringFromCGRect(rect));
 
 }
 

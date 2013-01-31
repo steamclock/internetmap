@@ -290,15 +290,18 @@
 }
 
 - (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didReceiveResponsePacket:(NSData *)packet arrivedAt:(NSDate *)dateTime{
-    
+
     // Check what kind of packet from header
     int typeOfPacket = [self processICMPPacket:packet];
     
     if (typeOfPacket == kICMPTimeExceeded) {
+        [NSObject cancelPreviousPerformRequestsWithTarget:self];
         [self processErrorICMPPacket:packet arrivedAt:dateTime];
     } else if (typeOfPacket == kICMPTypeEchoReply) {
+        [NSObject cancelPreviousPerformRequestsWithTarget:self];
         // Check if we've reached our final destination
     } else if (typeOfPacket == kICMPTypeDestinationUnreachable){
+        [NSObject cancelPreviousPerformRequestsWithTarget:self];
         NSLog(@"Destination unreachable");
         [self processErrorICMPPacket:packet arrivedAt:dateTime];
     } else {
