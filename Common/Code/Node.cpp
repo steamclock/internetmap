@@ -8,8 +8,9 @@
 
 //lazy loading of generated strings
 
-Node::Node()
-:mInitializedFriendly(false)
+Node::Node() :
+    mInitializedFriendly(false),
+    hasLatLong(false)
 {}
 
 std::string Node::friendlyDescription() {

@@ -12,7 +12,6 @@
 @interface VisualizationsTableViewController ()
 
 @property (nonatomic, assign) int selectedRow;
-@property (nonatomic, strong) NSArray* visualizationOptions;
 
 @end
 
@@ -37,7 +36,6 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.visualizationOptions = [self.mapController visualizationNames];
 }
 
 - (void)didReceiveMemoryWarning
@@ -114,9 +112,11 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.mapController setVisualization:indexPath.row];
     self.selectedRow = indexPath.row;
     [self.tableView reloadData];
+    if(self.selectedBlock) {
+        self.selectedBlock(indexPath.row);
+    }
 }
 
 @end
