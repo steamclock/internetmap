@@ -12,4 +12,5 @@
     <string name="asnNullNode">ASN Failure: %s does not exist.</string>
     <string name="noInternet">This feature requires internet access.</string>
     <color name="translucentBlack">#C8000000</color>
+    <string name="searchHint">Type a company or domain...</string>
 </resources>

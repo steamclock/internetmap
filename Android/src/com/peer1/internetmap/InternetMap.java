@@ -158,7 +158,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         if (mSearchPopup == null) {
             LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
             View popupView = layoutInflater.inflate(R.layout.searchview, null);
-            mSearchPopup = new SearchPopup(this, popupView);
+            mSearchPopup = new SearchPopup(this, mController, popupView);
             mSearchPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 public void onDismiss() {
                     mSearchPopup = null;
