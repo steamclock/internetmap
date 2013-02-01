@@ -12,6 +12,7 @@
 
 @interface VisualizationsTableViewController : UITableViewController
 
-@property (strong) MapControllerWrapper* mapController;
+@property (strong) void (^selectedBlock)(int index);
+@property (nonatomic, strong) NSArray* visualizationOptions;
 
 @end

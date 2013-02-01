@@ -556,15 +556,23 @@ static const int AXIS_DIVISIONS = 8;
     }
     if (!self.visualizationSelectionPopover) {
         VisualizationsTableViewController *tableforPopover = [[VisualizationsTableViewController alloc] initWithStyle:UITableViewStylePlain];
-        tableforPopover.mapController = self.controller;
         self.visualizationSelectionPopover = [[WEPopoverController alloc] initWithContentViewController:tableforPopover];
         self.visualizationSelectionPopover.delegate = self;
+        tableforPopover.visualizationOptions = [self.controller visualizationNames];
         [self.visualizationSelectionPopover setPopoverContentSize:tableforPopover.contentSizeForViewInPopover];
         if (![HelperMethods deviceIsiPad]) {
             WEPopoverContainerViewProperties *prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
             prop.upArrowImageName = nil;
             self.visualizationSelectionPopover.containerViewProperties = prop;
         }
+        
+        __weak ViewController* weakSelf = self;
+        
+        tableforPopover.selectedBlock = ^(int vis){
+            [weakSelf.controller setVisualization:vis];
+            [weakSelf.visualizationSelectionPopover dismissPopoverAnimated:YES];
+            weakSelf.visualizationsButton.selected = NO;
+        };
     }
     [self.visualizationSelectionPopover presentPopoverFromRect:self.visualizationsButton.bounds inView:self.visualizationsButton permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
     self.visualizationsButton.selected = YES;
