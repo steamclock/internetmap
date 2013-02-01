@@ -1,5 +1,7 @@
 package com.peer1.internetmap;
 
+import java.util.ArrayList;
+
 public class MapControllerWrapper {
     public native void rotateRadiansXY(float radX, float radY);
     public native void startMomentumPanWithVelocity(float vX, float vY);
@@ -13,6 +15,6 @@ public class MapControllerWrapper {
     public native int targetNodeIndex();
     public native NodeWrapper nodeByAsn(String asn);
     public native void updateTargetForIndex(int index);
-    public native int nodeCount();
+    public native NodeWrapper[] allNodes();
 
 }

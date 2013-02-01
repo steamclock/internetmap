@@ -23,30 +23,25 @@ public class SearchPopup extends PopupWindow{
      * SearchNode: a lightweight wrapper for nodewrapper
      * @author chani
      * 
-     * This provides lazy-loading of node data, and the required interface for ArrayAdapter use.
+     * This the required interface for ArrayAdapter use and filtering.
      *
      */
     private class SearchNode {
-        public final int index;
-        private NodeWrapper node;
+        private NodeWrapper mNode;
         
-        SearchNode(int index) {
-            this.index = index;
+        SearchNode(NodeWrapper node) {
+            mNode = node;
         }
         
         //returns a display string for ArrayAdapter
         public String toString() {
-            //load the node, if needed
-            if (node == null) {
-                node = mController.nodeAtIndex(index);
-                if (node == null) { //can't happen. I hope.
-                    Log.d(TAG, String.format("BUG!!! no such index %d", index));
-                    return "";
-                }
-            }
-            
             //display: ASN - Description
-            return String.format("%s - %s", node.asn, node.friendlyDescription());
+            return String.format("%s - %s", mNode.asn, mNode.friendlyDescription());
+        }
+        
+        //return true if the node matches the search filter
+        public boolean matches(CharSequence filter) {
+            return mNode.asn.contains(filter) || mNode.rawTextDescription.contains(filter);
         }
     }
     
@@ -65,18 +60,25 @@ public class SearchPopup extends PopupWindow{
         public class NodeFilter extends Filter {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
-                //TODO actually filter
                 FilterResults results = new FilterResults();
                 if (constraint.length() <= 0) {
                     //default, full list
                     results.count = mAllNodes.size();
                     results.values = mAllNodes;
+                    Log.d(TAG, "default nodes");
                 } else {
-                    //fake it
-                    ArrayList<SearchNode> nodes = new ArrayList<SearchNode>(1);
-                    nodes.add(mAllNodes.get(1));
+                    //filter it
+                    Log.d(TAG, "filtering...");
+                    ArrayList<SearchNode> nodes = new ArrayList<SearchNode>();
+                    //TODO use java style iterators
+                    for (int i=0; i<mAllNodes.size(); i++) {
+                        if (mAllNodes.get(i).matches(constraint)) {
+                            nodes.add(mAllNodes.get(i));
+                        }
+                    }
+                    Log.d(TAG, "filtered!");
                     results.values = nodes;
-                    results.count = 1;
+                    results.count = nodes.size();
                 }
                 return results;
             }
@@ -86,6 +88,7 @@ public class SearchPopup extends PopupWindow{
             protected void publishResults(CharSequence constraint,
                     FilterResults results) {
                 mFilteredNodes = (ArrayList<SearchNode>)results.values;
+                Log.d(TAG, String.format("matched %d nodes", results.count));
                 notifyDataSetChanged();
             }
         }
@@ -128,13 +131,15 @@ public class SearchPopup extends PopupWindow{
         setFocusable(true); //make clicks work
 
         //set up the results list
-        int numNodes = mController.nodeCount();
+        NodeWrapper[] rawNodes = mController.allNodes();
+        Log.d(TAG, String.format("loaded %d nodes", rawNodes.length));
+        
         //initial search results: use all the nodes!
-        mAllNodes = new ArrayList<SearchNode>(numNodes);
-        for (int i = 0; i < numNodes; i++) {
-            mAllNodes.add(new SearchNode(i));
+        mAllNodes = new ArrayList<SearchNode>(rawNodes.length);
+        for (int i = 0; i < rawNodes.length; i++) {
+            mAllNodes.add(new SearchNode(rawNodes[i]));
         }
-        Log.d(TAG, String.format("loaded %d nodes", numNodes));
+        Log.d(TAG, String.format("converted %d nodes", mAllNodes.size()));
         
         final NodeAdapter adapter = new NodeAdapter(context, android.R.layout.simple_list_item_1,
                 android.R.id.text1);
