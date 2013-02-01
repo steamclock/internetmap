@@ -50,6 +50,8 @@ public:
     std::string state;
     std::string postalCode;
     std::string country;
+    
+    bool hasLatLong;
     float latitude;
     float longitude;
     

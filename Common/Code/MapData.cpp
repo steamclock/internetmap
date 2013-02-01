@@ -201,6 +201,7 @@ void MapData::loadASInfo(const std::string& json){
                 node->state = as[9].asString();
                 node->postalCode = as[10].asString();
                 node->country = as[11].asString();
+                node->hasLatLong = true;
                 node->latitude = as[12].asFloat()*2.0*3.14159/360.0;
                 node->longitude = as[13].asFloat()*2.0*3.14159/360.0;
             }

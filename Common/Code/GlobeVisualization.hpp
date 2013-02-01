@@ -14,6 +14,7 @@
 class GlobeVisualization : public DefaultVisualization {
 public:
     virtual Point3 nodePosition(NodePointer node);
+    virtual Color nodeColor(NodePointer node);
     
     virtual std::string name(void) { return "Globe"; }
 };
