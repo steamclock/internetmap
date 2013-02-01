@@ -88,9 +88,12 @@
     
     NSString *dataString = [NSString stringWithFormat:@"{\"ip\":\"%@\"}", ip];
     [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    __weak ASIFormDataRequest* weakRequest = request;
+    
     [request setCompletionBlock:^{
-        NSError* error = request.error;
-        NSDictionary* jsonResponse = [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingAllowFragments error:&error];
+        NSError* error = weakRequest.error;
+        NSDictionary* jsonResponse = [NSJSONSerialization JSONObjectWithData:weakRequest.responseData options:NSJSONReadingAllowFragments error:&error];
         NSString* payload = [jsonResponse objectForKey:@"payload"];
         NSString* asnWithoutPrefix = [payload substringWithRange:NSMakeRange(2, payload.length -2)];
         [self finishedFetchingASN:asnWithoutPrefix forIndex:index];
@@ -98,7 +101,7 @@
     }];
     
     [request setFailedBlock:^{
-        [self failedFetchingASNForIndex:index error:[NSString stringWithFormat:@"%@", request.error]];
+        [self failedFetchingASNForIndex:index error:[NSString stringWithFormat:@"%@", weakRequest.error]];
     }];
 
     [request start];
@@ -132,9 +135,12 @@
     
     NSString *dataString = [NSString stringWithFormat:@"{\"asn\":\"%@\"}", asn];
     [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    __weak ASIFormDataRequest* weakRequest = request;
+
     [request setCompletionBlock:^{
-        NSError* error = request.error;
-        NSDictionary* jsonResponse = [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingAllowFragments error:&error];
+        NSError* error = weakRequest.error;
+        NSDictionary* jsonResponse = [NSJSONSerialization JSONObjectWithData:weakRequest.responseData options:NSJSONReadingAllowFragments error:&error];
         NSArray* offTheWire = [jsonResponse objectForKey:@"payload"];
         // We clean the array for any reserved ip spaces (sometimes 127.x.x.x shows up for loopback interfaces)
         NSMutableArray* responseArray = [[NSMutableArray alloc] init];
@@ -150,7 +156,7 @@
     
     [request setFailedBlock:^{
         response(@[@""]);
-        NSLog(@"%@", request.error);
+        NSLog(@"%@", weakRequest.error);
     }];
     
     [request startAsynchronous];
@@ -208,9 +214,12 @@
     [request setTimeOutSeconds:60];
     [request setRequestMethod:@"POST"];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
+    
+    __weak ASIFormDataRequest* weakRequest = request;
+
     [request setCompletionBlock:^{
-        NSError* error = request.error;
-        NSDictionary* jsonResponse = [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingAllowFragments error:&error];
+        NSError* error = weakRequest.error;
+        NSDictionary* jsonResponse = [NSJSONSerialization JSONObjectWithData:weakRequest.responseData options:NSJSONReadingAllowFragments error:&error];
         NSString* offTheWire = [jsonResponse objectForKey:@"payload"];
         completion(offTheWire);
     }];

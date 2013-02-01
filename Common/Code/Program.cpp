@@ -9,6 +9,7 @@
 #include "Program.hpp"
 #include "OpenGL.hpp"
 #include "Types.hpp"
+#include <stdlib.h>
 
 // TODO: clean this up
 void loadTextResource(std::string* resource, const std::string& base, const std::string& extension);
