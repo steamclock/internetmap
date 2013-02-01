@@ -15,6 +15,11 @@ bool deviceIsOld();
 
 Point3 DefaultVisualization::nodePosition(NodePointer node) {
     return Point3(log10f(node->importance)+2.0f, node->positionX, node->positionY);
+//    float r = 1.0;
+//    float x = r * cos(node->latitude) * cos(node->longitude);
+//    float y = r * cos(node->latitude) * sin(node->longitude);
+//    float z = r * sin(node->latitude);
+//    return Point3(x, y, z);    
 }
 
 float DefaultVisualization::nodeSize(NodePointer node) {

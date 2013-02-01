@@ -50,6 +50,8 @@ public:
     std::string state;
     std::string postalCode;
     std::string country;
+    float latitude;
+    float longitude;
     
     std::vector<ConnectionPointer> connections;
     
