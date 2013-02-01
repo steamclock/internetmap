@@ -13,4 +13,6 @@ public class MapControllerWrapper {
     public native int targetNodeIndex();
     public native NodeWrapper nodeByAsn(String asn);
     public native void updateTargetForIndex(int index);
+    public native int nodeCount();
+
 }

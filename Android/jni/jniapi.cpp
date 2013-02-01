@@ -172,7 +172,7 @@ JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nodeBy
 
 JNIEXPORT int JNICALL Java_com_peer1_internetmap_MapControllerWrapper_targetNodeIndex(JNIEnv* jenv, jobject obj) {
     MapController* controller = renderer->beginControllerModification();
-    //not actually modifying anything here... TODO can I have a readonly accessor instead?
+    //not actually modifying anything here... but we still need to be threadsafe.
     int ret = controller->targetNode;
     renderer->endControllerModification();
     return ret;
@@ -182,6 +182,13 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_updateTar
     MapController* controller = renderer->beginControllerModification();
     controller->updateTargetForIndex(index);
     renderer->endControllerModification();
+}
+
+JNIEXPORT int JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nodeCount(JNIEnv* jenv, jobject obj) {
+    MapController* controller = renderer->beginControllerModification();
+    int ret = controller->data->nodes.size();
+    renderer->endControllerModification();
+    return ret;
 }
 
 void DetachThreadFromVM(void) {

@@ -33,11 +33,10 @@ public class SearchPopup extends PopupWindow{
             //load the node, if needed
             if (node == null) {
                 node = mController.nodeAtIndex(index);
-            }
-            
-            if (node == null) { //can't happen. I hope.
-                Log.d(TAG, String.format("BUG!!! no such index %d", index));
-                return "";
+                if (node == null) { //can't happen. I hope.
+                    Log.d(TAG, String.format("BUG!!! no such index %d", index));
+                    return "";
+                }
             }
             
             //display: ASN - Description
@@ -54,12 +53,13 @@ public class SearchPopup extends PopupWindow{
 
         final ListView listView = (ListView) getContentView().findViewById(R.id.searchResultsView);
         
-        int numNodes = 100; //FIXME use actual # of nodes
+        int numNodes = mController.nodeCount();
         //initial search results: use all the nodes!
         SearchNode[] nodes = new SearchNode[numNodes];
         for (int i = 0; i < numNodes; i++) {
             nodes[i] = new SearchNode(i);
         }
+        Log.d(TAG, String.format("loaded %d nodes", numNodes));
         
         final ArrayAdapter<SearchNode> adapter = new ArrayAdapter<SearchNode>(context, android.R.layout.simple_list_item_1,
                 android.R.id.text1, nodes);
