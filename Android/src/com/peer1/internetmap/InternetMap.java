@@ -2,18 +2,22 @@ package com.peer1.internetmap;
 
 import java.io.InputStream;
 
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Point;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
 import android.os.Bundle;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.Button;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 import android.view.ScaleGestureDetector;
-import android.view.ViewGroup.LayoutParams;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -23,6 +27,7 @@ import android.view.SurfaceHolder;
 import android.view.View;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
+import com.peer1.internetmap.ASNRequest.ASNResponseHandler;
 
 public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
@@ -32,8 +37,13 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     private RotateGestureDetector mRotateDetector;
     
     private MapControllerWrapper mController;
+    private Handler mHandler; //handles threadsafe messages
 
-    private PopupWindow visualizationPopup;
+    private VisualizationPopupWindow mVisualizationPopup;
+    private SearchPopup mSearchPopup;
+    private NodePopup mNodePopup;
+    
+    private int mUserNodeIndex = -1; //cache user's node from "you are here"
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,12 +58,13 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         setContentView(R.layout.main);
         SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceview);
         surfaceView.getHolder().addCallback(this);
-        
+
         mGestureDetector = new GestureDetectorCompat(this, new MyGestureListener());
         mScaleDetector = new ScaleGestureDetector(this, new ScaleListener());
         mRotateDetector = new RotateGestureDetector(this, new RotateListener());
         
         mController = new MapControllerWrapper();
+        mHandler = new Handler();
     }
 
     public String readFileAsString(String filePath) throws java.io.IOException {
@@ -130,51 +141,161 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
 
     public void visualizationsButtonPressed(View view) {
-        if (visualizationPopup == null) {
-
-            LayoutInflater layoutInflater
-                    = (LayoutInflater)getBaseContext()
-                    .getSystemService(LAYOUT_INFLATER_SERVICE);
+        if (mVisualizationPopup == null) {
+            LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
             View popupView = layoutInflater.inflate(R.layout.visualizationview, null);
-            visualizationPopup = new PopupWindow(popupView, LayoutParams.WRAP_CONTENT,
-                    LayoutParams.WRAP_CONTENT);
-            visualizationPopup.setBackgroundDrawable(new ColorDrawable(Color.argb(200, 0, 0, 0)));
-            visualizationPopup.setOutsideTouchable(true);
-            visualizationPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            mVisualizationPopup = new VisualizationPopupWindow(this, popupView);
+            mVisualizationPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 public void onDismiss() {
-                    visualizationPopup = null;
+                    mVisualizationPopup = null;
                 }
             });
-            final ListView listView = (ListView)popupView.findViewById(R.id.visualizationList);
-            String[] values = new String[] {"Network View", "Globe View"};
-            final VisualizationArrayAdapter adapter = new VisualizationArrayAdapter(this, android.R.layout.simple_list_item_1, android.R.id.text1, values);
-            listView.setAdapter(adapter);
-
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-
-                    Log.d("INT_MAP", "Tapped row " + position);
-                    adapter.selectedRow = position;
-                    listView.invalidateViews();
-                }
-            });
-
-
-            visualizationPopup.showAsDropDown(findViewById(R.id.visualizationsButton));
+            mVisualizationPopup.showAsDropDown(findViewById(R.id.visualizationsButton));
         }
     }
 
+    public void searchButtonPressed(View view) {
+        if (mSearchPopup == null) {
+            LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+            View popupView = layoutInflater.inflate(R.layout.searchview, null);
+            mSearchPopup = new SearchPopup(this, mController, popupView);
+            mSearchPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                public void onDismiss() {
+                    mSearchPopup = null;
+                }
+            });
+            mSearchPopup.showAsDropDown(findViewById(R.id.searchButton));
+        }
+    }
+    
+    public void dismissSearchPopup(View unused) {
+        mSearchPopup.dismiss();
+    }
+
+    public void youAreHereButtonPressed(View view) {
+        //check internet status
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = (activeNetwork == null) ? false : activeNetwork.isConnectedOrConnecting();
+        if (!isConnected) {
+            showError(getString(R.string.noInternet));
+            return;
+        }
+
+        //TODO: stop timeline if active
+        //do an ASN request to get the user's ASN
+        ASNRequest.fetchCurrentASNWithResponseHandler(new ASNResponseHandler() {
+            public void onStart() {
+                Log.d(TAG, "asnrequest start");
+                //animate
+                ProgressBar progress = (ProgressBar) findViewById(R.id.youAreHereProgressBar);
+                Button button = (Button) findViewById(R.id.youAreHereButton);
+                progress.setVisibility(View.VISIBLE);
+                button.setVisibility(View.INVISIBLE);
+            }
+            public void onFinish() {
+                Log.d(TAG, "asnrequest finish");
+                //stop animating
+                ProgressBar progress = (ProgressBar) findViewById(R.id.youAreHereProgressBar);
+                Button button = (Button) findViewById(R.id.youAreHereButton);
+                progress.setVisibility(View.INVISIBLE);
+                button.setVisibility(View.VISIBLE);
+            }
+
+            public void onSuccess(JSONObject response) {
+                //expected response format: {"payload":"ASxxxx"}
+                try {
+                    String asnWithAS = response.getString("payload");
+                    String asnString = asnWithAS.substring(2);
+                    Log.d(TAG, String.format("asn: %s", asnString));
+                    //yay, an ASN! turn it into a node so we can target it.
+                    NodeWrapper node = mController.nodeByAsn(asnString);
+                    if (node != null) {
+                        mUserNodeIndex = node.index;
+                        selectNode(node);
+                    } else {
+                        showError(String.format(getString(R.string.asnNullNode), asnString));
+                    }
+                } catch (Exception e) {
+                    Log.d(TAG, String.format("can't parse response: %s", response.toString()));
+                    showError(getString(R.string.asnBadResponse));
+                }
+            }
+        
+            public void onFailure(Throwable e, String response) {
+                //tell the user
+                //FIXME: outputting the raw error response is bad. how can we make it userfriendly?
+                String message = String.format(getString(R.string.asnfail), response);
+                showError(message);
+                Log.d(TAG, message);
+            }
+        });
+    }
+    
+    public void showError(String message) {
+        //TODO: I'm not sure if a dialog or a toast is most appropriate for errors.
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+    
+    public void selectNode(NodeWrapper node) {
+        mController.updateTargetForIndex(node.index);
+    }
+
+    //called from c++
+    public void showNodePopup() {
+        Log.d(TAG, "showNodePopup");
+        //get the current node
+        int index = mController.targetNodeIndex();
+        Log.d(TAG, String.format("node at index %d", index));
+        NodeWrapper node = mController.nodeAtIndex(index);
+        if (node == null) {
+            Log.d(TAG, "is null");
+            if (mNodePopup != null) {
+                mNodePopup.dismiss();
+            }
+        } else {
+            //node is ok; show the popup
+            Log.d(TAG, String.format("has index %d and asn %s", node.index, node.asn));
+            if (mNodePopup == null) {
+                LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                View popupView = layoutInflater.inflate(R.layout.nodeview, null);
+                mNodePopup = new NodePopup(this, popupView);
+                mNodePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    public void onDismiss() {
+                        mNodePopup = null;
+                    }
+                });
+            }
+            boolean isUserNode = (node.index == mUserNodeIndex);
+            mNodePopup.setNode(node, isUserNode);
+            mNodePopup.showAsDropDown(findViewById(R.id.visualizationsButton)); //FIXME show by node
+        }
+    }
+    
+    //callbacks from the nodePopup UI
+    public void dismissNodePopup(View unused) {
+        mNodePopup.dismiss();
+    }
+    
+    public void runTraceroute(View unused){
+        Log.d(TAG, "TODO: traceroute");
+    }
 
     //native wrappers
     public native void nativeOnCreate();
-
     public native void nativeOnResume();
-
     public native void nativeOnPause();
-
     public native void nativeOnStop();
-
     public native void nativeSetSurface(Surface surface, float density);
+    
+    //threadsafe callbacks for c++
+    public void threadsafeShowNodePopup() {
+        mHandler.post(new Runnable() {
+            public void run() {
+                showNodePopup();
+            }
+        });
+    }
     
 
     static {
@@ -192,8 +313,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
         @Override
         public boolean onDown(MotionEvent event) { 
-            Log.d(TAG,"onDown");
-            mController.nativeHandleTouchDownAtPoint(event.getX(), event.getY());
+            Log.d(TAG, "onDown");
+            mController.handleTouchDownAtPoint(event.getX(), event.getY());
             return true;
         }
 
@@ -201,7 +322,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
                 float distanceY) {
             Log.d(TAG, String.format("onScroll: x %f y %f", distanceX, distanceY));
-            mController.nativeRotateRadiansXY(distance2radians(distanceX), distance2radians(distanceY));
+            mController.rotateRadiansXY(distance2radians(distanceX), distance2radians(distanceY));
             return true;
         }
         
@@ -209,7 +330,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         public boolean onFling(MotionEvent event1, MotionEvent event2, 
                 float velocityX, float velocityY) {
             Log.d(TAG, String.format("onFling: vx %f vy %f", velocityX, velocityY));
-            mController.nativeStartMomentumPanWithVelocity(velocityAdjust(velocityX), velocityAdjust(velocityY));
+            mController.startMomentumPanWithVelocity(velocityAdjust(velocityX), velocityAdjust(velocityY));
             return true;
         }
 
@@ -217,7 +338,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         //note: if double tap is used this should probably s/Up/Confirmed
         public boolean onSingleTapUp(MotionEvent e) {
             Log.d(TAG, "tap!");
-            mController.nativeSelectHoveredNode();
+            mController.selectHoveredNode();
             //TODO: iOS does some deselect stuff if that call failed.
             //but, I think maybe that should just happen inside the controller automatically.
             return true;
@@ -230,7 +351,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         public boolean onScale(ScaleGestureDetector detector) {
             float scale = detector.getScaleFactor() - 1;
             Log.d(TAG, String.format("scale: %f", scale));
-            mController.nativeZoomByScale(scale);
+            mController.zoomByScale(scale);
             return true;
         }
 
@@ -238,7 +359,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         public void onScaleEnd(ScaleGestureDetector detector) {
             float scale = detector.getScaleFactor() - 1;
             Log.d(TAG, String.format("scaleEnd: %f", scale));
-            mController.nativeStartMomentumZoomWithVelocity(scale*50);
+            mController.startMomentumZoomWithVelocity(scale * 50);
         }
     }
 
@@ -248,7 +369,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         public boolean onRotate(RotateGestureDetector detector) {
             float rotate = detector.getRotateFactor();
             Log.d(TAG, String.format("!!rotate: %f", rotate));
-            mController.nativeRotateRadiansZ(-rotate);
+            mController.rotateRadiansZ(-rotate);
             return true;
         }
 
@@ -256,7 +377,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         public void onRotateEnd(RotateGestureDetector detector) {
             float velocity = detector.getRotateFactor(); //FIXME not actually velocity. always seems to be 0
             Log.d(TAG, String.format("!!!!rotateEnd: %f", velocity));
-            mController.nativeStartMomentumRotationWithVelocity(velocity*50);
+            mController.startMomentumRotationWithVelocity(velocity * 50);
         }
     }
     

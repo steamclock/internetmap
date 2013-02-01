@@ -28,6 +28,20 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved)
     return JNI_VERSION_1_6;
 }
 
+//helper function for wrappers returning a node
+jobject wrapNode(JNIEnv* jenv, NodePointer node) {
+    if (!node) return 0;
+
+    jclass nodeWrapperClass = jenv->FindClass("com/peer1/internetmap/NodeWrapper");
+    jmethodID constructor = jenv->GetMethodID(nodeWrapperClass, "<init>",
+            "(IFILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+    //note: if you change this code, triple-check that the argument order matches NodeWrapper.
+    jobject wrapper = jenv->NewObject(nodeWrapperClass, constructor, node->index, node->importance,
+            node->connections.size(), jenv->NewStringUTF(node->asn.c_str()),
+            jenv->NewStringUTF(node->friendlyDescription().c_str()), jenv->NewStringUTF(node->typeString.c_str()));
+    return wrapper;
+}
+
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeOnCreate(JNIEnv* jenv, jobject obj)
 {
     LOG("OnCreate");
@@ -75,13 +89,13 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeSetSurface(J
     return;
 }
 
-JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeRotateRadiansXY(JNIEnv* jenv, jobject obj,
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_rotateRadiansXY(JNIEnv* jenv, jobject obj,
 		float radX, float radY) {
     renderer->bufferedRotationX(radX);
     renderer->bufferedRotationY(radY);
 }
 
-JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeStartMomentumPanWithVelocity(JNIEnv* jenv, jobject obj,
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_startMomentumPanWithVelocity(JNIEnv* jenv, jobject obj,
         float vX, float vY) {
     MapController* controller = renderer->beginControllerModification();
     controller->display->camera->startMomentumPanWithVelocity(Vector2(vX, vY));
@@ -89,41 +103,90 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeSta
 
 }
 
-JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeHandleTouchDownAtPoint(JNIEnv* jenv, jobject obj,
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_handleTouchDownAtPoint(JNIEnv* jenv, jobject obj,
         float x, float y) {
     MapController* controller = renderer->beginControllerModification();
     controller->handleTouchDownAtPoint(Vector2(x, y));
     renderer->endControllerModification();
 }
 
-JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeZoomByScale(JNIEnv* jenv, jobject obj,
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_zoomByScale(JNIEnv* jenv, jobject obj,
         float scale) {
     LOG("zoom");
     renderer->bufferedZoom(scale);
 }
 
-JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeStartMomentumZoomWithVelocity(JNIEnv* jenv, jobject obj,
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_startMomentumZoomWithVelocity(JNIEnv* jenv, jobject obj,
         float velocity) {
     MapController* controller = renderer->beginControllerModification();
     controller->display->camera->startMomentumZoomWithVelocity(velocity);
     renderer->endControllerModification();
 }
 
-JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeRotateRadiansZ(JNIEnv* jenv, jobject obj,
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_rotateRadiansZ(JNIEnv* jenv, jobject obj,
         float radians) {
     renderer->bufferedRotationZ(radians);
 }
 
-JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeStartMomentumRotationWithVelocity(JNIEnv* jenv, jobject obj,
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_startMomentumRotationWithVelocity(JNIEnv* jenv, jobject obj,
         float velocity) {
     MapController* controller = renderer->beginControllerModification();
     controller->display->camera->startMomentumRotationWithVelocity(velocity);
     renderer->endControllerModification();
 }
 
-JNIEXPORT bool JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nativeSelectHoveredNode(JNIEnv* jenv, jobject obj) {
+JNIEXPORT bool JNICALL Java_com_peer1_internetmap_MapControllerWrapper_selectHoveredNode(JNIEnv* jenv, jobject obj) {
     MapController* controller = renderer->beginControllerModification();
     bool ret = controller->selectHoveredNode();
+    renderer->endControllerModification();
+    return ret;
+}
+
+JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nodeAtIndex(JNIEnv* jenv, jobject obj,
+        int index) {
+    MapController* controller = renderer->beginControllerModification();
+    if (index < 0 || index >= controller->data->nodes.size()) {
+        LOG("node index out of range");
+        renderer->endControllerModification();
+        return 0;
+    }
+    NodePointer node = controller->data->nodes[index];
+    jobject wrapper = wrapNode(jenv, node);
+
+    renderer->endControllerModification();
+    return wrapper;
+}
+
+JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nodeByAsn(JNIEnv* jenv, jobject obj,
+        jstring asn) {
+    MapController* controller = renderer->beginControllerModification();
+
+    const char *asnCstr = jenv->GetStringUTFChars(asn, 0);
+    NodePointer node = controller->data->nodesByAsn[asnCstr];
+    jenv->ReleaseStringUTFChars(asn, asnCstr);
+    jobject wrapper = wrapNode(jenv, node);
+
+    renderer->endControllerModification();
+    return wrapper;
+}
+
+JNIEXPORT int JNICALL Java_com_peer1_internetmap_MapControllerWrapper_targetNodeIndex(JNIEnv* jenv, jobject obj) {
+    MapController* controller = renderer->beginControllerModification();
+    //not actually modifying anything here... but we still need to be threadsafe.
+    int ret = controller->targetNode;
+    renderer->endControllerModification();
+    return ret;
+}
+
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_updateTargetForIndex(JNIEnv* jenv, jobject obj, int index) {
+    MapController* controller = renderer->beginControllerModification();
+    controller->updateTargetForIndex(index);
+    renderer->endControllerModification();
+}
+
+JNIEXPORT int JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nodeCount(JNIEnv* jenv, jobject obj) {
+    MapController* controller = renderer->beginControllerModification();
+    int ret = controller->data->nodes.size();
     renderer->endControllerModification();
     return ret;
 }
@@ -136,14 +199,12 @@ void loadTextResource(std::string* resource, const std::string& base, const std:
     // Cannot share a JNIEnv between threads. Need to store the JavaVM, and use JavaVM->GetEnv to discover the thread's JNIEnv
     JNIEnv *env = NULL;
     int status = javaVM->GetEnv((void **)&env, JNI_VERSION_1_6);
-    if(status < 0)
-    {
-        LOG_ERROR("failed to get JNI environment, assuming native thread");
+    if (status < 0) { //should only happen the first time
         status = javaVM->AttachCurrentThread(&env, NULL);
-        if(status < 0)
-        {
+        if (status < 0) { //really shouldn't happen
             LOG_ERROR("failed to attach current thread");
             *resource = "";
+            return;
         }
     }
 
@@ -172,4 +233,27 @@ void loadTextResource(std::string* resource, const std::string& base, const std:
 
 bool deviceIsOld() {
     return false;
+}
+
+//note: we can only call specifically threadsafe functions here
+void cameraMoveFinishedCallback(void) {
+    LOG("cameraMoveFinishedCallback");
+    JNIEnv *env = NULL;
+    int status = javaVM->GetEnv((void **)&env, JNI_VERSION_1_6);
+    if (status < 0) { //shouldn't happen
+        LOG_ERROR("failed to get JNI environment, assuming native thread");
+        status = javaVM->AttachCurrentThread(&env, NULL);
+        if (status < 0) { //really shouldn't happen
+            LOG_ERROR("failed to attach current thread");
+            return;
+        }
+    }
+
+    jclass klass = env->GetObjectClass(activity);
+    jmethodID methodID = env->GetMethodID(klass, "threadsafeShowNodePopup", "()V");
+    env->CallObjectMethod(activity, methodID);
+}
+
+// TODO
+void lostSelectedNodeCallback(void) {
 }

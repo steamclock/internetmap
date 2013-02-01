@@ -20,10 +20,14 @@ Android Build Setup Instructions
 6. Locally modify a broken script in the NDK
 
 Edit this file:
-```C:\android-ndk-r8d\build\gmsl\__gmsl```
+```
+C:\android-ndk-r8d\build\gmsl\__gmsl
+```
 
 ...and change line 512 to:
-```int_encode = $(__gmsl_tr1)$(wordlist 1,$(words $1),$ (__gmsl_input_int))```
+```
+int_encode = $(__gmsl_tr1)$(wordlist 1,$(words $1),$ (__gmsl_input_int))
+```
 
 7. Get the project into your eclipse workspace via the File->Import command (Select Existing project from under general, and point it at the Android directory in the git repo). 
 
@@ -59,5 +63,33 @@ Other Android Gotchas & Advice
 - If the built-in help docs don't work: use a web browser (developer.android.com)
 
 - If all else fails, restart Eclipse
+
+- If you get a crash in native code on Android, you can extract a callstack via the following (note, env variables are not defined by default, you need to either define them, or replace with actual paths):
+  $(ANDROIDSDK)/platform-tools/adb logcat | $(NDKROOT)/ndk-stack -sym $(PROJECTROOT)/obj/local/armeabi 
+
+Taking high-res screenshots
+===========================
+
+To take a print resolution screenshot, you need to do the following:
+
+- Turn the screenshot button on locally by commenting out the line "self.screenshotButton.hidden = YES;" in ViewController.m
+
+- If necessary modify the number of subdivisions to do by changing AXIS_DIVISIONS in ViewController.m (the default is 8, whihc will produce a 16k shot on a retina iPad, different values may be needed for other devices to get the desired resolutions).
+
+- Run the application, set up the intended view, and hit the screenshot button in the upper right hand corner.
+
+- Download the data from the app
+  - Open the Organizer window in XCode 
+  - Go to the devices tab
+  - Find the current device
+  - Click on the "Applications" section
+  - Hit download at the bottom of the window and pick a location
+
+- If you don't have it install Imagemagick (with homebrew, you can do 'brew install imagemagick')
+
+- Open up a terminal and go to the AppData/Documetn directory inside the bundle you downloaded 
+
+- Run the following command : montage screenshot*.png -mode concatenate -tile 8x8 final.png
+  - You may need to change "8x8" if you changed AXIS_DIVISIONS earlier
 
 

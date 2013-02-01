@@ -22,6 +22,34 @@
 	[super dealloc];
 }
 
++ (WEPopoverContainerViewProperties *)defaultContainerViewProperties {
+	WEPopoverContainerViewProperties *ret = [[WEPopoverContainerViewProperties new] autorelease];
+	
+	CGSize imageSize = CGSizeMake(30.0f, 30.0f);
+	NSString *bgImageName = @"popoverBgSimple.png";
+	CGFloat bgMargin = 0;
+	CGFloat contentMargin = 0;
+	
+	ret.leftBgMargin = bgMargin;
+	ret.rightBgMargin = bgMargin;
+	ret.topBgMargin = bgMargin;
+	ret.bottomBgMargin = bgMargin;
+	ret.leftBgCapSize = imageSize.width/2;
+	ret.topBgCapSize = imageSize.height/2;
+	ret.bgImageName = bgImageName;
+	ret.leftContentMargin = contentMargin;
+	ret.rightContentMargin = contentMargin;
+	ret.topContentMargin = contentMargin;
+	ret.bottomContentMargin = contentMargin;
+	ret.arrowMargin = 1.0;
+	
+	ret.upArrowImageName = @"popoverArrowUpSimple.png";
+	ret.downArrowImageName = @"popoverArrowDownSimple.png";
+	ret.leftArrowImageName = @"popoverArrowLeftSimple.png";
+	ret.rightArrowImageName = @"popoverArrowRightSimple.png";
+	return ret;
+}
+
 @end
 
 @interface WEPopoverContainerView(Private)
@@ -324,7 +352,6 @@ permittedArrowDirections:(UIPopoverArrowDirection)permittedArrowDirections
 			        theArrowRect.origin.y = CGRectGetMinY(theBgRect) - upArrowImage.size.height + properties.topBgMargin;
 			    }
 			}
-			bgFrame = CGRectOffset(theBgRect, theOffset.x, theOffset.y);
             
 			CGFloat minMargin = MIN(minMarginLeft, minMarginRight);
 			minMargin = MIN(minMargin, minMarginTop);

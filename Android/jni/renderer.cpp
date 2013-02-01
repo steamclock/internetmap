@@ -118,6 +118,9 @@ void Renderer::renderLoop() {
 
         // Let the main thread do any work that it is waiting on us for
         pthread_mutex_unlock(&_mutex);
+        // sched_yield();
+        //the scheduler is being flaky, force sleep long enough for the main thread to wake
+        usleep(1000);
         pthread_mutex_lock(&_mutex);
 
         if(_rotateX != 0.0f) {
@@ -252,7 +255,7 @@ bool Renderer::initialize() {
 
     _mapController->display->setDisplayScale(_displayScale);
 
-    _mapController->data->updateDisplay(_mapController->display);
+    _mapController->updateDisplay(false);
 
     _mapController->display->camera->setAllowIdleAnimation(true);
 
@@ -310,7 +313,7 @@ void Renderer::endControllerModification(void) {
 
 void Renderer::drawFrame() {
     _currentTimeSec = double(clock()) / double(CLOCKS_PER_SEC);
-    _mapController->display->update(_currentTimeSec - _initialTimeSec);
+    _mapController->update(_currentTimeSec - _initialTimeSec);
     _mapController->display->draw();
 }
 
@@ -321,12 +324,5 @@ void* Renderer::threadStartCallback(void *myself) {
     pthread_exit(0);
 
     return 0;
-}
-
-// TODO
-void cameraMoveFinishedCallback(void) {
-}
-
-void lostSelectedNodeCallback(void) {
 }
 
