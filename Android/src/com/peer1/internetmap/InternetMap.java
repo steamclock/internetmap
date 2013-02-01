@@ -1,7 +1,9 @@
 package com.peer1.internetmap;
 
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
@@ -174,11 +176,9 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
     public void youAreHereButtonPressed(View view) {
         //check internet status
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = (activeNetwork == null) ? false : activeNetwork.isConnectedOrConnecting();
+        boolean isConnected = haveConnectivity();
+        
         if (!isConnected) {
-            showError(getString(R.string.noInternet));
             return;
         }
 
@@ -232,6 +232,19 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         });
     }
     
+    public boolean haveConnectivity(){
+        //check Internet status
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = (activeNetwork == null) ? false : activeNetwork.isConnectedOrConnecting();
+        if (!isConnected) {
+            showError(getString(R.string.noInternet));
+            return false;
+        } else {
+        	return true;
+        }
+    }
+    
     public void showError(String message) {
         //TODO: I'm not sure if a dialog or a toast is most appropriate for errors.
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
@@ -277,8 +290,40 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         mNodePopup.dismiss();
     }
     
-    public void runTraceroute(View unused){
+    public void runTraceroute(View unused) throws JSONException, UnsupportedEncodingException{
         Log.d(TAG, "TODO: traceroute");
+      //check internet status
+        boolean isConnected = haveConnectivity();
+        
+        if (!isConnected) {
+            return;
+        }
+        String asn = "AS15169";
+        ASNRequest.fetchIPsForASN(asn, new ASNResponseHandler() {
+            public void onStart() {
+
+            }
+            public void onFinish() {
+
+            }
+
+            public void onSuccess(JSONObject response) {
+                try {
+                	//Try and get legit payload here
+                    Log.d(TAG, String.format("payload: %s", response));
+                } catch (Exception e) {
+                    Log.d(TAG, String.format("Can't parse response: %s", response.toString()));
+                    showError(getString(R.string.asnBadResponse));
+                }
+            }
+        
+            public void onFailure(Throwable e, String response) {
+                String message = String.format(getString(R.string.asnfail), response);
+                showError(message);
+                Log.d(TAG, message);
+            }
+        });        
+        
     }
 
     //native wrappers
