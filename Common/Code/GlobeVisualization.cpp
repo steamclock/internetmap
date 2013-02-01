@@ -9,9 +9,9 @@
 #include "GlobeVisualization.hpp"
 
 Point3 GlobeVisualization::nodePosition(NodePointer node) {
-    float zenith = node->positionX * M_PI;
-    float azimuth = node->positionY * M_PI;
-    float radius = 1.5f;
-    
-    return Point3(radius * sin(zenith) * cos(azimuth), radius * sin(zenith) * sin(azimuth), radius * cos(zenith) );
+    float r = 1.0;
+    float x = r * cos(node->latitude) * cos(node->longitude);
+    float y = r * cos(node->latitude) * sin(node->longitude);
+    float z = r * sin(node->latitude);
+    return Point3(x, y, z);
 }
