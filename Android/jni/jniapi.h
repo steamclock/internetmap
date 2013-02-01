@@ -31,6 +31,9 @@ JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nodeBy
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_updateTargetForIndex(JNIEnv* jenv, jobject obj,
         int index);
 JNIEXPORT int JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nodeCount(JNIEnv* jenv, jobject obj);
+
+//nodewrapper
+JNIEXPORT jstring JNICALL Java_com_peer1_internetmap_NodeWrapper_nativeFriendlyDescription(JNIEnv* jenv, jobject obj, int index);
 };
 
 #endif // JNIAPI_H

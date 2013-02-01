@@ -46,7 +46,7 @@ public class SearchPopup extends PopupWindow{
             }
             
             //display: ASN - Description
-            return String.format("%s - %s", node.asn, node.friendlyDescription);
+            return String.format("%s - %s", node.asn, node.friendlyDescription());
         }
     }
     

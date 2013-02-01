@@ -38,7 +38,7 @@ jobject wrapNode(JNIEnv* jenv, NodePointer node) {
     //note: if you change this code, triple-check that the argument order matches NodeWrapper.
     jobject wrapper = jenv->NewObject(nodeWrapperClass, constructor, node->index, node->importance,
             node->connections.size(), jenv->NewStringUTF(node->asn.c_str()),
-            jenv->NewStringUTF(node->friendlyDescription().c_str()), jenv->NewStringUTF(node->typeString.c_str()));
+            jenv->NewStringUTF(node->rawTextDescription.c_str()), jenv->NewStringUTF(node->typeString.c_str()));
     return wrapper;
 }
 
@@ -187,6 +187,19 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_updateTar
 JNIEXPORT int JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nodeCount(JNIEnv* jenv, jobject obj) {
     MapController* controller = renderer->beginControllerModification();
     int ret = controller->data->nodes.size();
+    renderer->endControllerModification();
+    return ret;
+}
+
+JNIEXPORT jstring JNICALL Java_com_peer1_internetmap_NodeWrapper_nativeFriendlyDescription(JNIEnv* jenv, jobject obj, int index) {
+    MapController* controller = renderer->beginControllerModification();
+    if (index < 0 || index >= controller->data->nodes.size()) {
+        LOG("node index out of range");
+        renderer->endControllerModification();
+        return 0;
+    }
+    NodePointer node = controller->data->nodes[index];
+    jstring ret = jenv->NewStringUTF(node->friendlyDescription().c_str());
     renderer->endControllerModification();
     return ret;
 }
