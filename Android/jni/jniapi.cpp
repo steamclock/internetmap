@@ -32,13 +32,26 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved)
 jobject wrapNode(JNIEnv* jenv, NodePointer node) {
     if (!node) return 0;
 
+    //strings that need to be freed after
+    //note: normally jni cleans these up on return to java, but allNodes just generates too many of them (the limit is 512)
+    jstring asn = jenv->NewStringUTF(node->asn.c_str());
+    jstring textDesc = jenv->NewStringUTF(node->rawTextDescription.c_str());
+    jstring type = jenv->NewStringUTF(node->typeString.c_str());
+
     jclass nodeWrapperClass = jenv->FindClass("com/peer1/internetmap/NodeWrapper");
     jmethodID constructor = jenv->GetMethodID(nodeWrapperClass, "<init>",
             "(IFILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
     //note: if you change this code, triple-check that the argument order matches NodeWrapper.
     jobject wrapper = jenv->NewObject(nodeWrapperClass, constructor, node->index, node->importance,
-            node->connections.size(), jenv->NewStringUTF(node->asn.c_str()),
-            jenv->NewStringUTF(node->friendlyDescription().c_str()), jenv->NewStringUTF(node->typeString.c_str()));
+            node->connections.size(), asn, textDesc, type);
+
+    //free up the strings
+    jenv->DeleteLocalRef(asn);
+    jenv->DeleteLocalRef(textDesc);
+    jenv->DeleteLocalRef(type);
+    //oh, we need to free this too
+    jenv->DeleteLocalRef(nodeWrapperClass);
+
     return wrapper;
 }
 
@@ -184,9 +197,31 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_updateTar
     renderer->endControllerModification();
 }
 
-JNIEXPORT int JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nodeCount(JNIEnv* jenv, jobject obj) {
+JNIEXPORT jobjectArray JNICALL Java_com_peer1_internetmap_MapControllerWrapper_allNodes(JNIEnv* jenv, jobject obj) {
     MapController* controller = renderer->beginControllerModification();
-    int ret = controller->data->nodes.size();
+    jclass nodeWrapperClass = jenv->FindClass("com/peer1/internetmap/NodeWrapper");
+    jobjectArray array = jenv->NewObjectArray(controller->data->nodes.size(), nodeWrapperClass, 0);
+    //populate array
+    for (int i = 0; i < controller->data->nodes.size(); i++) {
+        NodePointer node = controller->data->nodes[i];
+        jobject wrapper = wrapNode(jenv, node);
+        jenv->SetObjectArrayElement(array, i, wrapper);
+        //cleanup because we loop >512 times
+        jenv->DeleteLocalRef(wrapper);
+    }
+    renderer->endControllerModification();
+    return array;
+}
+
+JNIEXPORT jstring JNICALL Java_com_peer1_internetmap_NodeWrapper_nativeFriendlyDescription(JNIEnv* jenv, jobject obj, int index) {
+    MapController* controller = renderer->beginControllerModification();
+    if (index < 0 || index >= controller->data->nodes.size()) {
+        LOG("node index out of range");
+        renderer->endControllerModification();
+        return 0;
+    }
+    NodePointer node = controller->data->nodes[index];
+    jstring ret = jenv->NewStringUTF(node->friendlyDescription().c_str());
     renderer->endControllerModification();
     return ret;
 }
