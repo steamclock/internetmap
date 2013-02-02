@@ -3,7 +3,6 @@ package com.peer1.internetmap;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,15 +17,20 @@ public class SearchPopup extends PopupWindow{
     private MapControllerWrapper mController;
     private NodeAdapter.NodeFilter mFilter;
     private ArrayList<SearchNode> mAllNodes;
+    private Context mContext;
     
+    /** required interface for arrayadapter items */
+    private interface SearchItem {
+        public String toString();
+    }
     /**
      * SearchNode: a lightweight wrapper for nodewrapper
      * @author chani
      * 
-     * This the required interface for ArrayAdapter use and filtering.
+     * This implements the required interface for ArrayAdapter use and filtering.
      *
      */
-    private class SearchNode {
+    private class SearchNode implements SearchItem {
         public final NodeWrapper node;
         
         SearchNode(NodeWrapper node) {
@@ -46,12 +50,27 @@ public class SearchPopup extends PopupWindow{
     }
     
     /**
+     * special 'find host' item
+     */
+    private class FindHostItem implements SearchItem {
+        public final String host;
+        
+        FindHostItem(String host) {
+            this.host = host;
+        }
+        
+        public String toString() {
+            return String.format(mContext.getString(R.string.findHost), host);
+        }
+    }
+    
+    /**
      * An arrayadapter that can use and filter SearchNodes
      * @author chani
      *
      */
-    private class NodeAdapter extends ArrayAdapter<SearchNode> {
-        private ArrayList<SearchNode> mFilteredNodes;
+    private class NodeAdapter extends ArrayAdapter<SearchItem> {
+        private ArrayList<? extends SearchItem> mFilteredNodes;
         /**
          * Filters the list of search results.
          * @author chani
@@ -69,7 +88,7 @@ public class SearchPopup extends PopupWindow{
                 } else {
                     //filter it
                     Log.d(TAG, "filtering...");
-                    ArrayList<SearchNode> nodes = new ArrayList<SearchNode>();
+                    ArrayList<SearchItem> nodes = new ArrayList<SearchItem>();
                     //TODO use java style iterators
                     for (int i=0; i<mAllNodes.size(); i++) {
                         if (mAllNodes.get(i).matches(constraint)) {
@@ -77,6 +96,14 @@ public class SearchPopup extends PopupWindow{
                         }
                     }
                     Log.d(TAG, "filtered!");
+                    
+                    //'find host' option?
+                    //FIXME this can't be the best way to do contains()
+                    if (nodes.isEmpty() || constraint.toString().contains(".")) {
+                        FindHostItem item = new FindHostItem(constraint.toString());
+                        nodes.add(0, item);
+                    }
+                    
                     results.values = nodes;
                     results.count = nodes.size();
                 }
@@ -87,7 +114,7 @@ public class SearchPopup extends PopupWindow{
             @Override
             protected void publishResults(CharSequence constraint,
                     FilterResults results) {
-                mFilteredNodes = (ArrayList<SearchNode>)results.values;
+                mFilteredNodes = (ArrayList<SearchItem>)results.values;
                 Log.d(TAG, String.format("matched %d nodes", results.count));
                 notifyDataSetChanged();
             }
@@ -109,11 +136,11 @@ public class SearchPopup extends PopupWindow{
             return mFilteredNodes.size();
         }
         @Override
-        public SearchNode getItem(int position) {
+        public SearchItem getItem(int position) {
             return mFilteredNodes.get(position);
         }
         @Override
-        public int getPosition(SearchNode item) {
+        public int getPosition(SearchItem item) {
             return mFilteredNodes.indexOf(item);
         }
         @Override
@@ -125,6 +152,7 @@ public class SearchPopup extends PopupWindow{
 
     public SearchPopup(Context context, MapControllerWrapper controller, View view) {
         super(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        mContext = context;
         mController = controller;
         setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.translucentBlack)));
         setOutsideTouchable(true); //make touching outside dismiss the popup
@@ -148,9 +176,15 @@ public class SearchPopup extends PopupWindow{
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                SearchNode snode = adapter.getItem(position);
-                mController.updateTargetForIndex(snode.node.index);
-                SearchPopup.this.dismiss();
+                SearchItem item = adapter.getItem(position);
+                if (item instanceof SearchNode) {
+                    SearchNode snode = (SearchNode)item;
+                    mController.updateTargetForIndex(snode.node.index);
+                    SearchPopup.this.dismiss();
+                } else {
+                    FindHostItem fhi = (FindHostItem)item;
+                    Log.d(TAG, String.format("TODO: find host %s", fhi.host));
+                }
             }
         });
         

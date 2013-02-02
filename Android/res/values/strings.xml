@@ -13,4 +13,5 @@
     <string name="noInternet">This feature requires internet access.</string>
     <color name="translucentBlack">#C8000000</color>
     <string name="searchHint">Type a company or domain...</string>
+    <string name="findHost">Find host \'%s\'</string>
 </resources>
