@@ -27,21 +27,21 @@ public class SearchPopup extends PopupWindow{
      *
      */
     private class SearchNode {
-        private NodeWrapper mNode;
+        public final NodeWrapper node;
         
         SearchNode(NodeWrapper node) {
-            mNode = node;
+            this.node = node;
         }
         
         //returns a display string for ArrayAdapter
         public String toString() {
             //display: ASN - Description
-            return String.format("%s - %s", mNode.asn, mNode.friendlyDescription());
+            return String.format("%s - %s", node.asn, node.friendlyDescription());
         }
         
         //return true if the node matches the search filter
         public boolean matches(CharSequence filter) {
-            return mNode.asn.contains(filter) || mNode.rawTextDescription.contains(filter);
+            return node.asn.contains(filter) || node.rawTextDescription.contains(filter);
         }
     }
     
@@ -148,8 +148,9 @@ public class SearchPopup extends PopupWindow{
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                //TODO
-                Log.d(TAG, "click!");
+                SearchNode snode = adapter.getItem(position);
+                mController.updateTargetForIndex(snode.node.index);
+                SearchPopup.this.dismiss();
             }
         });
         
