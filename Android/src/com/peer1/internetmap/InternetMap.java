@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.Toast;
 import android.view.ScaleGestureDetector;
 import android.view.GestureDetector;
@@ -143,6 +144,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
 
     public void visualizationsButtonPressed(View view) {
+        dismissTimeline();
+
         if (mVisualizationPopup == null) {
             LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
             View popupView = layoutInflater.inflate(R.layout.visualizationview, null);
@@ -157,6 +160,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
 
     public void searchButtonPressed(View view) {
+        dismissTimeline();
+
         if (mSearchPopup == null) {
             LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
             View popupView = layoutInflater.inflate(R.layout.searchview, null);
@@ -175,6 +180,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
 
     public void youAreHereButtonPressed(View view) {
+        dismissTimeline();
+
         //check internet status
         boolean isConnected = haveConnectivity();
         
@@ -230,6 +237,25 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                 Log.d(TAG, message);
             }
         });
+    }
+    
+
+    public void timelineButtonPressed(View view) {
+        Log.d(TAG, "timeline");
+        SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
+        if (timelineBar.getVisibility() == View.VISIBLE) {
+            dismissTimeline();
+        } else {
+            timelineBar.setProgress(timelineBar.getMax());
+            timelineBar.setVisibility(View.VISIBLE);
+            //TODO: change node popup mode, set up timeline
+        }
+    }
+    
+    public void dismissTimeline() {
+        SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
+        timelineBar.setVisibility(View.GONE);
+        //TODO: change node popup mode
     }
     
     public boolean haveConnectivity(){
