@@ -110,7 +110,14 @@ void MapController::unhoverNode(){
 
 }
 
-void MapController::deselectCurrentNode(){
+void MapController::deselectCurrentNode() {
+    updateTargetForIndex(INT_MAX);
+}
+
+void MapController::updateTargetForIndex(int index) {
+    Target target;
+    
+    // update current node to default state
     if (targetNode != INT_MAX) {
         NodePointer node = data->nodeAtIndex(targetNode);
         std::vector<NodePointer> nodes;
@@ -118,18 +125,11 @@ void MapController::deselectCurrentNode(){
         data->visualization->updateDisplayForNodes(display->nodes, nodes);
         data->visualization->resetDisplayForSelectedNodes(display, std::vector<NodePointer>());
     }
-}
-
-void MapController::updateTargetForIndex(int index) {
-    Target target;
-    
-    // update current node to default state
-    deselectCurrentNode();
     clearHighlightLines();
+    targetNode = index;
     
     //set new node as targeted
     if (index != INT_MAX) {
-        targetNode = index;
         NodePointer node = data->nodeAtIndex(targetNode);
         if (!node->active) {
             targetNode = INT_MAX;
@@ -150,10 +150,10 @@ void MapController::updateTargetForIndex(int index) {
         nodes.push_back(node);
         data->visualization->resetDisplayForSelectedNodes(display, nodes);
         highlightConnections(node);
+        
+        //change camera anchor point and zoom
+        display->camera->setTarget(target);
     }
-    
-    //change camera anchor point and zoom
-    display->camera->setTarget(target);
 }
 
 static bool importanceCompareConnections(ConnectionPointer i, ConnectionPointer j) {

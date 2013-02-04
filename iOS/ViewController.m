@@ -304,9 +304,6 @@ static const int AXIS_DIVISIONS = 8;
     [self.controller resetIdleTimer];
     [self dismissNodeInfoPopover];
     if (![self.controller selectHoveredNode]) { //couldn't select node
-        
-        [self dismissNodeInfoPopover];
-        [self.controller clearHighlightLines];
         [self.controller deselectCurrentNode];
     }
 }
@@ -853,6 +850,7 @@ static const int AXIS_DIVISIONS = 8;
 
 -(void)doneTapped{
     [self dismissNodeInfoPopover];
+    [self.controller deselectCurrentNode];
 }
 
 #pragma mark - WEPopover Delegate
