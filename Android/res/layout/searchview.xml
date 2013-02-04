@@ -16,7 +16,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="@string/searchHint" >
+            android:hint="@string/searchHint"
+            android:inputType="textNoSuggestions|textVisiblePassword" >
 
             <requestFocus />
         </EditText>
