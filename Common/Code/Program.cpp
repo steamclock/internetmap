@@ -84,6 +84,10 @@ void Program::setup(const std::string& fragmentName, const std::string& vertexNa
         glBindAttribLocation(_program, ATTRIB_COLORTARGET, "colorTarget");
     }
     
+#ifdef BUILD_MAC
+    glBindFragDataLocation(	_program, 0, "outputColor" );
+#endif
+    
     // Link program.
     if (!linkProgram(_program)) {
         LOG("Failed to link program: %d", _program);

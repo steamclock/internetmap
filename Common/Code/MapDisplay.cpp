@@ -48,13 +48,25 @@ void MapDisplay::bindDefaultNodeUniforms(shared_ptr<Program> program) {
 
 void MapDisplay::draw(void)
 {
+#ifdef BUILD_MAC
+    static GLuint vao = 0;
+    if(vao == 0) {
+        glGenVertexArrays(1, &vao);
+        glBindVertexArray(vao);
+    }
+    
+    glEnable(GL_PROGRAM_POINT_SIZE);
+#endif
+    
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); //Visualization background color
+    
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     glEnable(GL_DEPTH_TEST); //enable z testing and writing
     glEnable(GL_BLEND);
-    glEnable(GL_POINT_SPRITE_OES);
 
+    glEnable(GL_POINT_SPRITE_OES);
+    
     if (selectedNodes) {
         _selectedNodeProgram->bind();
         bindDefaultNodeUniforms(_selectedNodeProgram);
