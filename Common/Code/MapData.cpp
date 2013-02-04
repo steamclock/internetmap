@@ -159,15 +159,15 @@ void MapData::loadFromAttrString(const std::string& json){
     asTypeDict["edu"] = AS_EDU;
     asTypeDict["ix"] = AS_IX;
     asTypeDict["nic"] = AS_NIC;
-    
+        
     std::map<int, std::string> friendlyTypeStrings;
     friendlyTypeStrings[AS_UNKNOWN] = "Unknown Network Type";
-    friendlyTypeStrings[AS_T1] = "T1";
-    friendlyTypeStrings[AS_T2] = "T2";
-    friendlyTypeStrings[AS_COMP] = "COMP";
-    friendlyTypeStrings[AS_EDU] = "Educational Institution";
-    friendlyTypeStrings[AS_IX] = "IX";
-    friendlyTypeStrings[AS_NIC] = "NIC";
+    friendlyTypeStrings[AS_T1] = "Large ISP";
+    friendlyTypeStrings[AS_T2] = "Small ISP";
+    friendlyTypeStrings[AS_COMP] = "Customer Network";
+    friendlyTypeStrings[AS_EDU] = "University";
+    friendlyTypeStrings[AS_IX] = "Internet Exchange Point";
+    friendlyTypeStrings[AS_NIC] = "Network Information Center";
     
     std::vector<std::string> lines;
     split(lines, json, "\n");
