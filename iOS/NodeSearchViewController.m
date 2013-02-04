@@ -10,8 +10,6 @@
 #import "NodeWrapper.h"
 #import "SCDispatchQueue.h"
 
-#define ASNS_AT_TOP @[@13768, @23498, @3, @15169, @714, @32934, @7847] //Peer1, Cogeco, MIT, google, apple, facebook, NASA
-
 @interface NodeSearchViewController ()
 
 @property (strong, nonatomic) UITextField* textField;
@@ -98,21 +96,6 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self.textField becomeFirstResponder];
-}
-
-- (void)setAllItems:(NSMutableArray *)allItems {
-    _allItems = [allItems mutableCopy];
-    NSArray* arr = ASNS_AT_TOP;
-    for (int i = 0; i < [arr count]; i++) {
-        int asn = [arr[i] intValue];
-        for (int j = 0; j < [self.allItems count]; j++) {
-            NodeWrapper* node = self.allItems[j];
-            if ([node.asn intValue] == asn) {
-                [self.allItems exchangeObjectAtIndex:i withObjectAtIndex:j];
-                break;
-            }
-        }
-    }
 }
 
 #pragma mark - UITextField action method

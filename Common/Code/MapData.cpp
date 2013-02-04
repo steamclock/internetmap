@@ -19,6 +19,9 @@
 #include "json.h"
 #endif
 
+static const char *ASNS_AT_TOP[] = {"13768", "23498", "3", "15169", "714", "32934", "7847"}; //Peer1, Cogeco, MIT, google, apple, facebook, NASA
+static const int NUM_ASNS_AT_TOP = 7;
+
 NodePointer MapData::nodeAtIndex(unsigned int index) {
     return nodes[index];
 }
@@ -88,6 +91,13 @@ void MapData::loadFromString(const std::string& text) {
     sourceText = nextToken(sourceText, token, &lineEnd);
     numConnections = atof(token);
     
+    if (nodes.size() == 0) {
+        LOG("initializing nodes vector (total %d)", numNodes);
+        nodes.reserve(numNodes);
+        nodes.resize(NUM_ASNS_AT_TOP);
+        //LOG("nodes.size: %ld", nodes.size());
+    }
+    
     int missingNodes = 0;
     for (int i = 0; i < numNodes; i++) {
         // Grab asn
@@ -106,11 +116,27 @@ void MapData::loadFromString(const std::string& text) {
             
             node = NodePointer(new Node());
             node->asn = token;
-            node->index = nodes.size();
             node->type = AS_UNKNOWN;
             node->active = true;
             
-            nodes.push_back(node);
+            //is it a special node?
+            bool needInsert = false;
+            for (int i=0; i<NUM_ASNS_AT_TOP; i++) {
+                if (strcmp(token, ASNS_AT_TOP[i]) == 0) {
+                    node->index = i;
+                    needInsert = true;
+                    //LOG("found special at index %d", node->index);
+                    break;
+                }
+            }
+            
+            if (needInsert) {
+                nodes[node->index] = node;
+            } else {
+                //regular nodes can just be appended.
+                node->index = nodes.size();
+                nodes.push_back(node);
+            }
             nodesByAsn[node->asn] = node;
         }
         
