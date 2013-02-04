@@ -17,6 +17,9 @@
 @property (strong, nonatomic) UITextField* textField;
 @property (strong, nonatomic) NSArray* searchResults;
 @property BOOL showHostLookup;
+
+@property int activeSearchID;
+
 @end
 
 @implementation NodeSearchViewController
@@ -217,23 +220,56 @@
     else {
         __weak NodeSearchViewController* weakSelf = self;
         NSString* localSearchText = [searchText copy];
+        NSString* upcaseSearchText = [[searchText copy] uppercaseString];
         NSArray* localAllItems = self.allItems;
         
+        // Store unique id for active search, so we can abort if another search is started
+        int mySearchID = ++self.activeSearchID;
+        
         [[SCDispatchQueue defaultPriorityQueue] dispatchAsync:^{
-            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(rawTextDescription contains[cd] %@) OR (asn contains[cd] %@)", searchText, searchText];
-            NSArray* searchResults = [localAllItems filteredArrayUsingPredicate:predicate];
+            //NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
+            NSMutableArray* searchResults = [NSMutableArray new];
+            
+            for(NodeWrapper* node in localAllItems) {
+                if ([[node.rawTextDescription uppercaseString] rangeOfString:upcaseSearchText].location != NSNotFound) {
+                    [searchResults addObject:node];
+                    continue;
+                }
+                
+                if ([[node.asn uppercaseString] rangeOfString:upcaseSearchText].location != NSNotFound) {
+                    [searchResults addObject:node];
+                    continue;
+                }
+                
+                // Search ids not matching measn a newer search has started, so abort this one
+                if(mySearchID != self.activeSearchID) {
+                    //NSLog(@"search (aborted): %.2f", ([NSDate timeIntervalSinceReferenceDate] - start) * 1000.0f);
+                    break;
+                }
+            }
 
-            [[SCDispatchQueue mainQueue] dispatchAsync:^{
-                if((weakSelf.allItems == localAllItems) && [localSearchText isEqualToString:weakSelf.textField.text])
-                 {
-                     bool hasDot = [localSearchText rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"."]].location != NSNotFound;
-                     
-                     weakSelf.showHostLookup = ((localSearchText.length != 0) && hasDot) ||  (searchResults.count == 0);
-                     
-                     weakSelf.searchResults = searchResults;
-                     [self.tableView reloadData];
-                 }
-            }];
+            if(mySearchID == self.activeSearchID) {
+                [[SCDispatchQueue mainQueue] dispatchAsync:^{
+                    // Verify that the original parameters are still valid, we don't
+                    // want to change the search results if there is another search in progress
+                    if((weakSelf.allItems == localAllItems) && [localSearchText isEqualToString:weakSelf.textField.text])
+                     {
+                         //NSLog(@"search (used): %.2f", ([NSDate timeIntervalSinceReferenceDate] - start) * 1000.0f);
+
+                         bool hasDot = [localSearchText rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"."]].location != NSNotFound;
+                         
+                         // Only show search for host in table if it might reasonably be a host
+                         // or ip address
+                         weakSelf.showHostLookup = ((localSearchText.length != 0) && hasDot) ||  (searchResults.count == 0);
+                         
+                         weakSelf.searchResults = searchResults;
+                         [self.tableView reloadData];
+                     }
+                     else {
+                        //NSLog(@"search (discarded): %.2f", ([NSDate timeIntervalSinceReferenceDate] - start) * 1000.0f);
+                     }
+                }];
+            }
         }];
     }
 }
