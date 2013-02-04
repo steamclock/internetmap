@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager.LayoutParams;
 import android.widget.*;
 
 
@@ -157,6 +158,7 @@ public class SearchPopup extends PopupWindow{
         setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.translucentBlack)));
         setOutsideTouchable(true); //make touching outside dismiss the popup
         setFocusable(true); //make clicks work
+        setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE); //show keyboard
 
         //set up the results list
         NodeWrapper[] rawNodes = mController.allNodes();
