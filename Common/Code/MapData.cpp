@@ -160,6 +160,15 @@ void MapData::loadFromAttrString(const std::string& json){
     asTypeDict["ix"] = AS_IX;
     asTypeDict["nic"] = AS_NIC;
     
+    std::map<int, std::string> friendlyTypeStrings;
+    friendlyTypeStrings[AS_UNKNOWN] = "Unknown Network Type";
+    friendlyTypeStrings[AS_T1] = "T1";
+    friendlyTypeStrings[AS_T2] = "T2";
+    friendlyTypeStrings[AS_COMP] = "COMP";
+    friendlyTypeStrings[AS_EDU] = "Educational Institution";
+    friendlyTypeStrings[AS_IX] = "IX";
+    friendlyTypeStrings[AS_NIC] = "NIC";
+    
     std::vector<std::string> lines;
     split(lines, json, "\n");
 
@@ -173,7 +182,7 @@ void MapData::loadFromAttrString(const std::string& json){
         if(node){
             
             node->type = asTypeDict[aDesc[7]];
-            node->typeString = aDesc[7];
+            node->typeString = friendlyTypeStrings[node->type];
             node->rawTextDescription = aDesc[1];
         }
     }
