@@ -675,17 +675,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                         [self selectNodeForASN:asn];
                     }
                     else {
-                        [self.errorInfoView setErrorString:@"Couldn't resolve ASN for host."];
+                        [self.errorInfoView setErrorString:@"Couldn't find ASN for host."];
                     }
                 }];
             } else {
-                [self.errorInfoView setErrorString:@"Couldn't find any host by that name."];
-                //FIXME when is that error cleared?
-                [self.searchActivityIndicator stopAnimating];
-                self.searchButton.hidden = NO;
-            }
-            else {
-                [self.errorInfoView setErrorString:@"Couldn't resolve IP address for host."];
+                [self.errorInfoView setErrorString:@"Couldn't find IP address for host."];
                 [self.searchActivityIndicator stopAnimating];
                 self.searchButton.hidden = NO;
             };

@@ -13,7 +13,7 @@
 #import <netdb.h>
 #import "SCDispatchQueue.h"
 
-static const int TIMEOUT = 5;
+static const int TIMEOUT = 10;
 
 @implementation ASNRequest
 
