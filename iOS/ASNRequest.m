@@ -11,16 +11,9 @@
 #import "ASIFormDataRequest.h"
 #import <arpa/inet.h>
 #import <netdb.h>
+#import "SCDispatchQueue.h"
 
-@interface ASNRequest()
-
-@property (nonatomic, readwrite) NSMutableArray* result;
-@property (nonatomic, strong) ASNResponseBlock response;
-
-- (void)finishedFetchingASN:(NSString*)asn forIndex:(int)index;
-- (void)failedFetchingASNForIndex:(int)index error:(NSString*)error;
-
-@end
+static const int TIMEOUT = 5;
 
 @implementation ASNRequest
 
@@ -55,34 +48,16 @@
     return FALSE;
 }
 
-- (void)startFetchingASNsForIPs:(NSArray*)theIPs{
-    self.result = [NSMutableArray arrayWithCapacity:theIPs.count];
-    int numberOfIPs = [theIPs count];
-    
-    for (int i = 0; i < numberOfIPs; i++) {
-        [self.result addObject:[NSNull null]];
++ (void)fetchASNForIP:(NSString*)ip response:(ASNStringResponseBlock)result {
+    if ([ip isEqual:[NSNull null]]) {
+        // Might get a null from a timed out traceroute op, not sure if it ever actually ets this far through.
+        result(nil);
+    } else if ([ASNRequest isInvalidOrPrivate:ip]){
+        result(nil);
     }
-    
-    for (int i = 0; i < numberOfIPs; i++) {
-        
-        NSString* ip = [theIPs objectAtIndex:i];
-        
-        if ([ip isEqual:[NSNull null]]) {
-            //Nulls are stored where there would have been an IP in the case of a timed-out traceroute hop
-            [self failedFetchingASNForIndex:i error:@"No ASN needed, this was a timed out hop."];
-        } else if ([ASNRequest isInvalidOrPrivate:ip]){
-            [self failedFetchingASNForIndex:i error:@"No ASN, this was an invalid or private address."];
-        } else {
-            [self fetchASNForIP:ip index:i];
-        }
-    }
-    
-}
 
-- (void)fetchASNForIP:(NSString*)ip index:(int)index{
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"http://72.51.24.24:8080/iptoasn"]];
-    [request setShouldAttemptPersistentConnection:YES];
-    [request setTimeOutSeconds:60];
+    [request setTimeOutSeconds:TIMEOUT];
     [request setRequestMethod:@"POST"];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
     
@@ -96,40 +71,20 @@
         NSDictionary* jsonResponse = [NSJSONSerialization JSONObjectWithData:weakRequest.responseData options:NSJSONReadingAllowFragments error:&error];
         NSString* payload = [jsonResponse objectForKey:@"payload"];
         NSString* asnWithoutPrefix = [payload substringWithRange:NSMakeRange(2, payload.length -2)];
-        [self finishedFetchingASN:asnWithoutPrefix forIndex:index];
-        
+        result(asnWithoutPrefix);
     }];
     
     [request setFailedBlock:^{
-        [self failedFetchingASNForIndex:index error:[NSString stringWithFormat:@"%@", weakRequest.error]];
+        result(nil);
     }];
 
     [request start];
 }
 
-- (void)finishedFetchingASN:(NSString*)asn forIndex:(int)index {
-    [self.result replaceObjectAtIndex:index withObject:asn];
-    if (self.response) {
-        self.response(self.result);
-    }
-}
 
-- (void)failedFetchingASNForIndex:(int)index error:(NSString*)error {
-    // Really only need to print this for debugging
-    //NSLog(@"Failed for index: %i, Error msg: %@", index, error);
-}
-
-+(void)fetchForAddresses:(NSArray*)addresses responseBlock:(ASNResponseBlock)response {
-    ASNRequest* request = [ASNRequest new];
-    request.response = response;
-    [request startFetchingASNsForIPs:addresses];
-}
-
-+(void)fetchIPsForASN:(NSString*)asn responseBlock:(ASNResponseBlock)response {
-
++(void)fetchIPsForASN:(NSString*)asn response:(ASNArrayResponseBlock)response {
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"http://72.51.24.24:8080/asntoips"]];
-    [request setShouldAttemptPersistentConnection:YES];
-    [request setTimeOutSeconds:60];
+    [request setTimeOutSeconds:TIMEOUT];
     [request setRequestMethod:@"POST"];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
     
@@ -155,8 +110,7 @@
     }];
     
     [request setFailedBlock:^{
-        response(@[@""]);
-        NSLog(@"%@", weakRequest.error);
+        response nil;
     }];
     
     [request startAsynchronous];
@@ -167,51 +121,67 @@
 // Originally pulled from here: http://www.bdunagan.com/2009/11/28/iphone-tip-no-nshost/
 // MIT License
 
-+ (NSArray *)addressesForHostname:(NSString *)hostname {
-    // Get the addresses for the given hostname.
-    CFHostRef hostRef = CFHostCreateWithName(kCFAllocatorDefault, (__bridge CFStringRef)hostname);
-    
-    BOOL isSuccess = CFHostStartInfoResolution(hostRef, kCFHostAddresses, nil);
-    if (!isSuccess) {
-        CFRelease(hostRef);
-        return nil;
-    }
-    CFArrayRef addressesRef = CFHostGetAddressing(hostRef, nil);
-    if (addressesRef == nil)  {
-        CFRelease(hostRef);
-        return nil;
-    }
-    // Convert these addresses into strings.
-    char ipAddress[INET6_ADDRSTRLEN];
-    NSMutableArray *addresses = [NSMutableArray array];
-    CFIndex numAddresses = CFArrayGetCount(addressesRef);
-    for (CFIndex currentIndex = 0; currentIndex < numAddresses; currentIndex++) {
-        struct sockaddr *address = (struct sockaddr *)CFDataGetBytePtr(CFArrayGetValueAtIndex(addressesRef, currentIndex));
++(void)fetchIPsForHostname:(NSString*)hostname response:(ASNArrayResponseBlock)result {
+    [[SCDispatchQueue defaultPriorityQueue] dispatchAsync:^{
+        // Get the addresses for the given hostname.
+        CFHostRef hostRef = CFHostCreateWithName(kCFAllocatorDefault, (__bridge CFStringRef)hostname);
         
-        if (address == nil) {
+        BOOL isSuccess = CFHostStartInfoResolution(hostRef, kCFHostAddresses, nil);
+        if (!isSuccess) {
             CFRelease(hostRef);
-            return nil;
+            [[SCDispatchQueue mainQueue] dispatchAsync:^{
+                result(nil);
+            }];
+            return;
+        }
+        CFArrayRef addressesRef = CFHostGetAddressing(hostRef, nil);
+        if (addressesRef == nil)  {
+            CFRelease(hostRef);
+            [[SCDispatchQueue mainQueue] dispatchAsync:^{
+                result(nil);
+            }];
+            return;
+        }
+        // Convert these addresses into strings.
+        char ipAddress[INET6_ADDRSTRLEN];
+        NSMutableArray *addresses = [NSMutableArray array];
+        CFIndex numAddresses = CFArrayGetCount(addressesRef);
+        for (CFIndex currentIndex = 0; currentIndex < numAddresses; currentIndex++) {
+            struct sockaddr *address = (struct sockaddr *)CFDataGetBytePtr(CFArrayGetValueAtIndex(addressesRef, currentIndex));
+            
+            if (address == nil) {
+                CFRelease(hostRef);
+                [[SCDispatchQueue mainQueue] dispatchAsync:^{
+                    result(nil);
+                }];
+                return;
+            }
+            
+            getnameinfo(address, address->sa_len, ipAddress, INET6_ADDRSTRLEN, nil, 0, NI_NUMERICHOST);
+            
+            if (ipAddress == nil) {
+                CFRelease(hostRef);
+                [[SCDispatchQueue mainQueue] dispatchAsync:^{
+                    result(nil);
+                }];
+                return;
+            }
+            
+            [addresses addObject:[NSString stringWithCString:ipAddress encoding:NSASCIIStringEncoding]];
         }
         
-        getnameinfo(address, address->sa_len, ipAddress, INET6_ADDRSTRLEN, nil, 0, NI_NUMERICHOST);
+        CFRelease(hostRef);
         
-        if (ipAddress == nil) {
-            CFRelease(hostRef);
-            return nil;
-        }
-        
-        [addresses addObject:[NSString stringWithCString:ipAddress encoding:NSASCIIStringEncoding]];
-    }
-    
-    CFRelease(hostRef);
-    return addresses;
+        [[SCDispatchQueue mainQueue] dispatchAsync:^{
+            result(addresses);
+        }];
+    }];
 }
 
 
-+ (void)fetchGlobalIPWithCompletionBlock:(void (^)(NSString* ip))completion failedBlock:(void(^)(void))failedBlock {
++ (void)fetchGlobalIPWithCompletionBlock:(ASNStringResponseBlock)completion {
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"http://72.51.24.24:8080/ip"]];
-    [request setShouldAttemptPersistentConnection:YES];
-    [request setTimeOutSeconds:60];
+    [request setTimeOutSeconds:TIMEOUT];
     [request setRequestMethod:@"POST"];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
     
@@ -224,20 +194,21 @@
         completion(offTheWire);
     }];
     
-    [request setFailedBlock:failedBlock];
+    [request setFailedBlock:^{
+        completion(nil);
+    }];
+    
     [request startAsynchronous];
 }
 
-+ (void)fetchCurrentASNWithResponseBlock:(ASNResponseBlock)response errorBlock:(void(^)(void))error{
-    [[SCDispatchQueue defaultPriorityQueue] dispatchAsync:^{
-        [self fetchGlobalIPWithCompletionBlock:^(NSString * ip) {
-            if (!ip || [ip isEqualToString:@""]) {
-                error();
-            } else {
-                [ASNRequest fetchForAddresses:@[ip] responseBlock:response];
-            }
-        } failedBlock:error];
-        
++(void)fetchCurrentASN:(ASNStringResponseBlock)response {
+    [self fetchGlobalIPWithCompletionBlock:^(NSString *ip) {
+        if(ip && ip.length) {
+            [ASNRequest fetchASNForIP:ip response:response];
+        }
+        else {
+            response(nil);
+        }
     }];
 }
 

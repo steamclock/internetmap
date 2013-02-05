@@ -464,34 +464,21 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             self.youAreHereActivityIndicator.hidden = NO;
             [self.youAreHereActivityIndicator startAnimating];
             self.youAreHereButton.hidden = YES;
-            
-            void (^error)(void) = ^{
-                NSString* error = @"ASN lookup failed";
-                NSLog(@"ASN fetching failed with error: %@", error);
+                        
+            [ASNRequest fetchCurrentASN:^(NSString *asn) {
+                if(asn) {
+                    self.cachedCurrentASN = asn;
+                    [self selectNodeForASN:asn];
+                }
+                else {
+                    [self.errorInfoView setErrorString:@"Couldn't look up current address."];
+                }
+                
                 self.isCurrentlyFetchingASN = NO;
                 [self.youAreHereActivityIndicator stopAnimating];
                 self.youAreHereActivityIndicator.hidden = YES;
                 self.youAreHereButton.hidden = NO;
-                
-                UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error locating your node", nil) message:error delegate:nil cancelButtonTitle:nil otherButtonTitles:@"ok", nil];
-                [alert show];
-            };
-            
-            [ASNRequest fetchCurrentASNWithResponseBlock:^(NSArray *asn) {
-                NSString* myASN = asn[0];
-                if([myASN isEqual:[NSNull null]]) {
-                    error();
-                }
-                else {
-                    //NSLog(@"ASN fetched: %@", myASN);
-                    self.isCurrentlyFetchingASN = NO;
-                    [self.youAreHereActivityIndicator stopAnimating];
-                    self.youAreHereActivityIndicator.hidden = YES;
-                    self.youAreHereButton.hidden = NO;
-                    self.cachedCurrentASN = myASN;
-                    [self selectNodeForASN:myASN];
-                }
-            } errorBlock:error];
+            }];
         }
     }else {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No Internet connection" message:@"Please connect to the internet." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
@@ -581,7 +568,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     else {
         //check if node is the current node
         BOOL isSelectingCurrentNode = NO;
-        if (!self.cachedCurrentASN) {
+        if (self.cachedCurrentASN) {
             NodeWrapper* node = [self.controller nodeByASN:[NSString stringWithFormat:@"%@", self.cachedCurrentASN]];
             if (node.index == self.controller.targetNode) {
                 isSelectingCurrentNode = YES;
@@ -653,20 +640,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (void)precacheCurrentASN {
     
-    void (^error)(void) = ^{
-        //do nothing when precaching fails
-    };
-    
-    
-    [ASNRequest fetchCurrentASNWithResponseBlock:^(NSArray *asn) {
-        NSString* myASN = asn[0];
-        if([myASN isEqual:[NSNull null]]) {
-            error();
+    [ASNRequest fetchCurrentASN:^(NSString *asn) {
+        if(asn) {
+            self.cachedCurrentASN = asn;
         }
-        else {
-            self.cachedCurrentASN = myASN;
-        }
-    } errorBlock:error];
+    }];
 }
 
 
@@ -685,22 +663,27 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         // TODO :detect an IP address and call fetchASNForIP directly rather than doing no-op lookup
         [self.searchActivityIndicator startAnimating];
         self.searchButton.hidden = YES;
-        [[SCDispatchQueue defaultPriorityQueue] dispatchAsync:^{
-            NSArray* addresses = [ASNRequest addressesForHostname:host];
+        
+        [ASNRequest fetchIPsForHostname:host response:^(NSArray *addresses) {
             if(addresses.count != 0) {
                 self.controller.lastSearchIP = addresses[0];
-                [ASNRequest fetchForAddresses:@[addresses[0]] responseBlock:^(NSArray *asn) {
+                [ASNRequest fetchASNForIP:addresses[0] response:^(NSString *asn) {
                     [self.searchActivityIndicator stopAnimating];
                     self.searchButton.hidden = NO;
-                    NSString* myASN = asn[0];
-                    if([myASN isEqual:[NSNull null]]) {
-                        [self.errorInfoView setErrorString:@"Couldn't resolve address for hostname."];
+                    
+                    if(asn) {
+                        [self selectNodeForASN:asn];
                     }
                     else {
-                        [self selectNodeForASN:myASN];
+                        [self.errorInfoView setErrorString:@"Couldn't resolve ASN for host."];
                     }
                 }];
             }
+            else {
+                [self.errorInfoView setErrorString:@"Couldn't resolve IP address for host."];
+                [self.searchActivityIndicator stopAnimating];
+                self.searchButton.hidden = NO;
+            };
         }];
     } else {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No Internet connection" message:@"Please connect to the internet." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
@@ -770,7 +753,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     } else {
         NodeWrapper* node = [self.controller nodeAtIndex:self.controller.targetNode];
         if (node.asn) {
-            [ASNRequest fetchIPsForASN:node.asn responseBlock:^(NSArray *ipsFromWire) {
+            [ASNRequest fetchIPsForASN:node.asn response:^(NSArray *ipsFromWire) {
                 //We arbitrarily select any of the prefix IPs and try for a traceroute using it
                 //We do this because we have no reliable way of knowing what machines will reslond to our ICMP packets
                 //So, if we can contact even one machine within an ASN - any one at all - we know we travel through that ASN
@@ -832,14 +815,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         return;
     }
     
-    [ASNRequest fetchForAddresses:@[[hops lastObject]] responseBlock:^(NSArray *asns) {
+    [ASNRequest fetchASNForIP:[hops lastObject] response:^(NSString *asn) {
         NodeWrapper* last = [self.tracerouteHops lastObject];
         
-        for(NSString* asn in asns) {
-            NodeWrapper* current =  [self.controller nodeByASN:[NSString stringWithFormat:@"%@", asn]];
-            if(current && current != last) {
-                [self.tracerouteHops addObject:current];
-            }
+        NodeWrapper* current =  [self.controller nodeByASN:[NSString stringWithFormat:@"%@", asn]];
+        if(current && current != last) {
+            [self.tracerouteHops addObject:current];
         }
         
         if ([self.tracerouteHops count] >= 2) {
@@ -853,7 +834,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             [asnSet addObject:node.asn];
         }
         self.nodeInformationViewController.box2.numberLabel.text = [NSString stringWithFormat:@"%i", [asnSet count]];
-        
     }];
 
 }

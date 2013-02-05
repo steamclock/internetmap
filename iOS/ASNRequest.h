@@ -8,15 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
-typedef void (^ASNResponseBlock)(NSArray* asn);
+typedef void (^ASNArrayResponseBlock)(NSArray* result);
+typedef void (^ASNStringResponseBlock)(NSString* result);
 
 @interface ASNRequest : NSObject
 
-+(void)fetchForAddresses:(NSArray*)addresses responseBlock:(ASNResponseBlock)result;
-+(void)fetchIPsForASN:(NSString*)asn responseBlock:(ASNResponseBlock)result;
-+(NSArray *)addressesForHostname:(NSString *)hostname;
-+(void)fetchCurrentASNWithResponseBlock:(ASNResponseBlock)response errorBlock:(void(^)(void))error;
-
++(void)fetchASNForIP:(NSString*)ip response:(ASNStringResponseBlock)result;
++(void)fetchIPsForASN:(NSString*)asn response:(ASNArrayResponseBlock)result;
++(void)fetchIPsForHostname:(NSString*)hostname response:(ASNArrayResponseBlock)result;
++(void)fetchCurrentASN:(ASNStringResponseBlock)response;
 
 @end
 
