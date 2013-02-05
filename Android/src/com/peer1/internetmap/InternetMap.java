@@ -192,6 +192,12 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         }
         
         //TODO animate
+        final ProgressBar progress = (ProgressBar) findViewById(R.id.searchProgressBar);
+        final Button button = (Button) findViewById(R.id.searchButton);
+        progress.setVisibility(View.VISIBLE);
+        button.setVisibility(View.INVISIBLE);
+        
+        //dns lookup in the background
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
@@ -207,7 +213,9 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             protected void onPostExecute(String addrString) {
                 if (addrString.isEmpty()) {
                     showError(String.format(getString(R.string.invalidHost), host));
-                    //TODO stop spinning
+                    //stop animating
+                    progress.setVisibility(View.INVISIBLE);
+                    button.setVisibility(View.VISIBLE);
                 } else {
                     Log.d(TAG, addrString);
                     ASNRequest.fetchASNForIP(addrString, new ASNResponseHandler() {
@@ -217,11 +225,9 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                     }
                     public void onFinish() {
                         Log.d(TAG, "asnrequest2 finish");
-                        /*stop animating
-                        ProgressBar progress = (ProgressBar) findViewById(R.id.youAreHereProgressBar);
-                        Button button = (Button) findViewById(R.id.youAreHereButton);
+                        //stop animating
                         progress.setVisibility(View.INVISIBLE);
-                        button.setVisibility(View.VISIBLE);*/
+                        button.setVisibility(View.VISIBLE);
                     }
 
                     public void onSuccess(JSONObject response) {
