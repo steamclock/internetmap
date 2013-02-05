@@ -70,8 +70,9 @@ void Camera::update(TimeInterval currentTime) {
     Matrix4 modelView = view * model;
     Matrix4 projectionMatrix;
     
-    if((_subregionX == 0.0f) && (_subregionY == 0.0f) && (_subregionWidth == 1.0f) && (_subregionHeight == 1.0f)) {
+    //if((_subregionX == 0.0f) && (_subregionY == 0.0f) && (_subregionWidth == 1.0f) && (_subregionHeight == 1.0f)) {
        projectionMatrix = Matrix4::perspective(DegreesToRadians(65.0f), aspect, NEAR_PLANE, FAR_PLANE);
+    /*
     }
     else {
         float halfX = (float)tan( double( DegreesToRadians(65.0f) * 0.5 ) ) * NEAR_PLANE;
@@ -82,7 +83,7 @@ void Camera::update(TimeInterval currentTime) {
                                             -halfY + (_subregionY * halfY * 2),
                                             -halfY + (_subregionY * halfY * 2) + (_subregionHeight * halfY * 2),
                                             NEAR_PLANE, FAR_PLANE);
-    }
+    }*/
     
     _projectionMatrix = projectionMatrix;
     _modelViewMatrix = modelView;

@@ -39,6 +39,9 @@ bool deviceIsOld(void) {
 @property (strong) NSString* screenshot;
 @property float width;
 @property float height;
+@property float captureWidth;
+@property float captureHeight;
+@property GLuint fbo;
 @end
 
 @implementation Renderer
@@ -48,6 +51,13 @@ bool deviceIsOld(void) {
         self.mapController = new MapController;
         _mapController->updateDisplay(false);
         _mapController->display->camera->setAllowIdleAnimation(true);
+        
+        int maxSize;
+        glGetIntegerv(GL_MAX_VIEWPORT_DIMS, &maxSize);
+        
+        self.captureHeight = self.captureWidth = 4096;
+        
+        self.fbo = [self buildFBOWithWidth:self.captureWidth andHeight:self.captureHeight];
     }
     return self;
 }
@@ -75,6 +85,13 @@ bool deviceIsOld(void) {
 -(void)display {
     float time = [NSDate timeIntervalSinceReferenceDate];
     
+    if(self.screenshot) {
+        glBindFramebuffer(GL_FRAMEBUFFER, self.fbo);
+        glViewport(0,0,self.captureWidth, self.captureHeight);
+        self.mapController->display->camera->setDisplaySize(self.captureWidth, self.captureHeight);
+        self.mapController->display->camera->setViewSubregion(0.0, 0.0, 0.25, 0.25);
+    }
+    
     if(self.rotateX != 0.0f) {
         self.mapController->display->camera->rotateRadiansX(self.rotateX);
         self.rotateX = 0.0;
@@ -95,13 +112,64 @@ bool deviceIsOld(void) {
     
     if(self.screenshot) {
         [self captureImageToFile:self.screenshot];
+        self.mapController->display->camera->setDisplaySize(self.width, self.height);
+        self.mapController->display->camera->setViewSubregion(0.0, 0.0, 1.0, 1.0);;
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glViewport(0,0,self.width, self.width);
         self.screenshot = nil;
     }
 }
 
+-(GLuint) buildFBOWithWidth:(GLuint)width andHeight:(GLuint) height
+{
+	GLuint fboName;
+	
+	GLuint colorTexture;
+	
+	// Create a texture object to apply to model
+	glGenTextures(1, &colorTexture);
+	glBindTexture(GL_TEXTURE_2D, colorTexture);
+	
+	// Set up filter and wrap modes for this texture object
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+#if ESSENTIAL_GL_PRACTICES_IOS
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+#else
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+#endif
+	
+	// Allocate a texture image with which we can render to
+	// Pass NULL for the data parameter since we don't need to load image data.
+	//     We will be generating the image by rendering to this texture
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+				 width, height, 0,
+				 GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	
+	GLuint depthRenderbuffer;
+	glGenRenderbuffers(1, &depthRenderbuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER, depthRenderbuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, width, height);
+	
+	glGenFramebuffers(1, &fboName);
+	glBindFramebuffer(GL_FRAMEBUFFER, fboName);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRenderbuffer);
+	
+	if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	{
+		NSLog(@"failed to make complete framebuffer object %x", glCheckFramebufferStatus(GL_FRAMEBUFFER));
+		return 0;
+	}
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	return fboName;
+}
+
 -(void)captureImageToFile:(NSString*)filename {
-    float width = self.width;
-    float height = self.height;
+    float width = self.captureWidth;
+    float height = self.captureHeight;
     
     GLvoid *imageData = malloc(width*height*4);
     glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
