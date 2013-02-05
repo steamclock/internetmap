@@ -16,7 +16,7 @@ Node::Node() :
 std::string Node::friendlyDescription() {
     if (!mInitializedFriendly) {
         if (!rawTextDescription.empty()) {
-            LOG("original: %s", rawTextDescription.c_str());
+            //LOG("original: %s", rawTextDescription.c_str());
             //if the description starts with "signet-as signet..." or "signet signet..."
             //then strip the redundant first word.
             bool stripFirst = false;
@@ -52,7 +52,7 @@ std::string Node::friendlyDescription() {
                 mFriendlyDescription[wordStart] = toupper(mFriendlyDescription[wordStart]);
                 prevWordEnd = mFriendlyDescription.find(' ', wordStart);
             } while (prevWordEnd != std::string::npos);
-            LOG("after upper: %s", mFriendlyDescription.c_str());
+            //LOG("after upper: %s", mFriendlyDescription.c_str());
         }
         mInitializedFriendly = true;
     }
