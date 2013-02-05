@@ -106,11 +106,11 @@ static const int TIMEOUT = 10;
                 NSLog(@"Failed to add %@, was reserved IP.", ip);
             }
         }
-        response(@[responseArray]);
+        response(responseArray);
     }];
     
     [request setFailedBlock:^{
-        response nil;
+        response(nil);
     }];
     
     [request startAsynchronous];
