@@ -51,10 +51,7 @@ bool deviceIsOld(void) {
         self.mapController = new MapController;
         _mapController->updateDisplay(false);
         _mapController->display->camera->setAllowIdleAnimation(true);
-        
-        int maxSize;
-        glGetIntegerv(GL_MAX_VIEWPORT_DIMS, &maxSize);
-        
+                
         self.captureHeight = self.captureWidth = 4096;
         
         self.fbo = [self buildFBOWithWidth:self.captureWidth andHeight:self.captureHeight];
@@ -85,12 +82,6 @@ bool deviceIsOld(void) {
 -(void)display {
     float time = [NSDate timeIntervalSinceReferenceDate];
     
-    if(self.screenshot) {
-        glBindFramebuffer(GL_FRAMEBUFFER, self.fbo);
-        glViewport(0,0,self.captureWidth, self.captureHeight);
-        self.mapController->display->camera->setDisplaySize(self.captureWidth, self.captureHeight);
-        self.mapController->display->camera->setViewSubregion(0.0, 0.0, 0.25, 0.25);
-    }
     
     if(self.rotateX != 0.0f) {
         self.mapController->display->camera->rotateRadiansX(self.rotateX);
@@ -106,17 +97,48 @@ bool deviceIsOld(void) {
         self.mapController->display->camera->zoomByScale(self.zoom);
         self.zoom = 0.0;
     }
-    
+
     self.mapController->update(time);
-    self.mapController->display->draw();
-    
+
     if(self.screenshot) {
-        [self captureImageToFile:self.screenshot];
+        GLint maxDims[2];
+        glGetIntegerv(GL_MAX_VIEWPORT_DIMS, maxDims);
+        int axisDivisions = maxDims[0] / self.captureWidth;
+                
+        glBindFramebuffer(GL_FRAMEBUFFER, self.fbo);
+        
+        glViewport(0,0,self.captureWidth, self.captureHeight);
+        self.mapController->display->camera->setDisplaySize(1024, 1024);
+        self.mapController->display->setDisplayScale(self.captureHeight/1024);
+        self.mapController->display->draw();
+        NSString* filename = [NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"InternetMap/master.png"]];
+        [self captureImageToFile:filename];
+        
+        self.mapController->display->setDisplayScale(maxDims[0]/1024);
+        
+        for(int y = 0; y < axisDivisions; y++) {
+            for(int x = 0; x < axisDivisions; x++) {
+                glViewport(-(x * self.captureWidth), -(y * self.captureHeight), self.captureWidth * axisDivisions, self.captureHeight * axisDivisions);
+                self.mapController->display->draw();
+                NSString* filename = [NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"InternetMap/tile%.2d.png",(y * axisDivisions) + x]];
+                [self captureImageToFile:filename];
+            }
+        }
+        
         self.mapController->display->camera->setDisplaySize(self.width, self.height);
-        self.mapController->display->camera->setViewSubregion(0.0, 0.0, 1.0, 1.0);;
+        self.mapController->display->setDisplayScale(1.0f);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glViewport(0,0,self.width, self.width);
         self.screenshot = nil;
+
+    }
+    else {
+        self.mapController->display->draw();
+    }
+    
+    
+    
+    if(self.screenshot) {
     }
 }
 
