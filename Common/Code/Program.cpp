@@ -36,6 +36,11 @@ void Program::setup(const std::string& fragmentName, const std::string& vertexNa
     // Create and compile vertex shader.
     std::string vertShaderCode;
     loadTextResource(&vertShaderCode, vertexName, "vsh");
+    
+#ifdef BUILD_MAC
+    vertShaderCode = "#version 120\n" + vertShaderCode;
+#endif
+    
     if (!compileShader(&vertShader,GL_VERTEX_SHADER,vertShaderCode)) {
         LOG("Failed to compile vertex shader");
         return;
@@ -43,7 +48,15 @@ void Program::setup(const std::string& fragmentName, const std::string& vertexNa
     
     // Create and compile fragment shader.
     std::string fragShaderCode;
+    
     loadTextResource(&fragShaderCode, fragmentName, "fsh");
+
+#ifdef BUILD_MAC
+    fragShaderCode = "#version 120\n" + fragShaderCode;
+#else
+    fragShaderCode = "precision mediump float;\n" + fragShaderCode;
+#endif
+
     if (!compileShader(&fragShader,GL_FRAGMENT_SHADER,fragShaderCode)) {
         LOG("Failed to compile fragment shader");
         return;
@@ -83,11 +96,7 @@ void Program::setup(const std::string& fragmentName, const std::string& vertexNa
     if(_activeAttributesMask & ATTRIB_MASK(ATTRIB_COLORTARGET)) {
         glBindAttribLocation(_program, ATTRIB_COLORTARGET, "colorTarget");
     }
-    
-#ifdef BUILD_MAC
-    glBindFragDataLocation(	_program, 0, "outputColor" );
-#endif
-    
+        
     // Link program.
     if (!linkProgram(_program)) {
         LOG("Failed to link program: %d", _program);

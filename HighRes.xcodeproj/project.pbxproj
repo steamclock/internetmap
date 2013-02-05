@@ -55,12 +55,12 @@
 		A68193CB16C0631F00327A4E /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = A68193C816C0631F00327A4E /* README.txt */; };
 		A68193CC16C0631F00327A4E /* version in Resources */ = {isa = PBXBuildFile; fileRef = A68193C916C0631F00327A4E /* version */; };
 		A68193D116C0667500327A4E /* Renderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = A68193D016C0667500327A4E /* Renderer.mm */; };
-		A68193D916C07EC800327A4E /* line.fsh in Sources */ = {isa = PBXBuildFile; fileRef = A68193D316C07EC800327A4E /* line.fsh */; };
-		A68193DA16C07EC800327A4E /* line.vsh in Sources */ = {isa = PBXBuildFile; fileRef = A68193D416C07EC800327A4E /* line.vsh */; };
-		A68193DB16C07EC800327A4E /* node.fsh in Sources */ = {isa = PBXBuildFile; fileRef = A68193D516C07EC800327A4E /* node.fsh */; };
-		A68193DC16C07EC800327A4E /* node.vsh in Sources */ = {isa = PBXBuildFile; fileRef = A68193D616C07EC800327A4E /* node.vsh */; };
-		A68193DD16C07EC800327A4E /* nodeBlend.vsh in Sources */ = {isa = PBXBuildFile; fileRef = A68193D716C07EC800327A4E /* nodeBlend.vsh */; };
-		A68193DE16C07EC800327A4E /* selectedNode.fsh in Sources */ = {isa = PBXBuildFile; fileRef = A68193D816C07EC800327A4E /* selectedNode.fsh */; };
+		A6EE085116C0DF3900B6C687 /* line.fsh in Resources */ = {isa = PBXBuildFile; fileRef = A6EE084516C0DEB900B6C687 /* line.fsh */; };
+		A6EE085216C0DF3900B6C687 /* line.vsh in Resources */ = {isa = PBXBuildFile; fileRef = A6EE084616C0DEB900B6C687 /* line.vsh */; };
+		A6EE085316C0DF3900B6C687 /* node.fsh in Resources */ = {isa = PBXBuildFile; fileRef = A6EE084716C0DEB900B6C687 /* node.fsh */; };
+		A6EE085416C0DF3900B6C687 /* node.vsh in Resources */ = {isa = PBXBuildFile; fileRef = A6EE084816C0DEB900B6C687 /* node.vsh */; };
+		A6EE085516C0DF3900B6C687 /* nodeBlend.vsh in Resources */ = {isa = PBXBuildFile; fileRef = A6EE084916C0DEB900B6C687 /* nodeBlend.vsh */; };
+		A6EE085616C0DF3900B6C687 /* selectedNode.fsh in Resources */ = {isa = PBXBuildFile; fileRef = A6EE084A16C0DEB900B6C687 /* selectedNode.fsh */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -141,12 +141,12 @@
 		A68193C916C0631F00327A4E /* version */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = version; sourceTree = "<group>"; };
 		A68193CF16C0667400327A4E /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.h; sourceTree = "<group>"; };
 		A68193D016C0667500327A4E /* Renderer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Renderer.mm; sourceTree = "<group>"; };
-		A68193D316C07EC800327A4E /* line.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = line.fsh; sourceTree = "<group>"; };
-		A68193D416C07EC800327A4E /* line.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = line.vsh; sourceTree = "<group>"; };
-		A68193D516C07EC800327A4E /* node.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = node.fsh; sourceTree = "<group>"; };
-		A68193D616C07EC800327A4E /* node.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = node.vsh; sourceTree = "<group>"; };
-		A68193D716C07EC800327A4E /* nodeBlend.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = nodeBlend.vsh; sourceTree = "<group>"; };
-		A68193D816C07EC800327A4E /* selectedNode.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = selectedNode.fsh; sourceTree = "<group>"; };
+		A6EE084516C0DEB900B6C687 /* line.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = line.fsh; sourceTree = "<group>"; };
+		A6EE084616C0DEB900B6C687 /* line.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = line.vsh; sourceTree = "<group>"; };
+		A6EE084716C0DEB900B6C687 /* node.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = node.fsh; sourceTree = "<group>"; };
+		A6EE084816C0DEB900B6C687 /* node.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = node.vsh; sourceTree = "<group>"; };
+		A6EE084916C0DEB900B6C687 /* nodeBlend.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = nodeBlend.vsh; sourceTree = "<group>"; };
+		A6EE084A16C0DEB900B6C687 /* selectedNode.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = selectedNode.fsh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -172,7 +172,7 @@
 				A681935316C0625900327A4E /* OpenGL.framework */,
 				A681933916C05F6400327A4E /* HighRes */,
 				A681935916C062C600327A4E /* Data */,
-				A68193D216C07EC800327A4E /* OGL3 Shaders */,
+				A6EE084416C0DEB900B6C687 /* Shaders */,
 				A681938B16C062D800327A4E /* Code */,
 				A68193C416C0631F00327A4E /* jsoncpp */,
 				A681933216C05F6400327A4E /* Frameworks */,
@@ -315,19 +315,19 @@
 			path = "External Code/jsoncpp";
 			sourceTree = "<group>";
 		};
-		A68193D216C07EC800327A4E /* OGL3 Shaders */ = {
+		A6EE084416C0DEB900B6C687 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
-				A68193D316C07EC800327A4E /* line.fsh */,
-				A68193D416C07EC800327A4E /* line.vsh */,
-				A68193D516C07EC800327A4E /* node.fsh */,
-				A68193D616C07EC800327A4E /* node.vsh */,
-				A68193D716C07EC800327A4E /* nodeBlend.vsh */,
-				A68193D816C07EC800327A4E /* selectedNode.fsh */,
+				A6EE084516C0DEB900B6C687 /* line.fsh */,
+				A6EE084616C0DEB900B6C687 /* line.vsh */,
+				A6EE084716C0DEB900B6C687 /* node.fsh */,
+				A6EE084816C0DEB900B6C687 /* node.vsh */,
+				A6EE084916C0DEB900B6C687 /* nodeBlend.vsh */,
+				A6EE084A16C0DEB900B6C687 /* selectedNode.fsh */,
 			);
-			name = "OGL3 Shaders";
-			path = "Common/OGL3 Shaders";
-			sourceTree = SOURCE_ROOT;
+			name = Shaders;
+			path = Common/Shaders;
+			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
@@ -380,6 +380,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6EE085116C0DF3900B6C687 /* line.fsh in Resources */,
+				A6EE085216C0DF3900B6C687 /* line.vsh in Resources */,
+				A6EE085316C0DF3900B6C687 /* node.fsh in Resources */,
+				A6EE085416C0DF3900B6C687 /* node.vsh in Resources */,
+				A6EE085516C0DF3900B6C687 /* nodeBlend.vsh in Resources */,
+				A6EE085616C0DF3900B6C687 /* selectedNode.fsh in Resources */,
 				A681933E16C05F6400327A4E /* InfoPlist.strings in Resources */,
 				A681934416C05F6400327A4E /* Credits.rtf in Resources */,
 				A681934A16C05F6400327A4E /* MainMenu.xib in Resources */,
@@ -434,12 +440,6 @@
 				A68193BD16C062D800327A4E /* VertexBuffer.cpp in Sources */,
 				A68193CA16C0631F00327A4E /* jsoncpp.cpp in Sources */,
 				A68193D116C0667500327A4E /* Renderer.mm in Sources */,
-				A68193D916C07EC800327A4E /* line.fsh in Sources */,
-				A68193DA16C07EC800327A4E /* line.vsh in Sources */,
-				A68193DB16C07EC800327A4E /* node.fsh in Sources */,
-				A68193DC16C07EC800327A4E /* node.vsh in Sources */,
-				A68193DD16C07EC800327A4E /* nodeBlend.vsh in Sources */,
-				A68193DE16C07EC800327A4E /* selectedNode.fsh in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
