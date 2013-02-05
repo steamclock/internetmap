@@ -299,17 +299,34 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
 
     private class TimelineListener implements SeekBar.OnSeekBarChangeListener{
+        private TimelinePopup mTimelinePopup;
+        
         public void onStartTrackingTouch(SeekBar seekBar) {
-            Log.d(TAG, "TODO: create timeline popup");
+            LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+            View popupView = layoutInflater.inflate(R.layout.timelinepopup, null);
+            mTimelinePopup = new TimelinePopup(InternetMap.this, popupView);
+            mTimelinePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                public void onDismiss() {
+                    mNodePopup = null;
+                }
+            });
         }
+        
         public void onProgressChanged(SeekBar seekBar, int progress,
                 boolean fromUser) {
-            Log.d(TAG, String.format("TODO: update timeline popup to %d", progress + mTimelineMinYear));
+            if (mTimelinePopup == null) {
+                //Log.d(TAG, "ignoring progresschange");
+                return;
+            }
+            String year = Integer.toString(progress + mTimelineMinYear);
+            mTimelinePopup.setData(year, mTimelineHistory.optString(year));
+            mTimelinePopup.showAsDropDown(findViewById(R.id.timelineSeekBar)); //FIXME x offset?
         }
+        
         public void onStopTrackingTouch(SeekBar seekBar) {
             int year = mTimelineMinYear + seekBar.getProgress();
             mController.setTimelinePoint(year);
-            Log.d(TAG, "TODO: dismiss timeline popup");
+            mTimelinePopup.dismiss();
         }
     }
     
