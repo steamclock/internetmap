@@ -293,9 +293,11 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     
     public void dismissTimeline() {
         SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
-        timelineBar.setVisibility(View.GONE);
-        mController.setTimelinePoint(mTimelineMinYear + timelineBar.getMax());
-        //TODO: change node popup mode
+        if (timelineBar.getVisibility() == View.VISIBLE) {
+            timelineBar.setVisibility(View.GONE);
+            mController.setTimelinePoint(mTimelineMinYear + timelineBar.getMax());
+            //TODO: change node popup mode
+        }
     }
 
     private class TimelineListener implements SeekBar.OnSeekBarChangeListener{
