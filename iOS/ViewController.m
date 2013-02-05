@@ -33,7 +33,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (strong, nonatomic) MapControllerWrapper* controller;
 //@property (strong, nonatomic) MapData* data;
 
-@property (nonatomic) NSMutableArray* tracerouteHops;
+@property (nonatomic) NSMutableDictionary* tracerouteASNs;
 
 @property (strong, nonatomic) NSDate* lastIntersectionDate;
 @property (assign, nonatomic) BOOL isHandlingLongPress;
@@ -703,8 +703,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.youAreHereButton.selected = NO;
     [self.nodeInformationPopover dismissPopoverAnimated:YES];
     [self.nodeInformationViewController.tracerouteTimer invalidate];
-    if (self.tracerouteHops) {
-        self.tracerouteHops = nil;
+    if (self.tracerouteASNs) {
+        self.tracerouteASNs = nil;
         [self.controller clearHighlightLines];
     }
 }
@@ -734,7 +734,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     [self resizeNodeInfoPopover];
     
-    self.tracerouteHops = [NSMutableArray array];
+    self.tracerouteASNs = [NSMutableDictionary new];
     [self.controller zoomAnimated:-3 duration:3];
     
     NodeWrapper* node = [self.controller nodeAtIndex:self.controller.targetNode];
@@ -803,6 +803,35 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 #pragma mark - SCTracerouteUtility Delegate
 
+-(void)displayHops:(NSArray*)ips withDestNode:(NodeWrapper*)destNode {
+    NSMutableArray* mergedAsnHops = [NSMutableArray new];
+    
+    __block NSString* lastAsn = nil;
+    __block int lastIndex = -1;
+    
+    [ips enumerateObjectsUsingBlock:^(NSString* ip, NSUInteger idx, BOOL *stop) {
+        NSString* asn = self.tracerouteASNs[ip];
+        if(asn && ![asn isEqual:[NSNull null]] && ![asn isEqualToString:lastAsn])  {
+            lastAsn = asn;
+            NodeWrapper* node = [self.controller nodeByASN:asn];
+            if(node) {
+                lastIndex = node.index;
+                [mergedAsnHops addObject:node];
+            }
+        }
+    }];
+    
+    if(destNode && (lastIndex != destNode.index)) {
+        [mergedAsnHops addObject:destNode];
+    }
+    
+    if ([mergedAsnHops count] >= 2) {
+        [self.controller highlightRoute:mergedAsnHops];
+    }
+    
+    self.nodeInformationViewController.box2.numberLabel.text = [NSString stringWithFormat:@"%i", [mergedAsnHops count]];
+}
+
 - (void)tracerouteDidFindHop:(NSString*)report withHops:(NSArray *)hops{
     
     NSLog(@"%@", report);
@@ -814,30 +843,28 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         return;
     }
     
-    [ASNRequest fetchASNForIP:[hops lastObject] response:^(NSString *asn) {
-        NodeWrapper* last = [self.tracerouteHops lastObject];
-        
-        NodeWrapper* current =  [self.controller nodeByASN:[NSString stringWithFormat:@"%@", asn]];
-        if(current && current != last) {
-            [self.tracerouteHops addObject:current];
+    [hops enumerateObjectsUsingBlock:^(NSString* ip, NSUInteger idx, BOOL *stop) {
+        if(ip && ![ip isEqual:[NSNull null]] && (self.tracerouteASNs[ip] == nil)) {
+            [ASNRequest fetchASNForIP:ip response:^(NSString *asn) {
+                if(self.tracer == nil) {
+                    // occasionally we get a rogue one after the trace is finished, we can probably ignore that
+                    return;
+                }
+                
+                if(asn && ![asn isEqual:[NSNull null]]) {
+                    self.tracerouteASNs[ip] = asn;
+                }
+                else {
+                    self.tracerouteASNs[ip] = [NSNull null];
+                }
+                
+                [self displayHops:hops withDestNode:nil];
+            }];
         }
-        
-        if ([self.tracerouteHops count] >= 2) {
-            [self.controller highlightRoute:self.tracerouteHops];
-        }
-        
-        //update node info label for number of unique ASN Hops
-        NSMutableSet* asnSet = [NSMutableSet set];
-        for (int i = 0; i < [self.tracerouteHops count]; i++) {
-            NodeWrapper* node = self.tracerouteHops[i];
-            [asnSet addObject:node.asn];
-        }
-        self.nodeInformationViewController.box2.numberLabel.text = [NSString stringWithFormat:@"%i", [asnSet count]];
     }];
-
 }
 
-- (void)tracerouteDidComplete:(NSMutableArray*)hops{
+- (void)tracerouteDidComplete:(NSMutableArray*)hops {
     [self.tracer stop];
     self.tracer = nil;
     self.nodeInformationViewController.tracerouteTextView.text = [[NSString stringWithFormat:@"%@\nTraceroute complete.", self.nodeInformationViewController.tracerouteTextView.text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -845,16 +872,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.nodeInformationViewController tracerouteDone];
     [self resizeNodeInfoPopover];
 
-    //highlight last node if not already highlighted
-    NodeWrapper* node = [self.tracerouteHops lastObject];
-    if (node.index != self.controller.targetNode) {
-        [self.tracerouteHops addObject:[self.controller nodeAtIndex:self.controller.targetNode]];
-        [self.controller highlightRoute:self.tracerouteHops];
-    }
-
+    [self displayHops:hops withDestNode:[self.controller nodeAtIndex:self.controller.targetNode]];
 }
 
--(void)tracerouteDidTimeout{
+-(void)tracerouteDidTimeout:(NSMutableArray*)hops {
     [self.tracer stop];
     self.tracer = nil;
     self.nodeInformationViewController.tracerouteTextView.text = [[NSString stringWithFormat:@"%@\nTraceroute completed with as many hops as we could contact.", self.nodeInformationViewController.tracerouteTextView.text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -862,12 +883,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.nodeInformationViewController tracerouteDone];
     [self resizeNodeInfoPopover];
 
-    //highlight last node if not already highlighted
-    NodeWrapper* node = [self.tracerouteHops lastObject];
-    if (node.index != self.controller.targetNode) {
-        [self.tracerouteHops addObject:[self.controller nodeAtIndex:self.controller.targetNode]];
-        [self.controller highlightRoute:self.tracerouteHops];
-    }
+    [self displayHops:hops withDestNode:[self.controller nodeAtIndex:self.controller.targetNode]];
 }
 
 @end
