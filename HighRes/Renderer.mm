@@ -36,6 +36,9 @@ bool deviceIsOld(void) {
 @property float rotateX;
 @property float rotateY;
 @property float zoom;
+@property (strong) NSString* screenshot;
+@property float width;
+@property float height;
 @end
 
 @implementation Renderer
@@ -55,6 +58,8 @@ bool deviceIsOld(void) {
 }
 
 -(void)resizeWithWidth:(float)width andHeight:(float)height {
+    self.width = width;
+    self.height = height;
     self.mapController->display->camera->setDisplaySize(width, height);
 }
 
@@ -66,7 +71,6 @@ bool deviceIsOld(void) {
 -(void)zoom:(float)zoom {
     self.zoom += zoom;
 }
-
 
 -(void)display {
     float time = [NSDate timeIntervalSinceReferenceDate];
@@ -88,6 +92,42 @@ bool deviceIsOld(void) {
     
     self.mapController->update(time);
     self.mapController->display->draw();
+    
+    if(self.screenshot) {
+        [self captureImageToFile:self.screenshot];
+        self.screenshot = nil;
+    }
+}
+
+-(void)captureImageToFile:(NSString*)filename {
+    float width = self.width;
+    float height = self.height;
+    
+    GLvoid *imageData = malloc(width*height*4);
+    glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
+    
+    CGDataProviderRef dataProviderRef = CGDataProviderCreateWithData(NULL, imageData, width*height*4, nil);
+    CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
+    CGImageRef imageRef = CGImageCreate(width, height, 8 /* bits per component*/, 32 /* bits per pixel*/, width * 4, colorSpaceRef, kCGBitmapByteOrderDefault, dataProviderRef,    NULL, NO, kCGRenderingIntentDefault);
+    
+    CFURLRef url = (__bridge CFURLRef)[NSURL fileURLWithPath:filename];
+    CGImageDestinationRef destination = CGImageDestinationCreateWithURL(url, kUTTypePNG, 1, NULL);
+    CGImageDestinationAddImage(destination, imageRef, nil);
+    
+    if (!CGImageDestinationFinalize(destination)) {
+        NSLog(@"Failed to write image to %@", filename);
+    }
+    
+    CFRelease(destination);
+    
+    CGDataProviderRelease(dataProviderRef);
+    CGColorSpaceRelease(colorSpaceRef);
+    CGImageRelease(imageRef);
+    free(imageData);
+}
+
+-(void)screenshot:(NSString*)filename {
+    self.screenshot = filename;
 }
 
 @end

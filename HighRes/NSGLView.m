@@ -168,6 +168,10 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	CGLUnlockContext([[self openGLContext] CGLContextObj]);
 }
 
+- (BOOL)acceptsFirstResponder {
+    return YES;
+}
+
 - (void)mouseDown:(NSEvent *)theEvent {
     self.lastMouseDown = [NSEvent mouseLocation];
 }
@@ -187,6 +191,12 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     float zoom = ([NSEvent mouseLocation].y - self.lastRightMouseDown.y) * 0.01;
     [self.renderer zoom:zoom];;
     self.lastRightMouseDown = [NSEvent mouseLocation];
+}
+
+-(void)keyDown:(NSEvent *)theEvent {
+    if([theEvent.characters isEqualToString:@" "]) {
+        [self.renderer screenshot:@"/Users/nigel/InternetMap.png"];
+    }
 }
 
 - (void) dealloc
