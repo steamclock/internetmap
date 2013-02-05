@@ -55,6 +55,9 @@
 - (void) drawView;
 
 @property (strong) Renderer* renderer;
+@property NSPoint lastMouseDown;
+@property NSPoint lastRightMouseDown;
+
 @end
 
 @implementation NSGLView
@@ -163,6 +166,27 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     	
 	CGLFlushDrawable([[self openGLContext] CGLContextObj]);
 	CGLUnlockContext([[self openGLContext] CGLContextObj]);
+}
+
+- (void)mouseDown:(NSEvent *)theEvent {
+    self.lastMouseDown = [NSEvent mouseLocation];
+}
+
+- (void)rightMouseDown:(NSEvent *)theEvent {
+    self.lastRightMouseDown = [NSEvent mouseLocation];
+}
+
+- (void)mouseDragged:(NSEvent *)theEvent {
+    float rotateX = ([NSEvent mouseLocation].x - self.lastMouseDown.x) * 0.01;
+    float rotateY = -([NSEvent mouseLocation].y - self.lastMouseDown.y) * 0.01;
+    [self.renderer rotateRadiansX:rotateX radiansY:rotateY];
+    self.lastMouseDown = [NSEvent mouseLocation];
+}
+
+- (void)rightMouseDragged:(NSEvent *)theEvent {
+    float zoom = ([NSEvent mouseLocation].y - self.lastRightMouseDown.y) * 0.01;
+    [self.renderer zoom:zoom];;
+    self.lastRightMouseDown = [NSEvent mouseLocation];
 }
 
 - (void) dealloc

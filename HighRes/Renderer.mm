@@ -33,7 +33,9 @@ bool deviceIsOld(void) {
 
 @interface Renderer ()
 @property MapController* mapController;
-
+@property float rotateX;
+@property float rotateY;
+@property float zoom;
 @end
 
 @implementation Renderer
@@ -56,8 +58,34 @@ bool deviceIsOld(void) {
     self.mapController->display->camera->setDisplaySize(width, height);
 }
 
+-(void)rotateRadiansX:(float)x radiansY:(float)y {
+    self.rotateX += x;
+    self.rotateY += y;
+}
+
+-(void)zoom:(float)zoom {
+    self.zoom += zoom;
+}
+
+
 -(void)display {
     float time = [NSDate timeIntervalSinceReferenceDate];
+    
+    if(self.rotateX != 0.0f) {
+        self.mapController->display->camera->rotateRadiansX(self.rotateX);
+        self.rotateX = 0.0;
+    }
+    
+    if(self.rotateY != 0.0f) {
+        self.mapController->display->camera->rotateRadiansY(self.rotateY);
+        self.rotateY = 0.0;
+    }
+    
+    if(self.zoom != 0.0f) {
+        self.mapController->display->camera->zoomByScale(self.zoom);
+        self.zoom = 0.0;
+    }
+    
     self.mapController->update(time);
     self.mapController->display->draw();
 }

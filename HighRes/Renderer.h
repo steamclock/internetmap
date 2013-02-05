@@ -9,5 +9,6 @@
 
 -(void)display;
 -(void)resizeWithWidth:(float)width andHeight:(float)height;
-
+-(void)rotateRadiansX:(float)x radiansY:(float)y;
+-(void)zoom:(float)zoom;
 @end
