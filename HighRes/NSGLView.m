@@ -174,6 +174,12 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 
 - (void)mouseDown:(NSEvent *)theEvent {
     self.lastMouseDown = [NSEvent mouseLocation];
+    
+    CGLLockContext([[self openGLContext] CGLContextObj]);
+    NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    point.y = self.bounds.size.height - point.y;
+    [self.renderer clickedAtPoint:point];
+	CGLUnlockContext([[self openGLContext] CGLContextObj]);
 }
 
 - (void)rightMouseDown:(NSEvent *)theEvent {

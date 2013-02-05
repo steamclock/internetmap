@@ -10,6 +10,8 @@
 #include "Program.hpp"
 #include "OpenGL.hpp"
 
+float gDisplayScale = 1.0f;
+
 MapDisplay::MapDisplay() :
     _nodeProgram(new Program("node", "node", VERTEX_NODE)),
     _blendNodeProgram(new Program("node", "nodeBlend", VERTEX_BLEND_NODE)),
@@ -48,6 +50,8 @@ void MapDisplay::bindDefaultNodeUniforms(shared_ptr<Program> program) {
 
 void MapDisplay::draw(void)
 {
+    gDisplayScale = _displayScale;
+    
 #ifdef BUILD_MAC
     static GLuint vao = 0;
     if(vao == 0) {
@@ -66,6 +70,8 @@ void MapDisplay::draw(void)
     glEnable(GL_BLEND);
 
     glEnable(GL_POINT_SPRITE_OES);
+    
+    glEnable(GL_LINE_SMOOTH);
     
     if (selectedNodes) {
         _selectedNodeProgram->bind();

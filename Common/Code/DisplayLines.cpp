@@ -10,6 +10,8 @@
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
+extern float gDisplayScale;
+
 struct LineVertex {
     RawVector3 position;
     ByteColor color;
@@ -43,7 +45,7 @@ void DisplayLines::updateLine(int index, const Point3& start, const Color& start
 }
 
 void DisplayLines::display(void) {
-    glLineWidth(_width);
+    glLineWidth(_width * gDisplayScale);
 
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
 

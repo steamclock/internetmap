@@ -226,7 +226,7 @@ void MapController::highlightConnections(NodePointer node) {
     }
     
     lines->endUpdate();
-    lines->setWidth(((filteredConnections.size() < 20) ? 2 : 1) * display->getDisplayScale());
+    lines->setWidth(((filteredConnections.size() < 20) ? 2 : 1));
     display->highlightLines = lines;
 }
 
@@ -268,7 +268,7 @@ void MapController::highlightRoute(std::vector<NodePointer> nodeList) {
     
     
     lines->endUpdate();
-    lines->setWidth(5.0*display->getDisplayScale());
+    lines->setWidth(5.0);
     
     display->highlightLines = lines;
     

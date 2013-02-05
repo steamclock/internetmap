@@ -79,8 +79,13 @@ bool deviceIsOld(void) {
     self.zoom += zoom;
 }
 
+-(void)clickedAtPoint:(NSPoint)point {
+    self.mapController->handleTouchDownAtPoint(Vector2(point.x, point.y));
+    self.mapController->selectHoveredNode();
+}
+
 -(void)display {
-    float time = [NSDate timeIntervalSinceReferenceDate];
+    NSTimeInterval time = [NSDate timeIntervalSinceReferenceDate];
     
     
     if(self.rotateX != 0.0f) {
