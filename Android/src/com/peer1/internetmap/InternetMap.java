@@ -210,7 +210,32 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                     //TODO stop spinning
                 } else {
                     Log.d(TAG, addrString);
-                    //TODO fetchForAddresses
+                    ASNRequest.fetchASNForIP(addrString, new ASNResponseHandler() {
+                    public void onStart() {
+                        Log.d(TAG, "asnrequest2 start");
+                        //nothing to do; already animating
+                    }
+                    public void onFinish() {
+                        Log.d(TAG, "asnrequest2 finish");
+                        /*stop animating
+                        ProgressBar progress = (ProgressBar) findViewById(R.id.youAreHereProgressBar);
+                        Button button = (Button) findViewById(R.id.youAreHereButton);
+                        progress.setVisibility(View.INVISIBLE);
+                        button.setVisibility(View.VISIBLE);*/
+                    }
+
+                    public void onSuccess(JSONObject response) {
+                        selectNodeByASN(response, false);
+                    }
+                
+                    public void onFailure(Throwable e, String response) {
+                        //tell the user
+                        //FIXME: outputting the raw error response is bad. how can we make it userfriendly?
+                        String message = String.format(getString(R.string.asnfail), response);
+                        showError(message);
+                        Log.d(TAG, message);
+                    }
+                });
                 }
             }
         }.execute();
@@ -250,23 +275,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             }
 
             public void onSuccess(JSONObject response) {
-                //expected response format: {"payload":"ASxxxx"}
-                try {
-                    String asnWithAS = response.getString("payload");
-                    String asnString = asnWithAS.substring(2);
-                    Log.d(TAG, String.format("asn: %s", asnString));
-                    //yay, an ASN! turn it into a node so we can target it.
-                    NodeWrapper node = mController.nodeByAsn(asnString);
-                    if (node != null) {
-                        mUserNodeIndex = node.index;
-                        selectNode(node);
-                    } else {
-                        showError(String.format(getString(R.string.asnNullNode), asnString));
-                    }
-                } catch (Exception e) {
-                    Log.d(TAG, String.format("can't parse response: %s", response.toString()));
-                    showError(getString(R.string.asnBadResponse));
-                }
+                   selectNodeByASN(response, true);
             }
         
             public void onFailure(Throwable e, String response) {
@@ -384,8 +393,26 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
     
-    public void selectNode(NodeWrapper node) {
-        mController.updateTargetForIndex(node.index);
+    public void selectNodeByASN(JSONObject response, boolean cacheIndex) {
+        //expected response format: {"payload":"ASxxxx"}
+        try {
+            String asnWithAS = response.getString("payload");
+            String asnString = asnWithAS.substring(2);
+            Log.d(TAG, String.format("2asn: %s", asnString));
+            //yay, an ASN! turn it into a node so we can target it.
+            NodeWrapper node = mController.nodeByAsn(asnString);
+            if (node != null) {
+                if (cacheIndex) {
+                    mUserNodeIndex = node.index;
+                }
+                mController.updateTargetForIndex(node.index);
+            } else {
+                showError(String.format(getString(R.string.asnNullNode), asnString));
+            }
+        } catch (Exception e) {
+            Log.d(TAG, String.format("can't parse response: %s", response.toString()));
+            showError(getString(R.string.asnBadResponse));
+        }
     }
 
     //called from c++
