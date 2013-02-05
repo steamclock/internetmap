@@ -682,7 +682,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.searchButton.selected = NO;
 
     if ([HelperMethods deviceHasInternetConnection]) {
-        // TODO :detect an IP address and call fetchASNForIP directly rather than doing no-op lookup
+        // TODO :detect when the host is an IP address and call fetchASNForIP directly rather than doing no-op lookup
         [self.searchActivityIndicator startAnimating];
         self.searchButton.hidden = YES;
         [[SCDispatchQueue defaultPriorityQueue] dispatchAsync:^{
@@ -700,6 +700,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                         [self selectNodeForASN:myASN];
                     }
                 }];
+            } else {
+                [self.errorInfoView setErrorString:@"Couldn't find any host by that name."];
+                //FIXME when is that error cleared?
+                [self.searchActivityIndicator stopAnimating];
+                self.searchButton.hidden = NO;
             }
         }];
     } else {
