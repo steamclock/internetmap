@@ -3,6 +3,8 @@ package com.peer1.internetmap;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Iterator;
 
 import org.json.JSONException;
@@ -14,6 +16,7 @@ import android.content.Context;
 import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Bundle;
@@ -182,21 +185,35 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         }
     }
     
-    public void findHost(String host) {
+    public void findHost(final String host) {
         Log.d(TAG, String.format("find host: %s", host));
         if (!haveConnectivity()) {
             return;
         }
         
         //TODO animate
-        //TODO addressesForHost.
-        String address = "";
-        if (address.isEmpty()) {
-            //TODO stop spinning
-            showError(String.format(getString(R.string.invalidHost), host));
-        } else {
-            //TODO fetchForAddresses
-        }
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                String addrString;
+                try {
+                    InetAddress address = InetAddress.getByName(host);
+                    addrString = address.getHostAddress();
+                } catch (UnknownHostException e) {
+                    addrString = "";
+                }
+                return addrString;
+            }
+            protected void onPostExecute(String addrString) {
+                if (addrString.isEmpty()) {
+                    showError(String.format(getString(R.string.invalidHost), host));
+                    //TODO stop spinning
+                } else {
+                    Log.d(TAG, addrString);
+                    //TODO fetchForAddresses
+                }
+            }
+        }.execute();
     }
     
     public void dismissSearchPopup(View unused) {
