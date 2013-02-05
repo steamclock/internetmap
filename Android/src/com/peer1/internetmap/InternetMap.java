@@ -287,13 +287,14 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             }
             timelineBar.setProgress(timelineBar.getMax());
             timelineBar.setVisibility(View.VISIBLE);
-            //TODO: change node popup mode, set up timeline
+            //TODO: change node popup mode
         }
     }
     
     public void dismissTimeline() {
         SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
         timelineBar.setVisibility(View.GONE);
+        mController.setTimelinePoint(mTimelineMinYear + timelineBar.getMax());
         //TODO: change node popup mode
     }
 
@@ -306,7 +307,9 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             Log.d(TAG, String.format("TODO: update timeline popup to %d", progress + mTimelineMinYear));
         }
         public void onStopTrackingTouch(SeekBar seekBar) {
-            Log.d(TAG, String.format("TODO: dismiss timeline popup, set controller to %d", seekBar.getProgress() + mTimelineMinYear));
+            int year = mTimelineMinYear + seekBar.getProgress();
+            mController.setTimelinePoint(year);
+            Log.d(TAG, "TODO: dismiss timeline popup");
         }
     }
     
