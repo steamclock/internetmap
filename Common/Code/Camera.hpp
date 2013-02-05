@@ -62,9 +62,7 @@ class Camera {
     Quaternion _rotationTarget;
     TimeInterval _rotationStartTime;
     TimeInterval _rotationDuration;
-    
-    float _subregionX, _subregionY, _subregionWidth, _subregionHeight;
-    
+        
     void handleIdleMovement(TimeInterval delta);
     void handleMomentumPan(TimeInterval delta);
     void handleMomentumZoom(TimeInterval delta);
@@ -111,12 +109,6 @@ public:
     
     void startMomentumRotationWithVelocity(float velocity);
     void stopMomentumRotation();
-
-    // set the subregion to render for a high resolution screenshot.
-    // All numbers are normalized (so 0,0,1,1 would be fullscreen)
-    void setViewSubregion(float x, float y, float w, float h);
-    float getSubregionScale(void);
-
 };
 
 #endif

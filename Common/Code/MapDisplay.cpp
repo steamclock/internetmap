@@ -43,7 +43,7 @@ void MapDisplay::bindDefaultNodeUniforms(shared_ptr<Program> program) {
     Matrix4 p = camera->currentProjection();
     glUniformMatrix4fv(program->uniformForName("modelViewMatrix"), 1, 0, reinterpret_cast<float*>(&mv));
     glUniformMatrix4fv(program->uniformForName("projectionMatrix"), 1, 0, reinterpret_cast<float*>(&p));
-    glUniform1f(program->uniformForName("maxSize"), _displayScale * camera->getSubregionScale() * 300.0f); // Largest size to render a node. May be too large for slow devices
+    glUniform1f(program->uniformForName("maxSize"), _displayScale * 300.0f); // Largest size to render a node. May be too large for slow devices
     glUniform1f(program->uniformForName("screenWidth"), _displayScale * camera->displayWidth());
     glUniform1f(program->uniformForName("screenHeight"), _displayScale * camera->displayHeight());
 }

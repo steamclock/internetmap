@@ -55,6 +55,4 @@
 - (NSArray*)visualizationNames;
 - (void)setVisualization:(int)vis;
 
-- (void)setViewSubregion:(CGRect)rect;
-
 @end

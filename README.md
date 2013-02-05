@@ -72,24 +72,25 @@ Taking high-res screenshots
 
 To take a print resolution screenshot, you need to do the following:
 
-- Turn the screenshot button on locally by commenting out the line "self.screenshotButton.hidden = YES;" in ViewController.m
+- Create a "InternetMap" subdirectory in you Home directory (The output path is currently hardcoded)
 
-- If necessary modify the number of subdivisions to do by changing AXIS_DIVISIONS in ViewController.m (the default is 8, whihc will produce a 16k shot on a retina iPad, different values may be needed for other devices to get the desired resolutions).
+- Open the "HighRes" project and build and run it.
 
-- Run the application, set up the intended view, and hit the screenshot button in the upper right hand corner.
+- Set up the intended view.
+  - Left click and drag rotates. 
+  - Right click and drag zooms. 
+  - You can select nodes by clicking on them.
 
-- Download the data from the app
-  - Open the Organizer window in XCode 
-  - Go to the devices tab
-  - Find the current device
-  - Click on the "Applications" section
-  - Hit download at the bottom of the window and pick a location
+- Hit the space bar to take a screenshot. This will write a single 4k 'master' screenshot (the whole scene in a single image), and a number of 4k 'tile' screenshots.
+	- Intel HD 3000 will max out at 8k (2x2 4k)
+	- Intel HD 4000 and discrete GPUs should do 16k (4x4 4k)
 
-- If you don't have it install Imagemagick (with homebrew, you can do 'brew install imagemagick')
+- If you don't have it, install Imagemagick (with homebrew, you can do 'brew install imagemagick')
 
-- Open up a terminal and go to the AppData/Documetn directory inside the bundle you downloaded 
+- Open up a terminal and go to the ~/InternetMap directory.
 
-- Run the following command : montage screenshot*.png -mode concatenate -tile 8x8 final.png
-  - You may need to change "8x8" if you changed AXIS_DIVISIONS earlier
+- Run the following command : montage screenshot*.png -mode concatenate -tile 4x4 final.png
+  - You may need to use '2x2' instead of '4x4' how many tiles were produced.
 
+Note that the print resolution version may have the larger nodes appear smaller than in the the original image from the live window. There are hardware limitations on point sprite size that will get hit on some hardware. There doesn't appear to be any way to resolve this right now.
 
