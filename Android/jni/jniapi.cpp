@@ -213,6 +213,15 @@ JNIEXPORT jobjectArray JNICALL Java_com_peer1_internetmap_MapControllerWrapper_a
     return array;
 }
 
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_setTimelinePoint(JNIEnv* jenv, jobject obj, int year) {
+    MapController* controller = renderer->beginControllerModification();
+    char date[9];
+    sprintf(date, "%d0101", year);
+    controller->setTimelinePoint(date);
+    renderer->endControllerModification();
+}
+
+
 JNIEXPORT jstring JNICALL Java_com_peer1_internetmap_NodeWrapper_nativeFriendlyDescription(JNIEnv* jenv, jobject obj, int index) {
     MapController* controller = renderer->beginControllerModification();
     if (index < 0 || index >= controller->data->nodes.size()) {

@@ -16,5 +16,6 @@ public class MapControllerWrapper {
     public native NodeWrapper nodeByAsn(String asn);
     public native void updateTargetForIndex(int index);
     public native NodeWrapper[] allNodes();
+    public native void setTimelinePoint(int year);
 
 }

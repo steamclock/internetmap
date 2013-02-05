@@ -1,7 +1,9 @@
 package com.peer1.internetmap;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Iterator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,6 +20,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.Toast;
 import android.view.ScaleGestureDetector;
 import android.view.GestureDetector;
@@ -46,6 +49,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     private NodePopup mNodePopup;
     
     private int mUserNodeIndex = -1; //cache user's node from "you are here"
+    private JSONObject mTimelineHistory; //history data for timeline
+    private int mTimelineMinYear;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,6 +72,9 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         
         mController = new MapControllerWrapper();
         mHandler = new Handler();
+        
+        SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
+        timelineBar.setOnSeekBarChangeListener(new TimelineListener());
     }
 
     public String readFileAsString(String filePath) throws java.io.IOException {
@@ -143,6 +151,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
 
     public void visualizationsButtonPressed(View view) {
+        dismissTimeline();
+
         if (mVisualizationPopup == null) {
             LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
             View popupView = layoutInflater.inflate(R.layout.visualizationview, null);
@@ -157,6 +167,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
 
     public void searchButtonPressed(View view) {
+        dismissTimeline();
+
         if (mSearchPopup == null) {
             LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
             View popupView = layoutInflater.inflate(R.layout.searchview, null);
@@ -175,6 +187,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
 
     public void youAreHereButtonPressed(View view) {
+        dismissTimeline();
+
         //check internet status
         boolean isConnected = haveConnectivity();
         
@@ -182,7 +196,6 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             return;
         }
 
-        //TODO: stop timeline if active
         //do an ASN request to get the user's ASN
         ASNRequest.fetchCurrentASNWithResponseHandler(new ASNResponseHandler() {
             public void onStart() {
@@ -230,6 +243,74 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                 Log.d(TAG, message);
             }
         });
+    }
+
+    public void timelineButtonPressed(View view) {
+        Log.d(TAG, "timeline");
+        SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
+        if (timelineBar.getVisibility() == View.VISIBLE) {
+            dismissTimeline();
+        } else {
+            if (mTimelineHistory == null) {
+                //load history data & init the timeline bounds
+                try {
+                    mTimelineHistory = new JSONObject(readFileAsString("data/history.json"));
+                } catch (JSONException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                
+                //get range
+                String minYear = "9999";
+                String maxYear = "0";
+                Iterator<?> it = mTimelineHistory.keys();
+                while(it.hasNext()){
+                    //note: even though years are numbers, since all the ones we use are 2xxx, a string comparison is safe.
+                    String year = (String)it.next();
+                    if (year.compareTo(minYear) < 0) {
+                        minYear = year;
+                    }
+                    if (year.compareTo(maxYear) > 0) {
+                        maxYear = year;
+                    }
+                }
+                Log.d(TAG, String.format("year span: %s to %s", minYear, maxYear));
+                
+                int min = Integer.parseInt(minYear);
+                int max = Integer.parseInt(maxYear);
+                int range = max - min;
+                timelineBar.setMax(range);
+                mTimelineMinYear = min;
+            }
+            timelineBar.setProgress(timelineBar.getMax());
+            timelineBar.setVisibility(View.VISIBLE);
+            //TODO: change node popup mode
+        }
+    }
+    
+    public void dismissTimeline() {
+        SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
+        timelineBar.setVisibility(View.GONE);
+        mController.setTimelinePoint(mTimelineMinYear + timelineBar.getMax());
+        //TODO: change node popup mode
+    }
+
+    private class TimelineListener implements SeekBar.OnSeekBarChangeListener{
+        public void onStartTrackingTouch(SeekBar seekBar) {
+            Log.d(TAG, "TODO: create timeline popup");
+        }
+        public void onProgressChanged(SeekBar seekBar, int progress,
+                boolean fromUser) {
+            Log.d(TAG, String.format("TODO: update timeline popup to %d", progress + mTimelineMinYear));
+        }
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            int year = mTimelineMinYear + seekBar.getProgress();
+            mController.setTimelinePoint(year);
+            Log.d(TAG, "TODO: dismiss timeline popup");
+        }
     }
     
     public boolean haveConnectivity(){

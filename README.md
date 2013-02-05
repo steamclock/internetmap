@@ -35,6 +35,11 @@ int_encode = $(__gmsl_tr1)$(wordlist 1,$(words $1),$ (__gmsl_input_int))
 
 Congratulations, you have a setup that might conceivably build the Android version of the project!
 
+9. In Eclipse preferences, ensure that it is using spaces (not tabs) in java, c++ and other files:
+    Java->Code Style->Formatter->Edit->Indentation = "Spaces Only"
+    C/C++->Code Style->Formatter->Edit->Indentation = "Spaces Only"
+    General->Editors->Text Editors->Insert spaces for tabs
+
 Other Android Gotchas & Advice
 ==============================
 
