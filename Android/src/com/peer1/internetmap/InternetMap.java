@@ -182,6 +182,23 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         }
     }
     
+    public void findHost(String host) {
+        Log.d(TAG, String.format("find host: %s", host));
+        if (!haveConnectivity()) {
+            return;
+        }
+        
+        //TODO animate
+        //TODO addressesForHost.
+        String address = "";
+        if (address.isEmpty()) {
+            //TODO stop spinning
+            showError(String.format(getString(R.string.invalidHost), host));
+        } else {
+            //TODO fetchForAddresses
+        }
+    }
+    
     public void dismissSearchPopup(View unused) {
         mSearchPopup.dismiss();
     }
