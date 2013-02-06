@@ -94,7 +94,7 @@ To take a print resolution screenshot, you need to do the following:
 
 - Open up a terminal and go to the ~/InternetMap directory.
 
-- Run the following command : montage screenshot*.png -mode concatenate -tile 4x4 final.png
+- Run the following command : montage tile*.png -mode concatenate -tile 4x4 final.png
   - You may need to use '2x2' instead of '4x4' how many tiles were produced.
 
 Note that the print resolution version may have the larger nodes appear smaller than in the the original image from the live window. There are hardware limitations on point sprite size that will get hit on some hardware. There doesn't appear to be any way to resolve this right now.
