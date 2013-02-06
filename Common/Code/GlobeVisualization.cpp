@@ -7,24 +7,38 @@
 //
 
 #include "GlobeVisualization.hpp"
+#include <stdlib.h>
 
+void GlobeVisualization::activate(std::vector<NodePointer> nodes) {
+    srand(81531);
+    
+    for(unsigned int i = 0; i < nodes.size(); i++) {
+        nodes[i]->visualizationActive = true; //nodes[i]->hasLatLong;
+    }
+}
+
+float unitRandom() {
+    return float(arc4random_uniform(1000000)) / float(1000000);
+}
 Point3 GlobeVisualization::nodePosition(NodePointer node) {
-    if(!node->hasLatLong) {
-        return DefaultVisualization::nodePosition(node);
+    float r;
+    
+    if(!node->hasLatLong && (node->latitude == 0.0f) && (node->longitude == 0.0f)) {
+        node->latitude = (2 * M_PI) * unitRandom();
+        node->longitude = acos(2.0f * unitRandom() - 1.0f);
     }
     
-    float r = 1.0;
+    r = node->hasLatLong ? 1.1f : 1.0f;
+    
     float x = r * cos(node->latitude) * cos(node->longitude);
     float y = r * cos(node->latitude) * sin(node->longitude);
     float z = r * sin(node->latitude);
     return Point3(x, y, z);
 }
 
-
-
 Color GlobeVisualization::nodeColor(NodePointer node) {
     if(!node->hasLatLong) {
-        return Color(0.0f, 0.0f, 0.0f, 0.0f);
+        return Color(0.3f, 0.3f, 0.3f, 1.0f);
     }
 
     return DefaultVisualization::nodeColor(node);

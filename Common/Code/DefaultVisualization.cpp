@@ -13,6 +13,12 @@
 
 bool deviceIsOld();
 
+void DefaultVisualization::activate(std::vector<NodePointer> nodes) {
+    for(unsigned int i = 0; i < nodes.size(); i++) {
+        nodes[i]->visualizationActive = true;
+    }
+}
+
 Point3 DefaultVisualization::nodePosition(NodePointer node) {
     return Point3(log10f(node->importance)+2.0f, node->positionX, node->positionY);
 }
@@ -59,7 +65,7 @@ void DefaultVisualization::updateDisplayForNodes(shared_ptr<DisplayNodes> displa
         Point3 position;
         float size;
 
-        if(node->active) {
+        if(node->isActive()) {
             position = nodePosition(node);
             size = nodeSize(node);
             color = nodeColor(node);
