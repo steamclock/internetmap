@@ -537,8 +537,15 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
         @Override
         public boolean onDown(MotionEvent event) { 
-            Log.d(TAG, "onDown");
-            mController.handleTouchDownAtPoint(event.getX(), event.getY());
+            float x = event.getX();
+            float y = event.getY();
+            SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceview);
+            int location[] = new int[2];
+            surfaceView.getLocationOnScreen(location);
+            int top = location[1];
+            int left = location[0];
+            Log.d(TAG, String.format("onDown %f %f %d %d", x, y, top, left));
+            mController.handleTouchDownAtPoint(x - left, y - top);
             return true;
         }
 
