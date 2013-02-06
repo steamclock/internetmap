@@ -183,8 +183,10 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
     NSMutableArray* array = [NSMutableArray arrayWithCapacity:_controller->data->nodes.size()];
     for (int i = 0; i<_controller->data->nodes.size(); i++) {
         NodePointer node = _controller->data->nodes[i];
-        NodeWrapper* wrap = [[NodeWrapper alloc] initWithNodePointer:node];
-        [array addObject:wrap];
+        if(node->isActive()) {
+            NodeWrapper* wrap = [[NodeWrapper alloc] initWithNodePointer:node];
+            [array addObject:wrap];
+        }
     }
     
     return array;
@@ -197,7 +199,7 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
 
 - (NodeWrapper*)nodeByASN:(NSString*)asn{
     NodePointer node = _controller->data->nodesByAsn[std::string([asn UTF8String])];
-    if(node)
+    if(node && node->isActive())
         return [[NodeWrapper alloc] initWithNodePointer:node];
     else
         return nil;

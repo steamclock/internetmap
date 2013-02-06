@@ -13,13 +13,18 @@ void GlobeVisualization::activate(std::vector<NodePointer> nodes) {
     srand(81531);
     
     for(unsigned int i = 0; i < nodes.size(); i++) {
-        nodes[i]->visualizationActive = true; //nodes[i]->hasLatLong;
+#if 0
+        nodes[i]->visualizationActive = true;
+#else
+        nodes[i]->visualizationActive = nodes[i]->hasLatLong;
+#endif
     }
 }
 
 float unitRandom() {
-    return float(arc4random_uniform(1000000)) / float(1000000);
+    return float(rand()) / float(RAND_MAX);
 }
+
 Point3 GlobeVisualization::nodePosition(NodePointer node) {
     float r;
     

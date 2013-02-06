@@ -177,10 +177,17 @@ JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nodeBy
     const char *asnCstr = jenv->GetStringUTFChars(asn, 0);
     NodePointer node = controller->data->nodesByAsn[asnCstr];
     jenv->ReleaseStringUTFChars(asn, asnCstr);
-    jobject wrapper = wrapNode(jenv, node);
 
-    renderer->endControllerModification();
-    return wrapper;
+    if(node->isActive()) {
+        jobject wrapper = wrapNode(jenv, node);
+
+        renderer->endControllerModification();
+        return wrapper;
+    }
+    else {
+        renderer->endControllerModification();
+        return 0;
+    }
 }
 
 JNIEXPORT int JNICALL Java_com_peer1_internetmap_MapControllerWrapper_targetNodeIndex(JNIEnv* jenv, jobject obj) {
@@ -204,10 +211,12 @@ JNIEXPORT jobjectArray JNICALL Java_com_peer1_internetmap_MapControllerWrapper_a
     //populate array
     for (int i = 0; i < controller->data->nodes.size(); i++) {
         NodePointer node = controller->data->nodes[i];
-        jobject wrapper = wrapNode(jenv, node);
-        jenv->SetObjectArrayElement(array, i, wrapper);
-        //cleanup because we loop >512 times
-        jenv->DeleteLocalRef(wrapper);
+        if(node->isActive()) {
+            jobject wrapper = wrapNode(jenv, node);
+            jenv->SetObjectArrayElement(array, i, wrapper);
+            //cleanup because we loop >512 times
+            jenv->DeleteLocalRef(wrapper);
+        }
     }
     renderer->endControllerModification();
     return array;
