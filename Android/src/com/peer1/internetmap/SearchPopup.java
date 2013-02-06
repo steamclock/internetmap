@@ -1,6 +1,7 @@
 package com.peer1.internetmap;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
@@ -45,8 +46,8 @@ public class SearchPopup extends PopupWindow{
         }
         
         //return true if the node matches the search filter
-        public boolean matches(CharSequence filter) {
-            return node.asn.contains(filter) || node.rawTextDescription.contains(filter);
+        public boolean matches(Pattern pattern) {
+            return pattern.matcher(node.asn).find() || pattern.matcher(node.rawTextDescription).find();
         }
     }
     
@@ -90,9 +91,10 @@ public class SearchPopup extends PopupWindow{
                     //filter it
                     Log.d(TAG, "filtering...");
                     ArrayList<SearchItem> nodes = new ArrayList<SearchItem>();
+                    Pattern pattern = Pattern.compile(Pattern.quote(constraint.toString()), Pattern.CASE_INSENSITIVE);
                     //TODO use java style iterators
                     for (int i=0; i<mAllNodes.size(); i++) {
-                        if (mAllNodes.get(i).matches(constraint)) {
+                        if (mAllNodes.get(i).matches(pattern)) {
                             nodes.add(mAllNodes.get(i));
                         }
                     }
