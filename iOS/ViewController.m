@@ -19,6 +19,9 @@
 #import "TimelineInfoViewController.h"
 #import "ExpandedSlider.h"
 
+// Below import for testing BSD traceroute only
+#import "main-traceroute.h"
+
 //TODO: move this to a better place.
 #define SELECTED_NODE_COLOR UIColorFromRGB(0xffa300)
 
@@ -730,7 +733,16 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.nodeInformationPopover repositionPopoverFromRect:[self displayRectForNodeInfoPopover] inView:self.view permittedArrowDirections:dir animated:YES];
 }
 
+-(void)testBSDTraceroute {
+    //Function for dev/testing purposes only
+    char* derp[] = {"foo", "google.com"};
+    main_traceroute(2, derp);
+}
+
 -(void)tracerouteButtonTapped{
+    
+    //Below line for testing purposes only
+    [self testBSDTraceroute];
     
     [self resizeNodeInfoPopover];
     
