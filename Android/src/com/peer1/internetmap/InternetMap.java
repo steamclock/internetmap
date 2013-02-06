@@ -156,7 +156,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
 
     public void visualizationsButtonPressed(View view) {
-        dismissTimeline();
+        dismissPopups();
 
         if (mVisualizationPopup == null) {
             LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -172,7 +172,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
 
     public void searchButtonPressed(View view) {
-        dismissTimeline();
+        dismissPopups();
 
         if (mSearchPopup == null) {
             LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -254,7 +254,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
 
     public void youAreHereButtonPressed(View view) {
-        dismissTimeline();
+        dismissPopups();
 
         //check internet status
         boolean isConnected = haveConnectivity();
@@ -299,8 +299,9 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     public void timelineButtonPressed(View view) {
         Log.d(TAG, "timeline");
         if (mInTimelineMode) {
-            dismissTimeline();
+            dismissPopups(); //leave timeline mode
         } else {
+            dismissPopups();
             SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
             if (mTimelineHistory == null) {
                 //load history data & init the timeline bounds
@@ -345,15 +346,17 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         }
     }
     
-    public void dismissTimeline() {
+    public void dismissPopups() {
         if (mInTimelineMode) {
             SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
             timelineBar.setVisibility(View.GONE);
             mController.setTimelinePoint(mTimelineMinYear + timelineBar.getMax());
             mInTimelineMode = false;
-            //reset the node popup, the lazy way
-            if (mNodePopup != null) mNodePopup.dismiss();
         }
+        if (mNodePopup != null) {
+            mNodePopup.dismiss();
+        }
+        //search and visualization popups dismiss themselves, we can ignore them here
     }
 
     private class TimelineListener implements SeekBar.OnSeekBarChangeListener{
@@ -365,7 +368,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             mTimelinePopup = new TimelinePopup(InternetMap.this, popupView);
             mTimelinePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 public void onDismiss() {
-                    mNodePopup = null;
+                    mTimelinePopup = null;
                 }
             });
         }
@@ -455,6 +458,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                 mNodePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     public void onDismiss() {
                         mNodePopup = null;
+                        mController.deselectCurrentNode();
                     }
                 });
             }
@@ -569,9 +573,10 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         //note: if double tap is used this should probably s/Up/Confirmed
         public boolean onSingleTapUp(MotionEvent e) {
             Log.d(TAG, "tap!");
-            mController.selectHoveredNode();
-            //TODO: iOS does some deselect stuff if that call failed.
-            //but, I think maybe that should just happen inside the controller automatically.
+            boolean selected = mController.selectHoveredNode();
+            if (!selected && mNodePopup != null) {
+                mNodePopup.dismiss();
+            }
             return true;
         }
     }
