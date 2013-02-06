@@ -47,6 +47,7 @@ private:
     EGLDisplay _display;
     EGLSurface _surface;
     EGLContext _context;
+    EGLConfig _config;
     int _width;
     int _height;
     float _displayScale;
