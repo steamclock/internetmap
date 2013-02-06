@@ -250,6 +250,12 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_setVisual
     renderer->endControllerModification();
 }
 
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_deselectCurrentNode(JNIEnv* jenv, jobject obj) {
+    MapController* controller = renderer->beginControllerModification();
+    controller->deselectCurrentNode();
+    renderer->endControllerModification();
+}
+
 JNIEXPORT jstring JNICALL Java_com_peer1_internetmap_NodeWrapper_nativeFriendlyDescription(JNIEnv* jenv, jobject obj, int index) {
     MapController* controller = renderer->beginControllerModification();
     if (index < 0 || index >= controller->data->nodes.size()) {

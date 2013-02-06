@@ -455,6 +455,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                 mNodePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     public void onDismiss() {
                         mNodePopup = null;
+                        mController.deselectCurrentNode();
                     }
                 });
             }
@@ -569,9 +570,10 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         //note: if double tap is used this should probably s/Up/Confirmed
         public boolean onSingleTapUp(MotionEvent e) {
             Log.d(TAG, "tap!");
-            mController.selectHoveredNode();
-            //TODO: iOS does some deselect stuff if that call failed.
-            //but, I think maybe that should just happen inside the controller automatically.
+            boolean selected = mController.selectHoveredNode();
+            if (!selected && mNodePopup != null) {
+                mNodePopup.dismiss();
+            }
             return true;
         }
     }
