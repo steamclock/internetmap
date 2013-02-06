@@ -72,11 +72,10 @@ const char* nextToken(const char* source, char* token, bool* lineEnd) {
 void MapData::loadFromString(const std::string& text) {
     // Connections an boxes are always fully regenerated
     connections.erase(connections.begin(), connections.end());
-    boxesForNodes.erase(boxesForNodes.begin(), boxesForNodes.end());
     
     // Mark all nodes as inactive (they will be reactivated if they are in the current data set)
     for(int i = 0; i < nodes.size(); i++) {
-        nodes[i]->active = false;
+        nodes[i]->timelineActive = false;
     }
     
     const char* sourceText = text.c_str();
@@ -108,7 +107,7 @@ void MapData::loadFromString(const std::string& text) {
         
         if(node) {
             // already thre, just mark as active
-            node->active = true;
+            node->timelineActive = true;
         }
         else {
             // Not there, create
@@ -117,7 +116,7 @@ void MapData::loadFromString(const std::string& text) {
             node = NodePointer(new Node());
             node->asn = token;
             node->type = AS_UNKNOWN;
-            node->active = true;
+            node->timelineActive = true;
             
             //is it a special node?
             bool needInsert = false;
@@ -173,6 +172,8 @@ void MapData::loadFromString(const std::string& text) {
     
     LOG("loaded data: %d nodes (this load), %d nodes (total), %d connections", missingNodes, (int)(nodes.size()), numConnections);
     
+    visualization->activate(nodes);
+
     createNodeBoxes();
 }
 
@@ -245,6 +246,7 @@ void MapData::loadASInfo(const std::string& json){
 }
 
 void MapData::createNodeBoxes() {
+    boxesForNodes.erase(boxesForNodes.begin(), boxesForNodes.end());
     
     for (int k = 0; k < numberOfCellsZ; k++) {
         float z = IndexBoxMinZ + boxSizeZWithoutOverlap*k;
@@ -263,7 +265,7 @@ void MapData::createNodeBoxes() {
     
     for (unsigned int i = 0; i < nodes.size(); i++) {
         NodePointer ptrNode = nodes.at(i);
-        if(ptrNode->active) {
+        if(ptrNode->isActive()) {
             Point3 pos = visualization->nodePosition(ptrNode);
             IndexBoxPointer box = indexBoxForPoint(pos);
             box->indices.insert(i);

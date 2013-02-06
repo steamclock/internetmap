@@ -18,7 +18,6 @@
 
 class MapData {
     IndexBoxPointer indexBoxForPoint(const Point3& point);
-    void createNodeBoxes();
 public:
     VisualizationPointer visualization;
     
@@ -32,7 +31,9 @@ public:
     void loadFromString(const std::string& data);
     void loadFromAttrString(const std::string& json);
     void loadASInfo(const std::string& asinfo);
-    
+
+    void createNodeBoxes();
+
     NodePointer nodeAtIndex(unsigned int index);
     
 };

@@ -197,6 +197,7 @@
 - (void)filterContentForSearchText:(NSString*)searchText
 {
     if(searchText.length == 0) {
+        self.showHostLookup = NO;
         self.searchResults = self.allItems;
         [self.tableView reloadData];
     }

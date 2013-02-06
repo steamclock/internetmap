@@ -65,6 +65,9 @@ MapController::MapController() :
     data->loadASInfo(asinfoText);
 
     LOG("parse asinfo.json: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
+    
+    data->visualization->activate(data->nodes);
+    data->createNodeBoxes();
 }
 
 void MapController::handleTouchDownAtPoint(Vector2 point) {
@@ -131,7 +134,7 @@ void MapController::updateTargetForIndex(int index) {
     //set new node as targeted
     if (index != INT_MAX) {
         NodePointer node = data->nodeAtIndex(targetNode);
-        if (!node->active) {
+        if (!node->isActive()) {
             targetNode = INT_MAX;
             lostSelectedNodeCallback();
             return;
@@ -391,6 +394,7 @@ void MapController::setTimelinePoint(const std::string& origName, bool blend) {
     std::string dataText;
     loadTextResource(&dataText, name, "txt");
     data->loadFromString(dataText);
+        
     LOG("reloaded for timeline point: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
     start = clock();
     updateDisplay(blend);
@@ -452,5 +456,7 @@ void MapController::setVisualization(int visualization) {
     }
 
     data->visualization = _visualizations[visualization];
+    data->visualization->activate(data->nodes);
+    data->createNodeBoxes();
     updateDisplay(true);
 }

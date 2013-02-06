@@ -10,7 +10,9 @@
 
 Node::Node() :
     mInitializedFriendly(false),
-    hasLatLong(false)
+    hasLatLong(false),
+    latitude(0.0f),
+    longitude(0.0f)
 {}
 
 std::string Node::friendlyDescription() {

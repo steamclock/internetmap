@@ -222,11 +222,21 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     self.cachedCurrentASN = nil;
     [self precacheCurrentASN];
+    
+    
+    [self performSelector:@selector(fadeOutLogo) withObject:nil afterDelay:4];
+    
 }
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     
     return [HelperMethods deviceIsiPad] ? UIInterfaceOrientationIsLandscape(interfaceOrientation) : UIInterfaceOrientationIsPortrait(interfaceOrientation);
+}
+
+- (void)fadeOutLogo {
+    [UIView animateWithDuration:1 animations:^{
+        self.logo.alpha = 0.3;
+    }];
 }
 
 #pragma mark - GLKView and GLKViewController delegate methods

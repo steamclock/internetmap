@@ -21,6 +21,8 @@ public:
     
     virtual std::string name(void) = 0;
     
+    virtual void activate(std::vector<NodePointer> nodes) = 0;
+    
     virtual Point3 nodePosition(NodePointer node) = 0;
     virtual float nodeSize(NodePointer node) = 0;
     virtual float nodeZoom(NodePointer node) = 0;

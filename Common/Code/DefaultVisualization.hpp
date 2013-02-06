@@ -20,6 +20,8 @@ public:
 
     virtual std::string name(void) { return "Network View"; }
 
+    virtual void activate(std::vector<NodePointer> nodes);
+
     virtual Point3 nodePosition(NodePointer node);
     virtual float nodeSize(NodePointer node);
     virtual float nodeZoom(NodePointer node);

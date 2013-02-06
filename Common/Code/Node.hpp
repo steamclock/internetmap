@@ -39,7 +39,8 @@ public:
     float positionX;
     float positionY;
     int type;
-    bool active;
+    bool timelineActive;
+    bool visualizationActive;
     
     std::string typeString;
     std::string name;
@@ -58,6 +59,7 @@ public:
     std::vector<ConnectionPointer> connections;
     
     std::string friendlyDescription(); //rawTextDescription with some cleanup applied
+    bool isActive() { return timelineActive && visualizationActive; }
 private:
     std::string mFriendlyDescription;
     bool mInitializedFriendly;

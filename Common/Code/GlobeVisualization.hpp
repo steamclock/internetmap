@@ -13,6 +13,8 @@
 
 class GlobeVisualization : public DefaultVisualization {
 public:
+    void activate(std::vector<NodePointer> nodes);
+
     virtual Point3 nodePosition(NodePointer node);
     virtual Color nodeColor(NodePointer node);
     
