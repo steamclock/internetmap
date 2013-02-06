@@ -235,6 +235,12 @@ JNIEXPORT jobjectArray JNICALL Java_com_peer1_internetmap_MapControllerWrapper_v
     return array;
 }
 
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_setVisualization(JNIEnv* jenv, jobject obj, int index) {
+    MapController* controller = renderer->beginControllerModification();
+    controller->setVisualization(index);
+    renderer->endControllerModification();
+}
+
 JNIEXPORT jstring JNICALL Java_com_peer1_internetmap_NodeWrapper_nativeFriendlyDescription(JNIEnv* jenv, jobject obj, int index) {
     MapController* controller = renderer->beginControllerModification();
     if (index < 0 || index >= controller->data->nodes.size()) {

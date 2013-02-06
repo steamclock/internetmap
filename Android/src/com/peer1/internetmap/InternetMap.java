@@ -54,6 +54,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     private int mUserNodeIndex = -1; //cache user's node from "you are here"
     private JSONObject mTimelineHistory; //history data for timeline
     private int mTimelineMinYear;
+    public int mCurrentVisualization; //cached for the visualization popup
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
