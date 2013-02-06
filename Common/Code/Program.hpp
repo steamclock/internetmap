@@ -29,6 +29,8 @@ static const int VERTEX_BLEND_NODE = ATTRIB_MASK(ATTRIB_POSITION) | ATTRIB_MASK(
 
 class Program {
     unsigned int _program;
+    unsigned int _vertShader;
+    unsigned int _fragShader;
     unsigned int _activeAttributesMask;
     
     void setup(const std::string& fragmentName, const std::string& vertexName, unsigned int attribMask);

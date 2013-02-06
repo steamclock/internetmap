@@ -16,6 +16,8 @@ void loadTextResource(std::string* resource, const std::string& base, const std:
 
 Program::Program(const std::string& name, unsigned int attributes)  :
     _program(0),
+    _vertShader(0),
+    _fragShader(0),
     _activeAttributesMask(0)
 {
     setup(name, name, attributes);
@@ -23,6 +25,8 @@ Program::Program(const std::string& name, unsigned int attributes)  :
 
 Program::Program(const std::string& fragmentName, const std::string& vertexName, unsigned int attributes) :
     _program(0),
+    _vertShader(0),
+    _fragShader(0),
     _activeAttributesMask(0)
 {
     setup(fragmentName, vertexName, attributes);
@@ -117,21 +121,25 @@ void Program::setup(const std::string& fragmentName, const std::string& vertexNa
         return;
     }
     
+    _vertShader = vertShader;
+    _fragShader = fragShader;
+    
     LOG("Compiled shader %s/%s", fragmentName.c_str(), vertexName.c_str());
-
-    // Release vertex and fragment shaders.
-    if (vertShader) {
-        glDetachShader(_program, vertShader);
-        glDeleteShader(vertShader);
-    }
-    if (fragShader) {
-        glDetachShader(_program, fragShader);
-        glDeleteShader(fragShader);
-    }
 }
 
 Program::~Program() {
     if(_program) {
+        // Release vertex and fragment shaders.
+        if (_vertShader) {
+            glDetachShader(_program, _vertShader);
+            glDeleteShader(_vertShader);
+        }
+        
+        if (_fragShader) {
+            glDetachShader(_program, _fragShader);
+            glDeleteShader(_fragShader);
+        }
+
         glDeleteProgram(_program);
         _program = 0;
     }
@@ -142,6 +150,7 @@ int Program::uniformForName(const std::string& name) {
 }
 
 void Program::bind() {
+    glUseProgram(0);
     glUseProgram(_program);
 }
 
