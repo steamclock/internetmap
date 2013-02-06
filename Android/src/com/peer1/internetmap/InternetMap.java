@@ -365,7 +365,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             mTimelinePopup = new TimelinePopup(InternetMap.this, popupView);
             mTimelinePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 public void onDismiss() {
-                    mNodePopup = null;
+                    mTimelinePopup = null;
                 }
             });
         }
