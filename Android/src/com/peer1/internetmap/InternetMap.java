@@ -55,6 +55,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     private JSONObject mTimelineHistory; //history data for timeline
     private int mTimelineMinYear;
     public int mCurrentVisualization; //cached for the visualization popup
+    private boolean mInTimelineMode; //true if we're showing the timeline
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -297,10 +298,10 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
     public void timelineButtonPressed(View view) {
         Log.d(TAG, "timeline");
-        SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
-        if (timelineBar.getVisibility() == View.VISIBLE) {
+        if (mInTimelineMode) {
             dismissTimeline();
         } else {
+            SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
             if (mTimelineHistory == null) {
                 //load history data & init the timeline bounds
                 try {
@@ -335,18 +336,23 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                 timelineBar.setMax(range);
                 mTimelineMinYear = min;
             }
+            
             timelineBar.setProgress(timelineBar.getMax());
             timelineBar.setVisibility(View.VISIBLE);
-            //TODO: change node popup mode
+            mInTimelineMode = true;
+            //reset the node popup, the lazy way
+            if (mNodePopup != null) mNodePopup.dismiss();
         }
     }
     
     public void dismissTimeline() {
-        SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
-        if (timelineBar.getVisibility() == View.VISIBLE) {
+        if (mInTimelineMode) {
+            SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
             timelineBar.setVisibility(View.GONE);
             mController.setTimelinePoint(mTimelineMinYear + timelineBar.getMax());
-            //TODO: change node popup mode
+            mInTimelineMode = false;
+            //reset the node popup, the lazy way
+            if (mNodePopup != null) mNodePopup.dismiss();
         }
     }
 
@@ -439,8 +445,13 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             Log.d(TAG, String.format("has index %d and asn %s", node.index, node.asn));
             if (mNodePopup == null) {
                 LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                View popupView = layoutInflater.inflate(R.layout.nodeview, null);
-                mNodePopup = new NodePopup(this, popupView);
+                View popupView;
+                if (mInTimelineMode) {
+                    popupView = layoutInflater.inflate(R.layout.nodetimelineview, null);
+                } else {
+                    popupView = layoutInflater.inflate(R.layout.nodeview, null);
+                }
+                mNodePopup = new NodePopup(this, popupView, mInTimelineMode);
                 mNodePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     public void onDismiss() {
                         mNodePopup = null;

@@ -24,10 +24,12 @@ import android.widget.TextView;
 public class NodePopup extends PopupWindow {
     private static String TAG = "NodePopup";
     private Context mContext;
+    private boolean mIsTimelineView;
     
-    public NodePopup(Context context, View view) {
+    public NodePopup(Context context, View view, boolean isTimelineView) {
         super(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mContext = context;
+        mIsTimelineView = isTimelineView;
         setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.translucentBlack)));
         
         //FIXME calculate appropriate size
@@ -41,7 +43,7 @@ public class NodePopup extends PopupWindow {
     public void setNode(NodeWrapper node, boolean isUsersNode) {
         //set up content
         ArrayList<String> strings = new ArrayList<String>(4);
-        if (isUsersNode) {
+        if (isUsersNode && !mIsTimelineView) {
             strings.add(mContext.getString(R.string.youarehere));
         }
         String desc = node.friendlyDescription();
@@ -49,40 +51,46 @@ public class NodePopup extends PopupWindow {
             strings.add(desc);
         }
         strings.add("AS" + node.asn);
-        if (!node.typeString.isEmpty()) {
-            strings.add(node.typeString);
-        }
-        //FIXME show # connections only on tablets..?
-        if (node.numberOfConnections == 1) {
-            strings.add(mContext.getString(R.string.oneconnection));
-        } else {
-            //<num> connections
-            strings.add(String.format(mContext.getString(R.string.nconnections), node.numberOfConnections));
+        if (!mIsTimelineView) {
+            if (!node.typeString.isEmpty()) {
+                strings.add(node.typeString);
+            }
+            //FIXME show # connections only on tablets..?
+            if (node.numberOfConnections == 1) {
+                strings.add(mContext.getString(R.string.oneconnection));
+            } else {
+                //<num> connections
+                strings.add(String.format(mContext.getString(R.string.nconnections), node.numberOfConnections));
+            }
         }
         
         //split into title/rest
         String title = strings.get(0);
-        StringBuilder mainText = new StringBuilder();
-        if (strings.size() <= 1) {
-            //default text
-            mainText.append(mContext.getString(R.string.nodata));
-        } else {
-            //join the strings with \n
-            mainText.append(strings.get(1));
-            for (int i = 2; i < strings.size(); i++) {
-                mainText.append("\n");
-                mainText.append(strings.get(i));
+        if (!mIsTimelineView) {
+            StringBuilder mainText = new StringBuilder();
+            if (strings.size() <= 1) {
+                //default text
+                mainText.append(mContext.getString(R.string.nodata));
+            } else {
+                //join the strings with \n
+                mainText.append(strings.get(1));
+                for (int i = 2; i < strings.size(); i++) {
+                    mainText.append("\n");
+                    mainText.append(strings.get(i));
+                }
             }
+
+            //put it in the right views
+            TextView mainTextView = (TextView) getContentView().findViewById(R.id.mainTextView);
+            mainTextView.setText(mainText);
         }
-        
-        //put it in the right views
         TextView titleView = (TextView) getContentView().findViewById(R.id.titleView);
         titleView.setText(title);
-        TextView mainTextView = (TextView) getContentView().findViewById(R.id.mainTextView);
-        mainTextView.setText(mainText);
-        
-        //show traceroute for all but user's current node
-        Button tracerouteBtn = (Button) getContentView().findViewById(R.id.tracerouteBtn);
-        tracerouteBtn.setVisibility(isUsersNode ? android.view.View.GONE : android.view.View.VISIBLE);
+
+        if (!mIsTimelineView) {
+            //show traceroute for all but user's current node
+            Button tracerouteBtn = (Button) getContentView().findViewById(R.id.tracerouteBtn);
+            tracerouteBtn.setVisibility(isUsersNode ? android.view.View.GONE : android.view.View.VISIBLE);
+        }
     }
 }
