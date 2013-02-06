@@ -201,13 +201,14 @@ void MapController::highlightConnections(NodePointer node) {
         std::random_shuffle(filteredConnections.begin() + NUM_IMPORTANT_CONNECTIONS, filteredConnections.end());
     }
     
-    shared_ptr<DisplayLines> lines(new DisplayLines(filteredConnections.size()));
+    int renderedConnections = std::min((unsigned int)(filteredConnections.size()), NUM_RENDERED_CONNECTIONS);
+    shared_ptr<DisplayLines> lines(new DisplayLines(renderedConnections));
     lines->beginUpdate();
     
     Color brightColor = ColorFromRGB(SELECTED_CONNECTION_COLOR_BRIGHT_HEX);
     Color dimColor = ColorFromRGB(SELECTED_CONNECTION_COLOR_DIM_HEX);
 
-    for(unsigned int i = 0; i < std::min((unsigned int)(filteredConnections.size()), NUM_RENDERED_CONNECTIONS); i++) {
+    for(unsigned int i = 0; i < renderedConnections; i++) {
         ConnectionPointer connection = filteredConnections[i];
         NodePointer a = connection->first;
         NodePointer b = connection->second;
