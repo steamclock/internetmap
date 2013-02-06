@@ -34,7 +34,7 @@ public class VisualizationPopupWindow extends PopupWindow{
 
     private Context context;
 
-    public VisualizationPopupWindow(Context context, View view) {
+    public VisualizationPopupWindow(Context context, MapControllerWrapper controller, View view) {
         super(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         this.context = context;
         setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.translucentBlack)));
@@ -42,7 +42,7 @@ public class VisualizationPopupWindow extends PopupWindow{
         setFocusable(true);
 
         final ListView listView = (ListView) getContentView().findViewById(R.id.visualizationList);
-        String[] values = new String[] {"Network View", "Globe View"};
+        String[] values = controller.visualizationNames();
         final VisualizationArrayAdapter adapter = new VisualizationArrayAdapter(context, android.R.layout.simple_list_item_1, android.R.id.text1, values);
         listView.setAdapter(adapter);
 

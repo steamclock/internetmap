@@ -159,7 +159,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         if (mVisualizationPopup == null) {
             LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
             View popupView = layoutInflater.inflate(R.layout.visualizationview, null);
-            mVisualizationPopup = new VisualizationPopupWindow(this, popupView);
+            mVisualizationPopup = new VisualizationPopupWindow(this, mController, popupView);
             mVisualizationPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 public void onDismiss() {
                     mVisualizationPopup = null;
