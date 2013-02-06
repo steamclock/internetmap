@@ -38,7 +38,7 @@ static const int PACKETS_PER_ITER = 1; // How many packets we send each time we 
 
 - (void)tracerouteDidFindHop:(NSString*)report withHops:(NSArray*)hops;
 - (void)tracerouteDidComplete:(NSArray*)hops;
-- (void)tracerouteDidTimeout;
+- (void)tracerouteDidTimeout:(NSArray*)hops;
 
 @end
 

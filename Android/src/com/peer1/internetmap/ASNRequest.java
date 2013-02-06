@@ -40,12 +40,28 @@ public class ASNRequest {
         client.get(getAbsoluteUrl("ip"), handler);
     }
     
-    private static void fetchASNForIP(String ip, final ASNResponseHandler finHandler) throws JSONException, UnsupportedEncodingException {
+    public static void fetchASNForIP(String ip, final ASNResponseHandler finHandler) {
+        //calls from outside can't have already started, and probably want errors caught.
+        try {
+            fetchASNForIP(ip, false, finHandler);
+        } catch (Exception e) {
+            finHandler.onFailure(new Throwable(e.getMessage()), null);
+        }
+    }
+    
+    private static void fetchASNForIP(String ip, final boolean alreadyStarted, final ASNResponseHandler finHandler) throws JSONException, UnsupportedEncodingException {
         JSONObject postData = new JSONObject();
         postData.put("ip", ip);
         StringEntity entity = new StringEntity(postData.toString());
         entity.setContentType("application/json");
         client.post(null, getAbsoluteUrl("iptoasn"), entity, "application/json", new AsyncHttpResponseHandler(){
+            @Override
+            public void onStart(){
+                //only trigger start if some other part of ASNRequest didn't already do it.
+                if (!alreadyStarted) {
+                    finHandler.onStart();
+                }
+            }
             @Override
             public void onSuccess(String response) {
                 try {
@@ -77,6 +93,10 @@ public class ASNRequest {
         }
         entity.setContentType("application/json");
         client.post(null, getAbsoluteUrl("asntoips"), entity, "application/json", new AsyncHttpResponseHandler(){
+            @Override
+            public void onStart(){
+                finHandler.onStart();
+            }
             @Override
             public void onSuccess(String response) {
                 try {
@@ -112,7 +132,7 @@ public class ASNRequest {
                         JSONObject jsonObject = new JSONObject(response);
                         String ip = jsonObject.getString("payload");
                         if (ip != null && !ip.isEmpty()) {
-                            fetchASNForIP(ip, finHandler);
+                            fetchASNForIP(ip, true, finHandler);
                         } else {
                             onFailure(new Throwable(errorString), null);
                         }

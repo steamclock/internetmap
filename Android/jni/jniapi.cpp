@@ -221,6 +221,25 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_setTimeli
     renderer->endControllerModification();
 }
 
+JNIEXPORT jobjectArray JNICALL Java_com_peer1_internetmap_MapControllerWrapper_visualizationNames(JNIEnv* jenv, jobject obj) {
+    MapController* controller = renderer->beginControllerModification();
+    std::vector<std::string> names = controller->visualizationNames();
+    jclass stringClass = jenv->FindClass("java/lang/String");
+    jobjectArray array = jenv->NewObjectArray(names.size(), stringClass, 0);
+    for (int i = 0; i < names.size(); i++) {
+        //this should be small enough to let JNI handle memory
+        jstring name = jenv->NewStringUTF(names[i].c_str());
+        jenv->SetObjectArrayElement(array, i, name);
+    }
+    renderer->endControllerModification();
+    return array;
+}
+
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_setVisualization(JNIEnv* jenv, jobject obj, int index) {
+    MapController* controller = renderer->beginControllerModification();
+    controller->setVisualization(index);
+    renderer->endControllerModification();
+}
 
 JNIEXPORT jstring JNICALL Java_com_peer1_internetmap_NodeWrapper_nativeFriendlyDescription(JNIEnv* jenv, jobject obj, int index) {
     MapController* controller = renderer->beginControllerModification();

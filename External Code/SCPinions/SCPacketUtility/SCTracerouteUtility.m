@@ -95,8 +95,8 @@
             [self.packetUtility sendPacketWithData:nil andTTL:self.ttlCount];
         }   
     } else if (self.ttlCount > MAX_HOPS) {
-        if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidTimeout)]) {
-            [self.delegate tracerouteDidTimeout];
+        if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidTimeout:)]) {
+            [self.delegate tracerouteDidTimeout:self.hopsForCurrentIP];
         }
     }
 }
@@ -210,9 +210,13 @@
         }
     }
     
+    // Fill up to current sequence number with nulls
+    while (self.hopsForCurrentIP.count < (sequenceNumber + 1)) {
+        [self.hopsForCurrentIP addObject:[NSNull null]];
+    }
+    
     if (numberOfTimeoutsForIP > 0) {
         if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:withHops:)]) {
-            [self.hopsForCurrentIP insertObject:[NSNull null] atIndex:sequenceNumber];
             NSArray* hops = self.hopsForCurrentIP;
             [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: * * * Hop did not reply or timed out.", self.hopsForCurrentIP.count] withHops:hops];
             self.totalHopsTimedOut++;
@@ -223,23 +227,28 @@
         }
         
         if (self.totalHopsTimedOut >= 3) {
-            [self.hopsForCurrentIP insertObject:[NSNull null] atIndex:sequenceNumber];
             NSArray* hops = self.hopsForCurrentIP;
             [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: * * * Hop did not reply or timed out.", self.hopsForCurrentIP.count] withHops:hops];
             
             
-            if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidTimeout)]) {
-                [self.delegate tracerouteDidTimeout];
+            if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidTimeout:)]) {
+                [self.delegate tracerouteDidTimeout:self.hopsForCurrentIP];
             }
         }
     }
 }
 
--(void)foundNewIP:(NSString*)ip withReport:(NSString*)report withSequenceNumber:(int)sequenceNumber{
+-(void)foundNewIP:(NSString*)ip withReport:(NSString*)report withSequenceNumber:(int)sequenceNumber {
+    
+    // Fill up to current sequence number with nulls (so replace object will function)
+    while (self.hopsForCurrentIP.count < (sequenceNumber + 1)) {
+        [self.hopsForCurrentIP addObject:[NSNull null]];
+    }
+
     BOOL alreadyContainsIP = [self.hopsForCurrentIP containsObject:ip];
     if (!alreadyContainsIP) {
         //[self.hopsForCurrentIP addObject:ip];
-        [self.hopsForCurrentIP insertObject:ip atIndex:sequenceNumber];
+        [self.hopsForCurrentIP replaceObjectAtIndex:sequenceNumber withObject:ip];
         
         NSString* reported = [NSString stringWithFormat:@"%d: %@", self.hopsForCurrentIP.count, report];
         if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:withHops:)]) {

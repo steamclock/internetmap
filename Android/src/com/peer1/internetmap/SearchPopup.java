@@ -151,7 +151,7 @@ public class SearchPopup extends PopupWindow{
         }
     }
 
-    public SearchPopup(Context context, MapControllerWrapper controller, View view) {
+    public SearchPopup(final InternetMap context, MapControllerWrapper controller, View view) {
         super(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mContext = context;
         mController = controller;
@@ -182,11 +182,11 @@ public class SearchPopup extends PopupWindow{
                 if (item instanceof SearchNode) {
                     SearchNode snode = (SearchNode)item;
                     mController.updateTargetForIndex(snode.node.index);
-                    SearchPopup.this.dismiss();
                 } else {
                     FindHostItem fhi = (FindHostItem)item;
-                    Log.d(TAG, String.format("TODO: find host %s", fhi.host));
+                    context.findHost(fhi.host);
                 }
+                SearchPopup.this.dismiss();
             }
         });
         

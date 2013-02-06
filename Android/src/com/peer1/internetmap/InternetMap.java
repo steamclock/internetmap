@@ -3,6 +3,8 @@ package com.peer1.internetmap;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Iterator;
 
 import org.json.JSONException;
@@ -14,6 +16,7 @@ import android.content.Context;
 import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Bundle;
@@ -51,6 +54,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     private int mUserNodeIndex = -1; //cache user's node from "you are here"
     private JSONObject mTimelineHistory; //history data for timeline
     private int mTimelineMinYear;
+    public int mCurrentVisualization; //cached for the visualization popup
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -156,7 +160,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         if (mVisualizationPopup == null) {
             LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
             View popupView = layoutInflater.inflate(R.layout.visualizationview, null);
-            mVisualizationPopup = new VisualizationPopupWindow(this, popupView);
+            mVisualizationPopup = new VisualizationPopupWindow(this, mController, popupView);
             mVisualizationPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 public void onDismiss() {
                     mVisualizationPopup = null;
@@ -180,6 +184,68 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             });
             mSearchPopup.showAsDropDown(findViewById(R.id.searchButton));
         }
+    }
+    
+    public void findHost(final String host) {
+        Log.d(TAG, String.format("find host: %s", host));
+        if (!haveConnectivity()) {
+            return;
+        }
+        
+        //TODO animate
+        final ProgressBar progress = (ProgressBar) findViewById(R.id.searchProgressBar);
+        final Button button = (Button) findViewById(R.id.searchButton);
+        progress.setVisibility(View.VISIBLE);
+        button.setVisibility(View.INVISIBLE);
+        
+        //dns lookup in the background
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                String addrString;
+                try {
+                    InetAddress address = InetAddress.getByName(host);
+                    addrString = address.getHostAddress();
+                } catch (UnknownHostException e) {
+                    addrString = "";
+                }
+                return addrString;
+            }
+            protected void onPostExecute(String addrString) {
+                if (addrString.isEmpty()) {
+                    showError(String.format(getString(R.string.invalidHost), host));
+                    //stop animating
+                    progress.setVisibility(View.INVISIBLE);
+                    button.setVisibility(View.VISIBLE);
+                } else {
+                    Log.d(TAG, addrString);
+                    ASNRequest.fetchASNForIP(addrString, new ASNResponseHandler() {
+                    public void onStart() {
+                        Log.d(TAG, "asnrequest2 start");
+                        //nothing to do; already animating
+                    }
+                    public void onFinish() {
+                        Log.d(TAG, "asnrequest2 finish");
+                        //stop animating
+                        progress.setVisibility(View.INVISIBLE);
+                        button.setVisibility(View.VISIBLE);
+                    }
+
+                    public void onSuccess(JSONObject response) {
+                        selectNodeByASN(response, false);
+                    }
+                
+                    public void onFailure(Throwable e, String response) {
+                        //tell the user
+                        //FIXME: outputting the raw error response is bad. how can we make it userfriendly?
+                        String message = String.format(getString(R.string.asnfail), response);
+                        showError(message);
+                        Log.d(TAG, message);
+                    }
+                });
+                }
+            }
+        }.execute();
     }
     
     public void dismissSearchPopup(View unused) {
@@ -216,23 +282,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             }
 
             public void onSuccess(JSONObject response) {
-                //expected response format: {"payload":"ASxxxx"}
-                try {
-                    String asnWithAS = response.getString("payload");
-                    String asnString = asnWithAS.substring(2);
-                    Log.d(TAG, String.format("asn: %s", asnString));
-                    //yay, an ASN! turn it into a node so we can target it.
-                    NodeWrapper node = mController.nodeByAsn(asnString);
-                    if (node != null) {
-                        mUserNodeIndex = node.index;
-                        selectNode(node);
-                    } else {
-                        showError(String.format(getString(R.string.asnNullNode), asnString));
-                    }
-                } catch (Exception e) {
-                    Log.d(TAG, String.format("can't parse response: %s", response.toString()));
-                    showError(getString(R.string.asnBadResponse));
-                }
+                   selectNodeByASN(response, true);
             }
         
             public void onFailure(Throwable e, String response) {
@@ -293,9 +343,11 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     
     public void dismissTimeline() {
         SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
-        timelineBar.setVisibility(View.GONE);
-        mController.setTimelinePoint(mTimelineMinYear + timelineBar.getMax());
-        //TODO: change node popup mode
+        if (timelineBar.getVisibility() == View.VISIBLE) {
+            timelineBar.setVisibility(View.GONE);
+            mController.setTimelinePoint(mTimelineMinYear + timelineBar.getMax());
+            //TODO: change node popup mode
+        }
     }
 
     private class TimelineListener implements SeekBar.OnSeekBarChangeListener{
@@ -348,8 +400,26 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
     
-    public void selectNode(NodeWrapper node) {
-        mController.updateTargetForIndex(node.index);
+    public void selectNodeByASN(JSONObject response, boolean cacheIndex) {
+        //expected response format: {"payload":"ASxxxx"}
+        try {
+            String asnWithAS = response.getString("payload");
+            String asnString = asnWithAS.substring(2);
+            Log.d(TAG, String.format("2asn: %s", asnString));
+            //yay, an ASN! turn it into a node so we can target it.
+            NodeWrapper node = mController.nodeByAsn(asnString);
+            if (node != null) {
+                if (cacheIndex) {
+                    mUserNodeIndex = node.index;
+                }
+                mController.updateTargetForIndex(node.index);
+            } else {
+                showError(String.format(getString(R.string.asnNullNode), asnString));
+            }
+        } catch (Exception e) {
+            Log.d(TAG, String.format("can't parse response: %s", response.toString()));
+            showError(getString(R.string.asnBadResponse));
+        }
     }
 
     //called from c++

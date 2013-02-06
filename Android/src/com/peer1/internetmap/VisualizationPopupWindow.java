@@ -32,24 +32,25 @@ public class VisualizationPopupWindow extends PopupWindow{
         }
     }
 
-    private Context context;
-
-    public VisualizationPopupWindow(Context context, View view) {
+    public VisualizationPopupWindow(final InternetMap context, final MapControllerWrapper controller, View view) {
         super(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        this.context = context;
         setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.translucentBlack)));
         setOutsideTouchable(true);
         setFocusable(true);
 
         final ListView listView = (ListView) getContentView().findViewById(R.id.visualizationList);
-        String[] values = new String[] {"Network View", "Globe View"};
+        String[] values = controller.visualizationNames();
         final VisualizationArrayAdapter adapter = new VisualizationArrayAdapter(context, android.R.layout.simple_list_item_1, android.R.id.text1, values);
+        adapter.selectedRow = context.mCurrentVisualization;
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                adapter.selectedRow = position;
-                listView.invalidateViews();
+                //this isn't quite the cleanest way to cache the index, but it's easy
+                context.mCurrentVisualization = position;
+                
+                controller.setVisualization(position);
+                VisualizationPopupWindow.this.dismiss();
             }
         });
     }
