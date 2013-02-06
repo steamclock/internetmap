@@ -99,3 +99,28 @@ To take a print resolution screenshot, you need to do the following:
 
 Note that the print resolution version may have the larger nodes appear smaller than in the the original image from the live window. There are hardware limitations on point sprite size that will get hit on some hardware. There doesn't appear to be any way to resolve this right now.
 
+Getting the app working in the emulator
+====================================================
+
+Turns out the newest emulator actually does support openGL ES 2.0, you just have to do a bit of build magic to get it working: (Some of the following stuff is not actually required, but it increases the speed of the emulator)
+
+Open the Android SDK Manager by running 'android' in a terminal in your android-sdk/tools folder. I'd recommend adding android-sdk/tools and android-sdk/platform-tools to your PATH.
+Download an Android sdk with API level >= 15 (starting at 4.0.3) and make sure you also download the 'Intel x86 Atom System Image'.
+Open the AVD Manager by running 'android avd'.
+Create a new AVD and make sure that:
+
+- The target API Level is >= 15
+- The CPU/ABI is x86
+- "Use Host GPU" is selected
+
+Now, go to http://developer.android.com/tools/devices/emulator.html and search for 'Configuring VM Acceleration on Mac' and follow the steps there.
+
+Now, re-run ndk-build from your IDE (in eclipse you should be able to just do a new build). This is necessary because we're now also building for a different platform (x86).
+
+Run the application. If your IDE keeps re-starting the emulator over and over, be sure it is registered in adb: type 'adb devices', and if it doesn't show up, restart adb by typing 'adb kill-server'.
+
+A few caveats:
+
+- The emulator is really slow at startup. openGL performance isn't too bad though.
+- The emulator doesn't support multi-touch.
+
