@@ -33,4 +33,14 @@ public class TimelinePopup extends PopupWindow {
             mainTextView.setText(Html.fromHtml(mainText));
         }
     }
+
+    /**
+     * For some reason popupwindow doesn't have this.
+     * @return the real width of the popup based on the layout.
+     */
+    public int getMeasuredWidth() {
+        //update the layout for current data
+        getContentView().measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        return getContentView().getMeasuredWidth();
+    }
 }

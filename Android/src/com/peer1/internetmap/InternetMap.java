@@ -384,15 +384,34 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             }
             String year = Integer.toString(progress + mTimelineMinYear);
             mTimelinePopup.setData(year, mTimelineHistory.optString(year));
+            
             //update size/position
-            int width;
+            int width, offset;
+            boolean needsUpdate;
             if (isSmallScreen()) {
                 width = LayoutParams.MATCH_PARENT;
+                offset = 0;
+                needsUpdate = false;
             } else {
                 width = LayoutParams.WRAP_CONTENT; //mainView.getWidth() / 2;
+                //calculate offset to line up with the timelineBar
+                int barWidth = seekBar.getWidth();
+                int maxProgress = seekBar.getMax();
+                int popupWidth = mTimelinePopup.getMeasuredWidth();
+                //FIXME something is going slightly wrong around here and I don't know why.
+                //the location is accurate for 2000 and 2006, but ever so slightly off for other points.
+                int progressXLocation = (int)(barWidth * (float)progress / maxProgress);
+                int progressXCenter = progressXLocation + seekBar.getThumbOffset();
+                offset = progressXCenter - popupWidth/2; //center
+                //Log.d(TAG, String.format("popup: %d thumb: %d location: %d offset: %d", popupWidth, progressXLocation, progressXCenter, offset));
+                needsUpdate = true;
             }
-            mTimelinePopup.setWindowLayoutMode(width, LayoutParams.WRAP_CONTENT);
-            mTimelinePopup.showAsDropDown(findViewById(R.id.timelineSeekBar)); //FIXME x offset?
+            if (!mTimelinePopup.isShowing()) {
+                mTimelinePopup.setWindowLayoutMode(width, LayoutParams.WRAP_CONTENT);
+                mTimelinePopup.showAsDropDown(seekBar, offset, 0);
+            } else if (needsUpdate) {
+                mTimelinePopup.update(seekBar, offset, 0, -1, -1);
+            }
             //Log.d(TAG, String.format("%dx%d", mTimelinePopup.getWidth(), mTimelinePopup.getHeight()));
         }
         
