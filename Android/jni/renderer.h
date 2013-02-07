@@ -16,7 +16,7 @@ class MapController;
 class Renderer {
 
 public:
-    Renderer();
+    Renderer(bool smallScreen);
     virtual ~Renderer();
 
     void resume();
@@ -53,6 +53,7 @@ private:
     float _displayScale;
     double _initialTimeSec;
     double _currentTimeSec;
+    bool _smallScreen;
 
     float _rotateX, _rotateY, _rotateZ, _zoom;
 

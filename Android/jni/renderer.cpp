@@ -15,13 +15,14 @@
 
 void DetachThreadFromVM(void);
 
-Renderer::Renderer() {
+Renderer::Renderer(bool smallScreen) {
     LOG_INFO("Renderer instance created");
     pthread_mutex_init(&_mutex, 0);
     _window = NULL;
     _display = EGL_NO_DISPLAY;
     _surface = EGL_NO_SURFACE;
     _context = EGL_NO_CONTEXT;
+    _smallScreen = smallScreen;
 
     _currentTimeSec = double(clock()) / double(CLOCKS_PER_SEC);
     _initialTimeSec = _currentTimeSec;
@@ -284,6 +285,14 @@ bool Renderer::initialize() {
 
     _mapController = new MapController;
     _mapController->display->camera->setDisplaySize(width, height);
+
+    if (_smallScreen) {
+        LOG("this is a small screen");
+        // On phone we want a slightly different starting camera rotation/orientation
+        // so the long axis is aligned vertically
+        _mapController->display->camera->rotateRadiansZ(M_PI_2);
+        _mapController->display->camera->zoomByScale(-0.5);
+    }
 
     _mapController->display->setDisplayScale(_displayScale);
 

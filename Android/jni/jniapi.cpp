@@ -55,12 +55,12 @@ jobject wrapNode(JNIEnv* jenv, NodePointer node) {
     return wrapper;
 }
 
-JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeOnCreate(JNIEnv* jenv, jobject obj)
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeOnCreate(JNIEnv* jenv, jobject obj, bool smallScreen)
 {
     LOG("OnCreate");
 
     if(!renderer) {
-        renderer = new Renderer();
+        renderer = new Renderer(smallScreen);
     }
     activity = jenv->NewGlobalRef(obj);
     return;

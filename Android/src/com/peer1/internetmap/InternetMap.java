@@ -68,7 +68,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
         Log.i(TAG, "onCreate()");
 
-        nativeOnCreate();
+        nativeOnCreate(isSmallScreen());
 
         setContentView(R.layout.main);
         SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceview);
@@ -571,7 +571,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
 
     //native wrappers
-    public native void nativeOnCreate();
+    public native void nativeOnCreate(boolean smallScreen);
     public native void nativeOnResume();
     public native void nativeOnPause();
     public native void nativeOnDestroy();
