@@ -58,7 +58,7 @@ public class NodePopup extends PopupWindow {
             StringBuilder mainText = new StringBuilder();
             if (strings.size() <= 1) {
                 //default text
-                mainText.append(mContext.getString(R.string.nodata));
+                mainText.append(mContext.getString(R.string.nomoredata));
             } else {
                 //join the strings with \n
                 mainText.append(strings.get(1));

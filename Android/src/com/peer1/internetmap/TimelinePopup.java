@@ -13,9 +13,11 @@ import android.widget.TextView;
  */
 public class TimelinePopup extends PopupWindow {
     private static String TAG = "TimelinePopup";
+    private Context mContext;
     
     public TimelinePopup(Context context, View view) {
         super(view);
+        mContext = context;
         setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.translucentBlack)));
         setHeight(100); //a fake height so that showAsDropDown doesn't mess up.
     }
@@ -26,7 +28,7 @@ public class TimelinePopup extends PopupWindow {
         titleView.setText(year);
         TextView mainTextView = (TextView) getContentView().findViewById(R.id.mainTextView);
         if (mainText.isEmpty()) {
-            mainTextView.setText("fixme");
+            mainTextView.setText(mContext.getString(R.string.nodata));
         } else {
             mainTextView.setText(Html.fromHtml(mainText));
         }
