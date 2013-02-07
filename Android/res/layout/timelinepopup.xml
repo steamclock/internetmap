@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res/com.peer1.internetmap"
     android:id="@+id/LinearLayout1"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
@@ -12,7 +12,7 @@
         android:text="&lt;content>"
         android:textAppearance="?android:attr/textAppearanceMedium" />
     
-    oh<TextView
+    <TextView
         android:id="@+id/titleView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

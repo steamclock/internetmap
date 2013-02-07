@@ -384,7 +384,16 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             }
             String year = Integer.toString(progress + mTimelineMinYear);
             mTimelinePopup.setData(year, mTimelineHistory.optString(year));
+            //update size/position
+            int width;
+            if (isSmallScreen()) {
+                width = LayoutParams.MATCH_PARENT;
+            } else {
+                width = LayoutParams.WRAP_CONTENT; //mainView.getWidth() / 2;
+            }
+            mTimelinePopup.setWindowLayoutMode(width, LayoutParams.WRAP_CONTENT);
             mTimelinePopup.showAsDropDown(findViewById(R.id.timelineSeekBar)); //FIXME x offset?
+            //Log.d(TAG, String.format("%dx%d", mTimelinePopup.getWidth(), mTimelinePopup.getHeight()));
         }
         
         public void onStopTrackingTouch(SeekBar seekBar) {
