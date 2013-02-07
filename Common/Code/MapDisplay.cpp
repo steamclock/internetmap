@@ -73,6 +73,11 @@ void MapDisplay::draw(void)
     
     glEnable(GL_LINE_SMOOTH);
     
+#ifndef BUILD_MAC
+    // Mac does viewport trickery for the high-res screenshots, don't want to get up in it's areas
+    glViewport(0, 0, camera->displayWidth() * _displayScale, camera->displayHeight() * _displayScale);
+#endif
+    
     if (selectedNodes) {
         _selectedNodeProgram->bind();
         bindDefaultNodeUniforms(_selectedNodeProgram);

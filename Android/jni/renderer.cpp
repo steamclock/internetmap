@@ -87,11 +87,41 @@ void Renderer::bufferedZoom(float zoom) {
 void Renderer::setWindow(ANativeWindow *window, float displayScale) {
     _displayScale = displayScale;
 
+    LOG("setWindow %d", window);
     // notify render thread that window has changed
     if (!_paused) {
         pthread_mutex_lock(&_mutex);
     }
     _window = window;
+
+    if(_display != EGL_NO_DISPLAY) {
+        if(_surface != EGL_NO_SURFACE) {
+            LOG("destroying old surface");
+            eglDestroySurface(_display, _surface);
+            _surface = EGL_NO_SURFACE;
+        }
+
+        if(_window) {
+            LOG("attempting to create new surface");
+
+            if (!(_surface = eglCreateWindowSurface(_display, _config, _window, 0))) {
+                LOG_ERROR("eglCreateWindowSurface() returned error %d", eglGetError());
+                _surface = EGL_NO_SURFACE;
+            }
+
+            if (!eglQuerySurface(_display, _surface, EGL_WIDTH, &_width)
+                    || !eglQuerySurface(_display, _surface, EGL_HEIGHT, &_height)) {
+                LOG_ERROR("eglQuerySurface() returned error %d", eglGetError());
+            }
+
+            LOG("display size: %d %d %.2f", _width, _height, _displayScale);
+
+            _mapController->display->camera->setDisplaySize(_width, _height);
+
+            LOG("finished surface create");
+        }
+    }
+
     if (!_paused) {
         pthread_mutex_unlock(&_mutex);
     }
@@ -109,7 +139,7 @@ void Renderer::renderLoop() {
         }
 
         // Main thread might want to take this context current during the gap below, need to release it here
-        if (_display != EGL_NO_DISPLAY) {
+        if ((_display != EGL_NO_DISPLAY) && (_surface != EGL_NO_SURFACE)) {
             if (!eglMakeCurrent(_display, EGL_NO_SURFACE, EGL_NO_SURFACE,
                     EGL_NO_CONTEXT)) {
                 LOG_ERROR("eglMakeCurrent() returned error %d", eglGetError());
@@ -144,18 +174,19 @@ void Renderer::renderLoop() {
         _rotateZ = 0.0f;
         _zoom = 0.0f;
 
+        bool canRender = false;
 
-        if (_display != EGL_NO_DISPLAY) {
+        if ((_display != EGL_NO_DISPLAY) && (_surface != EGL_NO_SURFACE))  {
             // Take back control of GL context
             if (!eglMakeCurrent(_display, _surface, _surface, _context)) {
-                LOG_ERROR("eglMakeCurrent() returned error %d", eglGetError());
-                // Hack: this fails when we rotate, delete the context to force a recreation
-                // TODO: need to detect and handle this better
-                destroy();
+                LOG_ERROR("eglMakeCurrent() returned error %d", glGetError());
+            }
+            else {
+                canRender = true;
             }
         }
 
-        if (_display != EGL_NO_DISPLAY) {
+        if ((_display != EGL_NO_DISPLAY) && canRender) {
             drawFrame();
 
             if (!eglSwapBuffers(_display, _surface)) {
@@ -245,6 +276,7 @@ bool Renderer::initialize() {
     _display = display;
     _surface = surface;
     _context = context;
+    _config = config;
     _width = width;
     _height = height;
 
