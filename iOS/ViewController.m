@@ -532,7 +532,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if (self.timelineSlider.hidden) {
         self.timelineSlider.hidden = NO;
         self.timelineButton.selected = YES;
-        self.playButton.hidden = NO;
+        //self.playButton.hidden = NO;
         
         int year = (int)(self.minTimelineYear+self.timelineSlider.value*10);
         [self.controller setTimelinePoint:[NSString stringWithFormat:@"%d0101", year]];

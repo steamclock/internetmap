@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="8.00">
 	<data>
-		<int key="IBDocument.SystemTarget">1536</int>
+		<int key="IBDocument.SystemTarget">1552</int>
 		<string key="IBDocument.SystemVersion">12C60</string>
-		<string key="IBDocument.InterfaceBuilderVersion">2844</string>
+		<string key="IBDocument.InterfaceBuilderVersion">3084</string>
 		<string key="IBDocument.AppKitVersion">1187.34</string>
 		<string key="IBDocument.HIToolboxVersion">625.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-			<string key="NS.object.0">1930</string>
+			<string key="NS.object.0">2083</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>IBProxyObject</string>
@@ -217,10 +217,9 @@
 					<object class="IBUISlider" id="136826103">
 						<reference key="NSNextResponder" ref="184854543"/>
 						<int key="NSvFlags">-2147483382</int>
-						<string key="NSFrame">{{84, 438}, {206, 23}}</string>
+						<string key="NSFrame">{{31, 438}, {259, 23}}</string>
 						<reference key="NSSuperview" ref="184854543"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -585,7 +584,6 @@
 					<string key="superclassName">GLKViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="playButtonPressed:">id</string>
-						<string key="screenshot:">id</string>
 						<string key="searchButtonPressed:">id</string>
 						<string key="timelineButtonPressed:">id</string>
 						<string key="timelineSliderValueChanged:">id</string>
@@ -595,10 +593,6 @@
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
 						<object class="IBActionInfo" key="playButtonPressed:">
 							<string key="name">playButtonPressed:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="screenshot:">
-							<string key="name">screenshot:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="searchButtonPressed:">
@@ -626,7 +620,6 @@
 						<string key="buttonContainerView">UIView</string>
 						<string key="logo">UIImageView</string>
 						<string key="playButton">UIButton</string>
-						<string key="screenshotButton">UIButton</string>
 						<string key="searchActivityIndicator">UIActivityIndicatorView</string>
 						<string key="searchButton">UIButton</string>
 						<string key="timelineActivityIndicator">UIActivityIndicatorView</string>
@@ -648,10 +641,6 @@
 						</object>
 						<object class="IBToOneOutletInfo" key="playButton">
 							<string key="name">playButton</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="screenshotButton">
-							<string key="name">screenshotButton</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="searchActivityIndicator">
@@ -709,6 +698,6 @@
 			<string key="travelback.png">{38, 37}</string>
 			<string key="youarehere.png">{36, 41}</string>
 		</dictionary>
-		<string key="IBCocoaTouchPluginVersion">1930</string>
+		<string key="IBCocoaTouchPluginVersion">2083</string>
 	</data>
 </archive>
