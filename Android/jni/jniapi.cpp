@@ -329,7 +329,7 @@ void cameraMoveFinishedCallback(void) {
 
     jclass klass = env->GetObjectClass(activity);
     jmethodID methodID = env->GetMethodID(klass, "threadsafeShowNodePopup", "()V");
-    env->CallObjectMethod(activity, methodID);
+    env->CallVoidMethod(activity, methodID);
 }
 
 // TODO
