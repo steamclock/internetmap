@@ -85,7 +85,7 @@ void Renderer::bufferedZoom(float zoom) {
 }
 
 void Renderer::setWindow(ANativeWindow *window, float displayScale) {
-    _displayScale = displayScale;
+    _displayScale = 1.0f;//displayScale;
 
     LOG("setWindow %d", window);
     // notify render thread that window has changed

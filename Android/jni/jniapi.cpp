@@ -78,11 +78,8 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeOnPause(JNIE
     return;
 }
 
-JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeOnStop(JNIEnv* jenv, jobject obj)
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeOnDestroy(JNIEnv* jenv, jobject obj)
 {
-//    delete renderer;
-//    renderer = NULL;
-
     jenv->DeleteGlobalRef(activity);
     activity = NULL;
 

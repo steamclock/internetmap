@@ -110,10 +110,10 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
 
     @Override
-    protected void onStop() {
+    protected void onDestroy() {
         super.onDestroy();
-        Log.i(TAG, "onStop()");
-        nativeOnStop();
+        Log.i(TAG, "onDestroy()");
+        nativeOnDestroy();
     }
 
     @SuppressWarnings("deprecation")
@@ -513,7 +513,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     public native void nativeOnCreate();
     public native void nativeOnResume();
     public native void nativeOnPause();
-    public native void nativeOnStop();
+    public native void nativeOnDestroy();
     public native void nativeSetSurface(Surface surface, float density);
     
     //threadsafe callbacks for c++
