@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -25,6 +26,7 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.Toast;
+import android.view.Gravity;
 import android.view.ScaleGestureDetector;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -33,6 +35,7 @@ import android.view.Surface;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
 import com.peer1.internetmap.ASNRequest.ASNResponseHandler;
@@ -430,6 +433,17 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             showError(getString(R.string.asnBadResponse));
         }
     }
+    
+    public boolean isSmallScreen() {
+        Configuration config = getResources().getConfiguration();
+        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            //if the user forces a phone to landscape mode, the big-screen UI fits better.
+            return false;
+        }
+        int screenSize = config.screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+        Log.d(TAG, String.format("size: %d", screenSize));
+        return screenSize <= Configuration.SCREENLAYOUT_SIZE_NORMAL;
+    }
 
     //called from c++
     public void showNodePopup() {
@@ -464,7 +478,26 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             }
             boolean isUserNode = (node.index == mUserNodeIndex);
             mNodePopup.setNode(node, isUserNode);
-            mNodePopup.showAsDropDown(findViewById(R.id.visualizationsButton)); //FIXME show by node
+            //update size/position
+            View mainView = findViewById(R.id.surfaceview);
+            int gravity, width;
+            //note: PopupWindow appears to ignore gravity width/height hints
+            //and most of its size setters only take absolute numbers; setWindowLayoutMode is the exception
+            //but, setWindowLayoutMode doesn't properly handle absolute numbers either, so we may have to call *both*.
+            if (mInTimelineMode) {
+                gravity = Gravity.CENTER; //FIXME it should be a bit above center but that's hard
+                width = mainView.getWidth() / 2;
+            } else if (isSmallScreen()) {
+                gravity = Gravity.BOTTOM;
+                width = LayoutParams.MATCH_PARENT;
+            } else {
+                gravity = Gravity.CENTER_VERTICAL | Gravity.RIGHT;
+                width = mainView.getWidth() / 2;
+            }
+            Log.d(TAG, String.format("width: %d", width));
+            mNodePopup.setWindowLayoutMode(width, LayoutParams.WRAP_CONTENT);
+            mNodePopup.setWidth(width);
+            mNodePopup.showAtLocation(mainView, gravity, 0, 0);
         }
     }
     

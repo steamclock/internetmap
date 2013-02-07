@@ -3,17 +3,9 @@ package com.peer1.internetmap;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.text.TextPaint;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -27,14 +19,10 @@ public class NodePopup extends PopupWindow {
     private boolean mIsTimelineView;
     
     public NodePopup(Context context, View view, boolean isTimelineView) {
-        super(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        super(view);
         mContext = context;
         mIsTimelineView = isTimelineView;
         setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.translucentBlack)));
-        
-        //FIXME calculate appropriate size
-        setWidth(300);
-        setHeight(200);
     }
     
     public void setNode(NodeWrapper node) {
