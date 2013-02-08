@@ -103,6 +103,10 @@
 
 }
 
+-(void)startLoad {
+    self.yearLabel.text = [NSString stringWithFormat:@"Loading %d", self.year];
+}
+
 
 - (CGFloat)heightForMutableAttributedString:(NSMutableAttributedString*)mutableAttString width:(CGFloat)width
 {

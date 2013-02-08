@@ -201,7 +201,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             prop.downArrowImageName = nil;
             self.timelinePopover.containerViewProperties = prop;
         }
-
+        
+        self.timelinePopover.userInteractionEnabled = NO;
     }
     
     //setup timeline slider values
@@ -539,6 +540,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         int year = (int)(self.minTimelineYear+self.timelineSlider.value*10);
         [self.controller setTimelinePoint:[NSString stringWithFormat:@"%d0101", year]];
 
+        [self timelineSliderValueChanged:nil];
+        
         // Poke node info popover so it'll switch styles, note: camera move when reselecting node will
         // show it again
         [self dismissNodeInfoPopover];
@@ -645,7 +648,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 - (void)timelineSliderTouchUp:(id)sender {
-    [self.timelinePopover dismissPopoverAnimated:NO];
+    [self.timelineInfoViewController startLoad];
+  
     [self dismissNodeInfoPopover];
     [self.controller deselectCurrentNode];
     [self.controller resetZoomAndRotationAnimatedForOrientation:![HelperMethods deviceIsiPad]];
@@ -657,6 +661,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.timelineSelectionBlock = ^ {
         int year = (int)(weakSelf.minTimelineYear+weakSelf.timelineSlider.value*10);
         [weakSelf.controller setTimelinePoint:[NSString stringWithFormat:@"%d0101", year]];
+        [weakSelf.timelinePopover dismissPopoverAnimated:NO];
     };
     
 }
