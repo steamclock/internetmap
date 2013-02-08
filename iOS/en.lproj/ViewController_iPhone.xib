@@ -66,6 +66,11 @@
 									<int key="NSColorSpace">3</int>
 									<bytes key="NSWhite">MC41AA</bytes>
 								</object>
+								<object class="NSCustomResource" key="IBUIHighlightedImage" id="504283727">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">search_selected.png</string>
+								</object>
+								<reference key="IBUISelectedImage" ref="504283727"/>
 								<object class="NSCustomResource" key="IBUINormalImage">
 									<string key="NSClassName">NSImage</string>
 									<string key="NSResourceName">search.png</string>
@@ -110,6 +115,11 @@
 									<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 								</object>
 								<reference key="IBUINormalTitleShadowColor" ref="1072507531"/>
+								<object class="NSCustomResource" key="IBUIHighlightedImage" id="1042741207">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">youarehere_selected.png</string>
+								</object>
+								<reference key="IBUISelectedImage" ref="1042741207"/>
 								<object class="NSCustomResource" key="IBUINormalImage">
 									<string key="NSClassName">NSImage</string>
 									<string key="NSResourceName">youarehere.png</string>
@@ -147,6 +157,11 @@
 									<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 								</object>
 								<reference key="IBUINormalTitleShadowColor" ref="1072507531"/>
+								<object class="NSCustomResource" key="IBUIHighlightedImage" id="1052945127">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">eye_selected.png</string>
+								</object>
+								<reference key="IBUISelectedImage" ref="1052945127"/>
 								<object class="NSCustomResource" key="IBUINormalImage">
 									<string key="NSClassName">NSImage</string>
 									<string key="NSResourceName">eye.png</string>
@@ -184,6 +199,11 @@
 									<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 								</object>
 								<reference key="IBUINormalTitleShadowColor" ref="1072507531"/>
+								<object class="NSCustomResource" key="IBUIHighlightedImage" id="591409016">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">travelback_selected.png</string>
+								</object>
+								<reference key="IBUISelectedImage" ref="591409016"/>
 								<object class="NSCustomResource" key="IBUINormalImage">
 									<string key="NSClassName">NSImage</string>
 									<string key="NSResourceName">travelback.png</string>
@@ -220,6 +240,7 @@
 						<string key="NSFrame">{{31, 438}, {259, 23}}</string>
 						<reference key="NSSuperview" ref="184854543"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -549,6 +570,7 @@
 				<string key="-2.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="10.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<real value="0.0" key="10.IBUIButtonInspectorSelectedEdgeInsetMetadataKey"/>
+				<real value="2" key="10.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="2.CustomClassName">GLKView</string>
 				<string key="2.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="21.CustomClassName">ExpandedSlider</string>
@@ -560,8 +582,11 @@
 				<string key="5.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="6.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="7.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<real value="2" key="7.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="8.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<real value="2" key="8.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="9.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<real value="2" key="9.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
@@ -582,40 +607,6 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">ViewController</string>
 					<string key="superclassName">GLKViewController</string>
-					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="playButtonPressed:">id</string>
-						<string key="searchButtonPressed:">id</string>
-						<string key="timelineButtonPressed:">id</string>
-						<string key="timelineSliderValueChanged:">id</string>
-						<string key="visualizationsButtonPressed:">id</string>
-						<string key="youAreHereButtonPressed:">id</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="playButtonPressed:">
-							<string key="name">playButtonPressed:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="searchButtonPressed:">
-							<string key="name">searchButtonPressed:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="timelineButtonPressed:">
-							<string key="name">timelineButtonPressed:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="timelineSliderValueChanged:">
-							<string key="name">timelineSliderValueChanged:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="visualizationsButtonPressed:">
-							<string key="name">visualizationsButtonPressed:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="youAreHereButtonPressed:">
-							<string key="name">youAreHereButtonPressed:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="buttonContainerView">UIView</string>
 						<string key="logo">UIImageView</string>
@@ -693,10 +684,14 @@
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="eye.png">{46, 34}</string>
+			<string key="eye_selected.png">{46, 34}</string>
 			<string key="search.png">{40, 40}</string>
+			<string key="search_selected.png">{40, 40}</string>
 			<string key="timeline-play.png">{48, 48}</string>
 			<string key="travelback.png">{38, 37}</string>
+			<string key="travelback_selected.png">{38, 37}</string>
 			<string key="youarehere.png">{36, 41}</string>
+			<string key="youarehere_selected.png">{36, 41}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">2083</string>
 	</data>
