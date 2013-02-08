@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.net.ConnectivityManager;
@@ -67,7 +68,9 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         requestWindowFeature(android.view.Window.FEATURE_NO_TITLE);
 
         Log.i(TAG, "onCreate()");
-
+        
+        //try to get into the best orientation before initializing the backend
+        forceOrientation();
         nativeOnCreate(isSmallScreen());
 
         setContentView(R.layout.main);
@@ -84,6 +87,15 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
         timelineBar.setOnSeekBarChangeListener(new TimelineListener());
     }
+    
+    public void forceOrientation() {
+        Configuration config = getResources().getConfiguration();
+        int screenSize = config.screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+        Log.d(TAG, String.format("Size: %d", screenSize));
+        int orientation = (screenSize <= Configuration.SCREENLAYOUT_SIZE_NORMAL) ? 
+                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT : ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+        setRequestedOrientation(orientation);
+    }
 
     public String readFileAsString(String filePath) throws java.io.IOException {
         Log.i(TAG, String.format("Reading %s", filePath));
@@ -98,6 +110,14 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         return new String(buffer);
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.i(TAG, "onRestart()");
+        //force again in case the user was playing with an orientation app
+        forceOrientation();
+    }
+    
     @Override
     protected void onResume() {
         super.onResume();
