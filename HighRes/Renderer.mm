@@ -50,7 +50,7 @@ bool deviceIsOld(void) {
     if((self = [super init])) {
         self.mapController = new MapController;
         _mapController->updateDisplay(false);
-        _mapController->display->camera->setAllowIdleAnimation(true);
+        _mapController->display->camera->setAllowIdleAnimation(false);
                 
         self.captureHeight = self.captureWidth = 4096;
         
