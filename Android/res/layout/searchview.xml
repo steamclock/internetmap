@@ -17,6 +17,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:hint="@string/searchHint"
+            android:imeOptions="actionGo"
             android:inputType="textNoSuggestions|textVisiblePassword" >
 
             <requestFocus />

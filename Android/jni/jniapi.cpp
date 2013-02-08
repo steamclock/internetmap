@@ -208,7 +208,7 @@ JNIEXPORT jobjectArray JNICALL Java_com_peer1_internetmap_MapControllerWrapper_a
     //populate array
     for (int i = 0; i < controller->data->nodes.size(); i++) {
         NodePointer node = controller->data->nodes[i];
-        if(node->isActive()) {
+        if (node && node->isActive()) {
             jobject wrapper = wrapNode(jenv, node);
             jenv->SetObjectArrayElement(array, i, wrapper);
             //cleanup because we loop >512 times

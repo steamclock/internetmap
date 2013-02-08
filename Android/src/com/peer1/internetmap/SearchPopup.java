@@ -4,14 +4,18 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
+import android.view.inputmethod.EditorInfo;
 import android.widget.*;
+import android.widget.TextView.OnEditorActionListener;
 
 
 public class SearchPopup extends PopupWindow{
@@ -73,6 +77,19 @@ public class SearchPopup extends PopupWindow{
      */
     private class NodeAdapter extends ArrayAdapter<SearchItem> {
         private ArrayList<? extends SearchItem> mFilteredNodes;
+        
+        @Override
+        //highlight the first item
+        public View getView(int position, View convertView, ViewGroup parent) {
+            TextView textView = (TextView) super.getView(position, convertView, parent);
+            if (position == 0) {
+                textView.setTextColor(mContext.getResources().getColor(R.color.orange));
+            } else {
+                textView.setTextColor(Color.WHITE);
+            }
+            return textView;
+        }
+        
         /**
          * Filters the list of search results.
          * @author chani
@@ -169,7 +186,11 @@ public class SearchPopup extends PopupWindow{
         //initial search results: use all the nodes!
         mAllNodes = new ArrayList<SearchNode>(rawNodes.length);
         for (int i = 0; i < rawNodes.length; i++) {
-            mAllNodes.add(new SearchNode(rawNodes[i]));
+            if (rawNodes[i] != null) {
+                mAllNodes.add(new SearchNode(rawNodes[i]));
+            } else {
+                //Log.d(TAG, "caught null node"); //FIXME catch this in jni
+            }
         }
         Log.d(TAG, String.format("converted %d nodes", mAllNodes.size()));
         
@@ -203,6 +224,16 @@ public class SearchPopup extends PopupWindow{
             //unneeded abstract stuff
             public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {}
             public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {}
+        });
+        input.setOnEditorActionListener(new OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_GO) {
+                    listView.performItemClick(null, 0, 0);
+                    handled = true;
+                }
+                return handled;
+            }
         });
     }
 
