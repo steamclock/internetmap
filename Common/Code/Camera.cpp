@@ -293,6 +293,17 @@ void Camera::zoomByScale(float zoom) {
     }
 }
 
+void Camera::resetZoomAndRotationAnimated(bool isPortraitMode) {
+    TimeInterval duration = 2.5;
+    if (isPortraitMode) {
+        zoomAnimated(-8, duration);
+        rotateAnimated(Matrix4::rotation(M_PI_2, Vector3(0, 0, 1)), duration);
+    } else {
+        zoomAnimated(-3, duration);
+        rotateAnimated(Matrix4::identity(), duration);
+    }
+}
+
 void Camera::zoomAnimated(float zoom, TimeInterval duration) {
     if(zoom > _maxZoom) {
         zoom = _maxZoom;

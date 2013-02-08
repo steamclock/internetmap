@@ -135,17 +135,8 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
 
 #pragma mark - Camera: View Manipulation
 
-- (void)resetZoomAndRotationAnimatedWithDuration:(NSTimeInterval)duration{
-    
-    
-    if ([HelperMethods deviceIsiPad]) {
-        [self zoomAnimated:-3 duration:duration];
-        [self rotateAnimated:GLKMatrix4Identity duration:duration];
-
-    }else {
-        [self zoomAnimated:-8 duration:duration];
-        [self rotateAnimated:GLKMatrix4MakeRotation(M_PI_2, 0, 0, 1) duration:duration];
-    }
+- (void)resetZoomAndRotationAnimatedForOrientation:(BOOL)isPortraitMode{
+    _controller->display->camera->resetZoomAndRotationAnimated(isPortraitMode);
 }
 
 - (void)zoomAnimated:(float)zoom duration:(NSTimeInterval)duration{

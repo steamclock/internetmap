@@ -648,9 +648,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.timelinePopover dismissPopoverAnimated:NO];
     [self dismissNodeInfoPopover];
     [self.controller deselectCurrentNode];
-    [self.controller resetZoomAndRotationAnimatedWithDuration:2.5];
+    [self.controller resetZoomAndRotationAnimatedForOrientation:![HelperMethods deviceIsiPad]];
     //this does not set the new timeline data directly.
-    //instead, resetZoomAndRotationAnimatedWithDuration in MapControllerWrapper will cause an animated rotation.
+    //instead, resetZoomAndRotationAnimatedForOrientation in MapControllerWrapper will cause an animated rotation.
     //as soon as this rotation is finished, the "cameraResetFinished" notification is triggered, and 'viewResetDone' will be called
     
     __weak ViewController* weakSelf = self;

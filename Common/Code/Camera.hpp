@@ -109,6 +109,8 @@ public:
     
     void startMomentumRotationWithVelocity(float velocity);
     void stopMomentumRotation();
+    
+    void resetZoomAndRotationAnimated(bool isPortraitMode);
 };
 
 #endif
