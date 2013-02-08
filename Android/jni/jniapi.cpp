@@ -330,5 +330,6 @@ void cameraMoveFinishedCallback(void) {
 }
 
 // TODO
+void cameraResetFinishedCallback(void){}
 void lostSelectedNodeCallback(void) {
 }
