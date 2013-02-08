@@ -102,7 +102,7 @@
 		A686EAFE16B62DBD009B070E /* Program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A686EA9916B62BD5009B070E /* Program.cpp */; };
 		A686EAFF16B62DBD009B070E /* VertexBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A686EA9C16B62BD5009B070E /* VertexBuffer.cpp */; };
 		A686EB0016B62DBD009B070E /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAAB16B62BF1009B070E /* TTTAttributedLabel.m */; };
-		A686EB0116B62DBD009B070E /* jsoncpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A686EAAE16B62BFE009B070E /* jsoncpp.cpp */; };
+		A686EB0116B62DBD009B070E /* jsoncpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A686EAAE16B62BFE009B070E /* jsoncpp.cpp */; settings = {COMPILER_FLAGS = "-Xanalyzer -analyzer-disable-checker -Qunused-arguments"; }; };
 		A686EB0216B62DBD009B070E /* UIBarButtonItem+WEPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAEA16B62D40009B070E /* UIBarButtonItem+WEPopover.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		A686EB0316B62DBD009B070E /* WEPopoverContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAEC16B62D40009B070E /* WEPopoverContainerView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		A686EB0416B62DBD009B070E /* WEPopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAEE16B62D40009B070E /* WEPopoverController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -150,9 +150,9 @@
 		A6F3F5691640F1FB0070E6AE /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5681640F1FB0070E6AE /* GLKit.framework */; };
 		A6F3F56B1640F1FB0070E6AE /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F56A1640F1FB0070E6AE /* OpenGLES.framework */; };
 		D403BBDE16C1DF2F008AA000 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = D403BBD816C1DF2F008AA000 /* LICENSE */; };
-		D403BBDF16C1DF2F008AA000 /* main-traceroute.c in Sources */ = {isa = PBXBuildFile; fileRef = D403BBD916C1DF2F008AA000 /* main-traceroute.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		D403BBDF16C1DF2F008AA000 /* main-traceroute.c in Sources */ = {isa = PBXBuildFile; fileRef = D403BBD916C1DF2F008AA000 /* main-traceroute.c */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-checker"; }; };
 		D403BBE016C1DF2F008AA000 /* README in Resources */ = {isa = PBXBuildFile; fileRef = D403BBDA16C1DF2F008AA000 /* README */; };
-		D403BBE116C1DF2F008AA000 /* traceroute.c in Sources */ = {isa = PBXBuildFile; fileRef = D403BBDB16C1DF2F008AA000 /* traceroute.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		D403BBE116C1DF2F008AA000 /* traceroute.c in Sources */ = {isa = PBXBuildFile; fileRef = D403BBDB16C1DF2F008AA000 /* traceroute.c */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-checker"; }; };
 		D468090416795D4600A2C1CC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D468090216795CC200A2C1CC /* SystemConfiguration.framework */; };
 		D468090516795D4D00A2C1CC /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D468090016795CB700A2C1CC /* CFNetwork.framework */; };
 		D4C1083116B2043D00CA4A0E /* SCIcmpPacketUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = D4C1082B16B2043D00CA4A0E /* SCIcmpPacketUtility.m */; };
