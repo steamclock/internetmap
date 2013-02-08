@@ -64,6 +64,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (nonatomic) NSString* cachedCurrentASN;
 
 @property (nonatomic) int minTimelineYear;
+@property (nonatomic, strong) void (^timelineSelectionBlock)(void);
 
 /* UIKit Overlay */
 @property (weak, nonatomic) IBOutlet UIView* buttonContainerView;
@@ -216,6 +217,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.timelineSlider.value = diff;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayInformationPopoverForCurrentNode) name:@"cameraMovementFinished" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewResetDone) name:@"cameraResetFinished" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissNodeInfoPopover) name:@"lostSelectedNode" object:nil];
     
     [self.controller resetIdleTimer];
@@ -643,10 +645,27 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 - (void)timelineSliderTouchUp:(id)sender {
-    int year = (int)(self.minTimelineYear+self.timelineSlider.value*10);
-    [self.controller setTimelinePoint:[NSString stringWithFormat:@"%d0101", year]];
     [self.timelinePopover dismissPopoverAnimated:NO];
     [self dismissNodeInfoPopover];
+    [self.controller deselectCurrentNode];
+    [self.controller resetZoomAndRotationAnimatedWithDuration:2.5];
+    //this does not set the new timeline data directly.
+    //instead, resetZoomAndRotationAnimatedWithDuration in MapControllerWrapper will cause an animated rotation.
+    //as soon as this rotation is finished, the "cameraResetFinished" notification is triggered, and 'viewResetDone' will be called
+    
+    __weak ViewController* weakSelf = self;
+    self.timelineSelectionBlock = ^ {
+        int year = (int)(weakSelf.minTimelineYear+weakSelf.timelineSlider.value*10);
+        [weakSelf.controller setTimelinePoint:[NSString stringWithFormat:@"%d0101", year]];
+    };
+    
+}
+
+- (void)viewResetDone{
+    if (self.timelineSelectionBlock) {
+        self.timelineSelectionBlock();
+        self.timelineSelectionBlock = nil;
+    }
 }
 
 #pragma mark - Helper Methods: Current ASN precaching
@@ -752,19 +771,28 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 -(void)tracerouteButtonTapped{
     
     //Below line for testing purposes only
-    [self testBSDTraceroute];
+//    [self testBSDTraceroute];
     
     [self resizeNodeInfoPopover];
     
     self.tracerouteASNs = [NSMutableDictionary new];
-    [self.controller zoomAnimated:-3 duration:3];
+    
+    
+    //zoom out and rotate camera to default orientation on app startup
+    GLKMatrix4 zRotation = GLKMatrix4Identity;
+    float zoom = -3;
+    if (![HelperMethods deviceIsiPad]) {
+        zRotation = GLKMatrix4MakeRotation(M_PI_2, 0, 0, 1);
+        zoom = -8;
+    }
+    
+    [self.controller zoomAnimated:zoom duration:3];
     
     NodeWrapper* node = [self.controller nodeAtIndex:self.controller.targetNode];
-    // Ask Alex what this does - best guess is adjusts the camera distance/focal length?
     if (node.importance > 0.006) {
-        [self.controller rotateAnimated:GLKMatrix4Identity duration:3];
+        [self.controller rotateAnimated:zRotation duration:3];
     } else {
-        [self.controller rotateAnimated:GLKMatrix4MakeRotation(M_PI, 0, 1, 0) duration:3];
+        [self.controller rotateAnimated:GLKMatrix4Multiply(GLKMatrix4MakeRotation(M_PI, 0, 1, 0), zRotation) duration:3];
     }
     
     if(self.controller.lastSearchIP && ![self.controller.lastSearchIP isEqualToString:@""]) {

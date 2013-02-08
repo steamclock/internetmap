@@ -18,6 +18,12 @@ void cameraMoveFinishedCallback(void) {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"cameraMovementFinished" object:nil];
 }
 
+
+void cameraResetFinishedCallback(void) {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"cameraResetFinished" object:nil];
+}
+
+
 void lostSelectedNodeCallback(void) {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"lostSelectedNode" object:nil];
 }
@@ -128,6 +134,19 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
 }
 
 #pragma mark - Camera: View Manipulation
+
+- (void)resetZoomAndRotationAnimatedWithDuration:(NSTimeInterval)duration{
+    
+    
+    if ([HelperMethods deviceIsiPad]) {
+        [self zoomAnimated:-3 duration:duration];
+        [self rotateAnimated:GLKMatrix4Identity duration:duration];
+
+    }else {
+        [self zoomAnimated:-8 duration:duration];
+        [self rotateAnimated:GLKMatrix4MakeRotation(M_PI_2, 0, 0, 1) duration:duration];
+    }
+}
 
 - (void)zoomAnimated:(float)zoom duration:(NSTimeInterval)duration{
     _controller->display->camera->zoomAnimated(zoom, duration);

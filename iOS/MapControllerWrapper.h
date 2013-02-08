@@ -26,6 +26,7 @@
 - (void)draw;
 - (void)zoomAnimated:(float)zoom duration:(NSTimeInterval)duration;
 - (void)stopMomentumPan;
+- (void)resetZoomAndRotationAnimatedWithDuration:(NSTimeInterval)duration;
 - (void)rotateRadiansX:(float)rotate;
 - (void)rotateRadiansY:(float)rotate;
 - (void)rotateRadiansZ:(float)rotate;

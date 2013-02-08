@@ -14,6 +14,7 @@ static const float MAX_MAX_ZOOM = -0.06f;
 
 // TODO: better way to register this
 void cameraMoveFinishedCallback(void);
+void cameraResetFinishedCallback(void);
 
 Camera::Camera() :
     _displayWidth(0.0f),
@@ -170,6 +171,7 @@ void Camera::handleAnimatedRotation(TimeInterval delta) {
         float timeT = (_updateTime - _rotationStartTime) / _rotationDuration;
         if(timeT > 1.0f) {
             _rotationStartTime = MAXFLOAT;
+            cameraResetFinishedCallback();
         }
         else {
             float positionT;
