@@ -38,12 +38,14 @@
 
 - (id)init {
 	if ((self = [super init])) {
+        userInteractionEnabled = YES;
 	}
 	return self;
 }
 
 - (id)initWithContentViewController:(UIViewController *)viewController {
 	if ((self = [self init])) {
+        userInteractionEnabled = YES;
 		self.contentViewController = viewController;
 	}
 	return self;
@@ -78,6 +80,15 @@
 		passthroughViews = [[NSArray alloc] initWithArray:array];
 	}
 	[self updateBackgroundPassthroughViews];
+}
+
+- (BOOL)userInteractionEnabled {
+    return userInteractionEnabled;
+}
+
+-(void)setUserInteractionEnabled:(BOOL)u {
+    userInteractionEnabled = u;
+    backgroundView.userInteractionEnabled = u;
 }
 
 - (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)theContext {
@@ -157,6 +168,7 @@
 									   UIViewAutoresizingFlexibleHeight |
 									   UIViewAutoresizingFlexibleBottomMargin);
 	backgroundView.backgroundColor = [UIColor clearColor];
+    backgroundView.userInteractionEnabled = userInteractionEnabled;
 	backgroundView.delegate = self;
 	
 	[keyView addSubview:backgroundView];

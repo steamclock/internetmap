@@ -23,6 +23,15 @@
 	[super dealloc];
 }
 
+- (BOOL)userInteractionEnabled {
+    return !testHits;
+}
+
+-(void)setUserInteractionEnabled:(BOOL)userInteractionEnabled {
+    [super setUserInteractionEnabled:userInteractionEnabled];
+    testHits = !userInteractionEnabled;
+}
+
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
 	if (testHits) {
 		return nil;
