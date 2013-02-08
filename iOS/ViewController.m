@@ -211,8 +211,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.minTimelineYear = [sortedYears[0] intValue];
     int max = [[sortedYears lastObject] intValue];
     float diff = max-self.minTimelineYear;
-    diff /= 10;
-    diff += 0.099; // If we don't add a buffer, current year is only the very last position on the slider
     self.timelineSlider.minimumValue = 0;
     self.timelineSlider.maximumValue = diff;
     self.timelineSlider.value = diff;
@@ -537,9 +535,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.timelineButton.selected = YES;
         //self.playButton.hidden = NO;
         
-        int year = (int)(self.minTimelineYear+self.timelineSlider.value*10);
+        int year = (int)(self.minTimelineYear+self.timelineSlider.value);
         [self.controller setTimelinePoint:[NSString stringWithFormat:@"%d0101", year]];
 
+        // Give the timeline slider view a poke to reinitialize it with the current date
+        self.timelineInfoViewController.year = 0;
         [self timelineSliderValueChanged:nil];
         
         // Poke node info popover so it'll switch styles, note: camera move when reselecting node will
@@ -632,19 +632,26 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 
 - (IBAction)timelineSliderValueChanged:(id)sender {
-    int year = (int)(self.minTimelineYear+self.timelineSlider.value*10);
-    CGRect thumbRect = [self.timelineSlider thumbRectForBounds:self.timelineSlider.bounds trackRect:[self.timelineSlider trackRectForBounds:self.timelineSlider.bounds] value:self.timelineSlider.value];
+    float snappedValue = roundf(self.timelineSlider.value);
+    
+    if(fabs(self.timelineSlider.value - snappedValue) > 0.01) {
+        self.timelineSlider.value = snappedValue;
+    }
+        
+    int year = (int)(self.minTimelineYear+snappedValue);
+    CGRect thumbRect = [self.timelineSlider thumbRectForBounds:self.timelineSlider.bounds trackRect:[self.timelineSlider trackRectForBounds:self.timelineSlider.bounds] value:snappedValue];
     thumbRect = [self.view convertRect:thumbRect fromView:self.timelineSlider];
     if (![HelperMethods deviceIsiPad]) {
         thumbRect.origin.y -= 5;
     }
     
-    [self.timelinePopover dismissPopoverAnimated:NO];
-    
-    [self.timelineInfoViewController setYear:year];
-    [self.timelinePopover setPopoverContentSize:self.timelineInfoViewController.contentSizeForViewInPopover];
-    [self.timelinePopover presentPopoverFromRect:thumbRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];
-    
+    if(year != self.timelineInfoViewController.year) {
+        [self.timelinePopover dismissPopoverAnimated:NO];
+        
+        [self.timelineInfoViewController setYear:year];
+        [self.timelinePopover setPopoverContentSize:self.timelineInfoViewController.contentSizeForViewInPopover];
+        [self.timelinePopover presentPopoverFromRect:thumbRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];
+    }
 }
 
 - (void)timelineSliderTouchUp:(id)sender {
@@ -659,7 +666,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     __weak ViewController* weakSelf = self;
     self.timelineSelectionBlock = ^ {
-        int year = (int)(weakSelf.minTimelineYear+weakSelf.timelineSlider.value*10);
+        int year = (int)(weakSelf.minTimelineYear+weakSelf.timelineSlider.value);
         [weakSelf.controller setTimelinePoint:[NSString stringWithFormat:@"%d0101", year]];
         [weakSelf.timelinePopover dismissPopoverAnimated:NO];
     };
