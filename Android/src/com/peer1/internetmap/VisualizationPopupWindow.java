@@ -9,7 +9,7 @@ import android.widget.*;
 
 
 public class VisualizationPopupWindow extends PopupWindow{
-
+    private Context mContext;
 
     private class VisualizationArrayAdapter extends ArrayAdapter<String> {
         public int selectedRow;
@@ -22,10 +22,10 @@ public class VisualizationPopupWindow extends PopupWindow{
         public View getView(int position, View convertView, ViewGroup parent) {
             TextView textView = (TextView) super.getView(position, convertView, parent);
             if (position == selectedRow) {
-                textView.setBackgroundColor(Color.RED);
+                textView.setBackgroundColor(mContext.getResources().getColor(R.color.orange));
                 textView.setTextColor(Color.BLACK);
-            }else {
-                textView.setBackgroundColor(Color.parseColor("#80000000"));
+            } else {
+                textView.setBackgroundColor(Color.TRANSPARENT);
                 textView.setTextColor(Color.WHITE);
             }
             return textView;
@@ -37,6 +37,7 @@ public class VisualizationPopupWindow extends PopupWindow{
         setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.translucentBlack)));
         setOutsideTouchable(true);
         setFocusable(true);
+        mContext = context;
 
         final ListView listView = (ListView) getContentView().findViewById(R.id.visualizationList);
         String[] values = controller.visualizationNames();
