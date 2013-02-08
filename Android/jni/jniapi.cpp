@@ -253,6 +253,12 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_deselectC
     renderer->endControllerModification();
 }
 
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_resetZoomAndRotationAnimated(JNIEnv* jenv, jobject obj, bool isPortraitMode) {
+    MapController* controller = renderer->beginControllerModification();
+    controller->display->camera->resetZoomAndRotationAnimated(isPortraitMode);
+    renderer->endControllerModification();
+}
+
 JNIEXPORT jstring JNICALL Java_com_peer1_internetmap_NodeWrapper_nativeFriendlyDescription(JNIEnv* jenv, jobject obj, int index) {
     MapController* controller = renderer->beginControllerModification();
     if (index < 0 || index >= controller->data->nodes.size()) {
@@ -310,9 +316,8 @@ bool deviceIsOld() {
     return false;
 }
 
-//note: we can only call specifically threadsafe functions here
-void cameraMoveFinishedCallback(void) {
-    LOG("cameraMoveFinishedCallback");
+//call one of the threadsafe InternetMap methods
+void callThreadsafeVoidMethod(const char *methodName) {
     JNIEnv *env = NULL;
     int status = javaVM->GetEnv((void **)&env, JNI_VERSION_1_6);
     if (status < 0) { //shouldn't happen
@@ -325,11 +330,18 @@ void cameraMoveFinishedCallback(void) {
     }
 
     jclass klass = env->GetObjectClass(activity);
-    jmethodID methodID = env->GetMethodID(klass, "threadsafeShowNodePopup", "()V");
+    jmethodID methodID = env->GetMethodID(klass, methodName, "()V");
     env->CallVoidMethod(activity, methodID);
 }
 
+//note: we can only call specifically threadsafe functions from these callbacks
+void cameraMoveFinishedCallback(void) {
+    callThreadsafeVoidMethod("threadsafeShowNodePopup");
+}
+void cameraResetFinishedCallback(void){
+    callThreadsafeVoidMethod("threadsafeCameraResetCallback");
+}
+
 // TODO
-void cameraResetFinishedCallback(void){}
 void lostSelectedNodeCallback(void) {
 }

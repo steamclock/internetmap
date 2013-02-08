@@ -60,6 +60,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     private int mTimelineMinYear;
     public int mCurrentVisualization; //cached for the visualization popup
     private boolean mInTimelineMode; //true if we're showing the timeline
+    private CallbackHandler mCameraResetHandler;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -373,7 +374,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         if (mInTimelineMode) {
             SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
             timelineBar.setVisibility(View.GONE);
-            mController.setTimelinePoint(mTimelineMinYear + timelineBar.getMax());
+            resetViewAndSetTimeline(mTimelineMinYear + timelineBar.getMax());
             mInTimelineMode = false;
         }
         if (mNodePopup != null) {
@@ -437,9 +438,24 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         
         public void onStopTrackingTouch(SeekBar seekBar) {
             int year = mTimelineMinYear + seekBar.getProgress();
-            mController.setTimelinePoint(year);
+            resetViewAndSetTimeline(year);
             mTimelinePopup.dismiss();
         }
+    }
+    
+    public void resetViewAndSetTimeline(final int year) {
+        mController.resetZoomAndRotationAnimated(isSmallScreen());
+        mCameraResetHandler = new CallbackHandler(){
+            public void handle() {
+                mController.setTimelinePoint(year);
+                mCameraResetHandler = null;
+            }
+        };
+    }
+    
+    //for handling the camera reset callback
+    private interface CallbackHandler {
+        public void handle();
     }
     
     public boolean haveConnectivity(){
@@ -493,7 +509,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         return screenSize <= Configuration.SCREENLAYOUT_SIZE_NORMAL;
     }
 
-    //called from c++
+    //called from c++ via threadsafeShowNodePopup
     public void showNodePopup() {
         Log.d(TAG, "showNodePopup");
         //get the current node
@@ -602,6 +618,15 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         mHandler.post(new Runnable() {
             public void run() {
                 showNodePopup();
+            }
+        });
+    }
+    public void threadsafeCameraResetCallback() {
+        mHandler.post(new Runnable() {
+            public void run() {
+                if (mCameraResetHandler != null) {
+                    mCameraResetHandler.handle();
+                }
             }
         });
     }

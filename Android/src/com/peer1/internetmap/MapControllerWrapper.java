@@ -18,5 +18,5 @@ public class MapControllerWrapper {
     public native String[] visualizationNames();
     public native void setVisualization(int index);
     public native void deselectCurrentNode();
-
+    public native void resetZoomAndRotationAnimated(boolean isPortraitMode);
 }
