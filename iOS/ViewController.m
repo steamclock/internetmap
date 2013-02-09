@@ -556,7 +556,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.playButton.hidden = YES;
     [self.controller setTimelinePoint:@""];
     self.timelineSlider.value = self.timelineSlider.maximumValue;
-    
+    [self.timelinePopover dismissPopoverAnimated:NO];
+
     // Poke node info popover so it'll switch styles, note: camera move when reselecting node will
     // show it again
     [self dismissNodeInfoPopover];
