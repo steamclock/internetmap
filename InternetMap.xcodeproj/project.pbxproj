@@ -15,6 +15,25 @@
 		1175AA3416AA117F00B93031 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1175AA3316AA117F00B93031 /* ImageIO.framework */; };
 		A600AAD616A664E1003B1028 /* as2attr.txt in Resources */ = {isa = PBXBuildFile; fileRef = A600AAD316A664DF003B1028 /* as2attr.txt */; };
 		A600AAD716A664E1003B1028 /* asinfo.json in Resources */ = {isa = PBXBuildFile; fileRef = A600AAD416A664E0003B1028 /* asinfo.json */; };
+		A6551E4716C5CBF600340590 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5641640F1FB0070E6AE /* Foundation.framework */; };
+		A6551E5316C5CC8100340590 /* main-traceroute.c in Sources */ = {isa = PBXBuildFile; fileRef = D403BBD916C1DF2F008AA000 /* main-traceroute.c */; };
+		A6551E5416C5CC8100340590 /* traceroute.c in Sources */ = {isa = PBXBuildFile; fileRef = D403BBDB16C1DF2F008AA000 /* traceroute.c */; };
+		A6551E5516C5CC8100340590 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAAB16B62BF1009B070E /* TTTAttributedLabel.m */; };
+		A6551E5616C5CC8100340590 /* UIBarButtonItem+WEPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAEA16B62D40009B070E /* UIBarButtonItem+WEPopover.m */; };
+		A6551E5716C5CC8100340590 /* WEPopoverContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAEC16B62D40009B070E /* WEPopoverContainerView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		A6551E5816C5CC8100340590 /* WEPopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAEE16B62D40009B070E /* WEPopoverController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		A6551E5916C5CC8100340590 /* WETouchableView.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAF116B62D40009B070E /* WETouchableView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		A6551E5A16C5CC8100340590 /* ASIAuthenticationDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAD016B62C40009B070E /* ASIAuthenticationDialog.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		A6551E5B16C5CC8100340590 /* ASIDataCompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAD316B62C40009B070E /* ASIDataCompressor.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		A6551E5C16C5CC8100340590 /* ASIDataDecompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAD516B62C40009B070E /* ASIDataDecompressor.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		A6551E5D16C5CC8100340590 /* ASIDownloadCache.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAD716B62C40009B070E /* ASIDownloadCache.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		A6551E5E16C5CC8100340590 /* ASIFormDataRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAD916B62C40009B070E /* ASIFormDataRequest.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		A6551E5F16C5CC8100340590 /* ASIHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EADB16B62C40009B070E /* ASIHTTPRequest.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		A6551E6016C5CC8100340590 /* ASIInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EADF16B62C40009B070E /* ASIInputStream.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		A6551E6116C5CC8100340590 /* ASINetworkQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAE116B62C40009B070E /* ASINetworkQueue.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		A6551E6216C5CC8100340590 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAE416B62C4D009B070E /* Reachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		A6551E6316C5CCB300340590 /* libExternalCode.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A6551E4616C5CBF600340590 /* libExternalCode.a */; };
+		A6551E6416C5CD3000340590 /* jsoncpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A686EAAE16B62BFE009B070E /* jsoncpp.cpp */; };
 		A686E9BA16B62915009B070E /* history.json in Resources */ = {isa = PBXBuildFile; fileRef = A686E9B916B62915009B070E /* history.json */; };
 		A686E9BE16B6294B009B070E /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9BB16B6294B009B070E /* Default-568h@2x.png */; };
 		A686E9BF16B6294B009B070E /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9BC16B6294B009B070E /* Default.png */; };
@@ -101,21 +120,6 @@
 		A686EAFD16B62DBD009B070E /* OpenGL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A686EA9716B62BD5009B070E /* OpenGL.cpp */; };
 		A686EAFE16B62DBD009B070E /* Program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A686EA9916B62BD5009B070E /* Program.cpp */; };
 		A686EAFF16B62DBD009B070E /* VertexBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A686EA9C16B62BD5009B070E /* VertexBuffer.cpp */; };
-		A686EB0016B62DBD009B070E /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAAB16B62BF1009B070E /* TTTAttributedLabel.m */; };
-		A686EB0116B62DBD009B070E /* jsoncpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A686EAAE16B62BFE009B070E /* jsoncpp.cpp */; settings = {COMPILER_FLAGS = "-Xanalyzer -analyzer-disable-checker -Qunused-arguments"; }; };
-		A686EB0216B62DBD009B070E /* UIBarButtonItem+WEPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAEA16B62D40009B070E /* UIBarButtonItem+WEPopover.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		A686EB0316B62DBD009B070E /* WEPopoverContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAEC16B62D40009B070E /* WEPopoverContainerView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		A686EB0416B62DBD009B070E /* WEPopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAEE16B62D40009B070E /* WEPopoverController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		A686EB0516B62DBD009B070E /* WETouchableView.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAF116B62D40009B070E /* WETouchableView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		A686EB0616B62DBD009B070E /* ASIAuthenticationDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAD016B62C40009B070E /* ASIAuthenticationDialog.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		A686EB0716B62DBD009B070E /* ASIDataCompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAD316B62C40009B070E /* ASIDataCompressor.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		A686EB0816B62DBD009B070E /* ASIDataDecompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAD516B62C40009B070E /* ASIDataDecompressor.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		A686EB0916B62DBD009B070E /* ASIDownloadCache.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAD716B62C40009B070E /* ASIDownloadCache.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		A686EB0A16B62DBD009B070E /* ASIFormDataRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAD916B62C40009B070E /* ASIFormDataRequest.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		A686EB0B16B62DBD009B070E /* ASIHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EADB16B62C40009B070E /* ASIHTTPRequest.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		A686EB0C16B62DBD009B070E /* ASIInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EADF16B62C40009B070E /* ASIInputStream.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		A686EB0D16B62DBD009B070E /* ASINetworkQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAE116B62C40009B070E /* ASINetworkQueue.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		A686EB0E16B62DBD009B070E /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAE416B62C4D009B070E /* Reachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		A686EB0F16B63282009B070E /* ARSMaquettePro-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = A686E9D016B629DA009B070E /* ARSMaquettePro-Bold.otf */; };
 		A686EB1016B63282009B070E /* ARSMaquettePro-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = A686E9D116B629DA009B070E /* ARSMaquettePro-Light.otf */; };
 		A686EB1116B63282009B070E /* ARSMaquettePro-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = A686E9D216B629DA009B070E /* ARSMaquettePro-Medium.otf */; };
@@ -150,15 +154,25 @@
 		A6F3F5691640F1FB0070E6AE /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5681640F1FB0070E6AE /* GLKit.framework */; };
 		A6F3F56B1640F1FB0070E6AE /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F56A1640F1FB0070E6AE /* OpenGLES.framework */; };
 		D403BBDE16C1DF2F008AA000 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = D403BBD816C1DF2F008AA000 /* LICENSE */; };
-		D403BBDF16C1DF2F008AA000 /* main-traceroute.c in Sources */ = {isa = PBXBuildFile; fileRef = D403BBD916C1DF2F008AA000 /* main-traceroute.c */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-checker"; }; };
 		D403BBE016C1DF2F008AA000 /* README in Resources */ = {isa = PBXBuildFile; fileRef = D403BBDA16C1DF2F008AA000 /* README */; };
-		D403BBE116C1DF2F008AA000 /* traceroute.c in Sources */ = {isa = PBXBuildFile; fileRef = D403BBDB16C1DF2F008AA000 /* traceroute.c */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-checker"; }; };
 		D468090416795D4600A2C1CC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D468090216795CC200A2C1CC /* SystemConfiguration.framework */; };
 		D468090516795D4D00A2C1CC /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D468090016795CB700A2C1CC /* CFNetwork.framework */; };
 		D4C1083116B2043D00CA4A0E /* SCIcmpPacketUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = D4C1082B16B2043D00CA4A0E /* SCIcmpPacketUtility.m */; };
 		D4C1083216B2043D00CA4A0E /* SCPacketRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = D4C1082E16B2043D00CA4A0E /* SCPacketRecord.m */; };
 		D4C1083316B2043D00CA4A0E /* SCTracerouteUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = D4C1083016B2043D00CA4A0E /* SCTracerouteUtility.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A6551E4416C5CBF600340590 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/${PRODUCT_NAME}";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1117E57A1676BFCD0046AA69 /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
@@ -169,6 +183,7 @@
 		1175AA3316AA117F00B93031 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		A600AAD316A664DF003B1028 /* as2attr.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = as2attr.txt; path = Common/data/as2attr.txt; sourceTree = "<group>"; };
 		A600AAD416A664E0003B1028 /* asinfo.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = asinfo.json; path = Common/data/asinfo.json; sourceTree = "<group>"; };
+		A6551E4616C5CBF600340590 /* libExternalCode.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libExternalCode.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A686E9B916B62915009B070E /* history.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = history.json; path = Common/Data/history.json; sourceTree = "<group>"; };
 		A686E9BB16B6294B009B070E /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "iOS/Default-568h@2x.png"; sourceTree = SOURCE_ROOT; };
 		A686E9BC16B6294B009B070E /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = iOS/Default.png; sourceTree = SOURCE_ROOT; };
@@ -470,10 +485,19 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		A6551E4316C5CBF600340590 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A6551E4716C5CBF600340590 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A6F3F55B1640F1FB0070E6AE /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6551E6316C5CCB300340590 /* libExternalCode.a in Frameworks */,
 				114DD47D167AA6850061CB36 /* MobileCoreServices.framework in Frameworks */,
 				1175AA3416AA117F00B93031 /* ImageIO.framework in Frameworks */,
 				1175AA3216AA117800B93031 /* libxml2.dylib in Frameworks */,
@@ -778,6 +802,7 @@
 			isa = PBXGroup;
 			children = (
 				A6F3F55E1640F1FB0070E6AE /* internetmap.app */,
+				A6551E4616C5CBF600340590 /* libExternalCode.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1026,6 +1051,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		A6551E4516C5CBF600340590 /* ExternalCode */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A6551E4F16C5CBF600340590 /* Build configuration list for PBXNativeTarget "ExternalCode" */;
+			buildPhases = (
+				A6551E4216C5CBF600340590 /* Sources */,
+				A6551E4316C5CBF600340590 /* Frameworks */,
+				A6551E4416C5CBF600340590 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ExternalCode;
+			productName = ExternalCode;
+			productReference = A6551E4616C5CBF600340590 /* libExternalCode.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		A6F3F55D1640F1FB0070E6AE /* InternetMap */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A6F3F58D1640F1FB0070E6AE /* Build configuration list for PBXNativeTarget "InternetMap" */;
@@ -1066,6 +1108,7 @@
 			projectRoot = "";
 			targets = (
 				A6F3F55D1640F1FB0070E6AE /* InternetMap */,
+				A6551E4516C5CBF600340590 /* ExternalCode */,
 			);
 		};
 /* End PBXProject section */
@@ -1165,6 +1208,30 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		A6551E4216C5CBF600340590 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A6551E6416C5CD3000340590 /* jsoncpp.cpp in Sources */,
+				A6551E5316C5CC8100340590 /* main-traceroute.c in Sources */,
+				A6551E5416C5CC8100340590 /* traceroute.c in Sources */,
+				A6551E5516C5CC8100340590 /* TTTAttributedLabel.m in Sources */,
+				A6551E5616C5CC8100340590 /* UIBarButtonItem+WEPopover.m in Sources */,
+				A6551E5716C5CC8100340590 /* WEPopoverContainerView.m in Sources */,
+				A6551E5816C5CC8100340590 /* WEPopoverController.m in Sources */,
+				A6551E5916C5CC8100340590 /* WETouchableView.m in Sources */,
+				A6551E5A16C5CC8100340590 /* ASIAuthenticationDialog.m in Sources */,
+				A6551E5B16C5CC8100340590 /* ASIDataCompressor.m in Sources */,
+				A6551E5C16C5CC8100340590 /* ASIDataDecompressor.m in Sources */,
+				A6551E5D16C5CC8100340590 /* ASIDownloadCache.m in Sources */,
+				A6551E5E16C5CC8100340590 /* ASIFormDataRequest.m in Sources */,
+				A6551E5F16C5CC8100340590 /* ASIHTTPRequest.m in Sources */,
+				A6551E6016C5CC8100340590 /* ASIInputStream.m in Sources */,
+				A6551E6116C5CC8100340590 /* ASINetworkQueue.m in Sources */,
+				A6551E6216C5CC8100340590 /* Reachability.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A6F3F55A1640F1FB0070E6AE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1183,21 +1250,6 @@
 				A686EAFD16B62DBD009B070E /* OpenGL.cpp in Sources */,
 				A686EAFE16B62DBD009B070E /* Program.cpp in Sources */,
 				A686EAFF16B62DBD009B070E /* VertexBuffer.cpp in Sources */,
-				A686EB0016B62DBD009B070E /* TTTAttributedLabel.m in Sources */,
-				A686EB0116B62DBD009B070E /* jsoncpp.cpp in Sources */,
-				A686EB0216B62DBD009B070E /* UIBarButtonItem+WEPopover.m in Sources */,
-				A686EB0316B62DBD009B070E /* WEPopoverContainerView.m in Sources */,
-				A686EB0416B62DBD009B070E /* WEPopoverController.m in Sources */,
-				A686EB0516B62DBD009B070E /* WETouchableView.m in Sources */,
-				A686EB0616B62DBD009B070E /* ASIAuthenticationDialog.m in Sources */,
-				A686EB0716B62DBD009B070E /* ASIDataCompressor.m in Sources */,
-				A686EB0816B62DBD009B070E /* ASIDataDecompressor.m in Sources */,
-				A686EB0916B62DBD009B070E /* ASIDownloadCache.m in Sources */,
-				A686EB0A16B62DBD009B070E /* ASIFormDataRequest.m in Sources */,
-				A686EB0B16B62DBD009B070E /* ASIHTTPRequest.m in Sources */,
-				A686EB0C16B62DBD009B070E /* ASIInputStream.m in Sources */,
-				A686EB0D16B62DBD009B070E /* ASINetworkQueue.m in Sources */,
-				A686EB0E16B62DBD009B070E /* Reachability.m in Sources */,
 				D4C1083116B2043D00CA4A0E /* SCIcmpPacketUtility.m in Sources */,
 				D4C1083216B2043D00CA4A0E /* SCPacketRecord.m in Sources */,
 				D4C1083316B2043D00CA4A0E /* SCTracerouteUtility.m in Sources */,
@@ -1221,8 +1273,6 @@
 				A6E1D5C516B9EC7100D8B26F /* ExpandedSlider.m in Sources */,
 				A6E1D5CC16B9EFFB00D8B26F /* TypeVisualization.cpp in Sources */,
 				A6E1D5D416BAEFEA00D8B26F /* GlobeVisualization.cpp in Sources */,
-				D403BBDF16C1DF2F008AA000 /* main-traceroute.c in Sources */,
-				D403BBE116C1DF2F008AA000 /* traceroute.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1307,6 +1357,57 @@
 				WRAPPER_EXTENSION = app;
 			};
 			name = Testflight;
+		};
+		A6551E5016C5CBF600340590 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				DSTROOT = /tmp/ExternalCode.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				RUN_CLANG_STATIC_ANALYZER = NO;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		A6551E5116C5CBF600340590 /* Testflight */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				DSTROOT = /tmp/ExternalCode.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				RUN_CLANG_STATIC_ANALYZER = NO;
+				SKIP_INSTALL = YES;
+			};
+			name = Testflight;
+		};
+		A6551E5216C5CBF600340590 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				DSTROOT = /tmp/ExternalCode.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				RUN_CLANG_STATIC_ANALYZER = NO;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
 		};
 		A6F3F58B1640F1FB0070E6AE /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -1401,6 +1502,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		A6551E4F16C5CBF600340590 /* Build configuration list for PBXNativeTarget "ExternalCode" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A6551E5016C5CBF600340590 /* Debug */,
+				A6551E5116C5CBF600340590 /* Testflight */,
+				A6551E5216C5CBF600340590 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		A6F3F5581640F1FB0070E6AE /* Build configuration list for PBXProject "InternetMap" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
