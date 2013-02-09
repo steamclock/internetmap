@@ -27,6 +27,7 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 import android.view.Gravity;
 import android.view.ScaleGestureDetector;
 import android.view.GestureDetector;
@@ -189,6 +190,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             mVisualizationPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 public void onDismiss() {
                     mVisualizationPopup = null;
+                    ToggleButton button = (ToggleButton)findViewById(R.id.visualizationsButton);
+                    button.setChecked(false);
                 }
             });
             mVisualizationPopup.showAsDropDown(findViewById(R.id.visualizationsButton));
@@ -205,6 +208,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             mSearchPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 public void onDismiss() {
                     mSearchPopup = null;
+                    ToggleButton button = (ToggleButton)findViewById(R.id.searchButton);
+                    button.setChecked(false);
                 }
             });
             mSearchPopup.showAsDropDown(findViewById(R.id.searchButton));
@@ -284,6 +289,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         boolean isConnected = haveConnectivity();
         
         if (!isConnected) {
+            ToggleButton button = (ToggleButton)findViewById(R.id.youAreHereButton);
+            button.setChecked(false);
             return;
         }
 
@@ -316,6 +323,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                 String message = String.format(getString(R.string.asnfail), response);
                 showError(message);
                 Log.d(TAG, message);
+                ToggleButton button = (ToggleButton)findViewById(R.id.youAreHereButton);
+                button.setChecked(false);
             }
         });
     }
@@ -376,6 +385,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             timelineBar.setVisibility(View.GONE);
             resetViewAndSetTimeline(mTimelineMinYear + timelineBar.getMax());
             mInTimelineMode = false;
+            ToggleButton button = (ToggleButton)findViewById(R.id.timelineButton);
+            button.setChecked(false);
         }
         if (mNodePopup != null) {
             mNodePopup.dismiss();
@@ -537,10 +548,14 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                     public void onDismiss() {
                         mNodePopup = null;
                         mController.deselectCurrentNode();
+                        ToggleButton button = (ToggleButton)findViewById(R.id.youAreHereButton);
+                        button.setChecked(false);
                     }
                 });
             }
             boolean isUserNode = (node.index == mUserNodeIndex);
+            ToggleButton button = (ToggleButton)findViewById(R.id.youAreHereButton);
+            button.setChecked(isUserNode);
             mNodePopup.setNode(node, isUserNode);
             //update size/position
             View mainView = findViewById(R.id.surfaceview);

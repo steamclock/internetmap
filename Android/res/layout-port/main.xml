@@ -21,12 +21,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
             
-            <Button
+            <ToggleButton
                 android:id="@+id/searchButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/searchbutton"
-                android:onClick="searchButtonPressed" />
+                android:onClick="searchButtonPressed"
+                android:textOn=""
+                android:textOff="" />
 
             <ProgressBar
                 android:id="@+id/searchProgressBar"
@@ -44,12 +46,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
 
-            <Button
+            <ToggleButton
                 android:id="@+id/youAreHereButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/youareherebutton"
-                android:onClick="youAreHereButtonPressed" />
+                android:onClick="youAreHereButtonPressed"
+                android:textOn=""
+                android:textOff="" />
 
             <ProgressBar
                 android:id="@+id/youAreHereProgressBar"
@@ -62,19 +66,23 @@
 
         </RelativeLayout>
 
-        <Button
+        <ToggleButton
             android:id="@+id/visualizationsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/visualizationsbutton"
-            android:onClick="visualizationsButtonPressed" />
+            android:onClick="visualizationsButtonPressed"
+            android:textOff=""
+            android:textOn="" />
 
-        <Button
+        <ToggleButton
             android:id="@+id/timelineButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/timelinebutton"
-            android:onClick="timelineButtonPressed" />
+            android:onClick="timelineButtonPressed"
+            android:textOff=""
+            android:textOn="" />
     </LinearLayout>
 
     <SeekBar
