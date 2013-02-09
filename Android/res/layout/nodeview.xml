@@ -12,18 +12,11 @@
 
         <TextView
             android:id="@+id/titleView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:text="&lt;title>"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <TextView
-            android:id="@+id/titleSpacer"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text=""
+            android:maxLines="1"
+            android:text="&lt;title>"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <Button
