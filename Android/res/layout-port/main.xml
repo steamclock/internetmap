@@ -11,7 +11,7 @@
 
     <LinearLayout
         android:id="@+id/linearLayout1"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" >
@@ -19,8 +19,9 @@
         <RelativeLayout
             android:id="@+id/searchLayout"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-            
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
             <ToggleButton
                 android:id="@+id/searchButton"
                 android:layout_width="48dp"
@@ -38,13 +39,13 @@
                 android:layout_centerInParent="true"
                 android:indeterminate="true"
                 android:visibility="invisible" />
-
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/youAreHereLayout"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
 
             <ToggleButton
                 android:id="@+id/youAreHereButton"
@@ -63,26 +64,38 @@
                 android:layout_centerInParent="true"
                 android:indeterminate="true"
                 android:visibility="invisible" />
-
         </RelativeLayout>
 
-        <ToggleButton
-            android:id="@+id/visualizationsButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@drawable/visualizationsbutton"
-            android:onClick="visualizationsButtonPressed"
-            android:textOff=""
-            android:textOn="" />
+        <RelativeLayout
+            android:id="@+id/visualizationsLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
 
-        <ToggleButton
-            android:id="@+id/timelineButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@drawable/timelinebutton"
-            android:onClick="timelineButtonPressed"
-            android:textOff=""
-            android:textOn="" />
+            <ToggleButton
+                android:id="@+id/visualizationsButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/visualizationsbutton"
+                android:onClick="visualizationsButtonPressed"
+                android:textOff=""
+                android:textOn="" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/timelineLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <ToggleButton
+                android:id="@+id/timelineButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/timelinebutton"
+                android:onClick="timelineButtonPressed"
+                android:textOff=""
+                android:textOn="" />
+        </RelativeLayout>
     </LinearLayout>
 
     <SeekBar
