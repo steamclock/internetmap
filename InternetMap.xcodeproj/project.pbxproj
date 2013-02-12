@@ -160,6 +160,10 @@
 		D4C1083116B2043D00CA4A0E /* SCIcmpPacketUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = D4C1082B16B2043D00CA4A0E /* SCIcmpPacketUtility.m */; };
 		D4C1083216B2043D00CA4A0E /* SCPacketRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = D4C1082E16B2043D00CA4A0E /* SCPacketRecord.m */; };
 		D4C1083316B2043D00CA4A0E /* SCTracerouteUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = D4C1083016B2043D00CA4A0E /* SCTracerouteUtility.m */; };
+		E4BEB53E16CAE8E500F236F5 /* info_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = E4BEB53A16CAE8E500F236F5 /* info_selected.png */; };
+		E4BEB53F16CAE8E500F236F5 /* info_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E4BEB53B16CAE8E500F236F5 /* info_selected@2x.png */; };
+		E4BEB54016CAE8E500F236F5 /* info.png in Resources */ = {isa = PBXBuildFile; fileRef = E4BEB53C16CAE8E500F236F5 /* info.png */; };
+		E4BEB54116CAE8E500F236F5 /* info@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E4BEB53D16CAE8E500F236F5 /* info@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -482,6 +486,10 @@
 		D4C1082E16B2043D00CA4A0E /* SCPacketRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPacketRecord.m; path = "External Code/SCPinions/SCPacketUtility/SCPacketRecord.m"; sourceTree = SOURCE_ROOT; };
 		D4C1082F16B2043D00CA4A0E /* SCTracerouteUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCTracerouteUtility.h; path = "External Code/SCPinions/SCPacketUtility/SCTracerouteUtility.h"; sourceTree = SOURCE_ROOT; };
 		D4C1083016B2043D00CA4A0E /* SCTracerouteUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCTracerouteUtility.m; path = "External Code/SCPinions/SCPacketUtility/SCTracerouteUtility.m"; sourceTree = SOURCE_ROOT; };
+		E4BEB53A16CAE8E500F236F5 /* info_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = info_selected.png; path = iOS/Images/info_selected.png; sourceTree = SOURCE_ROOT; };
+		E4BEB53B16CAE8E500F236F5 /* info_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "info_selected@2x.png"; path = "iOS/Images/info_selected@2x.png"; sourceTree = SOURCE_ROOT; };
+		E4BEB53C16CAE8E500F236F5 /* info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = info.png; path = iOS/Images/info.png; sourceTree = SOURCE_ROOT; };
+		E4BEB53D16CAE8E500F236F5 /* info@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "info@2x.png"; path = "iOS/Images/info@2x.png"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -991,6 +999,10 @@
 		D4CEA32016694E53004B8E8A /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				E4BEB53A16CAE8E500F236F5 /* info_selected.png */,
+				E4BEB53B16CAE8E500F236F5 /* info_selected@2x.png */,
+				E4BEB53C16CAE8E500F236F5 /* info.png */,
+				E4BEB53D16CAE8E500F236F5 /* info@2x.png */,
 				A686E9D416B62A9D009B070E /* eye_selected.png */,
 				A686E9D516B62A9D009B070E /* eye_selected@2x.png */,
 				A686E9D616B62A9D009B070E /* eye.png */,
@@ -1202,6 +1214,10 @@
 				A6E1D5C216B9DA2A00D8B26F /* 20130102.txt in Resources */,
 				D403BBDE16C1DF2F008AA000 /* LICENSE in Resources */,
 				D403BBE016C1DF2F008AA000 /* README in Resources */,
+				E4BEB53E16CAE8E500F236F5 /* info_selected.png in Resources */,
+				E4BEB53F16CAE8E500F236F5 /* info_selected@2x.png in Resources */,
+				E4BEB54016CAE8E500F236F5 /* info.png in Resources */,
+				E4BEB54116CAE8E500F236F5 /* info@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1510,6 +1526,7 @@
 				A6551E5216C5CBF600340590 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A6F3F5581640F1FB0070E6AE /* Build configuration list for PBXProject "InternetMap" */ = {
 			isa = XCConfigurationList;
