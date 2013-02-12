@@ -83,6 +83,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 
 @property (strong, nonatomic) WEPopoverController* visualizationSelectionPopover;
+@property (strong, nonatomic) WEPopoverController* infoPopover;
 @property (strong, nonatomic) WEPopoverController* nodeSearchPopover;
 @property (strong, nonatomic) WEPopoverController* nodeInformationPopover;
 @property (weak, nonatomic) NodeInformationViewController* nodeInformationViewController; //this is weak because it's enough for us that the popover retains the controller. this is only a reference to update the ui of the infoViewController on traceroute callbacks, not to signify ownership
@@ -536,7 +537,39 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(IBAction)infoButtonPressed:(id)sender {
-    //TODO: popupver like visualizations
+    if (!self.infoPopover) {
+        VisualizationsTableViewController *tableforPopover = [[VisualizationsTableViewController alloc] initWithStyle:UITableViewStylePlain];
+        self.infoPopover = [[WEPopoverController alloc] initWithContentViewController:tableforPopover];
+        self.infoPopover.delegate = self;
+        tableforPopover.visualizationOptions = @[ @"Help", @"Contact Sales", @"Credits" ];
+        [self.infoPopover setPopoverContentSize:tableforPopover.contentSizeForViewInPopover];
+        if (![HelperMethods deviceIsiPad]) {
+            WEPopoverContainerViewProperties *prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
+            prop.upArrowImageName = nil;
+            self.infoPopover.containerViewProperties = prop;
+        }
+        
+        __weak ViewController* weakSelf = self;
+        
+        tableforPopover.selectedBlock = ^(int index){
+            switch (index) {
+                case 0: //help
+                    NSLog(@"TODO: help");
+                    break;
+                case 1: //sales
+                    NSLog(@"TODO: contact sales");
+                    break;
+                case 2: //credits
+                    NSLog(@"TODO: credits");
+                    break;
+                default: //can't happen
+                    NSLog(@"Unexpected info index %d!!", index);
+            }
+            [weakSelf.infoPopover dismissPopoverAnimated:YES];
+            weakSelf.infoButton.selected = NO;
+        };
+    }
+    [self.infoPopover presentPopoverFromRect:self.infoButton.bounds inView:self.infoButton permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
     self.infoButton.selected = YES;
 }
 
@@ -869,6 +902,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (BOOL)popoverControllerShouldDismissPopover:(WEPopoverController *)popoverController{
     self.visualizationsButton.selected = NO;
+    self.infoButton.selected = NO;
     self.searchButton.selected = NO;
     return YES;
 }
