@@ -579,16 +579,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.timelineButton.selected = YES;
         //self.playButton.hidden = NO;
         
-        int year = (int)(self.minTimelineYear+self.timelineSlider.value);
-        [self.controller setTimelinePoint:[NSString stringWithFormat:@"%d0101", year]];
+        [self updateTimeline];
 
         // Give the timeline slider view a poke to reinitialize it with the current date
         self.timelineInfoViewController.year = 0;
         [self timelineSliderValueChanged:nil];
-        
-        // Poke node info popover so it'll switch styles, note: camera move when reselecting node will
-        // show it again
-        [self dismissNodeInfoPopover];
     } else {
         [self leaveTimelineMode];
     }
