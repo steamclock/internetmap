@@ -110,7 +110,7 @@
 					<object class="IBUIImageView" id="599231769">
 						<reference key="NSNextResponder" ref="766721923"/>
 						<int key="NSvFlags">269</int>
-						<string key="NSFrame">{{325, 888}, {136, 69}}</string>
+						<string key="NSFrame">{{325, 876}, {136, 69}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="754389420"/>
@@ -210,8 +210,8 @@
 						<array class="NSMutableArray" key="children">
 							<reference ref="585686647"/>
 							<reference ref="692848212"/>
-							<reference ref="599231769"/>
 							<reference ref="754389420"/>
+							<reference ref="599231769"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -262,17 +262,6 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">FirstUseViewController</string>
 					<string key="superclassName">UIViewController</string>
-					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">next:</string>
-						<string key="NS.object.0">id</string>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<string key="NS.key.0">next:</string>
-						<object class="IBActionInfo" key="NS.object.0">
-							<string key="name">next:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</object>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="background">UIImageView</string>
 						<string key="content">UIScrollView</string>
