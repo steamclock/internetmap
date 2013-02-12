@@ -235,6 +235,16 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     return [HelperMethods deviceIsiPad] ? UIInterfaceOrientationIsLandscape(interfaceOrientation) : UIInterfaceOrientationIsPortrait(interfaceOrientation);
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    bool shownFirstUse = [[NSUserDefaults standardUserDefaults] boolForKey:@"shownFirstUse"];
+    
+    if(!shownFirstUse) {
+        [[NSUserDefaults standardUserDefaults] setBool:TRUE forKey:@"shownFirstUse"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [self showFirstUse];
+    }
+}
+
 - (void)fadeOutLogo {
     [UIView animateWithDuration:1 animations:^{
         self.logo.alpha = 0.3;
