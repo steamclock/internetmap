@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="8.00">
 	<data>
-		<int key="IBDocument.SystemTarget">1552</int>
+		<int key="IBDocument.SystemTarget">1536</int>
 		<string key="IBDocument.SystemVersion">12C60</string>
-		<string key="IBDocument.InterfaceBuilderVersion">3084</string>
+		<string key="IBDocument.InterfaceBuilderVersion">2843</string>
 		<string key="IBDocument.AppKitVersion">1187.34</string>
 		<string key="IBDocument.HIToolboxVersion">625.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-			<string key="NS.object.0">2083</string>
+			<string key="NS.object.0">1929</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>IBProxyObject</string>
@@ -91,7 +91,7 @@
 								<string key="NSFrame">{{30, 11}, {20, 20}}</string>
 								<reference key="NSSuperview" ref="469437449"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="103863338"/>
+								<reference key="NSNextKeyView" ref="862161693"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -99,7 +99,7 @@
 							<object class="IBUIButton" id="103863338">
 								<reference key="NSNextResponder" ref="469437449"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{94, 0}, {55, 55}}</string>
+								<string key="NSFrame">{{245, 0}, {55, 55}}</string>
 								<reference key="NSSuperview" ref="469437449"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="366312282"/>
@@ -120,20 +120,16 @@
 									<string key="NSResourceName">youarehere_selected.png</string>
 								</object>
 								<reference key="IBUISelectedImage" ref="1042741207"/>
-								<object class="NSCustomResource" key="IBUINormalImage">
-									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">youarehere.png</string>
-								</object>
 								<reference key="IBUIFontDescription" ref="5537166"/>
 								<reference key="IBUIFont" ref="817540984"/>
 							</object>
 							<object class="IBUIActivityIndicatorView" id="366312282">
 								<reference key="NSNextResponder" ref="469437449"/>
 								<int key="NSvFlags">-2147483356</int>
-								<string key="NSFrame">{{106, 9}, {20, 20}}</string>
+								<string key="NSFrame">{{258, 9}, {20, 20}}</string>
 								<reference key="NSSuperview" ref="469437449"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="862161693"/>
+								<reference key="NSNextKeyView" ref="749688742"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -141,7 +137,7 @@
 							<object class="IBUIButton" id="862161693">
 								<reference key="NSNextResponder" ref="469437449"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{170, 0}, {55, 55}}</string>
+								<string key="NSFrame">{{94, 0}, {55, 55}}</string>
 								<reference key="NSSuperview" ref="469437449"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="624688586"/>
@@ -172,7 +168,7 @@
 							<object class="IBUIActivityIndicatorView" id="624688586">
 								<reference key="NSNextResponder" ref="469437449"/>
 								<int key="NSvFlags">-2147483356</int>
-								<string key="NSFrame">{{183, 18}, {20, 20}}</string>
+								<string key="NSFrame">{{106, 18}, {20, 20}}</string>
 								<reference key="NSSuperview" ref="469437449"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="1063531004"/>
@@ -183,7 +179,7 @@
 							<object class="IBUIButton" id="1063531004">
 								<reference key="NSNextResponder" ref="469437449"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{245, 0}, {55, 55}}</string>
+								<string key="NSFrame">{{170, 0}, {55, 55}}</string>
 								<reference key="NSSuperview" ref="469437449"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="327473507"/>
@@ -214,10 +210,10 @@
 							<object class="IBUIActivityIndicatorView" id="327473507">
 								<reference key="NSNextResponder" ref="469437449"/>
 								<int key="NSvFlags">-2147483356</int>
-								<string key="NSFrame">{{258, 11}, {20, 20}}</string>
+								<string key="NSFrame">{{183, 11}, {20, 20}}</string>
 								<reference key="NSSuperview" ref="469437449"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="749688742"/>
+								<reference key="NSNextKeyView" ref="103863338"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -318,27 +314,11 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">youAreHereActivityIndicator</string>
-						<reference key="source" ref="841351856"/>
-						<reference key="destination" ref="366312282"/>
-					</object>
-					<int key="connectionID">11</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">visualizationsButton</string>
 						<reference key="source" ref="841351856"/>
 						<reference key="destination" ref="862161693"/>
 					</object>
 					<int key="connectionID">15</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">youAreHereButton</string>
-						<reference key="source" ref="841351856"/>
-						<reference key="destination" ref="103863338"/>
-					</object>
-					<int key="connectionID">16</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -424,15 +404,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">youAreHereButtonPressed:</string>
-						<reference key="source" ref="103863338"/>
-						<reference key="destination" ref="841351856"/>
-						<int key="IBEventType">7</int>
-					</object>
-					<int key="connectionID">17</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">searchButtonPressed:</string>
 						<reference key="source" ref="8295848"/>
 						<reference key="destination" ref="841351856"/>
@@ -507,7 +478,7 @@
 						<int key="objectID">6</int>
 						<reference key="object" ref="366312282"/>
 						<reference key="parent" ref="469437449"/>
-						<string key="objectName">youAreHere Activity Indicator</string>
+						<string key="objectName">info Activity Indicator</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">8</int>
@@ -519,7 +490,7 @@
 						<int key="objectID">9</int>
 						<reference key="object" ref="103863338"/>
 						<reference key="parent" ref="469437449"/>
-						<string key="objectName">youAreHereButton</string>
+						<string key="objectName">infoButton</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">10</int>
@@ -586,7 +557,7 @@
 				<string key="8.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<real value="2" key="8.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="9.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<real value="2" key="9.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
+				<real value="0.0" key="9.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
@@ -607,6 +578,35 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">ViewController</string>
 					<string key="superclassName">GLKViewController</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="playButtonPressed:">id</string>
+						<string key="searchButtonPressed:">id</string>
+						<string key="timelineButtonPressed:">id</string>
+						<string key="timelineSliderValueChanged:">id</string>
+						<string key="visualizationsButtonPressed:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="playButtonPressed:">
+							<string key="name">playButtonPressed:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="searchButtonPressed:">
+							<string key="name">searchButtonPressed:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="timelineButtonPressed:">
+							<string key="name">timelineButtonPressed:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="timelineSliderValueChanged:">
+							<string key="name">timelineSliderValueChanged:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="visualizationsButtonPressed:">
+							<string key="name">visualizationsButtonPressed:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="buttonContainerView">UIView</string>
 						<string key="logo">UIImageView</string>
@@ -618,8 +618,6 @@
 						<string key="timelineSlider">UISlider</string>
 						<string key="visualizationsActivityIndicator">UIActivityIndicatorView</string>
 						<string key="visualizationsButton">UIButton</string>
-						<string key="youAreHereActivityIndicator">UIActivityIndicatorView</string>
-						<string key="youAreHereButton">UIButton</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<object class="IBToOneOutletInfo" key="buttonContainerView">
@@ -662,14 +660,6 @@
 							<string key="name">visualizationsButton</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="youAreHereActivityIndicator">
-							<string key="name">youAreHereActivityIndicator</string>
-							<string key="candidateClassName">UIActivityIndicatorView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="youAreHereButton">
-							<string key="name">youAreHereButton</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
@@ -690,9 +680,8 @@
 			<string key="timeline-play.png">{48, 48}</string>
 			<string key="travelback.png">{38, 37}</string>
 			<string key="travelback_selected.png">{38, 37}</string>
-			<string key="youarehere.png">{36, 41}</string>
 			<string key="youarehere_selected.png">{36, 41}</string>
 		</dictionary>
-		<string key="IBCocoaTouchPluginVersion">2083</string>
+		<string key="IBCocoaTouchPluginVersion">1929</string>
 	</data>
 </archive>

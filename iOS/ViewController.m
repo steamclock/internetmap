@@ -69,14 +69,14 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 /* UIKit Overlay */
 @property (weak, nonatomic) IBOutlet UIView* buttonContainerView;
 @property (weak, nonatomic) IBOutlet UIButton* searchButton;
-@property (weak, nonatomic) IBOutlet UIButton* youAreHereButton;
+//@property (weak, nonatomic) IBOutlet UIButton* youAreHereButton;
 @property (weak, nonatomic) IBOutlet UIButton* visualizationsButton;
 @property (weak, nonatomic) IBOutlet UIButton* timelineButton;
 @property (weak, nonatomic) IBOutlet UISlider* timelineSlider;
 @property (weak, nonatomic) IBOutlet UIButton* playButton;
 @property (weak, nonatomic) IBOutlet UIImageView* logo;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* searchActivityIndicator;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView* youAreHereActivityIndicator;
+//@property (weak, nonatomic) IBOutlet UIActivityIndicatorView* youAreHereActivityIndicator;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* visualizationsActivityIndicator;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* timelineActivityIndicator;
 
@@ -161,7 +161,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     //setting activityIndicator sizes (positions are set in IB, but sizes can only be set in code)
     self.searchActivityIndicator.frame = CGRectMake(self.searchActivityIndicator.frame.origin.x, self.searchActivityIndicator.frame.origin.y, 30, 30);
-    self.youAreHereActivityIndicator.frame = CGRectMake(self.youAreHereActivityIndicator.frame.origin.x, self.youAreHereActivityIndicator.frame.origin.y, 30, 30);
+    //self.youAreHereActivityIndicator.frame = CGRectMake(self.youAreHereActivityIndicator.frame.origin.x, self.youAreHereActivityIndicator.frame.origin.y, 30, 30);
     self.visualizationsActivityIndicator.frame = CGRectMake(self.visualizationsActivityIndicator.frame.origin.x, self.visualizationsActivityIndicator.frame.origin.y, 30, 30);
     self.timelineActivityIndicator.frame = CGRectMake(self.timelineActivityIndicator.frame.origin.x, self.timelineActivityIndicator.frame.origin.y, 30, 30);
     
@@ -467,21 +467,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(void)selectYouAreHereNode {
-    [self youAreHereButtonPressed:0];
-}
-
--(IBAction)youAreHereButtonPressed:(id)sender {
-    //TODO: find out if we can make this work in timeline mode
-    if (self.timelineButton.selected) {
-        [self leaveTimelineMode];
-    }
     if ([HelperMethods deviceHasInternetConnection]) {
         //fetch current ASN and select node
         if (!self.isCurrentlyFetchingASN) {
             self.isCurrentlyFetchingASN = YES;
-            self.youAreHereActivityIndicator.hidden = NO;
-            [self.youAreHereActivityIndicator startAnimating];
-            self.youAreHereButton.hidden = YES;
                         
             [ASNRequest fetchCurrentASN:^(NSString *asn) {
                 if(asn) {
@@ -493,9 +482,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                 }
                 
                 self.isCurrentlyFetchingASN = NO;
-                [self.youAreHereActivityIndicator stopAnimating];
-                self.youAreHereActivityIndicator.hidden = YES;
-                self.youAreHereButton.hidden = NO;
             }];
         }
     }else {
@@ -622,9 +608,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             
         [self.nodeInformationPopover presentPopoverFromRect:[self displayRectForNodeInfoPopover] inView:self.view permittedArrowDirections:dir animated:YES];
         
-        if(isSelectingCurrentNode) {
-            self.youAreHereButton.selected = YES;
-        }
     }
 }
 
@@ -749,7 +732,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 - (void)dismissNodeInfoPopover {
     [self.tracer stop];
     self.tracer = nil;
-    self.youAreHereButton.selected = NO;
     [self.nodeInformationPopover dismissPopoverAnimated:YES];
     [self.nodeInformationViewController.tracerouteTimer invalidate];
     if (self.tracerouteASNs) {

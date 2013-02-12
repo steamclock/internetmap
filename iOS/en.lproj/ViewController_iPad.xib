@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="8.00">
 	<data>
-		<int key="IBDocument.SystemTarget">1552</int>
+		<int key="IBDocument.SystemTarget">1536</int>
 		<string key="IBDocument.SystemVersion">12C60</string>
-		<string key="IBDocument.InterfaceBuilderVersion">3084</string>
+		<string key="IBDocument.InterfaceBuilderVersion">2843</string>
 		<string key="IBDocument.AppKitVersion">1187.34</string>
 		<string key="IBDocument.HIToolboxVersion">625.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-			<string key="NS.object.0">2083</string>
+			<string key="NS.object.0">1929</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>IBProxyObject</string>
@@ -128,14 +128,14 @@
 									<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 								</object>
 								<reference key="IBUINormalTitleShadowColor" ref="179841405"/>
-								<object class="NSCustomResource" key="IBUIHighlightedImage" id="493655801">
+								<object class="NSCustomResource" key="IBUIHighlightedImage" id="994641922">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">youarehere_selected.png</string>
+									<string key="NSResourceName">eye_selected.png</string>
 								</object>
-								<reference key="IBUISelectedImage" ref="493655801"/>
+								<reference key="IBUISelectedImage" ref="994641922"/>
 								<object class="NSCustomResource" key="IBUINormalImage">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">youarehere.png</string>
+									<string key="NSResourceName">eye.png</string>
 								</object>
 								<reference key="IBUIFontDescription" ref="622120600"/>
 								<reference key="IBUIFont" ref="402028046"/>
@@ -168,14 +168,14 @@
 									<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 								</object>
 								<reference key="IBUINormalTitleShadowColor" ref="179841405"/>
-								<object class="NSCustomResource" key="IBUIHighlightedImage" id="519068788">
+								<object class="NSCustomResource" key="IBUIHighlightedImage" id="80278513">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">eye_selected.png</string>
+									<string key="NSResourceName">travelback_selected.png</string>
 								</object>
-								<reference key="IBUISelectedImage" ref="519068788"/>
+								<reference key="IBUISelectedImage" ref="80278513"/>
 								<object class="NSCustomResource" key="IBUINormalImage">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">eye.png</string>
+									<string key="NSResourceName">travelback.png</string>
 								</object>
 								<reference key="IBUIFontDescription" ref="622120600"/>
 								<reference key="IBUIFont" ref="402028046"/>
@@ -208,15 +208,8 @@
 									<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 								</object>
 								<reference key="IBUINormalTitleShadowColor" ref="179841405"/>
-								<object class="NSCustomResource" key="IBUIHighlightedImage" id="1012927685">
-									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">travelback_selected.png</string>
-								</object>
-								<reference key="IBUISelectedImage" ref="1012927685"/>
-								<object class="NSCustomResource" key="IBUINormalImage">
-									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">travelback.png</string>
-								</object>
+								<reference key="IBUIHighlightedImage" ref="80278513"/>
+								<reference key="IBUISelectedImage" ref="80278513"/>
 								<reference key="IBUIFontDescription" ref="622120600"/>
 								<reference key="IBUIFont" ref="402028046"/>
 							</object>
@@ -225,6 +218,7 @@
 								<int key="NSvFlags">-2147483356</int>
 								<string key="NSFrame">{{215, 37}, {20, 20}}</string>
 								<reference key="NSSuperview" ref="580833300"/>
+								<reference key="NSNextKeyView" ref="958763738"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -245,6 +239,7 @@
 						<int key="NSvFlags">-2147483356</int>
 						<string key="NSFrame">{{39, 720}, {947, 23}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -330,30 +325,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">youAreHereButton</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="586805203"/>
-					</object>
-					<int key="connectionID">22</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">visualizationsButton</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="341091275"/>
-					</object>
-					<int key="connectionID">21</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">timelineButton</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="747164839"/>
-					</object>
-					<int key="connectionID">20</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">timelineSlider</string>
 						<reference key="source" ref="372490531"/>
 						<reference key="destination" ref="812170113"/>
@@ -362,35 +333,11 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">youAreHereActivityIndicator</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="135839533"/>
-					</object>
-					<int key="connectionID">35</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">searchActivityIndicator</string>
 						<reference key="source" ref="372490531"/>
 						<reference key="destination" ref="354409866"/>
 					</object>
 					<int key="connectionID">40</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">visualizationsActivityIndicator</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="178017470"/>
-					</object>
-					<int key="connectionID">42</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">timelineActivityIndicator</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="931664156"/>
-					</object>
-					<int key="connectionID">44</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -417,6 +364,38 @@
 					<int key="connectionID">56</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">visualizationsButton</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="586805203"/>
+					</object>
+					<int key="connectionID">65</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">visualizationsActivityIndicator</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="135839533"/>
+					</object>
+					<int key="connectionID">67</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">timelineButton</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="341091275"/>
+					</object>
+					<int key="connectionID">69</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">timelineActivityIndicator</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="178017470"/>
+					</object>
+					<int key="connectionID">70</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">searchButtonPressed:</string>
 						<reference key="source" ref="724447255"/>
@@ -427,30 +406,21 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">youAreHereButtonPressed:</string>
+						<string key="label">visualizationsButtonPressed:</string>
 						<reference key="source" ref="586805203"/>
 						<reference key="destination" ref="372490531"/>
 						<int key="IBEventType">7</int>
 					</object>
-					<int key="connectionID">36</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">visualizationsButtonPressed:</string>
-						<reference key="source" ref="341091275"/>
-						<reference key="destination" ref="372490531"/>
-						<int key="IBEventType">7</int>
-					</object>
-					<int key="connectionID">48</int>
+					<int key="connectionID">63</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">timelineButtonPressed:</string>
-						<reference key="source" ref="747164839"/>
+						<reference key="source" ref="341091275"/>
 						<reference key="destination" ref="372490531"/>
 						<int key="IBEventType">7</int>
 					</object>
-					<int key="connectionID">49</int>
+					<int key="connectionID">68</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -527,11 +497,6 @@
 						<reference key="parent" ref="580833300"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">15</int>
-						<reference key="object" ref="586805203"/>
-						<reference key="parent" ref="580833300"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">16</int>
 						<reference key="object" ref="341091275"/>
 						<reference key="parent" ref="580833300"/>
@@ -547,12 +512,6 @@
 						<reference key="parent" ref="191373211"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">34</int>
-						<reference key="object" ref="135839533"/>
-						<reference key="parent" ref="580833300"/>
-						<string key="objectName">youAreHere Activity Indicator</string>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">39</int>
 						<reference key="object" ref="354409866"/>
 						<reference key="parent" ref="580833300"/>
@@ -562,18 +521,29 @@
 						<int key="objectID">41</int>
 						<reference key="object" ref="178017470"/>
 						<reference key="parent" ref="580833300"/>
-						<string key="objectName">visualizations Activity Indicator</string>
+						<string key="objectName">Activity Indicator</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">43</int>
 						<reference key="object" ref="931664156"/>
 						<reference key="parent" ref="580833300"/>
-						<string key="objectName">timeline Activity Indicator</string>
+						<string key="objectName">Activity Indicator</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">50</int>
 						<reference key="object" ref="395978741"/>
 						<reference key="parent" ref="191373211"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">15</int>
+						<reference key="object" ref="586805203"/>
+						<reference key="parent" ref="580833300"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">34</int>
+						<reference key="object" ref="135839533"/>
+						<reference key="parent" ref="580833300"/>
+						<string key="objectName">Activity Indicator</string>
 					</object>
 				</array>
 			</object>
@@ -588,11 +558,11 @@
 				<real value="0.0" key="14.IBUIButtonInspectorSelectedEdgeInsetMetadataKey"/>
 				<real value="3" key="14.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="15.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<real value="2" key="15.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
+				<real value="0.0" key="15.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="16.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<real value="0.0" key="16.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="17.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<real value="2" key="17.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
+				<real value="0.0" key="17.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="24.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="26.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="28.CustomClassName">ExpandedSlider</string>
@@ -607,7 +577,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">62</int>
+			<int key="maxID">70</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>
@@ -623,9 +593,7 @@
 			<string key="timeline-play.png">{48, 48}</string>
 			<string key="travelback.png">{38, 37}</string>
 			<string key="travelback_selected.png">{38, 37}</string>
-			<string key="youarehere.png">{36, 41}</string>
-			<string key="youarehere_selected.png">{36, 41}</string>
 		</dictionary>
-		<string key="IBCocoaTouchPluginVersion">2083</string>
+		<string key="IBCocoaTouchPluginVersion">1929</string>
 	</data>
 </archive>
