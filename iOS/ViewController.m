@@ -598,13 +598,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.timelineSlider.hidden = YES;
     self.timelineButton.selected = NO;
     self.playButton.hidden = YES;
-    [self.controller setTimelinePoint:@""];
     self.timelineSlider.value = self.timelineSlider.maximumValue;
+    [self updateTimeline];
     [self.timelinePopover dismissPopoverAnimated:NO];
-
-    // Poke node info popover so it'll switch styles, note: camera move when reselecting node will
-    // show it again
-    [self dismissNodeInfoPopover];
 }
 
 -(void)displayInformationPopoverForCurrentNode {
@@ -697,8 +693,13 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 - (void)timelineSliderTouchUp:(id)sender {
+    [self updateTimeline];
+}
+
+//deselect node, reset zoom/rotate, and set the timeline point to match the slider.
+-(void) updateTimeline {
     [self.timelineInfoViewController startLoad];
-  
+    
     [self dismissNodeInfoPopover];
     [self.controller deselectCurrentNode];
     [self.controller resetZoomAndRotationAnimatedForOrientation:![HelperMethods deviceIsiPad]];
@@ -712,7 +713,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         [weakSelf.controller setTimelinePoint:[NSString stringWithFormat:@"%d0101", year]];
         [weakSelf.timelinePopover dismissPopoverAnimated:NO];
     };
-    
 }
 
 - (void)viewResetDone{
