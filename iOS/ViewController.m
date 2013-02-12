@@ -65,7 +65,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (nonatomic) NSString* cachedCurrentASN;
 
 @property (nonatomic) int minTimelineYear;
-@property (nonatomic, strong) void (^timelineSelectionBlock)(void);
+@property (nonatomic, strong) void (^afterViewReset)(void);
 
 /* UIKit Overlay */
 @property (weak, nonatomic) IBOutlet UIView* buttonContainerView;
@@ -527,13 +527,22 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         __weak ViewController* weakSelf = self;
         
         tableforPopover.selectedBlock = ^(int vis){
-            [weakSelf.controller setVisualization:vis];
+            [weakSelf setVisualization:vis];
             [weakSelf.visualizationSelectionPopover dismissPopoverAnimated:YES];
             weakSelf.visualizationsButton.selected = NO;
         };
     }
     [self.visualizationSelectionPopover presentPopoverFromRect:self.visualizationsButton.bounds inView:self.visualizationsButton permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
     self.visualizationsButton.selected = YES;
+}
+
+-(void)setVisualization:(int) vis {
+    [self resetView];
+    
+    __weak ViewController* weakSelf = self;
+    self.afterViewReset = ^ {
+        [weakSelf.controller setVisualization:vis];
+    };
 }
 
 -(IBAction)infoButtonPressed:(id)sender {
@@ -695,25 +704,27 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 -(void) updateTimeline {
     [self.timelineInfoViewController startLoad];
     
-    [self dismissNodeInfoPopover];
-    [self.controller deselectCurrentNode];
-    [self.controller resetZoomAndRotationAnimatedForOrientation:![HelperMethods deviceIsiPad]];
-    //this does not set the new timeline data directly.
-    //instead, resetZoomAndRotationAnimatedForOrientation in MapControllerWrapper will cause an animated rotation.
-    //as soon as this rotation is finished, the "cameraResetFinished" notification is triggered, and 'viewResetDone' will be called
+    [self resetView];
     
     __weak ViewController* weakSelf = self;
-    self.timelineSelectionBlock = ^ {
+    self.afterViewReset = ^ {
         int year = (int)(weakSelf.minTimelineYear+weakSelf.timelineSlider.value);
         [weakSelf.controller setTimelinePoint:[NSString stringWithFormat:@"%d0101", year]];
         [weakSelf.timelinePopover dismissPopoverAnimated:NO];
     };
 }
 
+//deselect node and reset zoom/rotate. If you set the afterViewReset callback, it will be called when this finishes.
+-(void) resetView {
+    [self dismissNodeInfoPopover];
+    [self.controller deselectCurrentNode];
+    [self.controller resetZoomAndRotationAnimatedForOrientation:![HelperMethods deviceIsiPad]];
+}
+
 - (void)viewResetDone{
-    if (self.timelineSelectionBlock) {
-        self.timelineSelectionBlock();
-        self.timelineSelectionBlock = nil;
+    if (self.afterViewReset) {
+        self.afterViewReset();
+        self.afterViewReset = nil;
     }
 }
 
