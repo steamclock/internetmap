@@ -70,7 +70,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 /* UIKit Overlay */
 @property (weak, nonatomic) IBOutlet UIView* buttonContainerView;
 @property (weak, nonatomic) IBOutlet UIButton* searchButton;
-//@property (weak, nonatomic) IBOutlet UIButton* youAreHereButton;
+@property (weak, nonatomic) IBOutlet UIButton* infoButton;
 @property (weak, nonatomic) IBOutlet UIButton* visualizationsButton;
 @property (weak, nonatomic) IBOutlet UIButton* timelineButton;
 @property (weak, nonatomic) IBOutlet UISlider* timelineSlider;
@@ -533,6 +533,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
     [self.visualizationSelectionPopover presentPopoverFromRect:self.visualizationsButton.bounds inView:self.visualizationsButton permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
     self.visualizationsButton.selected = YES;
+}
+
+-(IBAction)infoButtonPressed:(id)sender {
+    //TODO: popupver like visualizations
+    self.infoButton.selected = YES;
 }
 
 -(IBAction)timelineButtonPressed:(id)sender {
