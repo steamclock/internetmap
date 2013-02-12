@@ -554,7 +554,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         tableforPopover.selectedBlock = ^(int index){
             switch (index) {
                 case 0: //help
-                    NSLog(@"TODO: help");
+                    [self showFirstUse];
                     break;
                 case 1: //sales
                     NSLog(@"TODO: contact sales");
