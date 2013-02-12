@@ -19,6 +19,7 @@
 #import "TimelineInfoViewController.h"
 #import "ExpandedSlider.h"
 #import "FirstUseViewController.h"
+#import "ContactFormViewController.h"
 
 // Below import for testing BSD traceroute only
 #import "main-traceroute.h"
@@ -483,6 +484,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self presentModalViewController:firstUse animated:YES];
 }
 
+-(void)showContactForm {
+    ContactFormViewController* contact = [[ContactFormViewController alloc] initWithNibName:@"ContactFormViewController" bundle:[NSBundle mainBundle]];
+    [self presentModalViewController:contact animated:YES];
+}
+
 -(void)selectYouAreHereNode {
     if ([HelperMethods deviceHasInternetConnection]) {
         //fetch current ASN and select node
@@ -566,7 +572,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                     [self showFirstUse];
                     break;
                 case 1: //sales
-                    NSLog(@"TODO: contact sales");
+                    [self showContactForm];
                     break;
                 case 2: //credits
                     NSLog(@"TODO: credits");
