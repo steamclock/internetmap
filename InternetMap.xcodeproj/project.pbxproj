@@ -34,6 +34,8 @@
 		A6551E6216C5CC8100340590 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EAE416B62C4D009B070E /* Reachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		A6551E6316C5CCB300340590 /* libExternalCode.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A6551E4616C5CBF600340590 /* libExternalCode.a */; };
 		A6551E6416C5CD3000340590 /* jsoncpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A686EAAE16B62BFE009B070E /* jsoncpp.cpp */; };
+		A6551E6816CAC1AF00340590 /* FirstUseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6551E6616CAC1AF00340590 /* FirstUseViewController.m */; };
+		A6551E6916CAC1AF00340590 /* FirstUseViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6551E6716CAC1AF00340590 /* FirstUseViewController.xib */; };
 		A686E9BA16B62915009B070E /* history.json in Resources */ = {isa = PBXBuildFile; fileRef = A686E9B916B62915009B070E /* history.json */; };
 		A686E9BE16B6294B009B070E /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9BB16B6294B009B070E /* Default-568h@2x.png */; };
 		A686E9BF16B6294B009B070E /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9BC16B6294B009B070E /* Default.png */; };
@@ -188,6 +190,9 @@
 		A600AAD316A664DF003B1028 /* as2attr.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = as2attr.txt; path = Common/data/as2attr.txt; sourceTree = "<group>"; };
 		A600AAD416A664E0003B1028 /* asinfo.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = asinfo.json; path = Common/data/asinfo.json; sourceTree = "<group>"; };
 		A6551E4616C5CBF600340590 /* libExternalCode.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libExternalCode.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		A6551E6516CAC1AE00340590 /* FirstUseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FirstUseViewController.h; path = iOS/FirstUseViewController.h; sourceTree = SOURCE_ROOT; };
+		A6551E6616CAC1AF00340590 /* FirstUseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FirstUseViewController.m; path = iOS/FirstUseViewController.m; sourceTree = SOURCE_ROOT; };
+		A6551E6716CAC1AF00340590 /* FirstUseViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = FirstUseViewController.xib; path = iOS/FirstUseViewController.xib; sourceTree = SOURCE_ROOT; };
 		A686E9B916B62915009B070E /* history.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = history.json; path = Common/Data/history.json; sourceTree = "<group>"; };
 		A686E9BB16B6294B009B070E /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "iOS/Default-568h@2x.png"; sourceTree = SOURCE_ROOT; };
 		A686E9BC16B6294B009B070E /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = iOS/Default.png; sourceTree = SOURCE_ROOT; };
@@ -869,6 +874,8 @@
 				D4D17D20166EA621003A489C /* XIBs */,
 				A6E1D5C316B9EC7100D8B26F /* ExpandedSlider.h */,
 				A6E1D5C416B9EC7100D8B26F /* ExpandedSlider.m */,
+				A6551E6516CAC1AE00340590 /* FirstUseViewController.h */,
+				A6551E6616CAC1AF00340590 /* FirstUseViewController.m */,
 			);
 			name = UI;
 			path = InternetMap;
@@ -1054,6 +1061,7 @@
 		D4D17D20166EA621003A489C /* XIBs */ = {
 			isa = PBXGroup;
 			children = (
+				A6551E6716CAC1AF00340590 /* FirstUseViewController.xib */,
 				A686EA4A16B62B23009B070E /* ViewController_iPad.xib */,
 				A686EA4C16B62B23009B070E /* ViewController_iPhone.xib */,
 			);
@@ -1218,6 +1226,7 @@
 				E4BEB53F16CAE8E500F236F5 /* info_selected@2x.png in Resources */,
 				E4BEB54016CAE8E500F236F5 /* info.png in Resources */,
 				E4BEB54116CAE8E500F236F5 /* info@2x.png in Resources */,
+				A6551E6916CAC1AF00340590 /* FirstUseViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1289,6 +1298,7 @@
 				A6E1D5C516B9EC7100D8B26F /* ExpandedSlider.m in Sources */,
 				A6E1D5CC16B9EFFB00D8B26F /* TypeVisualization.cpp in Sources */,
 				A6E1D5D416BAEFEA00D8B26F /* GlobeVisualization.cpp in Sources */,
+				A6551E6816CAC1AF00340590 /* FirstUseViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
