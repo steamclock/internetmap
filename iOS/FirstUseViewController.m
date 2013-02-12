@@ -19,7 +19,7 @@
 @end
 
 
-static const int NUM_PAGES = 2;
+static const int NUM_PAGES = 3;
 
 @implementation FirstUseViewController
 
@@ -27,55 +27,61 @@ static const int NUM_PAGES = 2;
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        // Custom initialization is all in viewWillApper (to make sure that resizes and stuff have already happened)
     }
     return self;
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
 }
 
 -(void)viewWillAppear:(BOOL)animated {
     self.content.delegate = self;
     
+    // Do idiom specific setup
+    if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        self.background.image = [UIImage imageNamed:@"iphone-bg.png"];
+        
+        // Automatic positioning doesn't handle y position of scroll view properly,
+        // need to manually position
+        CGRect origFrame = self.content.frame;
+        origFrame.origin.x = 0;
+        origFrame.origin.y = 0;
+        self.content.frame = origFrame;
+    }
+    else {
+        self.background.image = [UIImage imageNamed:@"ipad-bg.png"];
+    }
+    
+    // Add all the actual pages to the scrioll view
     CGRect frame = self.content.frame;
     frame.origin.x = 0;
     frame.origin.y = 0;
+    for(int i = 0; i < NUM_PAGES; i++) {
+        UIImageView* page = [[UIImageView alloc] initWithFrame:frame];
+        frame.origin.x += frame.size.width;
+        page.image = [UIImage imageNamed:[NSString stringWithFormat:@"screen%d.png", i+1]];
+        [self.content addSubview:page];
+    }
     
-    UIImageView* content0 = [[UIImageView alloc] initWithFrame:frame];
-
-    frame.origin.x += frame.size.width;
-    UIImageView* content1 = [[UIImageView alloc] initWithFrame:frame];
-
-    content0.image = [UIImage imageNamed:@"eye.png"];
-    content1.image = [UIImage imageNamed:@"youarehere.png"];
+    self.content.contentSize = CGSizeMake(frame.size.width * NUM_PAGES, frame.size.height);
     
-    [self.content addSubview:content0];
-    [self.content addSubview:content1];
-    
-    self.content.contentSize = CGSizeMake(frame.size.width * 2, frame.size.height);
-    
+    // Set up everything for the firsst page
     self.page = 0;
     [self setPageMarkerForPage:0];
 }
 
 -(void)setPageMarkerForPage:(int)page {
-    switch(page) {
-        case 0:
-            self.pageMarker.image = [UIImage imageNamed:@"eye.png"];
-            break;
-        case 1:
-            self.pageMarker.image = [UIImage imageNamed:@"youarehere.png"];
-            break;
-    }
+    // The little dots to show the page
+    self.pageMarker.image = [UIImage imageNamed:[NSString stringWithFormat:@"screen%d-highlight.png", page+1]];
+    
+    // Show differnt button for last page
+    UIImage* nextImage = (page == (NUM_PAGES - 1)) ? [UIImage imageNamed:@"start-exploring-button.png"] : [UIImage imageNamed:@"next-button.png"];
+    [self.next setImage:nextImage forState:UIControlStateNormal];
 }
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    // rounding, so it changes halfway through scroll
     int page = (int)round( scrollView.contentOffset.x / scrollView.frame.size.width);
     
+    // Change the dots and the button 
     if(page != self.page) {
         self.page = page;
         [self setPageMarkerForPage:page];
@@ -86,9 +92,11 @@ static const int NUM_PAGES = 2;
     int page = (int)round( self.content.contentOffset.x / self.content.frame.size.width);
  
     if(page == (NUM_PAGES - 1)) {
+        // Last page, dismiss
         [self dismissModalViewControllerAnimated:YES];
     }
     else {
+        //Trigger scroll to next page
         CGRect frame = self.content.frame;
         frame.origin.x = (page + 1) * frame.size.width;
         frame.origin.y = 0;

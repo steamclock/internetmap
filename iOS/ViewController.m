@@ -18,6 +18,7 @@
 #import "NodeWrapper.h"
 #import "TimelineInfoViewController.h"
 #import "ExpandedSlider.h"
+#import "FirstUseViewController.h"
 
 // Below import for testing BSD traceroute only
 #import "main-traceroute.h"
@@ -464,6 +465,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
     [self.nodeSearchPopover presentPopoverFromRect:self.searchButton.bounds inView:self.searchButton permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
     self.searchButton.selected = YES;
+}
+
+-(void)showFirstUse {
+    FirstUseViewController* firstUse = [[FirstUseViewController alloc] initWithNibName:@"FirstUseViewController" bundle:[NSBundle mainBundle]];
+    [self presentModalViewController:firstUse animated:YES];
 }
 
 -(void)selectYouAreHereNode {
