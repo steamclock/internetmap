@@ -15,6 +15,7 @@
 @property (strong, nonatomic) UITextField* textField;
 @property (strong, nonatomic) NSArray* searchResults;
 @property BOOL showHostLookup;
+@property BOOL showYourLocation;
 
 @property int activeSearchID;
 
@@ -56,7 +57,6 @@
     self.textField.delegate = self;
     self.textField.font = [UIFont fontWithName:FONT_NAME_LIGHT size:24];
     self.textField.returnKeyType = UIReturnKeyGo;
-    [self.textField setEnablesReturnKeyAutomatically:YES];
 
     // Attributed strings in iOS 6 only
     if([self.textField respondsToSelector:@selector(setAttributedPlaceholder:)]) {
@@ -90,6 +90,7 @@
     self.textField.text = @"";
     self.searchResults = self.allItems;
     self.showHostLookup = NO;
+    self.showYourLocation = YES;
     [self.tableView reloadData];
 }
 
@@ -101,6 +102,10 @@
 #pragma mark - UITextField action method
 - (void)textFieldDidChange:(UITextField*)sender {
     [self filterContentForSearchText:sender.text];
+}
+
+-(BOOL)haveSpecialFirstItem {
+    return self.showHostLookup || self.showYourLocation;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
@@ -117,7 +122,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return (self.searchResults.count ? self.searchResults.count : 1) + (self.showHostLookup ? 1 : 0);
+    return (self.searchResults.count ? self.searchResults.count : 1) + ([self haveSpecialFirstItem] ? 1 : 0);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -143,18 +148,23 @@
 
     int row = indexPath.row;
     
-    if(self.showHostLookup) {
+    if ([self haveSpecialFirstItem]) {
         if(row == 0) {
-            cell.textLabel.text = [NSString stringWithFormat:@"Find host '%@'", [self.textField.text lowercaseString] ];
+            //make that special item
+            if(self.showHostLookup) {
+                cell.textLabel.text = [NSString stringWithFormat:@"Find host '%@'", [self.textField.text lowercaseString] ];
+            } else {
+                cell.textLabel.text = @"Your Location";
+            }
             cell.textLabel.textColor = UI_ORANGE_COLOR;
             return cell;
         }
-        else
-        {
-            row--;
-        }
+        
+        //all the search indexes are off by one now
+        row--;
     }
     
+    //make a regular item
     if (row >= self.searchResults.count) {
         cell.textLabel.text = @"No results found";
     }else {
@@ -162,7 +172,8 @@
         cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", node.asn, node.friendlyDescription];
     }
     
-    if((row == 0) && (self.textField.text.length != 0) && !self.showHostLookup) {
+    //make it orange if it's really-first
+    if (![self haveSpecialFirstItem] && (row == 0)) {
         cell.textLabel.textColor = UI_ORANGE_COLOR;
     }
     
@@ -179,14 +190,20 @@
 {
     int row = indexPath.row;
     
-    if(self.showHostLookup) {
+    if ([self haveSpecialFirstItem]) {
         if(row == 0) {
-            [self.delegate selectNodeByHostLookup:[self.textField.text lowercaseString]];
+            //trigger one of the specials
+            if(self.showHostLookup) {
+                [self.delegate selectNodeByHostLookup:[self.textField.text lowercaseString]];
+            }
+            else{
+                [self.delegate selectYouAreHereNode];
+            }
             return;
         }
-        else{
-            row--;
-        }
+        
+        //all the search indexes are off by one now
+        row--;
     }
 
     NodeWrapper* node = self.searchResults[row];
@@ -198,10 +215,12 @@
 {
     if(searchText.length == 0) {
         self.showHostLookup = NO;
+        self.showYourLocation = YES;
         self.searchResults = self.allItems;
         [self.tableView reloadData];
     }
     else {
+        self.showYourLocation = NO;
         __weak NodeSearchViewController* weakSelf = self;
         NSString* localSearchText = [searchText copy];
         NSString* upcaseSearchText = [[searchText copy] uppercaseString];

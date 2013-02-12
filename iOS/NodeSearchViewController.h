@@ -15,6 +15,7 @@
 -(void)nodeSearchDelegateDone;
 -(void)nodeSelected:(NodeWrapper*)node;
 -(void)selectNodeByHostLookup:(NSString*)host;
+-(void)selectYouAreHereNode;
 
 @end
 

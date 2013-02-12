@@ -466,6 +466,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.searchButton.selected = YES;
 }
 
+-(void)selectYouAreHereNode {
+    [self youAreHereButtonPressed:0];
+}
+
 -(IBAction)youAreHereButtonPressed:(id)sender {
     //TODO: find out if we can make this work in timeline mode
     if (self.timelineButton.selected) {
