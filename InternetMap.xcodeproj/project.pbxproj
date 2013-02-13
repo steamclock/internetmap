@@ -58,6 +58,8 @@
 		A6551E9616CAF38800340590 /* finish@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A6551E9416CAF38800340590 /* finish@2x.png */; };
 		A6551E9A16CAFC7000340590 /* ContactFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6551E9816CAFC7000340590 /* ContactFormViewController.m */; };
 		A6551E9B16CAFC7000340590 /* ContactFormViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6551E9916CAFC7000340590 /* ContactFormViewController.xib */; };
+		A6551E9E16CB07EE00340590 /* contact-sales-field.png in Resources */ = {isa = PBXBuildFile; fileRef = A6551E9C16CB07EE00340590 /* contact-sales-field.png */; };
+		A6551E9F16CB07EE00340590 /* contact-sales-field@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A6551E9D16CB07EE00340590 /* contact-sales-field@2x.png */; };
 		A686E9BA16B62915009B070E /* history.json in Resources */ = {isa = PBXBuildFile; fileRef = A686E9B916B62915009B070E /* history.json */; };
 		A686E9BE16B6294B009B070E /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9BB16B6294B009B070E /* Default-568h@2x.png */; };
 		A686E9BF16B6294B009B070E /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9BC16B6294B009B070E /* Default.png */; };
@@ -238,6 +240,8 @@
 		A6551E9716CAFC6F00340590 /* ContactFormViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactFormViewController.h; path = iOS/ContactFormViewController.h; sourceTree = SOURCE_ROOT; };
 		A6551E9816CAFC7000340590 /* ContactFormViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContactFormViewController.m; path = iOS/ContactFormViewController.m; sourceTree = SOURCE_ROOT; };
 		A6551E9916CAFC7000340590 /* ContactFormViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ContactFormViewController.xib; path = iOS/ContactFormViewController.xib; sourceTree = SOURCE_ROOT; };
+		A6551E9C16CB07EE00340590 /* contact-sales-field.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "contact-sales-field.png"; path = "iOS/Images/contact-sales-field.png"; sourceTree = SOURCE_ROOT; };
+		A6551E9D16CB07EE00340590 /* contact-sales-field@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "contact-sales-field@2x.png"; path = "iOS/Images/contact-sales-field@2x.png"; sourceTree = SOURCE_ROOT; };
 		A686E9B916B62915009B070E /* history.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = history.json; path = Common/Data/history.json; sourceTree = "<group>"; };
 		A686E9BB16B6294B009B070E /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "iOS/Default-568h@2x.png"; sourceTree = SOURCE_ROOT; };
 		A686E9BC16B6294B009B070E /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = iOS/Default.png; sourceTree = SOURCE_ROOT; };
@@ -1084,6 +1088,8 @@
 				E4BEB53B16CAE8E500F236F5 /* info_selected@2x.png */,
 				E4BEB53C16CAE8E500F236F5 /* info.png */,
 				E4BEB53D16CAE8E500F236F5 /* info@2x.png */,
+				A6551E9C16CB07EE00340590 /* contact-sales-field.png */,
+				A6551E9D16CB07EE00340590 /* contact-sales-field@2x.png */,
 				A6551E6A16CAE30500340590 /* First Use */,
 				A686E9D416B62A9D009B070E /* eye_selected.png */,
 				A686E9D516B62A9D009B070E /* eye_selected@2x.png */,
@@ -1324,6 +1330,8 @@
 				A6551E9516CAF38800340590 /* finish.png in Resources */,
 				A6551E9616CAF38800340590 /* finish@2x.png in Resources */,
 				A6551E9B16CAFC7000340590 /* ContactFormViewController.xib in Resources */,
+				A6551E9E16CB07EE00340590 /* contact-sales-field.png in Resources */,
+				A6551E9F16CB07EE00340590 /* contact-sales-field@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

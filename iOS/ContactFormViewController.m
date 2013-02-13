@@ -15,6 +15,13 @@
 @property (strong) IBOutlet UIButton* submitButton;
 
 @property (strong) IBOutlet UITextField* nameField;
+@property (strong) IBOutlet UIImageView* nameBackground;
+
+@property (strong) IBOutlet UITextField* phoneField;
+@property (strong) IBOutlet UIImageView* phoneBackground;
+
+@property (strong) IBOutlet UITextField* emailField;
+@property (strong) IBOutlet UIImageView* emailBackground;
 
 @end
 
@@ -45,6 +52,11 @@
     else {
         self.background.image = [UIImage imageNamed:@"ipad-bg.png"];
     }
+    
+    UIImage* fieldBackground = [[UIImage imageNamed:@"contact-sales-field.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(10, 12, 10, 12)];
+    [self.nameBackground setImage:fieldBackground];
+    [self.phoneBackground setImage:fieldBackground];
+    [self.emailBackground setImage:fieldBackground];
     
     [self.submitButton setBackgroundImage:[[UIImage imageNamed:@"traceroute-button"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 22, 0, 22)] forState:UIControlStateNormal];
 }
