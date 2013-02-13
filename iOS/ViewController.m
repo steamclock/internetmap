@@ -594,7 +594,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.timelineButton.selected = YES;
         //self.playButton.hidden = NO;
         
-        [self updateTimeline];
+        [self updateTimelineWithPopoverDismiss:NO];
 
         // Give the timeline slider view a poke to reinitialize it with the current date
         self.timelineInfoViewController.year = 0;
@@ -609,7 +609,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.timelineButton.selected = NO;
     self.playButton.hidden = YES;
     self.timelineSlider.value = self.timelineSlider.maximumValue;
-    [self updateTimeline];
+    [self updateTimelineWithPopoverDismiss:NO];
     [self.timelinePopover dismissPopoverAnimated:NO];
 }
 
@@ -703,18 +703,20 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 - (void)timelineSliderTouchUp:(id)sender {
-    [self updateTimeline];
+    [self updateTimelineWithPopoverDismiss:YES];
 }
 
 //deselect node, reset zoom/rotate, and set the timeline point to match the slider.
--(void) updateTimeline {
+-(void) updateTimelineWithPopoverDismiss:(BOOL)popoverDismiss {
     [self.timelineInfoViewController startLoad];
     
     __weak ViewController* weakSelf = self;
     self.afterViewReset = ^ {
         int year = (int)(weakSelf.minTimelineYear+weakSelf.timelineSlider.value);
         [weakSelf.controller setTimelinePoint:[NSString stringWithFormat:@"%d0101", year]];
-        [weakSelf.timelinePopover dismissPopoverAnimated:NO];
+        if(popoverDismiss) {
+            [weakSelf.timelinePopover dismissPopoverAnimated:NO];
+        }
     };
     
     [self resetView];
@@ -729,7 +731,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (void)viewResetDone{
     if (self.afterViewReset) {
-        self.afterViewReset();
+        [[SCDispatchQueue mainQueue] dispatchAfter:0.1 block:self.afterViewReset];
         self.afterViewReset = nil;
     }
 }
