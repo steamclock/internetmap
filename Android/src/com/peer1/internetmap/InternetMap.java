@@ -197,6 +197,17 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             mVisualizationPopup.showAsDropDown(findViewById(R.id.visualizationsButton));
         }
     }
+    
+    public void setVisualization(final int index) {
+        //note: assuming all popups are gone because the visualization popup just finished.
+        mCameraResetHandler = new CallbackHandler(){
+            public void handle() {
+                mCurrentVisualization = index;
+                mController.setVisualization(index);
+            }
+        };
+        mController.resetZoomAndRotationAnimated(isSmallScreen());
+    }
 
     public void searchButtonPressed(View view) {
         dismissPopups();

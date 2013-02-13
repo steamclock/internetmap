@@ -47,10 +47,7 @@ public class VisualizationPopupWindow extends PopupWindow{
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                //this isn't quite the cleanest way to cache the index, but it's easy
-                context.mCurrentVisualization = position;
-                
-                controller.setVisualization(position);
+                context.setVisualization(position);
                 VisualizationPopupWindow.this.dismiss();
             }
         });
