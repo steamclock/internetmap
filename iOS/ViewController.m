@@ -928,6 +928,13 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     __block NSString* lastAsn = nil;
     __block int lastIndex = -1;
     
+    // Put our ASN at the start of the list, just in case
+    NodeWrapper* us = [self.controller nodeByASN:self.cachedCurrentASN];
+    if(us) {
+        [mergedAsnHops addObject:us];
+        lastAsn = self.cachedCurrentASN;
+    }
+    
     [ips enumerateObjectsUsingBlock:^(NSString* ip, NSUInteger idx, BOOL *stop) {
         NSString* asn = self.tracerouteASNs[ip];
         if(asn && ![asn isEqual:[NSNull null]] && ![asn isEqualToString:lastAsn])  {
