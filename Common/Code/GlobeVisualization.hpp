@@ -18,7 +18,7 @@ public:
     virtual Point3 nodePosition(NodePointer node);
     virtual Color nodeColor(NodePointer node);
     
-    virtual std::string name(void) { return "Globe"; }
+    virtual std::string name(void) { return "Globe View"; }
 };
 
 #endif /* defined(__InternetMap__GlobeVisualization__) */
