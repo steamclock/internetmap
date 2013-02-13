@@ -252,30 +252,37 @@ void MapController::highlightRoute(std::vector<NodePointer> nodeList) {
         return;
     }
     
+
     shared_ptr<DisplayLines> lines(new DisplayLines(nodeList.size() - 1));
     lines->beginUpdate();
-    
     Color lineColor = ColorFromRGB(0xffa300);
     
-    display->nodes->beginUpdate();
     for(unsigned int i = 0; i < nodeList.size() - 1; i++) {
         NodePointer a = nodeList[i];
         NodePointer b = nodeList[i+1];
-        display->nodes->updateNode(a->index, ColorFromRGB(SELECTED_NODE_COLOR_HEX));
-        display->nodes->updateNode(b->index, ColorFromRGB(SELECTED_NODE_COLOR_HEX));
-        highlightedNodes.insert(a->index);
-        highlightedNodes.insert(b->index);
         lines->updateLine(i, data->visualization->nodePosition(a), lineColor, data->visualization->nodePosition(b), lineColor);
     }
     
-    display->nodes->endUpdate();
-    
-    
     lines->endUpdate();
     lines->setWidth(5.0);
+
+    shared_ptr<DisplayNodes> selectedNodes(new DisplayNodes(nodeList.size()));
+    
+    selectedNodes->beginUpdate();
+    display->nodes->beginUpdate();
+    
+    for(unsigned int i = 0; i < nodeList.size(); i++) {
+        NodePointer node = nodeList[i];
+        display->nodes->updateNode(node->index, ColorFromRGB(SELECTED_NODE_COLOR_HEX));
+        selectedNodes->updateNode(i, data->visualization->nodePosition(node), data->visualization->nodeSize(node) * 0.8, ColorFromRGB(SELECTED_NODE_COLOR_HEX));
+        highlightedNodes.insert(node->index);
+    }
+    
+    display->nodes->endUpdate();
+    selectedNodes->endUpdate();
     
     display->highlightLines = lines;
-    
+    display->selectedNodes = selectedNodes;
 }
 
 int MapController::indexForNodeAtPoint(Vector2 pointInView) {

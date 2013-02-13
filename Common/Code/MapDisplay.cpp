@@ -87,6 +87,21 @@ void MapDisplay::draw(void)
         selectedNodes->display();
     }
     
+    Matrix4 mvp = camera->currentModelViewProjection();
+    
+    if(visualizationLines || highlightLines) {
+        _connectionProgram->bind();
+        glUniformMatrix4fv(_connectionProgram->uniformForName("modelViewProjectionMatrix"), 1, 0, reinterpret_cast<float*>(&mvp));
+    }
+    
+    if(visualizationLines) {
+        visualizationLines->display();
+    }
+    
+    if(highlightLines) {
+        highlightLines->display();
+    }
+    
     glBlendFunc(GL_ONE, GL_ONE);
     glDepthMask(GL_FALSE); //disable z writing only
 
@@ -121,21 +136,6 @@ void MapDisplay::draw(void)
             glUniform1f(_nodeProgram->uniformForName("minSize"), 2.0f);
             nodes->display();
         }
-    }
-
-    Matrix4 mvp = camera->currentModelViewProjection();
-
-    if(visualizationLines || highlightLines) {
-        _connectionProgram->bind();
-        glUniformMatrix4fv(_connectionProgram->uniformForName("modelViewProjectionMatrix"), 1, 0, reinterpret_cast<float*>(&mvp));
-    }
-    
-    if(visualizationLines) { 
-        visualizationLines->display();
-    }
-
-    if(highlightLines) {
-        highlightLines->display();
     }
     
     glDisable(GL_DEPTH_TEST);
