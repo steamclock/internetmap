@@ -294,13 +294,29 @@ void Camera::zoomByScale(float zoom) {
 }
 
 void Camera::resetZoomAndRotationAnimated(bool isPortraitMode) {
-    TimeInterval duration = 2.5;
+    float targetZoom;
+    Matrix4 targetRotation;
+    
     if (isPortraitMode) {
-        zoomAnimated(-8, duration);
-        rotateAnimated(Matrix4::rotation(M_PI_2, Vector3(0, 0, 1)), duration);
+        targetZoom = -8;
+        targetRotation = Matrix4::rotation(M_PI_2, Vector3(0, 0, 1));
     } else {
-        zoomAnimated(-3, duration);
-        rotateAnimated(Matrix4::identity(), duration);
+        targetZoom = -3;
+        targetRotation = Matrix4::identity();
+    }
+    
+    float zoomDistance = _zoom - targetZoom;
+    
+    //if we're already zoomed out (or close), it's not worth it
+    bool worthZooming = (zoomDistance > 0.5);
+    if (worthZooming) {
+        //LOG("zooming from %f to %f", _zoom, targetZoom);
+        TimeInterval duration = zoomDistance / 2;
+        zoomAnimated(targetZoom, duration);
+        rotateAnimated(targetRotation, duration);
+    } else {
+        //LOG("skipping zoom");
+        cameraResetFinishedCallback();
     }
 }
 

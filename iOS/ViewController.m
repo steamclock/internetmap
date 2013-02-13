@@ -537,12 +537,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(void)setVisualization:(int) vis {
-    [self resetView];
-    
     __weak ViewController* weakSelf = self;
     self.afterViewReset = ^ {
         [weakSelf.controller setVisualization:vis];
     };
+    
+    [self resetView];
 }
 
 -(IBAction)infoButtonPressed:(id)sender {
@@ -704,14 +704,14 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 -(void) updateTimeline {
     [self.timelineInfoViewController startLoad];
     
-    [self resetView];
-    
     __weak ViewController* weakSelf = self;
     self.afterViewReset = ^ {
         int year = (int)(weakSelf.minTimelineYear+weakSelf.timelineSlider.value);
         [weakSelf.controller setTimelinePoint:[NSString stringWithFormat:@"%d0101", year]];
         [weakSelf.timelinePopover dismissPopoverAnimated:NO];
     };
+    
+    [self resetView];
 }
 
 //deselect node and reset zoom/rotate. If you set the afterViewReset callback, it will be called when this finishes.
