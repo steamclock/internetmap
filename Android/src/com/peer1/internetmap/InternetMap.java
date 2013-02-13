@@ -306,19 +306,19 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         ASNRequest.fetchCurrentASNWithResponseHandler(new ASNResponseHandler() {
             public void onStart() {
                 Log.d(TAG, "asnrequest start");
-                /*FIXME animate what now?
-                ProgressBar progress = (ProgressBar) findViewById(R.id.youAreHereProgressBar);
-                Button button = (Button) findViewById(R.id.youAreHereButton);
+                //animate
+                ProgressBar progress = (ProgressBar) findViewById(R.id.searchProgressBar);
+                Button button = (Button) findViewById(R.id.searchButton);
                 progress.setVisibility(View.VISIBLE);
-                button.setVisibility(View.INVISIBLE);*/
+                button.setVisibility(View.INVISIBLE);
             }
             public void onFinish() {
                 Log.d(TAG, "asnrequest finish");
-                /*FIXME stop animating
-                ProgressBar progress = (ProgressBar) findViewById(R.id.youAreHereProgressBar);
-                Button button = (Button) findViewById(R.id.youAreHereButton);
+                //stop animating
+                ProgressBar progress = (ProgressBar) findViewById(R.id.searchProgressBar);
+                Button button = (Button) findViewById(R.id.searchButton);
                 progress.setVisibility(View.INVISIBLE);
-                button.setVisibility(View.VISIBLE);*/
+                button.setVisibility(View.VISIBLE);
             }
 
             public void onSuccess(JSONObject response) {
