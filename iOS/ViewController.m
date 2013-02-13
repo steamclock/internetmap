@@ -821,16 +821,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.nodeInformationPopover repositionPopoverFromRect:[self displayRectForNodeInfoPopover] inView:self.view permittedArrowDirections:dir animated:YES];
 }
 
--(void)testBSDTraceroute {
-    //Function for dev/testing purposes only
-    char* derp[] = {"foo", "google.com"};
-    main_traceroute(2, derp);
-}
-
 -(void)tracerouteButtonTapped{
-    
-    //Below line for testing purposes only
-//    [self testBSDTraceroute];
     
     [self resizeNodeInfoPopover];
     
