@@ -7,11 +7,15 @@
 //
 
 #import "ContactFormViewController.h"
+#import "HelperMethods.h"
 
 @interface ContactFormViewController ()
 
+@property (strong) IBOutlet UILabel* titleLabel;
+@property (strong) IBOutlet UILabel* blurbLabel;
+
 @property (strong) IBOutlet UIImageView* background;
-@property (strong) IBOutlet UIView* container;
+@property (strong) IBOutlet UIScrollView* container;
 @property (strong) IBOutlet UIButton* submitButton;
 
 @property (strong) IBOutlet UITextField* nameField;
@@ -36,6 +40,24 @@
     return self;
 }
 
+-(void)viewDidLoad {
+    [super viewDidLoad];
+    
+    self.titleLabel.font = [UIFont fontWithName:FONT_NAME_MEDIUM size:22.0];
+    self.blurbLabel.font = [UIFont fontWithName:FONT_NAME_MEDIUM size:14.0];
+    
+    UIImage* fieldBackground = [[UIImage imageNamed:@"contact-sales-field.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(16, 16, 16, 16)];
+    [self.nameBackground setImage:fieldBackground];
+    [self.phoneBackground setImage:fieldBackground];
+    [self.emailBackground setImage:fieldBackground];
+    
+    [self.submitButton setBackgroundImage:[[UIImage imageNamed:@"traceroute-button"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 22, 0, 22)] forState:UIControlStateNormal];
+    
+    self.nameField.delegate = self;
+    self.phoneField.delegate = self;
+    self.emailField.delegate = self;
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -53,12 +75,32 @@
         self.background.image = [UIImage imageNamed:@"ipad-bg.png"];
     }
     
-    UIImage* fieldBackground = [[UIImage imageNamed:@"contact-sales-field.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(10, 12, 10, 12)];
-    [self.nameBackground setImage:fieldBackground];
-    [self.phoneBackground setImage:fieldBackground];
-    [self.emailBackground setImage:fieldBackground];
-    
-    [self.submitButton setBackgroundImage:[[UIImage imageNamed:@"traceroute-button"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 22, 0, 22)] forState:UIControlStateNormal];
+    CGRect frame = self.container.frame;
+    frame.size.height += 100;
+    self.container.contentSize = frame.size;
+
+}
+
+-(void)textFieldDidBeginEditing:(UITextField *)textField {
+    if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        [self.container scrollRectToVisible:CGRectMake(0, 50, 320, 480) animated:YES];
+    }
+}
+
+-(BOOL)textFieldShouldReturn:(UITextField *)textField {
+    if(textField == self.nameField) {
+        [self.phoneField becomeFirstResponder];
+    }
+    else if(textField == self.phoneField) {
+        [self.emailField becomeFirstResponder];
+    }
+    else {
+        if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+            [self.container scrollRectToVisible:CGRectMake(0, 0, 320, 480) animated:YES];
+        }
+        [textField resignFirstResponder];
+    }
+    return YES;
 }
 
 -(IBAction)done:(id)sender {
@@ -66,13 +108,7 @@
 }
 
 -(IBAction)submit:(id)sender {
-    
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    [self dismissModalViewControllerAnimated:TRUE];
 }
 
 @end
