@@ -335,6 +335,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             dismissPopups(); //leave timeline mode
         } else {
             dismissPopups();
+            mController.resetZoomAndRotationAnimated(isSmallScreen());
+            
             SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
             if (mTimelineHistory == null) {
                 //load history data & init the timeline bounds
@@ -455,13 +457,12 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
     
     public void resetViewAndSetTimeline(final int year) {
-        mController.resetZoomAndRotationAnimated(isSmallScreen());
         mCameraResetHandler = new CallbackHandler(){
             public void handle() {
                 mController.setTimelinePoint(year);
-                mCameraResetHandler = null;
             }
         };
+        mController.resetZoomAndRotationAnimated(isSmallScreen());
     }
     
     //for handling the camera reset callback
@@ -641,6 +642,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             public void run() {
                 if (mCameraResetHandler != null) {
                     mCameraResetHandler.handle();
+                    mCameraResetHandler = null;
                 }
             }
         });
