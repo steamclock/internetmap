@@ -217,7 +217,7 @@ public class SearchPopup extends PopupWindow{
                     SearchNode snode = (SearchNode)item;
                     mController.updateTargetForIndex(snode.node.index);
                 } else if (item instanceof LocationItem) {
-                    context.youAreHereButtonPressed(null);
+                    context.youAreHereButtonPressed();
                 } else { //FindHostItem
                     FindHostItem fhi = (FindHostItem)item;
                     context.findHost(fhi.host);

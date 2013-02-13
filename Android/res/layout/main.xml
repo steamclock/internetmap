@@ -41,31 +41,6 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/youAreHereLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-            <ToggleButton
-                android:id="@+id/youAreHereButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@drawable/youareherebutton"
-                android:onClick="youAreHereButtonPressed"
-                android:textOff=""
-                android:textOn="" />
-
-            <ProgressBar
-                android:id="@+id/youAreHereProgressBar"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:indeterminate="true"
-                android:visibility="invisible" />
-
-        </RelativeLayout>
-
         <ToggleButton
             android:id="@+id/visualizationsButton"
             android:layout_width="48dp"

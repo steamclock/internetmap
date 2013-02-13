@@ -293,15 +293,12 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         mSearchPopup.dismiss();
     }
 
-    public void youAreHereButtonPressed(View view) {
-        dismissPopups();
+    public void youAreHereButtonPressed() {
 
         //check internet status
         boolean isConnected = haveConnectivity();
         
         if (!isConnected) {
-            ToggleButton button = (ToggleButton)findViewById(R.id.youAreHereButton);
-            button.setChecked(false);
             return;
         }
 
@@ -309,19 +306,19 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         ASNRequest.fetchCurrentASNWithResponseHandler(new ASNResponseHandler() {
             public void onStart() {
                 Log.d(TAG, "asnrequest start");
-                //animate
+                /*FIXME animate what now?
                 ProgressBar progress = (ProgressBar) findViewById(R.id.youAreHereProgressBar);
                 Button button = (Button) findViewById(R.id.youAreHereButton);
                 progress.setVisibility(View.VISIBLE);
-                button.setVisibility(View.INVISIBLE);
+                button.setVisibility(View.INVISIBLE);*/
             }
             public void onFinish() {
                 Log.d(TAG, "asnrequest finish");
-                //stop animating
+                /*FIXME stop animating
                 ProgressBar progress = (ProgressBar) findViewById(R.id.youAreHereProgressBar);
                 Button button = (Button) findViewById(R.id.youAreHereButton);
                 progress.setVisibility(View.INVISIBLE);
-                button.setVisibility(View.VISIBLE);
+                button.setVisibility(View.VISIBLE);*/
             }
 
             public void onSuccess(JSONObject response) {
@@ -334,8 +331,6 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                 String message = String.format(getString(R.string.asnfail), response);
                 showError(message);
                 Log.d(TAG, message);
-                ToggleButton button = (ToggleButton)findViewById(R.id.youAreHereButton);
-                button.setChecked(false);
             }
         });
     }
@@ -564,14 +559,10 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                     public void onDismiss() {
                         mNodePopup = null;
                         mController.deselectCurrentNode();
-                        ToggleButton button = (ToggleButton)findViewById(R.id.youAreHereButton);
-                        button.setChecked(false);
                     }
                 });
             }
             boolean isUserNode = (node.index == mUserNodeIndex);
-            ToggleButton button = (ToggleButton)findViewById(R.id.youAreHereButton);
-            button.setChecked(isUserNode);
             mNodePopup.setNode(node, isUserNode);
             //update size/position
             View mainView = findViewById(R.id.surfaceview);
