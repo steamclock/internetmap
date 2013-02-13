@@ -18,7 +18,12 @@
             android:ems="10"
             android:hint="@string/searchHint"
             android:imeOptions="actionGo"
-            android:inputType="textNoSuggestions|textVisiblePassword" >
+            android:inputType="textNoSuggestions|textVisiblePassword"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/titlebarPadding"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" >
 
             <requestFocus />
         </EditText>
