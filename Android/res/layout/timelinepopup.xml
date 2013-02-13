@@ -9,6 +9,7 @@
         android:id="@+id/mainTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="@dimen/contentPadding"
         android:text="&lt;content>"
         android:textAppearance="?android:attr/textAppearanceMedium" />
     

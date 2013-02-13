@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxLines="1"
+        android:padding="@dimen/contentPadding"
         android:text="&lt;title>"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 

@@ -14,12 +14,12 @@
             android:id="@+id/titleView"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/titlebarPadding"
             android:layout_weight="1"
             android:maxLines="1"
             android:text="&lt;title>"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/titlebarPadding"
             android:textColor="@android:color/black"
             android:textStyle="bold" />
 
@@ -31,21 +31,32 @@
             android:background="@color/orange"
             android:onClick="dismissNodePopup"
             android:src="@drawable/x_icon" />
-
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/mainTextView"
+    <LinearLayout
+        android:id="@+id/contentLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="&lt;content>"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/tracerouteBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="runTraceroute"
-        android:text="@string/dotraceroute" />
+        <TextView
+            android:id="@+id/mainTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/contentPadding"
+            android:text="&lt;content>"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <Button
+            android:id="@+id/tracerouteBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/contentPadding"
+            android:layout_marginLeft="@dimen/contentPadding"
+            android:layout_marginRight="@dimen/contentPadding"
+            android:onClick="runTraceroute"
+            android:text="@string/dotraceroute" />
+
+    </LinearLayout>
 
 </LinearLayout>
