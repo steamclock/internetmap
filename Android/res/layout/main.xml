@@ -58,6 +58,15 @@
             android:onClick="timelineButtonPressed"
             android:textOff=""
             android:textOn="" />
+        
+        <ToggleButton
+            android:id="@+id/infoButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/infobutton"
+            android:onClick="infoButtonPressed"
+            android:textOff=""
+            android:textOn="" />
     </LinearLayout>
 
     <SeekBar

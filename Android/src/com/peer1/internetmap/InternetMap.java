@@ -209,6 +209,10 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         mController.resetZoomAndRotationAnimated(isSmallScreen());
     }
 
+    public void infoButtonPressed(View view) {
+        Log.d(TAG, "TODO");
+    }
+
     public void searchButtonPressed(View view) {
         dismissPopups();
 
