@@ -6,7 +6,6 @@
 #include "Camera.hpp"
 #include <stdlib.h>
 
-static const float MOVE_TIME = 1.0f;
 static const float MIN_ZOOM = -10.0f;
 //we need a bound on the max. zoom because on small nodes the calculated max puts the target behind the camera.
 //this might be a bug in targeting...?
@@ -39,7 +38,8 @@ Camera::Camera() :
     _rotationVelocity(0.0f),
     _rotationEndTime(0.0f),
     _rotationStartTime(0.0f),
-    _rotationDuration(0.0f)
+    _rotationDuration(0.0f),
+    _moveDuration(0.0f)
 {
     _rotationMatrix = Matrix4::identity();
     _panVelocity.x = 0.0f;
@@ -193,7 +193,7 @@ Vector3 Camera::calculateMoveTarget(TimeInterval delta) {
     
     //animated move to target
     if(_targetMoveStartTime < _updateTime) {
-        float timeT = (_updateTime - _targetMoveStartTime) / MOVE_TIME;
+        float timeT = (_updateTime - _targetMoveStartTime) / _moveDuration;
         if(timeT > 1.0f) {
             currentTarget = _target;
             _targetMoveStartTime = MAXFLOAT;
@@ -312,7 +312,11 @@ void Camera::resetZoomAndRotationAnimated(bool isPortraitMode) {
     if (worthZooming) {
         //LOG("zooming from %f to %f", _zoom, targetZoom);
         TimeInterval duration = zoomDistance / 2;
-        zoomAnimated(targetZoom, duration);
+        //zoom via setTarget so that we also reset translation.
+        Target target;
+        target.zoom = targetZoom;
+        target.maxZoom = MAX_MAX_ZOOM;
+        setTarget(target, duration);
         rotateAnimated(targetRotation, duration);
     } else {
         //LOG("skipping zoom");
@@ -335,16 +339,17 @@ void Camera::zoomAnimated(float zoom, TimeInterval duration) {
     _zoomDuration = duration;
 }
 
-void Camera::setTarget(const Target& target) {
+void Camera::setTarget(const Target& target, TimeInterval duration) {
     _targetMoveStartPosition = _target;
     _target = target.vector;
+    _moveDuration = duration;
     _targetMoveStartTime = _updateTime;
     _isMovingToTarget = true;
     _maxZoom = target.maxZoom;
     if (_maxZoom > MAX_MAX_ZOOM) {
         _maxZoom = MAX_MAX_ZOOM;
     }
-    zoomAnimated(target.zoom, MOVE_TIME);
+    zoomAnimated(target.zoom, duration);
 }
 
 void Camera::startMomentumPanWithVelocity(Vector2 velocity) {

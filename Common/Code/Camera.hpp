@@ -8,6 +8,8 @@
 
 #include "Types.hpp"
 
+#define DEFAULT_MOVE_TIME 1.0f
+
 /**
  a target contains all the data needed for the camera to sensibly focus on a node.
  */
@@ -40,6 +42,7 @@ class Camera {
     
     TimeInterval _targetMoveStartTime;
     Vector3 _targetMoveStartPosition;
+    TimeInterval _moveDuration;
     
     float _zoomStart;
     float _zoomTarget;
@@ -75,7 +78,7 @@ class Camera {
 public:
     Camera();
     
-    void setTarget(const Target& target);
+    void setTarget(const Target& target, TimeInterval duration = DEFAULT_MOVE_TIME);
     Vector3 target(void) { return _target; }
     void setDisplaySize(float width, float height) { _displayWidth = width; _displayHeight = height; }
     float displayWidth() { return _displayWidth; }
