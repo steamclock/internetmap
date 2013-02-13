@@ -17,15 +17,20 @@
             android:layout_weight="1"
             android:maxLines="1"
             android:text="&lt;title>"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/titlebarPadding"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
 
-        <Button
+        <ImageButton
             android:id="@+id/closeBtn"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/orange"
             android:onClick="dismissNodePopup"
-            android:text="X" />
+            android:src="@drawable/x_icon" />
 
     </LinearLayout>
 
