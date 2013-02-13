@@ -26,6 +26,14 @@
     return self;
 }
 
+-(void)setItems:(NSArray *)items {
+    _items = items;
+    //update size
+    int itemHeight = 44; //according to the internet
+    int totalHeight = items.count * itemHeight;
+    self.contentSizeForViewInPopover = CGSizeMake(320, totalHeight);
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
