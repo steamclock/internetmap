@@ -107,7 +107,7 @@
         height += verticalPad; //bottom margin
         self.contentHeight = height;
 
-        float width = [HelperMethods deviceIsiPad] ? 440 : [[UIScreen mainScreen] bounds].size.width;
+        float width = [HelperMethods deviceIsiPad] ? 443 : [[UIScreen mainScreen] bounds].size.width;
         [self setContentSizeForViewInPopover:CGSizeMake(width, height)];
 
 

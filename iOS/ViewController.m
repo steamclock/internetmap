@@ -820,14 +820,13 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (CGRect)displayRectForNodeInfoPopover{
     CGRect displayRect;
-    CGPoint center = [self.controller getCoordinatesForNodeAtIndex:self.controller.targetNode];
     
     if (![HelperMethods deviceIsiPad]) {
-        displayRect = CGRectMake(center.x, self.controller.displaySize.height-self.nodeInformationViewController.contentSizeForViewInPopover.height, 1, 1);
+        displayRect = CGRectMake(160, self.controller.displaySize.height-self.nodeInformationViewController.contentSizeForViewInPopover.height, 1, 1);
     }else {
-        displayRect = CGRectMake(center.x, center.y, 1, 1);
+        displayRect = CGRectMake(512.0f, 384.0f, 1, 1);
     }
-    
+        
     return displayRect;
 }
 
