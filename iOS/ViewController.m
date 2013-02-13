@@ -78,7 +78,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (weak, nonatomic) IBOutlet UIButton* playButton;
 @property (weak, nonatomic) IBOutlet UIImageView* logo;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* searchActivityIndicator;
-//@property (weak, nonatomic) IBOutlet UIActivityIndicatorView* youAreHereActivityIndicator;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* visualizationsActivityIndicator;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* timelineActivityIndicator;
 
@@ -494,6 +493,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         //fetch current ASN and select node
         if (!self.isCurrentlyFetchingASN) {
             self.isCurrentlyFetchingASN = YES;
+            self.searchActivityIndicator.hidden = NO;
+            [self.searchActivityIndicator startAnimating];
+            self.searchButton.hidden = YES;
                         
             [ASNRequest fetchCurrentASN:^(NSString *asn) {
                 if(asn) {
@@ -505,6 +507,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                 }
                 
                 self.isCurrentlyFetchingASN = NO;
+                [self.searchActivityIndicator stopAnimating];
+                self.searchActivityIndicator.hidden = YES;
+                self.searchButton.hidden = NO;
             }];
         }
     }else {
