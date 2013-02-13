@@ -457,6 +457,10 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
     
     public void resetViewAndSetTimeline(final int year) {
+        if (mNodePopup != null) {
+            mNodePopup.dismiss();
+        }
+        
         mCameraResetHandler = new CallbackHandler(){
             public void handle() {
                 mController.setTimelinePoint(year);
