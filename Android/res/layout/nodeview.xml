@@ -19,13 +19,14 @@
             android:text="&lt;title>"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <Button
+        <ImageButton
             android:id="@+id/closeBtn"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/orange"
             android:onClick="dismissNodePopup"
-            android:text="X" />
+            android:src="@drawable/x_icon" />
 
     </LinearLayout>
 

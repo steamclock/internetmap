@@ -23,13 +23,14 @@
             <requestFocus />
         </EditText>
 
-        <Button
+        <ImageButton
             android:id="@+id/closeBtn"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="dismissSearchPopup"
-            android:text="X" />
+            android:background="@color/orange"
+            android:src="@drawable/x_icon" />
 
     </LinearLayout>
 
