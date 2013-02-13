@@ -298,7 +298,7 @@ void Camera::resetZoomAndRotationAnimated(bool isPortraitMode) {
     Matrix4 targetRotation;
     
     if (isPortraitMode) {
-        targetZoom = -8;
+        targetZoom = -4.5;
         targetRotation = Matrix4::rotation(M_PI_2, Vector3(0, 0, 1));
     } else {
         targetZoom = -3;
