@@ -16,4 +16,5 @@
     <string name="searchHint">Type a company or domain...</string>
     <string name="findHost">Find host \'%s\'</string>
     <string name="invalidHost">Can\'t find host \'%s\'</string>
+    <string name="yourLocation">Your Location</string>
 </resources>

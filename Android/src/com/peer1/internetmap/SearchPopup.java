@@ -71,6 +71,15 @@ public class SearchPopup extends PopupWindow{
     }
     
     /**
+     * special 'your location' item
+     */
+    private class LocationItem implements SearchItem {
+        public String toString() {
+            return mContext.getString(R.string.yourLocation);
+        }
+    }
+    
+    /**
      * An arrayadapter that can use and filter SearchNodes
      * @author chani
      *
@@ -96,18 +105,18 @@ public class SearchPopup extends PopupWindow{
          *
          */
         public class NodeFilter extends Filter {
+            private final LocationItem locationItem = new LocationItem();
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
-                FilterResults results = new FilterResults();
+                ArrayList<SearchItem> nodes = new ArrayList<SearchItem>();
                 if (constraint.length() <= 0) {
-                    //default, full list
-                    results.count = mAllNodes.size();
-                    results.values = mAllNodes;
+                    //default, full list + location
+                    nodes.add(locationItem);
+                    nodes.addAll(mAllNodes);
                     Log.d(TAG, "default nodes");
                 } else {
                     //filter it
                     Log.d(TAG, "filtering...");
-                    ArrayList<SearchItem> nodes = new ArrayList<SearchItem>();
                     Pattern pattern = Pattern.compile(Pattern.quote(constraint.toString()), Pattern.CASE_INSENSITIVE);
                     //TODO use java style iterators
                     for (int i=0; i<mAllNodes.size(); i++) {
@@ -123,10 +132,11 @@ public class SearchPopup extends PopupWindow{
                         FindHostItem item = new FindHostItem(constraint.toString());
                         nodes.add(0, item);
                     }
-                    
-                    results.values = nodes;
-                    results.count = nodes.size();
                 }
+                
+                FilterResults results = new FilterResults();
+                results.values = nodes;
+                results.count = nodes.size();
                 return results;
             }
             
@@ -142,8 +152,9 @@ public class SearchPopup extends PopupWindow{
         
         public NodeAdapter(Context context, int resource, int textViewResourceId) {
             super(context, resource, textViewResourceId);
-            mFilteredNodes = mAllNodes;
+            mFilteredNodes = new ArrayList<SearchItem>();
             mFilter = new NodeFilter();
+            mFilter.filter("");
         }
         
         @Override
@@ -205,7 +216,9 @@ public class SearchPopup extends PopupWindow{
                 if (item instanceof SearchNode) {
                     SearchNode snode = (SearchNode)item;
                     mController.updateTargetForIndex(snode.node.index);
-                } else {
+                } else if (item instanceof LocationItem) {
+                    context.youAreHereButtonPressed(null);
+                } else { //FindHostItem
                     FindHostItem fhi = (FindHostItem)item;
                     context.findHost(fhi.host);
                 }
