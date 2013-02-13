@@ -14,6 +14,7 @@
 			<string>IBProxyObject</string>
 			<string>IBUIActivityIndicatorView</string>
 			<string>IBUIButton</string>
+			<string>IBUIImageView</string>
 			<string>IBUISlider</string>
 			<string>IBUIView</string>
 		</array>
@@ -272,6 +273,21 @@
 						<reference key="IBUIFontDescription" ref="5537166"/>
 						<reference key="IBUIFont" ref="817540984"/>
 					</object>
+					<object class="IBUIImageView" id="745592271">
+						<reference key="NSNextResponder" ref="184854543"/>
+						<int key="NSvFlags">292</int>
+						<string key="NSFrame">{{188, 431}, {100, 36}}</string>
+						<reference key="NSSuperview" ref="184854543"/>
+						<reference key="NSWindow"/>
+						<string key="NSReuseIdentifierKey">_NS:9</string>
+						<int key="IBUIContentMode">4</int>
+						<bool key="IBUIUserInteractionEnabled">NO</bool>
+						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						<object class="NSCustomResource" key="IBUIImage">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">peer1-logo.png</string>
+						</object>
+					</object>
 				</array>
 				<string key="NSFrameSize">{320, 480}</string>
 				<reference key="NSSuperview"/>
@@ -396,6 +412,14 @@
 					<int key="connectionID">43</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">logo</string>
+						<reference key="source" ref="841351856"/>
+						<reference key="destination" ref="745592271"/>
+					</object>
+					<int key="connectionID">46</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">timelineButtonPressed:</string>
 						<reference key="source" ref="1063531004"/>
@@ -476,6 +500,7 @@
 							<reference ref="469437449"/>
 							<reference ref="749688742"/>
 							<reference ref="136826103"/>
+							<reference ref="745592271"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -552,6 +577,11 @@
 						<reference key="object" ref="749688742"/>
 						<reference key="parent" ref="184854543"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">45</int>
+						<reference key="object" ref="745592271"/>
+						<reference key="parent" ref="184854543"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -570,6 +600,7 @@
 				<string key="28.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="29.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="35.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="45.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="5.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="6.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="7.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -583,7 +614,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">44</int>
+			<int key="maxID">46</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -673,6 +704,7 @@
 			<string key="eye_selected.png">{46, 34}</string>
 			<string key="info.png">{37, 37}</string>
 			<string key="info_selected.png">{37, 37}</string>
+			<string key="peer1-logo.png">{100, 36}</string>
 			<string key="search.png">{40, 40}</string>
 			<string key="search_selected.png">{40, 40}</string>
 			<string key="timeline-play.png">{48, 48}</string>

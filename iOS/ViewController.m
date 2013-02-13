@@ -593,7 +593,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.timelineSlider.hidden = NO;
         self.timelineButton.selected = YES;
         //self.playButton.hidden = NO;
-        
+
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+            self.logo.hidden = YES;
+        }
+
         [self updateTimelineWithPopoverDismiss:NO];
 
         // Give the timeline slider view a poke to reinitialize it with the current date
@@ -605,6 +609,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(void)leaveTimelineMode {
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        self.logo.hidden = NO;
+    }
+    
     self.timelineSlider.hidden = YES;
     self.timelineButton.selected = NO;
     self.playButton.hidden = YES;
