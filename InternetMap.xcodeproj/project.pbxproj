@@ -126,7 +126,7 @@
 		A686EA7916B62B61009B070E /* TimelineInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EA6916B62B61009B070E /* TimelineInfoViewController.m */; };
 		A686EA7A16B62B61009B070E /* UIView+Convenience.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EA6A16B62B61009B070E /* UIView+Convenience.m */; };
 		A686EA7B16B62B61009B070E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EA6B16B62B61009B070E /* ViewController.m */; };
-		A686EA7C16B62B61009B070E /* VisualizationsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EA6C16B62B61009B070E /* VisualizationsTableViewController.m */; };
+		A686EA7C16B62B61009B070E /* StringListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EA6C16B62B61009B070E /* StringListViewController.m */; };
 		A686EA7D16B62B61009B070E /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = A686EA6D16B62B61009B070E /* AppDelegate.mm */; };
 		A686EA7E16B62B61009B070E /* ConnectionWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = A686EA6E16B62B61009B070E /* ConnectionWrapper.mm */; };
 		A686EA7F16B62B61009B070E /* MapControllerWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = A686EA6F16B62B61009B070E /* MapControllerWrapper.mm */; };
@@ -320,7 +320,7 @@
 		A686EA5D16B62B52009B070E /* TimelineInfoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TimelineInfoViewController.h; path = iOS/TimelineInfoViewController.h; sourceTree = SOURCE_ROOT; };
 		A686EA5E16B62B52009B070E /* UIView+Convenience.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIView+Convenience.h"; path = "iOS/UIView+Convenience.h"; sourceTree = SOURCE_ROOT; };
 		A686EA5F16B62B52009B070E /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ViewController.h; path = iOS/ViewController.h; sourceTree = SOURCE_ROOT; };
-		A686EA6016B62B52009B070E /* VisualizationsTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = VisualizationsTableViewController.h; path = iOS/VisualizationsTableViewController.h; sourceTree = SOURCE_ROOT; };
+		A686EA6016B62B52009B070E /* StringListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = StringListViewController.h; path = iOS/StringListViewController.h; sourceTree = SOURCE_ROOT; };
 		A686EA6116B62B61009B070E /* ASNRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASNRequest.m; path = iOS/ASNRequest.m; sourceTree = SOURCE_ROOT; };
 		A686EA6216B62B61009B070E /* ErrorInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ErrorInfoView.m; path = iOS/ErrorInfoView.m; sourceTree = SOURCE_ROOT; };
 		A686EA6316B62B61009B070E /* HelperMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HelperMethods.m; path = iOS/HelperMethods.m; sourceTree = SOURCE_ROOT; };
@@ -331,7 +331,7 @@
 		A686EA6916B62B61009B070E /* TimelineInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TimelineInfoViewController.m; path = iOS/TimelineInfoViewController.m; sourceTree = SOURCE_ROOT; };
 		A686EA6A16B62B61009B070E /* UIView+Convenience.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+Convenience.m"; path = "iOS/UIView+Convenience.m"; sourceTree = SOURCE_ROOT; };
 		A686EA6B16B62B61009B070E /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ViewController.m; path = iOS/ViewController.m; sourceTree = SOURCE_ROOT; };
-		A686EA6C16B62B61009B070E /* VisualizationsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VisualizationsTableViewController.m; path = iOS/VisualizationsTableViewController.m; sourceTree = SOURCE_ROOT; };
+		A686EA6C16B62B61009B070E /* StringListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StringListViewController.m; path = iOS/StringListViewController.m; sourceTree = SOURCE_ROOT; };
 		A686EA6D16B62B61009B070E /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = iOS/AppDelegate.mm; sourceTree = SOURCE_ROOT; };
 		A686EA6E16B62B61009B070E /* ConnectionWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ConnectionWrapper.mm; path = iOS/ConnectionWrapper.mm; sourceTree = SOURCE_ROOT; };
 		A686EA6F16B62B61009B070E /* MapControllerWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MapControllerWrapper.mm; path = iOS/MapControllerWrapper.mm; sourceTree = SOURCE_ROOT; };
@@ -944,8 +944,8 @@
 				A686EA6A16B62B61009B070E /* UIView+Convenience.m */,
 				A686EA5F16B62B52009B070E /* ViewController.h */,
 				A686EA6B16B62B61009B070E /* ViewController.m */,
-				A686EA6016B62B52009B070E /* VisualizationsTableViewController.h */,
-				A686EA6C16B62B61009B070E /* VisualizationsTableViewController.m */,
+				A686EA6016B62B52009B070E /* StringListViewController.h */,
+				A686EA6C16B62B61009B070E /* StringListViewController.m */,
 				1127C9CF16A0BBFB00413FE9 /* Objective-C++ Wrappers */,
 				D4D17D20166EA621003A489C /* XIBs */,
 				A6E1D5C316B9EC7100D8B26F /* ExpandedSlider.h */,
@@ -1394,7 +1394,7 @@
 				A686EA7916B62B61009B070E /* TimelineInfoViewController.m in Sources */,
 				A686EA7A16B62B61009B070E /* UIView+Convenience.m in Sources */,
 				A686EA7B16B62B61009B070E /* ViewController.m in Sources */,
-				A686EA7C16B62B61009B070E /* VisualizationsTableViewController.m in Sources */,
+				A686EA7C16B62B61009B070E /* StringListViewController.m in Sources */,
 				A686EA7D16B62B61009B070E /* AppDelegate.mm in Sources */,
 				A686EA7E16B62B61009B070E /* ConnectionWrapper.mm in Sources */,
 				A686EA7F16B62B61009B070E /* MapControllerWrapper.mm in Sources */,

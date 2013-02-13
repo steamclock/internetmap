@@ -4,7 +4,7 @@
 //
 
 #import "ViewController.h"
-#import "VisualizationsTableViewController.h"
+#import "StringListViewController.h"
 #import "NodeSearchViewController.h"
 #import "NodeInformationViewController.h"
 #import "ASNRequest.h"
@@ -519,10 +519,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         [self leaveTimelineMode];
     }
     if (!self.visualizationSelectionPopover) {
-        VisualizationsTableViewController *tableforPopover = [[VisualizationsTableViewController alloc] initWithStyle:UITableViewStylePlain];
+        StringListViewController *tableforPopover = [[StringListViewController alloc] initWithStyle:UITableViewStylePlain];
         self.visualizationSelectionPopover = [[WEPopoverController alloc] initWithContentViewController:tableforPopover];
         self.visualizationSelectionPopover.delegate = self;
-        tableforPopover.visualizationOptions = [self.controller visualizationNames];
+        tableforPopover.items = [self.controller visualizationNames];
         [self.visualizationSelectionPopover setPopoverContentSize:tableforPopover.contentSizeForViewInPopover];
         if (![HelperMethods deviceIsiPad]) {
             WEPopoverContainerViewProperties *prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
@@ -553,10 +553,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(IBAction)infoButtonPressed:(id)sender {
     if (!self.infoPopover) {
-        VisualizationsTableViewController *tableforPopover = [[VisualizationsTableViewController alloc] initWithStyle:UITableViewStylePlain];
+        StringListViewController *tableforPopover = [[StringListViewController alloc] initWithStyle:UITableViewStylePlain];
         self.infoPopover = [[WEPopoverController alloc] initWithContentViewController:tableforPopover];
         self.infoPopover.delegate = self;
-        tableforPopover.visualizationOptions = @[ @"Help", @"Contact Sales", @"Credits" ];
+        tableforPopover.items = @[ @"Help", @"Contact Sales", @"Credits" ];
         [self.infoPopover setPopoverContentSize:tableforPopover.contentSizeForViewInPopover];
         if (![HelperMethods deviceIsiPad]) {
             WEPopoverContainerViewProperties *prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];

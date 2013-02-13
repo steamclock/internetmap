@@ -10,9 +10,9 @@
 
 @class MapControllerWrapper;
 
-@interface VisualizationsTableViewController : UITableViewController
+@interface StringListViewController : UITableViewController
 
 @property (strong) void (^selectedBlock)(int index);
-@property (nonatomic, strong) NSArray* visualizationOptions;
+@property (nonatomic, strong) NSArray* items;
 
 @end

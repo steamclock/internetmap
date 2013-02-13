@@ -6,16 +6,16 @@
 //  Copyright (c) 2012 Peer1. All rights reserved.
 //
 
-#import "VisualizationsTableViewController.h"
+#import "StringListViewController.h"
 #import "MapControllerWrapper.h"
 
-@interface VisualizationsTableViewController ()
+@interface StringListViewController ()
 
 @property (nonatomic, assign) int selectedRow;
 
 @end
 
-@implementation VisualizationsTableViewController
+@implementation StringListViewController
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -53,7 +53,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.visualizationOptions.count;
+    return self.items.count;
 }
 
 #define DIVIDER_TAG 2
@@ -93,7 +93,7 @@
     }
     
     
-    cell.textLabel.text = [self.visualizationOptions objectAtIndex:indexPath.row];
+    cell.textLabel.text = [self.items objectAtIndex:indexPath.row];
 
 
 
