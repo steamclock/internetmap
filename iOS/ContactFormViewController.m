@@ -81,10 +81,53 @@
 
 }
 
+-(void)setPlaceholderColor:(UIColor*)color forTextField:(UITextField*)field {
+    if(![self.nameField respondsToSelector:@selector(setAttributedPlaceholder:)]) {
+        return;
+    }
+
+    if(field == self.nameField) {
+        self.nameField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Name" attributes:@{NSForegroundColorAttributeName: color}];
+    }
+    else if (field == self.phoneField) {
+        self.phoneField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Phone" attributes:@{NSForegroundColorAttributeName: color}];
+    }
+    else if(field == self.emailField) {
+        self.emailField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Email" attributes:@{NSForegroundColorAttributeName: color}];
+    }
+}
+
+-(UIImageView*)backgroundForField:(UITextField*)field {
+    if(field == self.nameField) {
+        return self.nameBackground;
+    }
+    else if (field == self.phoneField) {
+        return self.phoneBackground;
+    }
+    else if(field == self.emailField) {
+        return self.emailBackground;
+    }
+    
+    return nil;
+} 
+
 -(void)textFieldDidBeginEditing:(UITextField *)textField {
     if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         [self.container scrollRectToVisible:CGRectMake(0, 50, 320, 480) animated:YES];
     }
+    
+    UIImage* fieldBackground = [[UIImage imageNamed:@"contact-sales-field-highlighted.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(16, 16, 16, 16)];
+    [[self backgroundForField:textField] setImage:fieldBackground];
+    [textField setTextColor:[UIColor blackColor]];
+    [self setPlaceholderColor:[UIColor darkGrayColor] forTextField:textField];
+}
+
+
+-(void)textFieldDidEndEditing:(UITextField *)textField {
+    UIImage* fieldBackground = [[UIImage imageNamed:@"contact-sales-field.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(16, 16, 16, 16)];
+    [[self backgroundForField:textField] setImage:fieldBackground];
+    [textField setTextColor:[UIColor whiteColor]];
+    [self setPlaceholderColor:[UIColor lightGrayColor] forTextField:textField];
 }
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField {
