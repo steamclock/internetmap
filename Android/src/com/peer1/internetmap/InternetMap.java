@@ -420,9 +420,6 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             mInTimelineMode = false;
             ToggleButton button = (ToggleButton)findViewById(R.id.timelineButton);
             button.setChecked(false);
-            if (mTimelinePopup != null) {
-                mTimelinePopup.dismiss();
-            }
         }
         if (mNodePopup != null) {
             mNodePopup.dismiss();
@@ -498,7 +495,6 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         public void onStopTrackingTouch(SeekBar seekBar) {
             int year = mTimelineMinYear + seekBar.getProgress();
             resetViewAndSetTimeline(year);
-            mTimelinePopup.dismiss();
         }
     }
     
@@ -506,10 +502,18 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         if (mNodePopup != null) {
             mNodePopup.dismiss();
         }
+
+        //Assert.assertNotNull(mTimelinePopup);
+        if (mTimelinePopup != null) {
+            mTimelinePopup.showLoadingText();
+        }
         
         mCameraResetHandler = new CallbackHandler(){
             public void handle() {
                 mController.setTimelinePoint(year);
+                if (mTimelinePopup != null) {
+                    mTimelinePopup.dismiss();
+                }
             }
         };
         mController.resetZoomAndRotationAnimated(isSmallScreen());

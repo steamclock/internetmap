@@ -20,4 +20,5 @@
     <string name="infoHelp">Help</string>
     <string name="infoSales">Contact Sales</string>
     <string name="infoCredits">Credits</string>
+    <string name="loading">Loading %s...</string>
 </resources>
