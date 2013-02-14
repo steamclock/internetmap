@@ -25,13 +25,18 @@ public:
     std::map<std::string, NodePointer> nodesByAsn;
     std::vector<IndexBoxPointer> boxesForNodes;
     std::vector<ConnectionPointer> connections;
-    
+
+    // Cached copy of connections for latest data, so we can switch back quickly
+    std::vector<ConnectionPointer> defaultConnections;
+
     void clear(void);
     
     void loadFromString(const std::string& data);
     void loadFromAttrString(const std::string& json);
     void loadASInfo(const std::string& asinfo);
 
+    void resetToDefault();
+    
     void createNodeBoxes();
 
     NodePointer nodeAtIndex(unsigned int index);

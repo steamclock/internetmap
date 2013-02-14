@@ -42,6 +42,12 @@ public:
     bool timelineActive;
     bool visualizationActive;
     
+    // cached values for newest data, so that we can switch back quickly
+    float activeDefault;
+    float defaultImportance;
+    float defaultPositionX;
+    float defaultPositionY;
+    
     std::string typeString;
     std::string name;
     std::string rawTextDescription; //raw node description; do not use in the UI (use friendlyDescription instead)

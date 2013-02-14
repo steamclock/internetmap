@@ -399,10 +399,15 @@ void MapController::setTimelinePoint(const std::string& origName, bool blend) {
     if(name == "20130101") name = "20130102";
     
     clock_t start = clock();
-    std::string dataText;
-    loadTextResource(&dataText, name, "txt");
-    data->loadFromString(dataText);
-        
+    
+    if((name == "20130102") && data->nodes.size() != 0) {
+        data->resetToDefault();
+    }
+    else {
+        std::string dataText;
+        loadTextResource(&dataText, name, "txt");
+        data->loadFromString(dataText);
+    }
     LOG("reloaded for timeline point: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
     start = clock();
     updateDisplay(blend);

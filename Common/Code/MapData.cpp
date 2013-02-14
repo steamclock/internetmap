@@ -69,6 +69,25 @@ const char* nextToken(const char* source, char* token, bool* lineEnd) {
     return source;
 }
 
+void MapData::resetToDefault() {
+    for(int i = 0; i < nodes.size(); i++) {
+        Node* node = nodes[i].get();
+        
+        node->timelineActive = node->activeDefault;
+        if(node->activeDefault) {
+            node->positionX = node->defaultPositionX;
+            node->positionY = node->defaultPositionY;
+            node->importance = node->defaultImportance;
+        }
+    }
+    
+    connections = defaultConnections;
+    
+    visualization->activate(nodes);
+    
+    createNodeBoxes();
+}
+
 void MapData::loadFromString(const std::string& text) {
     // Connections an boxes are always fully regenerated
     connections.erase(connections.begin(), connections.end());
@@ -82,6 +101,8 @@ void MapData::loadFromString(const std::string& text) {
     char token[MAX_TOKEN_SIZE];
     bool lineEnd;
     int numNodes, numConnections;
+    
+    bool firstLoad = nodes.size() == 0;
     
     // Grab header data (node and connection counts)
     sourceText = nextToken(sourceText, token, &lineEnd);
@@ -152,6 +173,13 @@ void MapData::loadFromString(const std::string& text) {
         if(node) {
             node->positionY = atof(token);
         }
+        
+        if(node && firstLoad) {
+            node->defaultPositionX = node->positionX;
+            node->defaultPositionY = node->positionY;
+            node->defaultImportance = node->importance;
+            node->activeDefault = true;
+        }
     }
     
     // Load connections
@@ -168,6 +196,10 @@ void MapData::loadFromString(const std::string& text) {
             connection->second->connections.push_back(connection);
             connections.push_back(connection);
         }
+    }
+    
+    if(firstLoad) {
+        defaultConnections = connections;
     }
     
     LOG("loaded data: %d nodes (this load), %d nodes (total), %d connections", missingNodes, (int)(nodes.size()), numConnections);
