@@ -7,6 +7,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Iterator;
 
+import junit.framework.Assert;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -63,6 +65,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     public int mCurrentVisualization; //cached for the visualization popup
     private boolean mInTimelineMode; //true if we're showing the timeline
     private CallbackHandler mCameraResetHandler;
+    private TimelinePopup mTimelinePopup;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -397,42 +400,90 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                 timelineBar.setMax(range);
                 mTimelineMinYear = min;
             }
-            
+
             timelineBar.setProgress(timelineBar.getMax());
             timelineBar.setVisibility(View.VISIBLE);
             mInTimelineMode = true;
             //reset the node popup, the lazy way
             if (mNodePopup != null) mNodePopup.dismiss();
+            //get the timeline popup up (even if the slider didn't change)
+            createTimelinePopup();
+            showTimelinePopup(timelineBar, timelineBar.getMax());
         }
     }
     
     public void dismissPopups() {
         if (mInTimelineMode) {
             SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
-            timelineBar.setVisibility(View.GONE);
+            timelineBar.setVisibility(View.INVISIBLE);
             resetViewAndSetTimeline(mTimelineMinYear + timelineBar.getMax());
             mInTimelineMode = false;
             ToggleButton button = (ToggleButton)findViewById(R.id.timelineButton);
             button.setChecked(false);
+            if (mTimelinePopup != null) {
+                mTimelinePopup.dismiss();
+            }
         }
         if (mNodePopup != null) {
             mNodePopup.dismiss();
         }
         //search and visualization popups dismiss themselves, we can ignore them here
     }
+    
+    void createTimelinePopup() {
+        Assert.assertNull(mTimelinePopup);
+        LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = layoutInflater.inflate(R.layout.timelinepopup, null);
+        mTimelinePopup = new TimelinePopup(InternetMap.this, popupView);
+        mTimelinePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            public void onDismiss() {
+                mTimelinePopup = null;
+            }
+        });
+    }
+    
+    void showTimelinePopup(SeekBar seekBar, int progress) {
+        Assert.assertNotNull(mTimelinePopup);
+        String year = Integer.toString(progress + mTimelineMinYear);
+        mTimelinePopup.setData(year, mTimelineHistory.optString(year));
+        Log.d(TAG, year);
+        
+        //update size/position
+        int width, offset;
+        boolean needsUpdate;
+        if (isSmallScreen()) {
+            width = LayoutParams.MATCH_PARENT;
+            offset = 0;
+            needsUpdate = false;
+        } else {
+            width = LayoutParams.WRAP_CONTENT; //mainView.getWidth() / 2;
+            //calculate offset to line up with the timelineBar
+            int barWidth = seekBar.getWidth();
+            int maxProgress = seekBar.getMax();
+            int popupWidth = mTimelinePopup.getMeasuredWidth();
+            //FIXME something is going slightly wrong around here and I don't know why.
+            //the location is accurate for 2000 and 2006, but ever so slightly off for other points.
+            int progressXLocation = (int)(barWidth * (float)progress / maxProgress);
+            int progressXCenter = progressXLocation + seekBar.getThumbOffset();
+            offset = progressXCenter - popupWidth/2; //center
+            //Log.d(TAG, String.format("bar: %d popup: %d thumb: %d location: %d offset: %d", barWidth, popupWidth, progressXLocation, progressXCenter, offset));
+            needsUpdate = true;
+        }
+        if (!mTimelinePopup.isShowing()) {
+            //Log.d(TAG, "first show");
+            mTimelinePopup.setWindowLayoutMode(width, LayoutParams.WRAP_CONTENT);
+            mTimelinePopup.showAsDropDown(seekBar, offset, 0);
+        } else if (needsUpdate) {
+            mTimelinePopup.update(seekBar, offset, 0, -1, -1);
+        }
+    }
 
     private class TimelineListener implements SeekBar.OnSeekBarChangeListener{
-        private TimelinePopup mTimelinePopup;
         
         public void onStartTrackingTouch(SeekBar seekBar) {
-            LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-            View popupView = layoutInflater.inflate(R.layout.timelinepopup, null);
-            mTimelinePopup = new TimelinePopup(InternetMap.this, popupView);
-            mTimelinePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                public void onDismiss() {
-                    mTimelinePopup = null;
-                }
-            });
+            if (mTimelinePopup == null) {
+                createTimelinePopup();
+            }
         }
         
         public void onProgressChanged(SeekBar seekBar, int progress,
@@ -441,37 +492,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                 //Log.d(TAG, "ignoring progresschange");
                 return;
             }
-            String year = Integer.toString(progress + mTimelineMinYear);
-            mTimelinePopup.setData(year, mTimelineHistory.optString(year));
-            
-            //update size/position
-            int width, offset;
-            boolean needsUpdate;
-            if (isSmallScreen()) {
-                width = LayoutParams.MATCH_PARENT;
-                offset = 0;
-                needsUpdate = false;
-            } else {
-                width = LayoutParams.WRAP_CONTENT; //mainView.getWidth() / 2;
-                //calculate offset to line up with the timelineBar
-                int barWidth = seekBar.getWidth();
-                int maxProgress = seekBar.getMax();
-                int popupWidth = mTimelinePopup.getMeasuredWidth();
-                //FIXME something is going slightly wrong around here and I don't know why.
-                //the location is accurate for 2000 and 2006, but ever so slightly off for other points.
-                int progressXLocation = (int)(barWidth * (float)progress / maxProgress);
-                int progressXCenter = progressXLocation + seekBar.getThumbOffset();
-                offset = progressXCenter - popupWidth/2; //center
-                //Log.d(TAG, String.format("popup: %d thumb: %d location: %d offset: %d", popupWidth, progressXLocation, progressXCenter, offset));
-                needsUpdate = true;
-            }
-            if (!mTimelinePopup.isShowing()) {
-                mTimelinePopup.setWindowLayoutMode(width, LayoutParams.WRAP_CONTENT);
-                mTimelinePopup.showAsDropDown(seekBar, offset, 0);
-            } else if (needsUpdate) {
-                mTimelinePopup.update(seekBar, offset, 0, -1, -1);
-            }
-            //Log.d(TAG, String.format("%dx%d", mTimelinePopup.getWidth(), mTimelinePopup.getHeight()));
+            showTimelinePopup(seekBar, progress);
         }
         
         public void onStopTrackingTouch(SeekBar seekBar) {
