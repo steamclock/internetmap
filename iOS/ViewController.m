@@ -525,6 +525,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
     if (!self.visualizationSelectionPopover) {
         StringListViewController *tableforPopover = [[StringListViewController alloc] initWithStyle:UITableViewStylePlain];
+        [tableforPopover setHighlightCurrentRow:YES];
         self.visualizationSelectionPopover = [[WEPopoverController alloc] initWithContentViewController:tableforPopover];
         self.visualizationSelectionPopover.delegate = self;
         tableforPopover.items = [self.controller visualizationNames];
@@ -559,6 +560,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 -(IBAction)infoButtonPressed:(id)sender {
     if (!self.infoPopover) {
         StringListViewController *tableforPopover = [[StringListViewController alloc] initWithStyle:UITableViewStylePlain];
+        [tableforPopover setHighlightCurrentRow:NO];
         self.infoPopover = [[WEPopoverController alloc] initWithContentViewController:tableforPopover];
         self.infoPopover.delegate = self;
         tableforPopover.items = @[ @"Help", @"Contact Sales", @"Credits" ];
