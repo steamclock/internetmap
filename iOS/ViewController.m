@@ -567,7 +567,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         [tableforPopover setHighlightCurrentRow:NO];
         self.infoPopover = [[WEPopoverController alloc] initWithContentViewController:tableforPopover];
         self.infoPopover.delegate = self;
-        tableforPopover.items = @[ @"Help", @"Contact Sales", @"Credits" ];
+        tableforPopover.items = @[ @"Help", @"Contact Sales", @"Learn more at Peer1.com", @"Credits" ];
         [self.infoPopover setPopoverContentSize:tableforPopover.contentSizeForViewInPopover];
         if (![HelperMethods deviceIsiPad]) {
             WEPopoverContainerViewProperties *prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
@@ -585,7 +585,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                 case 1: //sales
                     [self showContactForm];
                     break;
-                case 2: //credits
+                case 2: //URL
+                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.peer1.com"]];
+                    break;
+                case 3: //credits
                     NSLog(@"TODO: credits");
                     break;
                 default: //can't happen
