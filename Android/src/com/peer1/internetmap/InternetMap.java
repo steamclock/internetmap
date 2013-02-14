@@ -53,6 +53,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     private Handler mHandler; //handles threadsafe messages
 
     private VisualizationPopupWindow mVisualizationPopup;
+    private InfoPopup mInfoPopup;
     private SearchPopup mSearchPopup;
     private NodePopup mNodePopup;
     
@@ -207,6 +208,24 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             }
         };
         mController.resetZoomAndRotationAnimated(isSmallScreen());
+    }
+
+    public void infoButtonPressed(View view) {
+        dismissPopups();
+
+        if (mInfoPopup == null) {
+            LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+            View popupView = layoutInflater.inflate(R.layout.visualizationview, null);
+            mInfoPopup = new InfoPopup(this, mController, popupView);
+            mInfoPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                public void onDismiss() {
+                    mInfoPopup = null;
+                    ToggleButton button = (ToggleButton)findViewById(R.id.infoButton);
+                    button.setChecked(false);
+                }
+            });
+            mInfoPopup.showAsDropDown(findViewById(R.id.infoButton));
+        }
     }
 
     public void searchButtonPressed(View view) {

@@ -12,6 +12,7 @@
 @interface StringListViewController ()
 
 @property (nonatomic, assign) int selectedRow;
+@property (nonatomic, assign) BOOL highlightSelectedRow;
 
 @end
 
@@ -24,6 +25,13 @@
         self.contentSizeForViewInPopover = CGSizeMake(320, 150);
     }
     return self;
+}
+
+-(void) setHighlightCurrentRow:(BOOL)highlight {
+    self.highlightSelectedRow = highlight;
+    if (!highlight) {
+        self.selectedRow = -1; //invalid row
+    }
 }
 
 -(void)setItems:(NSArray *)items {
@@ -120,7 +128,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    self.selectedRow = indexPath.row;
+    if (self.highlightSelectedRow) {
+        self.selectedRow = indexPath.row;
+    }
     [self.tableView reloadData];
     if(self.selectedBlock) {
         self.selectedBlock(indexPath.row);

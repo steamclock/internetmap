@@ -14,5 +14,6 @@
 
 @property (strong) void (^selectedBlock)(int index);
 @property (nonatomic, strong) NSArray* items;
+-(void) setHighlightCurrentRow:(BOOL)highlight;
 
 @end
