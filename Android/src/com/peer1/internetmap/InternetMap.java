@@ -597,6 +597,9 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                     popupView = layoutInflater.inflate(R.layout.nodetimelineview, null);
                 } else {
                     popupView = layoutInflater.inflate(R.layout.nodeview, null);
+                    if (isSmallScreen()) {
+                        popupView.findViewById(R.id.leftArrow).setVisibility(View.GONE);
+                    }
                 }
                 mNodePopup = new NodePopup(this, popupView, mInTimelineMode);
                 mNodePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {

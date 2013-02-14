@@ -1,62 +1,76 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res/com.peer1.internetmap"
-    android:id="@+id/LinearLayout1"
+    android:id="@+id/arrowLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="wrap_content" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/orange" >
-
-        <TextView
-            android:id="@+id/titleView"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/titlebarPadding"
-            android:layout_weight="1"
-            android:maxLines="1"
-            android:text="&lt;title>"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
-
-        <ImageButton
-            android:id="@+id/closeBtn"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/orange"
-            android:onClick="dismissNodePopup"
-            android:src="@drawable/x_icon" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/contentLayout"
+    <ImageView
+        android:id="@+id/leftArrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/arrow_black_left" />
+
+    <LinearLayout
+        android:id="@+id/LinearLayout1"
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/mainTextView"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/contentPadding"
-            android:text="&lt;content>"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:background="@color/orange" >
 
-        <Button
-            android:id="@+id/tracerouteBtn"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/titleView"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/titlebarPadding"
+                android:layout_weight="1"
+                android:maxLines="1"
+                android:text="&lt;title>"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/closeBtn"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/orange"
+                android:onClick="dismissNodePopup"
+                android:src="@drawable/x_icon" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/contentLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/contentPadding"
-            android:layout_marginLeft="@dimen/contentPadding"
-            android:layout_marginRight="@dimen/contentPadding"
-            android:onClick="runTraceroute"
-            android:text="@string/dotraceroute" />
+            android:orientation="vertical"
+            android:background="@color/translucentBlack" >
 
+            <TextView
+                android:id="@+id/mainTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/contentPadding"
+                android:text="&lt;content>"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <Button
+                android:id="@+id/tracerouteBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/contentPadding"
+                android:layout_marginLeft="@dimen/contentPadding"
+                android:layout_marginRight="@dimen/contentPadding"
+                android:onClick="runTraceroute"
+                android:text="@string/dotraceroute" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>
