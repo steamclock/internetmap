@@ -4,6 +4,7 @@
 //
 
 #include "Camera.hpp"
+#include "GlobeVisualization.hpp"
 #include <stdlib.h>
 
 static const float MIN_ZOOM = -10.0f;
@@ -294,6 +295,9 @@ void Camera::zoomByScale(float zoom) {
 }
 
 void Camera::resetZoomAndRotationAnimated(bool isPortraitMode) {
+    // TODO: should have better way of distributing this flag
+    GlobeVisualization::setPortrait(isPortraitMode);
+    
     float targetZoom;
     Matrix4 targetRotation;
     
