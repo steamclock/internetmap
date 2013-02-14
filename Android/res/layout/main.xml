@@ -79,4 +79,12 @@
         android:progressDrawable="@drawable/seekbar_progress"
         android:thumb="@drawable/seek_thumb_normal" />
 
+   <ImageView
+       android:id="@+id/imageView1"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_alignParentRight="true"
+       android:layout_alignParentTop="true"
+       android:src="@drawable/peer1_logo" />
+
 </RelativeLayout>
