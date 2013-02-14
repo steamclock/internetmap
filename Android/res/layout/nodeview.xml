@@ -69,7 +69,9 @@
                 android:layout_marginLeft="@dimen/contentPadding"
                 android:layout_marginRight="@dimen/contentPadding"
                 android:onClick="runTraceroute"
-                android:text="@string/dotraceroute" />
+                android:text="@string/dotraceroute"
+                android:visibility="gone" />
+
         </LinearLayout>
     </LinearLayout>
 
