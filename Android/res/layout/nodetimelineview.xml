@@ -15,5 +15,12 @@
         android:padding="@dimen/contentPadding"
         android:text="&lt;title>"
         android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+    <ImageView
+        android:id="@+id/arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/arrow_black_bottom" />
 
 </LinearLayout>
