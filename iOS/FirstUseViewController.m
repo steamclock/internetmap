@@ -69,10 +69,14 @@ static const int NUM_PAGES = 3;
 }
 
 -(void)setPageMarkerForPage:(int)page {
+    if(page >= NUM_PAGES) {
+        page = NUM_PAGES - 1;
+    }
+    
     // The little dots to show the page
     self.pageMarker.image = [UIImage imageNamed:[NSString stringWithFormat:@"screen%d-highlight.png", page+1]];
     
-    // Show differnt button for last page
+    // Show diffeernt button for last page
     UIImage* nextImage = (page == (NUM_PAGES - 1)) ? [UIImage imageNamed:@"finish.png"] : [UIImage imageNamed:@"next-button.png"];
     [self.next setImage:nextImage forState:UIControlStateNormal];
 }
