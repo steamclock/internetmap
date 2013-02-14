@@ -3,7 +3,6 @@ package com.peer1.internetmap;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -22,7 +21,6 @@ public class NodePopup extends PopupWindow {
         super(view);
         mContext = context;
         mIsTimelineView = isTimelineView;
-        setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.translucentBlack)));
     }
     
     public void setNode(NodeWrapper node) {

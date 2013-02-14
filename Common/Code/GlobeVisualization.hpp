@@ -19,6 +19,8 @@ public:
     virtual Color nodeColor(NodePointer node);
     
     virtual std::string name(void) { return "Globe View"; }
+    
+    static void setPortrait(bool);
 };
 
 #endif /* defined(__InternetMap__GlobeVisualization__) */

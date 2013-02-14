@@ -431,6 +431,9 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         Assert.assertNull(mTimelinePopup);
         LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = layoutInflater.inflate(R.layout.timelinepopup, null);
+        if (isSmallScreen()) {
+            popupView.findViewById(R.id.arrow).setVisibility(View.GONE);
+        }
         mTimelinePopup = new TimelinePopup(InternetMap.this, popupView);
         mTimelinePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
             public void onDismiss() {
@@ -597,6 +600,9 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                     popupView = layoutInflater.inflate(R.layout.nodetimelineview, null);
                 } else {
                     popupView = layoutInflater.inflate(R.layout.nodeview, null);
+                    if (isSmallScreen()) {
+                        popupView.findViewById(R.id.leftArrow).setVisibility(View.GONE);
+                    }
                 }
                 mNodePopup = new NodePopup(this, popupView, mInTimelineMode);
                 mNodePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {

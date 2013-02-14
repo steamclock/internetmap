@@ -9,6 +9,12 @@
 #include "GlobeVisualization.hpp"
 #include <stdlib.h>
 
+static bool sPortrait = false;
+
+void GlobeVisualization::setPortrait(bool b) {
+    sPortrait = b;
+}
+
 void GlobeVisualization::activate(std::vector<NodePointer> nodes) {
     srand(81531);
     
@@ -35,10 +41,21 @@ Point3 GlobeVisualization::nodePosition(NodePointer node) {
     
     r = node->hasLatLong ? 1.1f : 1.0f;
     
-    float x = r * cos(node->latitude) * cos(node->longitude);
-    float y = r * cos(node->latitude) * sin(node->longitude);
-    float z = r * sin(node->latitude);
-    return Point3(x, y, z);
+    // We want to build the globe so that the default rotation axis is between the poles, and North America is
+    // facing the camera. Need slightly different contruction for landscape and portrat mode (due to different
+    // camera rotations)
+    if(sPortrait) {
+        float x = r * sin(node->latitude);
+        float y = -r * cos(node->latitude) * cos(node->longitude);
+        float z = -r * cos(node->latitude) * sin(node->longitude);
+        return Point3(x, y, z);
+    }
+    else {
+        float x = r * cos(node->latitude) * cos(node->longitude);
+        float y = r * sin(node->latitude);
+        float z = -r * cos(node->latitude) * sin(node->longitude);
+        return Point3(x, y, z);
+    }
 }
 
 Color GlobeVisualization::nodeColor(NodePointer node) {

@@ -226,6 +226,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.cachedCurrentASN = nil;
     [self precacheCurrentASN];
     
+    [self.timelineButton setImage:[UIImage imageNamed:@"travelback_selected.png"] forState:UIControlStateSelected | UIControlStateHighlighted];
     
     [self performSelector:@selector(fadeOutLogo) withObject:nil afterDelay:4];
     
@@ -475,6 +476,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         searchController.allItems = [self.controller allNodes];
     }
     [self.nodeSearchPopover presentPopoverFromRect:self.searchButton.bounds inView:self.searchButton permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+    self.searchButton.highlighted = NO;
     self.searchButton.selected = YES;
 }
 
@@ -545,6 +547,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         };
     }
     [self.visualizationSelectionPopover presentPopoverFromRect:self.visualizationsButton.bounds inView:self.visualizationsButton permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+    
+    self.visualizationsButton.highlighted = NO;
     self.visualizationsButton.selected = YES;
 }
 
@@ -592,12 +596,15 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         };
     }
     [self.infoPopover presentPopoverFromRect:self.infoButton.bounds inView:self.infoButton permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+    
+    self.infoButton.highlighted = NO;
     self.infoButton.selected = YES;
 }
 
 -(IBAction)timelineButtonPressed:(id)sender {
     if (self.timelineSlider.hidden) {
         self.timelineSlider.hidden = NO;
+        self.timelineButton.highlighted = NO;
         self.timelineButton.selected = YES;
         //self.playButton.hidden = NO;
 
