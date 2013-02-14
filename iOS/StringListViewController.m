@@ -48,6 +48,7 @@
     
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.scrollEnabled = NO;
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -89,9 +90,16 @@
     UIView* divider = [cell.contentView viewWithTag:DIVIDER_TAG];
     if (!divider) {
         divider = [[UIView alloc] initWithFrame:CGRectMake(0, 43, self.tableView.width, 1)];
-        divider.backgroundColor = FONT_COLOR_GRAY;
+        divider.backgroundColor = [UIColor darkGrayColor];
         divider.tag = DIVIDER_TAG;
         [cell.contentView addSubview:divider];
+    }
+    
+    if(indexPath.row == (self.items.count - 1)) {
+        divider.backgroundColor = [UIColor blackColor];
+    }
+    else {
+        divider.backgroundColor = [UIColor darkGrayColor];
     }
     
     if (indexPath.row == self.selectedRow) {
