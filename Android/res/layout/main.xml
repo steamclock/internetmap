@@ -60,7 +60,7 @@
             android:textOn="" />
     </LinearLayout>
 
-    <SeekBar
+   <SeekBar
         android:id="@+id/timelineSeekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
