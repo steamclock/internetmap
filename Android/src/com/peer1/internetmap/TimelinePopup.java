@@ -33,6 +33,13 @@ public class TimelinePopup extends PopupWindow {
             mainTextView.setText(Html.fromHtml(mainText));
         }
     }
+    
+    //note: don't call this twice in a row
+    public void showLoadingText() {
+        TextView titleView = (TextView) getContentView().findViewById(R.id.titleView);
+        CharSequence year = titleView.getText();
+        titleView.setText(String.format(mContext.getString(R.string.loading), year));
+    }
 
     /**
      * For some reason popupwindow doesn't have this.
