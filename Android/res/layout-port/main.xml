@@ -101,6 +101,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        android:progressDrawable="@drawable/seekbar_progress"
+        android:thumb="@drawable/seek_thumb_normal" />
 
 </RelativeLayout>
