@@ -71,6 +71,21 @@
                 android:textOff=""
                 android:textOn="" />
         </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/infoLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <ToggleButton
+                android:id="@+id/infoButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/infobutton"
+                android:onClick="infoButtonPressed"
+                android:textOff=""
+                android:textOn="" />
+        </RelativeLayout>
     </LinearLayout>
 
     <SeekBar
