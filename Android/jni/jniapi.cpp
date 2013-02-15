@@ -259,6 +259,12 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_resetZoom
     renderer->endControllerModification();
 }
 
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_setAllowIdleAnimation(JNIEnv* jenv, jobject obj, bool allow) {
+    MapController* controller = renderer->beginControllerModification();
+    controller->display->camera->setAllowIdleAnimation(allow);
+    renderer->endControllerModification();
+}
+
 JNIEXPORT jstring JNICALL Java_com_peer1_internetmap_NodeWrapper_nativeFriendlyDescription(JNIEnv* jenv, jobject obj, int index) {
     MapController* controller = renderer->beginControllerModification();
     if (index < 0 || index >= controller->data->nodes.size()) {

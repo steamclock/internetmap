@@ -40,10 +40,13 @@ import android.view.ViewGroup.LayoutParams;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
 import com.peer1.internetmap.ASNRequest.ASNResponseHandler;
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.UpdateManager;
 
 public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
     private static String TAG = "InternetMap";
+    private final String APP_ID = "9a3f1d8d25e8728007a8abf2d420beb9"; //HockeyApp id
     private GestureDetectorCompat mGestureDetector;
     private ScaleGestureDetector mScaleDetector;
     private RotateGestureDetector mRotateDetector;
@@ -71,6 +74,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         requestWindowFeature(android.view.Window.FEATURE_NO_TITLE);
 
         Log.i(TAG, "onCreate()");
+        //check HockeyApp for updates (comment this out for release)
+        UpdateManager.register(this, APP_ID);
         
         //try to get into the best orientation before initializing the backend
         forceOrientation();
@@ -135,6 +140,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume()");
+        //check HockeyApp for crashes. comment this out for release
+        CrashManager.register(this, APP_ID);
         nativeOnResume();
     }
 
@@ -185,9 +192,18 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
+        
+        //handle assorted gestures
         mScaleDetector.onTouchEvent(event);
         mRotateDetector.onTouchEvent(event);
         mGestureDetector.onTouchEvent(event);
+        
+        //ensure we clean up when the touch ends
+        if (event.getAction() == MotionEvent.ACTION_CANCEL || event.getAction() == MotionEvent.ACTION_UP) {
+            Log.d(TAG, "touch end");
+            mController.setAllowIdleAnimation(true);
+        }
+        
         return super.onTouchEvent(event);
     }
 
@@ -733,6 +749,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             int top = location[1];
             int left = location[0];
             Log.d(TAG, String.format("onDown %f %f %d %d", x, y, top, left));
+            mController.setAllowIdleAnimation(false);
             mController.handleTouchDownAtPoint(x - left, y - top);
             return true;
         }
