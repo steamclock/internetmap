@@ -307,8 +307,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                 
                     public void onFailure(Throwable e, String response) {
                         //tell the user
-                        //FIXME: outputting the raw error response is bad. how can we make it userfriendly?
-                        String message = String.format(getString(R.string.asnfail), response);
+                        String message = getString(R.string.asnAssociationFail);
                         showError(message);
                         Log.d(TAG, message);
                     }
@@ -356,8 +355,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         
             public void onFailure(Throwable e, String response) {
                 //tell the user
-                //FIXME: outputting the raw error response is bad. how can we make it userfriendly?
-                String message = String.format(getString(R.string.asnfail), response);
+                String message = getString(R.string.currentASNFail);
                 showError(message);
                 Log.d(TAG, message);
             }
@@ -566,11 +564,11 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                 }
                 mController.updateTargetForIndex(node.index);
             } else {
-                showError(String.format(getString(R.string.asnNullNode), asnString));
+                showError(getString(R.string.asnAssociationFail));
             }
         } catch (Exception e) {
             Log.d(TAG, String.format("can't parse response: %s", response.toString()));
-            showError(getString(R.string.asnBadResponse));
+            showError(getString(R.string.asnAssociationFail));
         }
     }
     
@@ -672,12 +670,12 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                     Log.d(TAG, String.format("payload: %s", response));
                 } catch (Exception e) {
                     Log.d(TAG, String.format("Can't parse response: %s", response.toString()));
-                    showError(getString(R.string.asnBadResponse));
+                    showError(getString(R.string.tracerouteStartIPFail));
                 }
             }
         
             public void onFailure(Throwable e, String response) {
-                String message = String.format(getString(R.string.asnfail), response);
+                String message = getString(R.string.tracerouteStartIPFail);
                 showError(message);
                 Log.d(TAG, message);
             }

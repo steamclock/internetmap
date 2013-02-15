@@ -8,9 +8,9 @@
     <string name="oneconnection">One Connection</string>
     <string name="nconnections">%d Connections</string>
     <string name="dotraceroute">Perform Traceroute</string>
-    <string name="asnfail">ASN Failure: %s</string>
-    <string name="asnBadResponse">ASN Failure: unexpected response.</string>
-    <string name="asnNullNode">ASN Failure: %s does not exist.</string>
+    <string name="currentASNFail">Couldn\'t look up current address.</string>
+    <string name="asnAssociationFail">Couldn\'t find a node associated with your host.</string>
+    <string name="tracerouteStartIPFail">Error: ASN couldn\'t be resolved into IP. Please try another node!</string>
     <string name="noInternet">This feature requires internet access.</string>
     <color name="translucentBlack">#C8000000</color>
     <string name="searchHint">Type a company or domain...</string>
