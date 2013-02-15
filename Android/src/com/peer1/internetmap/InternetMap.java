@@ -7,6 +7,9 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Iterator;
 
+import android.view.animation.AlphaAnimation;
+import android.view.animation.AnimationUtils;
+import android.widget.*;
 import junit.framework.Assert;
 
 import org.json.JSONException;
@@ -24,12 +27,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.PopupWindow;
-import android.widget.ProgressBar;
-import android.widget.SeekBar;
-import android.widget.Toast;
-import android.widget.ToggleButton;
 import android.view.Gravity;
 import android.view.ScaleGestureDetector;
 import android.view.GestureDetector;
@@ -92,6 +89,16 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         
         SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
         timelineBar.setOnSeekBarChangeListener(new TimelineListener());
+
+
+        //fade out logo a bit after
+        ImageView logo = (ImageView) findViewById(R.id.peerLogo);
+        AlphaAnimation anim = new AlphaAnimation(1, 0.3f);
+        anim.setDuration(1000);
+        anim.setStartTime(AnimationUtils.currentAnimationTimeMillis()+4000);
+        anim.setFillAfter(true);
+        anim.setFillEnabled(true);
+        logo.setAnimation(anim);
     }
     
     public void forceOrientation() {
