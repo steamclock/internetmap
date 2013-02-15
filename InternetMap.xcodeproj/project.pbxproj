@@ -67,6 +67,7 @@
 		A6551EB916CD8A2A00340590 /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = A6551EB716CD8A2A00340590 /* Default-Landscape~ipad.png */; };
 		A6551EBC16CDAC8B00340590 /* CreditsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6551EBB16CDAC8A00340590 /* CreditsViewController.m */; };
 		A6551EBE16CDB22900340590 /* credits.html in Resources */ = {isa = PBXBuildFile; fileRef = A6551EBD16CDB22900340590 /* credits.html */; };
+		A6551EC216CEB88700340590 /* ExpandedScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6551EC116CEB88700340590 /* ExpandedScrollView.m */; };
 		A686E9BA16B62915009B070E /* history.json in Resources */ = {isa = PBXBuildFile; fileRef = A686E9B916B62915009B070E /* history.json */; };
 		A686E9BE16B6294B009B070E /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9BB16B6294B009B070E /* Default-568h@2x.png */; };
 		A686E9C516B62965009B070E /* icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9C116B62965009B070E /* icon-72.png */; };
@@ -258,6 +259,8 @@
 		A6551EBA16CDAC8A00340590 /* CreditsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CreditsViewController.h; path = iOS/CreditsViewController.h; sourceTree = SOURCE_ROOT; };
 		A6551EBB16CDAC8A00340590 /* CreditsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CreditsViewController.m; path = iOS/CreditsViewController.m; sourceTree = SOURCE_ROOT; };
 		A6551EBD16CDB22900340590 /* credits.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = credits.html; path = Common/Data/credits.html; sourceTree = "<group>"; };
+		A6551EC016CEB88700340590 /* ExpandedScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExpandedScrollView.h; path = iOS/ExpandedScrollView.h; sourceTree = SOURCE_ROOT; };
+		A6551EC116CEB88700340590 /* ExpandedScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ExpandedScrollView.m; path = iOS/ExpandedScrollView.m; sourceTree = SOURCE_ROOT; };
 		A686E9B916B62915009B070E /* history.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = history.json; path = Common/Data/history.json; sourceTree = "<group>"; };
 		A686E9BB16B6294B009B070E /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "iOS/Default-568h@2x.png"; sourceTree = SOURCE_ROOT; };
 		A686E9BC16B6294B009B070E /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = iOS/Default.png; sourceTree = SOURCE_ROOT; };
@@ -987,6 +990,8 @@
 				A6551E6616CAC1AF00340590 /* FirstUseViewController.m */,
 				A6551EBA16CDAC8A00340590 /* CreditsViewController.h */,
 				A6551EBB16CDAC8A00340590 /* CreditsViewController.m */,
+				A6551EC016CEB88700340590 /* ExpandedScrollView.h */,
+				A6551EC116CEB88700340590 /* ExpandedScrollView.m */,
 			);
 			name = UI;
 			path = InternetMap;
@@ -1446,6 +1451,7 @@
 				A6551E6816CAC1AF00340590 /* FirstUseViewController.m in Sources */,
 				A6551E9A16CAFC7000340590 /* ContactFormViewController.m in Sources */,
 				A6551EBC16CDAC8B00340590 /* CreditsViewController.m in Sources */,
+				A6551EC216CEB88700340590 /* ExpandedScrollView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
