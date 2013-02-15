@@ -8,6 +8,7 @@
 
 #import "ContactFormViewController.h"
 #import "HelperMethods.h"
+#import "ASIFormDataRequest.h"
 
 @interface ContactFormViewController ()
 
@@ -151,6 +152,37 @@
 }
 
 -(IBAction)submit:(id)sender {
+    NSString* platform =  ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) ? @"iPhone" : @"iPad";
+    NSDictionary* postData = @{@"fullName" : self.nameField.text,
+                               @"email" : self.emailField.text,
+                               @"phone" : self.phoneField.text,
+//                               @"company" : @"",
+                               @"LeadSource" : @"Map of the Internet",
+                               @"Website_Source__c" : platform };
+    
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"http://www.peer1.com/lead-submit"]];
+    [request setRequestMethod:@"POST"];
+    [request addRequestHeader:@"Content-Type" value:@"application/json"];
+    
+    NSError* error;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:postData options:0 error:&error];
+    
+    [request appendPostData:data];
+    
+    __weak ASIFormDataRequest* weakRequest = request;
+    
+    [request setCompletionBlock:^{
+        NSError* error = weakRequest.error;
+        NSDictionary* jsonResponse = [NSJSONSerialization JSONObjectWithData:weakRequest.responseData options:NSJSONReadingAllowFragments error:&error];
+        NSLog(@"Send suceeded %d %@ : %@", weakRequest.responseStatusCode, jsonResponse, [[NSString alloc] initWithData:weakRequest.responseData encoding:NSUTF8StringEncoding]);
+    }];
+    
+    [request setFailedBlock:^{
+        NSLog(@"Send failed");
+    }];
+
+    [request startAsynchronous];
+
     [self dismissModalViewControllerAnimated:TRUE];
 }
 
