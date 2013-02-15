@@ -185,9 +185,18 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
+        
+        //handle assorted gestures
         mScaleDetector.onTouchEvent(event);
         mRotateDetector.onTouchEvent(event);
         mGestureDetector.onTouchEvent(event);
+        
+        //ensure we clean up when the touch ends
+        if (event.getAction() == MotionEvent.ACTION_CANCEL || event.getAction() == MotionEvent.ACTION_UP) {
+            Log.d(TAG, "touch end");
+            mController.setAllowIdleAnimation(true);
+        }
+        
         return super.onTouchEvent(event);
     }
 
@@ -733,6 +742,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             int top = location[1];
             int left = location[0];
             Log.d(TAG, String.format("onDown %f %f %d %d", x, y, top, left));
+            mController.setAllowIdleAnimation(false);
             mController.handleTouchDownAtPoint(x - left, y - top);
             return true;
         }
