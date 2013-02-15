@@ -1,7 +1,11 @@
 package com.peer1.internetmap;
 
+import junit.framework.Assert;
+import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -11,12 +15,14 @@ import android.widget.PopupWindow;
 
 public class InfoPopup extends PopupWindow{
     private static String TAG = "InfoPopup";
+    private InternetMap mContext;
 
     public InfoPopup(final InternetMap context, final MapControllerWrapper controller, View view) {
         super(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.translucentBlack)));
         setOutsideTouchable(true);
         setFocusable(true);
+        mContext = context;
 
         final ListView listView = (ListView) getContentView().findViewById(R.id.visualizationList);
         
@@ -35,7 +41,7 @@ public class InfoPopup extends PopupWindow{
                     Log.d(TAG, "TODO: help");
                     break;
                 case 1: //sales
-                    Log.d(TAG, "TODO: sales");
+                    doSales();
                     break;
                 case 2: //credits
                     Log.d(TAG, "TODO: credits");
@@ -48,5 +54,17 @@ public class InfoPopup extends PopupWindow{
         });
     }
 
+    private void doSales() {
+        LayoutInflater layoutInflater = (LayoutInflater)mContext.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View popupView = layoutInflater.inflate(R.layout.contactsales, null);
+        SalesPopup popup = new SalesPopup(mContext, popupView);
+        //show it
+        View mainView = mContext.findViewById(R.id.mainLayout);
+        Assert.assertNotNull(mainView);
+        popup.setWidth(mainView.getWidth());
+        popup.setHeight(mainView.getHeight());
+        int gravity = Gravity.BOTTOM; //to avoid offset issues
+        popup.showAtLocation(mainView, gravity, 0, 0);
+    }
 
 }
