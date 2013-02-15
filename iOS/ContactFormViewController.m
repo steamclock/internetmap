@@ -9,6 +9,7 @@
 #import "ContactFormViewController.h"
 #import "HelperMethods.h"
 #import "ASIFormDataRequest.h"
+#import "MBProgressHUD.h"
 
 @interface ContactFormViewController ()
 
@@ -88,13 +89,13 @@
     }
 
     if(field == self.nameField) {
-        self.nameField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Name" attributes:@{NSForegroundColorAttributeName: color}];
+        self.nameField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Name (Required)" attributes:@{NSForegroundColorAttributeName: color}];
     }
     else if (field == self.phoneField) {
         self.phoneField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Phone" attributes:@{NSForegroundColorAttributeName: color}];
     }
     else if(field == self.emailField) {
-        self.emailField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Email" attributes:@{NSForegroundColorAttributeName: color}];
+        self.emailField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Email (Required)" attributes:@{NSForegroundColorAttributeName: color}];
     }
 }
 
@@ -152,6 +153,27 @@
 }
 
 -(IBAction)submit:(id)sender {
+    // suppress forms that are gonna fail
+    if((self.nameField.text.length == 0) || (self.emailField.text.length == 0)) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Missing required fields" message:@"Please enter both a name and email address." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    
+    void (^failure)() = ^{
+        [self dismissModalViewControllerAnimated:TRUE];
+        
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Network Error" message:@"Could not complete the contact request. Please try again later." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    };
+    
+    MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.removeFromSuperViewOnHide = YES;
+    hud.mode = MBProgressHUDModeIndeterminate;
+    hud.labelText = @"Sending contact request...";
+    
+    [hud show:YES];
+
     NSString* platform =  ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) ? @"iPhone" : @"iPad";
     NSDictionary* postData = @{@"fullName" : self.nameField.text,
                                @"email" : self.emailField.text,
@@ -164,8 +186,13 @@
     [request setRequestMethod:@"POST"];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
     
-    NSError* error;
+    NSError* error = nil;
     NSData *data = [NSJSONSerialization dataWithJSONObject:postData options:0 error:&error];
+    
+    if(error) {
+        failure();
+        return;
+    }
     
     [request appendPostData:data];
     
@@ -174,16 +201,27 @@
     [request setCompletionBlock:^{
         NSError* error = weakRequest.error;
         NSDictionary* jsonResponse = [NSJSONSerialization JSONObjectWithData:weakRequest.responseData options:NSJSONReadingAllowFragments error:&error];
-        NSLog(@"Send suceeded %d %@ : %@", weakRequest.responseStatusCode, jsonResponse, [[NSString alloc] initWithData:weakRequest.responseData encoding:NSUTF8StringEncoding]);
+        
+        NSLog(@"Got contact response %d %@", weakRequest.responseStatusCode, jsonResponse);
+
+        if(weakRequest.responseStatusCode == 200) {
+            hud.mode = MBProgressHUDModeText;
+            hud.labelText = @"Sent request";
+            
+            [hud hide:YES afterDelay:1.0];
+            
+            [[SCDispatchQueue mainQueue] dispatchAfter:1.0f block:^{
+                [self dismissModalViewControllerAnimated:TRUE];
+            }];
+        }
+        else {
+            failure();
+        }
     }];
     
-    [request setFailedBlock:^{
-        NSLog(@"Send failed");
-    }];
-
+    [request setFailedBlock:failure];
+    
     [request startAsynchronous];
-
-    [self dismissModalViewControllerAnimated:TRUE];
 }
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
