@@ -20,6 +20,7 @@
 #import "ExpandedSlider.h"
 #import "FirstUseViewController.h"
 #import "ContactFormViewController.h"
+#import "CreditsViewController.h"
 
 // Below import for testing BSD traceroute only
 #import "main-traceroute.h"
@@ -490,6 +491,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self presentModalViewController:contact animated:YES];
 }
 
+-(void)showCredits {
+    CreditsViewController* credits = [[CreditsViewController alloc] initWithNibName:nil bundle:[NSBundle mainBundle]];
+    [self presentModalViewController:credits animated:YES];
+}
+
 -(void)selectYouAreHereNode {
     if ([HelperMethods deviceHasInternetConnection]) {
         //fetch current ASN and select node
@@ -589,7 +595,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.peer1.com"]];
                     break;
                 case 3: //credits
-                    NSLog(@"TODO: credits");
+                    [self showCredits];
                     break;
                 default: //can't happen
                     NSLog(@"Unexpected info index %d!!", index);
