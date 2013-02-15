@@ -53,7 +53,7 @@ Other Android Gotchas & Advice
 
 - printf doesn't output to the log window in Eclipse, I added a 'LOG' macro to Types.hpp that maps to the right log function on Android and printf on iOS.
 
-- You need an actual android device set up for dev (OpenGL ES 2 doesn't work in the simulator)
+- Using an actual android device for dev is recommended. Using the emulator is possible, see instructions below on how to set it up and make it run a bit faster.
 
 - Some devices need to be put in developer mode or otherwise set up before they can be used. 
 	Nexus 7 : http://jaymartinez.blogspot.ca/2012/11/enable-developer-mode-on-nexus-7.html
