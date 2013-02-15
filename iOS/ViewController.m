@@ -246,6 +246,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         [[NSUserDefaults standardUserDefaults] synchronize];
         [self showFirstUse];
     }
+    
+    // When coming back from one of the modals (Help, credits, etc), we want to redisplay the info for the current node
+    // because we hid it when we brought up the info menu popover
+    [self displayInformationPopoverForCurrentNode];
 }
 
 - (void)fadeOutLogo {
@@ -459,6 +463,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if (self.timelineButton.selected) {
         [self leaveTimelineMode];
     }
+    
     [self dismissNodeInfoPopover];
     
     if (!self.nodeSearchPopover) {
@@ -531,6 +536,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if (self.timelineButton.selected) {
         [self leaveTimelineMode];
     }
+    
+    [self dismissNodeInfoPopover];
+
     if (!self.visualizationSelectionPopover) {
         StringListViewController *tableforPopover = [[StringListViewController alloc] initWithStyle:UITableViewStylePlain];
         [tableforPopover setHighlightCurrentRow:YES];
@@ -568,6 +576,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(IBAction)infoButtonPressed:(id)sender {
+    [self dismissNodeInfoPopover];
+
     if (!self.infoPopover) {
         StringListViewController *tableforPopover = [[StringListViewController alloc] initWithStyle:UITableViewStylePlain];
         [tableforPopover setHighlightCurrentRow:NO];
@@ -600,7 +610,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                 default: //can't happen
                     NSLog(@"Unexpected info index %d!!", index);
             }
+            
             [weakSelf.infoPopover dismissPopoverAnimated:YES];
+            
             weakSelf.infoButton.selected = NO;
         };
     }
@@ -931,14 +943,17 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 #pragma mark - WEPopover Delegate
 
 //Pretty sure these don't get called for NodeInfoPopover, but will get called for other popovers if we set delegates, yo
-- (void)popoverControllerDidDismissPopover:(WEPopoverController *)popoverController{
-
+- (void)popoverControllerDidDismissPopover:(WEPopoverController *)popoverController {
 }
 
 - (BOOL)popoverControllerShouldDismissPopover:(WEPopoverController *)popoverController{
     self.visualizationsButton.selected = NO;
     self.infoButton.selected = NO;
     self.searchButton.selected = NO;
+    
+    // Reshow the node info popover that we hid when the button was pressed
+    [self displayInformationPopoverForCurrentNode];
+    
     return YES;
 }
 
