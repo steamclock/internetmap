@@ -175,7 +175,7 @@ JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nodeBy
     NodePointer node = controller->data->nodesByAsn[asnCstr];
     jenv->ReleaseStringUTFChars(asn, asnCstr);
 
-    if(node->isActive()) {
+    if(node != NULL && node->isActive()) {
         jobject wrapper = wrapNode(jenv, node);
 
         renderer->endControllerModification();
