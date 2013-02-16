@@ -124,3 +124,14 @@ A few caveats:
 - The emulator is really slow at startup. openGL performance isn't too bad though.
 - The emulator doesn't support multi-touch.
 
+
+Building for HockeyApp
+=========================
+
+The easiest way to upload is to just drag the apk (Android/bin/InternetMap.apk) from finder to the web app. But watch out for a few things:
+
+- Don't use Project->Build Project, it does not update the .apk. Use Run instead, that will update it. if in doubt, check the timestamp.
+- Update the version number in the manifest to make checking for updates work.
+- Hockeyapp itself cannot be installed on devices with no SD card; it's not clear whether Internetmap itself could be installed if you typed out the full download url.
+
+
