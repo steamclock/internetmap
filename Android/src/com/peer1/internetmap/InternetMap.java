@@ -156,6 +156,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     protected void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "onDestroy()");
+        UpdateManager.unregister(); 
         nativeOnDestroy();
     }
 
