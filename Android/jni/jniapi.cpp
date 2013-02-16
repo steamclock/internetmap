@@ -265,6 +265,12 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_setAllowI
     renderer->endControllerModification();
 }
 
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_unhoverNode(JNIEnv* jenv, jobject obj) {
+    MapController* controller = renderer->beginControllerModification();
+    controller->unhoverNode();
+    renderer->endControllerModification();
+}
+
 JNIEXPORT jstring JNICALL Java_com_peer1_internetmap_NodeWrapper_nativeFriendlyDescription(JNIEnv* jenv, jobject obj, int index) {
     MapController* controller = renderer->beginControllerModification();
     if (index < 0 || index >= controller->data->nodes.size()) {

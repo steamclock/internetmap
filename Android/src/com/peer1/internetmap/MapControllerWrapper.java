@@ -20,4 +20,5 @@ public class MapControllerWrapper {
     public native void deselectCurrentNode();
     public native void resetZoomAndRotationAnimated(boolean isPortraitMode);
     public native void setAllowIdleAnimation(boolean allow);
+    public native void unhoverNode();
 }

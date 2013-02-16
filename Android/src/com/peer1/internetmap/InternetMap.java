@@ -203,6 +203,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         if (event.getAction() == MotionEvent.ACTION_CANCEL || event.getAction() == MotionEvent.ACTION_UP) {
             Log.d(TAG, "touch end");
             mController.setAllowIdleAnimation(true);
+            mController.unhoverNode();
         }
         
         return super.onTouchEvent(event);
