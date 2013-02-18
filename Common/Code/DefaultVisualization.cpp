@@ -85,9 +85,11 @@ void DefaultVisualization::updateDisplayForNodes(shared_ptr<DisplayNodes> displa
 
 void DefaultVisualization::updateLineDisplay(shared_ptr<MapDisplay> display, std::vector<ConnectionPointer>connections) {
     // Disabling default lines entirely for now, but leaving th code in case we want to renable it (in some cases) later
+    display->visualizationLines = shared_ptr<DisplayLines>();
     return;
     
     if (deviceIsOld()) {
+        display->visualizationLines = shared_ptr<DisplayLines>();
         return;
     }
     

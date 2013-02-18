@@ -290,6 +290,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self dismissNodeInfoPopover];
     if (![self.controller selectHoveredNode]) { //couldn't select node
         [self.controller deselectCurrentNode];
+        [self.controller resetZoomAndRotationAnimatedForOrientation:![HelperMethods deviceIsiPad]];
     }
 }
 
@@ -938,6 +939,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 -(void)doneTapped{
     [self dismissNodeInfoPopover];
     [self.controller deselectCurrentNode];
+    [self.controller resetZoomAndRotationAnimatedForOrientation:![HelperMethods deviceIsiPad]];
 }
 
 #pragma mark - WEPopover Delegate

@@ -17,10 +17,14 @@ public:
 
     virtual Point3 nodePosition(NodePointer node);
     virtual Color nodeColor(NodePointer node);
-    
+    virtual float nodeSize(NodePointer node);
+
     virtual std::string name(void) { return "Globe View"; }
     
     static void setPortrait(bool);
+    
+    void updateLineDisplay(shared_ptr<MapDisplay> display, std::vector<ConnectionPointer>connections);
+
 };
 
 #endif /* defined(__InternetMap__GlobeVisualization__) */
