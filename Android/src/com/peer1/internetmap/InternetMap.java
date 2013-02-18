@@ -211,6 +211,10 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     public void visualizationsButtonPressed(View view) {
         dismissPopups();
 
+        //make the button change sooner, and don't let them toggle the button while we're loading
+        final ToggleButton button = (ToggleButton)findViewById(R.id.visualizationsButton);
+        button.setChecked(true);
+        
         if (mVisualizationPopup == null) {
             LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
             View popupView = layoutInflater.inflate(R.layout.visualizationview, null);
@@ -218,7 +222,6 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             mVisualizationPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 public void onDismiss() {
                     mVisualizationPopup = null;
-                    ToggleButton button = (ToggleButton)findViewById(R.id.visualizationsButton);
                     button.setChecked(false);
                 }
             });
@@ -239,6 +242,10 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
     public void infoButtonPressed(View view) {
         dismissPopups();
+        
+        //make the button change sooner, and don't let them toggle the button while we're loading
+        final ToggleButton button = (ToggleButton)findViewById(R.id.infoButton);
+        button.setChecked(true);
 
         if (mInfoPopup == null) {
             LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -247,7 +254,6 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             mInfoPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 public void onDismiss() {
                     mInfoPopup = null;
-                    ToggleButton button = (ToggleButton)findViewById(R.id.infoButton);
                     button.setChecked(false);
                 }
             });
@@ -258,6 +264,10 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     public void searchButtonPressed(View view) {
         dismissPopups();
 
+        //make the button change sooner, and don't let them toggle the button while we're loading
+        final ToggleButton button = (ToggleButton)findViewById(R.id.searchButton);
+        button.setChecked(true);
+        
         if (mSearchPopup == null) {
             LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
             View popupView = layoutInflater.inflate(R.layout.searchview, null);
@@ -265,7 +275,6 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             mSearchPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 public void onDismiss() {
                     mSearchPopup = null;
-                    ToggleButton button = (ToggleButton)findViewById(R.id.searchButton);
                     button.setChecked(false);
                 }
             });
