@@ -261,17 +261,22 @@ void MapData::loadASInfo(const std::string& json){
             NodePointer node = nodesByAsn[members[i]];
             if (node) {
                 Json::Value as = root[members[i]];
-                node->name = as[1].asString();
-                node->rawTextDescription = as[5].asString();
-                node->dateRegistered = as[3].asString();
-                node->address = as[7].asString();
-                node->city = as[8].asString();
-                node->state = as[9].asString();
-                node->postalCode = as[10].asString();
-                node->country = as[11].asString();
+//                node->name = as[1].asString();
+//                node->rawTextDescription = as[5].asString();
+//                node->dateRegistered = as[3].asString();
+//                node->address = as[7].asString();
+//                node->city = as[8].asString();
+//                node->state = as[9].asString();
+//                node->postalCode = as[10].asString();
+//                node->country = as[11].asString();
+//                node->hasLatLong = true;
+//                node->latitude = as[12].asFloat()*2.0*3.14159/360.0;
+//                node->longitude = as[13].asFloat()*2.0*3.14159/360.0;
+
+                node->rawTextDescription = as[0].asString();
                 node->hasLatLong = true;
-                node->latitude = as[12].asFloat()*2.0*3.14159/360.0;
-                node->longitude = as[13].asFloat()*2.0*3.14159/360.0;
+                node->latitude = as[1].asFloat()*2.0*3.14159/360.0;
+                node->longitude = as[2].asFloat()*2.0*3.14159/360.0;
             }
         }
     }
