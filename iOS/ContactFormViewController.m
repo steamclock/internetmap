@@ -134,10 +134,10 @@
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField {
     if(textField == self.nameField) {
-        [self.phoneField becomeFirstResponder];
-    }
-    else if(textField == self.phoneField) {
         [self.emailField becomeFirstResponder];
+    }
+    else if(textField == self.emailField) {
+        [self.phoneField becomeFirstResponder];
     }
     else {
         if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
@@ -178,7 +178,7 @@
     NSDictionary* postData = @{@"fullName" : self.nameField.text,
                                @"email" : self.emailField.text,
                                @"phone" : self.phoneField.text,
-//                               @"company" : @"",
+                               @"company" : @"Unknown",
                                @"LeadSource" : @"Map of the Internet",
                                @"Website_Source__c" : platform };
     
