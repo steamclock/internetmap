@@ -23,8 +23,10 @@
     <string name="loading">Loading %s...</string>
     <string name="contactSalesHeader">Contact Sales</string>
     <string name="contactSalesBlurb">Peer 1 is a service leader you can rely on to always deliver on our uptime promise</string>
-    <string name="nameHint">Name</string>
+    <string name="nameHint">Name (Required)</string>
     <string name="phoneHint">Phone</string>
-    <string name="emailHint">Email</string>
+    <string name="emailHint">Email (Required)</string>
     <string name="submit">Submit</string>
+    <string name="requiredName">Name cannot be empty.</string>
+    <string name="requiredEmail">Email cannot be empty.</string>
 </resources>

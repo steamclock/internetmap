@@ -58,20 +58,20 @@
         </EditText>
 
         <EditText
-            android:id="@+id/phoneEdit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/phoneHint"
-            android:inputType="phone" />
-
-        <EditText
             android:id="@+id/emailEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/emailHint"
             android:inputType="textEmailAddress" />
+
+        <EditText
+            android:id="@+id/phoneEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/phoneHint"
+            android:inputType="phone" />
 
         <Button
             android:id="@+id/submitButton"
