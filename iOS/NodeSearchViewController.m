@@ -145,6 +145,7 @@
     }
     
     cell.textLabel.textColor = [UIColor whiteColor];
+    cell.accessoryView = nil;
 
     int row = indexPath.row;
     
@@ -155,6 +156,7 @@
                 cell.textLabel.text = [NSString stringWithFormat:@"Find host '%@'", [self.textField.text lowercaseString] ];
             } else {
                 cell.textLabel.text = @"Your Location";
+                cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"youarehere_selected.png"]];
             }
             cell.textLabel.textColor = UI_ORANGE_COLOR;
             return cell;
