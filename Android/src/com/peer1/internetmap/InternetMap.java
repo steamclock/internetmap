@@ -95,7 +95,6 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
         timelineBar.setOnSeekBarChangeListener(new TimelineListener());
 
-
         //fade out logo a bit after
         ImageView logo = (ImageView) findViewById(R.id.peerLogo);
         AlphaAnimation anim = new AlphaAnimation(1, 0.3f);
@@ -426,6 +425,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
             timelineBar.setProgress(timelineBar.getMax());
             timelineBar.setVisibility(View.VISIBLE);
+            timelineBar.requestLayout(); //hack to work around SurfaceView bug on some phones
+            
             mInTimelineMode = true;
             //reset the node popup, the lazy way
             if (mNodePopup != null) mNodePopup.dismiss();
