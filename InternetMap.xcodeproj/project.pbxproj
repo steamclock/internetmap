@@ -1574,7 +1574,7 @@
 					"\"$(SRCROOT)/Android/obj/local/armeabi\"",
 					"\"$(SRCROOT)/External Code/TestFlightSDK\"",
 				);
-				PRODUCT_NAME = internetmap;
+				PRODUCT_NAME = "Internet Map";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				STRIP_INSTALLED_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
@@ -1639,7 +1639,7 @@
 					"\"$(SRCROOT)/Android/obj/local/armeabi\"",
 					"\"$(SRCROOT)/External Code/TestFlightSDK\"",
 				);
-				PRODUCT_NAME = internetmap;
+				PRODUCT_NAME = "Internet Map";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
@@ -1733,7 +1733,7 @@
 					"\"$(SRCROOT)/Android/obj/local/armeabi\"",
 					"\"$(SRCROOT)/External Code/TestFlightSDK\"",
 				);
-				PRODUCT_NAME = internetmap;
+				PRODUCT_NAME = "Internet Map";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1754,7 +1754,7 @@
 					"\"$(SRCROOT)/Android/obj/local/armeabi\"",
 					"\"$(SRCROOT)/External Code/TestFlightSDK\"",
 				);
-				PRODUCT_NAME = internetmap;
+				PRODUCT_NAME = "Internet Map";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
