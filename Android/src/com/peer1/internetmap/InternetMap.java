@@ -642,6 +642,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                     public void onDismiss() {
                         mNodePopup = null;
                         mController.deselectCurrentNode();
+                        mController.resetZoomAndRotationAnimated(isSmallScreen());
                     }
                 });
             }
