@@ -503,6 +503,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(void)selectYouAreHereNode {
+    [self.nodeSearchPopover dismissPopoverAnimated:YES];
+    self.searchButton.selected = NO;
+
     if ([HelperMethods deviceHasInternetConnection]) {
         //fetch current ASN and select node
         if (!self.isCurrentlyFetchingASN) {
