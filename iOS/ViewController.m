@@ -934,6 +934,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.nodeInformationViewController.tracerouteTextView.textColor = [UIColor redColor];
     self.nodeInformationViewController.tracerouteTextView.text = @"Error: ASN couldn't be resolved into IP. Please try another node!";
     
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        [self.errorInfoView setErrorString:@"Failed to get IP for ASN."];
+    }
+
     [self.nodeInformationViewController.tracerouteTimer invalidate];
     [self.nodeInformationViewController tracerouteDone];
     [self resizeNodeInfoPopover];
