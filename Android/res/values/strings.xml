@@ -29,4 +29,7 @@
     <string name="submit">Submit</string>
     <string name="requiredName">Name cannot be empty.</string>
     <string name="requiredEmail">Email cannot be empty.</string>
+    <string name="submitSuccess">Message Sent.</string>
+    <string name="submitFail">Could not complete the contact request. Please try again later.</string>
+    <string name="submitFailInvalid">Could not complete the contact request; one or more fields are invalid.</string>
 </resources>

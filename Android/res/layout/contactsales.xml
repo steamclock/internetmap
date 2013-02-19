@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/translucentBlack"
     android:orientation="vertical" >
-
+    
     <LinearLayout
         android:id="@+id/headerLayout"
         android:layout_width="match_parent"
@@ -73,14 +73,26 @@
             android:hint="@string/phoneHint"
             android:inputType="phone" />
 
-        <Button
-            android:id="@+id/submitButton"
+        <RelativeLayout
+            android:id="@+id/submitLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/traceroute_button"
-            android:text="@string/submit" />
+            android:layout_gravity="center_horizontal" >
 
+            <Button
+                android:id="@+id/submitButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/traceroute_button"
+                android:text="@string/submit" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="invisible" />
+        </RelativeLayout>
     </LinearLayout>
 
 </LinearLayout>
