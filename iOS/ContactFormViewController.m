@@ -15,6 +15,7 @@
 
 @property (strong) IBOutlet UILabel* titleLabel;
 @property (strong) IBOutlet UILabel* blurbLabel;
+@property (strong) IBOutlet UILabel* footerLabel;
 
 @property (strong) IBOutlet UIImageView* background;
 @property (strong) IBOutlet UIScrollView* container;
@@ -47,6 +48,7 @@
     
     self.titleLabel.font = [UIFont fontWithName:FONT_NAME_MEDIUM size:22.0];
     self.blurbLabel.font = [UIFont fontWithName:FONT_NAME_MEDIUM size:14.0];
+    self.footerLabel.font = [UIFont fontWithName:FONT_NAME_MEDIUM size:12.0];
     
     UIImage* fieldBackground = [[UIImage imageNamed:@"contact-sales-field.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(16, 16, 16, 16)];
     [self.nameBackground setImage:fieldBackground];
