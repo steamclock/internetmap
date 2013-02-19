@@ -61,6 +61,9 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
 - (id)init {
     if (self = [super init]) {
         _controller = new MapController();
+        
+        _controller->display->camera->resetZoomAndRotationAnimated(![HelperMethods deviceIsiPad]);
+
         if(![HelperMethods deviceIsiPad]) {
             // On phone we want a slightly different starting camera rotation/orientation
             // so the long axis is aligned vertically
