@@ -292,6 +292,9 @@ bool Renderer::initialize() {
         // so the long axis is aligned vertically
         _mapController->display->camera->rotateRadiansZ(M_PI_2);
         _mapController->display->camera->zoomByScale(-0.5);
+
+        //give the camera a kick (there's a hack in there to fix the globe orientation)
+        _mapController->display->camera->resetZoomAndRotationAnimated(true);
     }
 
     _mapController->display->setDisplayScale(_displayScale);
