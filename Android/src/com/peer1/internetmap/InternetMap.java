@@ -114,7 +114,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         setRequestedOrientation(orientation);
     }
 
-    public String readFileAsString(String filePath) throws java.io.IOException {
+    public byte[] readFileAsBytes(String filePath) throws java.io.IOException {
         Log.i(TAG, String.format("Reading %s", filePath));
         InputStream input = getAssets().open(filePath);
 
@@ -123,8 +123,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         input.read(buffer);
         input.close();
 
-        // byte buffer into a string
-        return new String(buffer);
+        return buffer;
     }
 
     @Override
@@ -400,7 +399,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             if (mTimelineHistory == null) {
                 //load history data & init the timeline bounds
                 try {
-                    mTimelineHistory = new JSONObject(readFileAsString("data/history.json"));
+                    mTimelineHistory = new JSONObject(new String(readFileAsBytes("data/history.json")));
                 } catch (JSONException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();

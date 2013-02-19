@@ -313,14 +313,21 @@ void loadTextResource(std::string* resource, const std::string& base, const std:
 
     jstring javaString = env->NewStringUTF(final.c_str());
     jclass klass = env->GetObjectClass(activity);
-    jmethodID methodID = env->GetMethodID(klass, "readFileAsString", "(Ljava/lang/String;)Ljava/lang/String;");
-    jstring result = (jstring)env->CallObjectMethod(activity, methodID, javaString);
+    jmethodID methodID = env->GetMethodID(klass, "readFileAsBytes", "(Ljava/lang/String;)[B");
+    jbyteArray result = (jbyteArray)env->CallObjectMethod(activity, methodID, javaString);
     env->DeleteLocalRef(javaString);
+    env->DeleteLocalRef(klass);
 
-    const char* resultChars = env->GetStringUTFChars(result,0);
+    //LOG("starting jni copy");
+    jboolean isCopy;
+    jbyte* resultChars = env->GetByteArrayElements(result, &isCopy);
+    //LOG("done jni copy: %d", isCopy);
+    jsize size = env->GetArrayLength(result);
 
-    *resource = resultChars;
-    env->ReleaseStringUTFChars(result,resultChars);
+    //LOG("jbytearray size: %d", size);
+    resource->assign((const char*)resultChars, size);
+    //LOG("stdstring size: %d", resource->length());
+    env->ReleaseByteArrayElements(result, resultChars, JNI_ABORT);
     env->DeleteLocalRef(result);
 }
 
