@@ -2,7 +2,9 @@ package com.peer1.internetmap;
 
 import junit.framework.Assert;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -26,10 +28,11 @@ public class InfoPopup extends PopupWindow{
 
         final ListView listView = (ListView) getContentView().findViewById(R.id.visualizationList);
         
-        String[] values = new String[3];
+        String[] values = new String[4];
         values[0] = context.getString(R.string.infoHelp);
         values[1] = context.getString(R.string.infoSales);
-        values[2] = context.getString(R.string.infoCredits);
+        values[2] = context.getString(R.string.infoLink);
+        values[3] = context.getString(R.string.infoCredits);
         
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, android.R.id.text1, values);
         listView.setAdapter(adapter);
@@ -43,7 +46,12 @@ public class InfoPopup extends PopupWindow{
                 case 1: //sales
                     doSales();
                     break;
-                case 2: //credits
+                case 2: //link
+                    Log.d(TAG, "TODO: link");
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.peer1.com/node/3325"));
+                    mContext.startActivity(browserIntent);
+                    break;
+                case 3: //credits
                     Log.d(TAG, "TODO: credits");
                     break;
                 default:
