@@ -34,8 +34,8 @@ MapController::MapController() :
     data = shared_ptr<MapData>(new MapData());
     display = shared_ptr<MapDisplay>(new MapDisplay());
 
-    _visualizations.push_back(VisualizationPointer(new DefaultVisualization()));
     _visualizations.push_back(VisualizationPointer(new GlobeVisualization()));
+    _visualizations.push_back(VisualizationPointer(new DefaultVisualization()));
 //    _visualizations.push_back(VisualizationPointer(new TypeVisualization("EDU", AS_EDU)));
 //    _visualizations.push_back(VisualizationPointer(new TypeVisualization("T1", AS_T1)));
     
