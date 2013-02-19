@@ -48,8 +48,19 @@ void MapDisplay::bindDefaultNodeUniforms(shared_ptr<Program> program) {
     glUniformMatrix4fv(program->uniformForName("modelViewMatrix"), 1, 0, reinterpret_cast<float*>(&mv));
     glUniformMatrix4fv(program->uniformForName("projectionMatrix"), 1, 0, reinterpret_cast<float*>(&p));
     glUniform1f(program->uniformForName("maxSize"), maxPointSize); // Largest size to render a node. May be too large for slow devices
+    
+    // On iOS display size is in logical pixels, so we need to include display scale as well
+    // On Android the display size is in physical pixels, so we don't apply the display scale here
+    // We still use the display scale on logicial elements (like the max point size above,
+    // or the line width), so that we wont have (for example) point size capping out early and making
+    // things much smaller on high density android devices
+#ifdef ANDROID
+    glUniform1f(program->uniformForName("screenWidth"), camera->displayWidth());
+    glUniform1f(program->uniformForName("screenHeight"), camera->displayHeight());
+#else
     glUniform1f(program->uniformForName("screenWidth"), _displayScale * camera->displayWidth());
     glUniform1f(program->uniformForName("screenHeight"), _displayScale * camera->displayHeight());
+#endif
 }
 
 void MapDisplay::draw(void)
@@ -80,7 +91,13 @@ void MapDisplay::draw(void)
     
 #ifndef BUILD_MAC
     // Mac does viewport trickery for the high-res screenshots, don't want to get up in it's areas
+    // on iOS display size is in logical pixels, so we need to include display scale as well
+    // On android the display size is in physical pixels, so we don't apply the display scale here
+#ifdef ANDROID
+    glViewport(0, 0, camera->displayWidth(), camera->displayHeight());
+#else
     glViewport(0, 0, camera->displayWidth() * _displayScale, camera->displayHeight() * _displayScale);
+#endif
 #endif
     
     if (selectedNodes) {
