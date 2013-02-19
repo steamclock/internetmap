@@ -39,11 +39,15 @@ void MapDisplay::update(TimeInterval currentTime) {
 }
 
 void MapDisplay::bindDefaultNodeUniforms(shared_ptr<Program> program) {
+    float pointSizeRange[2];
+    glGetFloatv(GL_ALIASED_POINT_SIZE_RANGE, pointSizeRange);
+    float maxPointSize = std::min(pointSizeRange[1], _displayScale * 300.0f);
+
     Matrix4 mv = camera->currentModelView();
     Matrix4 p = camera->currentProjection();
     glUniformMatrix4fv(program->uniformForName("modelViewMatrix"), 1, 0, reinterpret_cast<float*>(&mv));
     glUniformMatrix4fv(program->uniformForName("projectionMatrix"), 1, 0, reinterpret_cast<float*>(&p));
-    glUniform1f(program->uniformForName("maxSize"), _displayScale * 300.0f); // Largest size to render a node. May be too large for slow devices
+    glUniform1f(program->uniformForName("maxSize"), maxPointSize); // Largest size to render a node. May be too large for slow devices
     glUniform1f(program->uniformForName("screenWidth"), _displayScale * camera->displayWidth());
     glUniform1f(program->uniformForName("screenHeight"), _displayScale * camera->displayHeight());
 }
@@ -72,6 +76,7 @@ void MapDisplay::draw(void)
     glEnable(GL_POINT_SPRITE_OES);
     
     glEnable(GL_LINE_SMOOTH);
+    glEnable(GL_POINT_SMOOTH);
     
 #ifndef BUILD_MAC
     // Mac does viewport trickery for the high-res screenshots, don't want to get up in it's areas
