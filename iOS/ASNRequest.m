@@ -56,7 +56,7 @@ static const int TIMEOUT = 10;
         result(nil);
     }
 
-    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"http://72.51.24.24:8080/iptoasn"]];
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"http://asnl.peer1.com/v1/iptoasn"]];
     [request setTimeOutSeconds:TIMEOUT];
     [request setRequestMethod:@"POST"];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
@@ -83,7 +83,7 @@ static const int TIMEOUT = 10;
 
 
 +(void)fetchIPsForASN:(NSString*)asn response:(ASNArrayResponseBlock)response {
-    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"http://72.51.24.24:8080/asntoips"]];
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"http://asnl.peer1.com/v1/asntoips"]];
     [request setTimeOutSeconds:TIMEOUT];
     [request setRequestMethod:@"POST"];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
@@ -180,7 +180,7 @@ static const int TIMEOUT = 10;
 
 
 + (void)fetchGlobalIPWithCompletionBlock:(ASNStringResponseBlock)completion {
-    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"http://72.51.24.24:8080/ip"]];
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"http://asnl.peer1.com/v1/ip"]];
     [request setTimeOutSeconds:TIMEOUT];
     [request setRequestMethod:@"POST"];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
