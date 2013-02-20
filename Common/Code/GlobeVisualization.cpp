@@ -82,7 +82,8 @@ void GlobeVisualization::updateLineDisplay(shared_ptr<MapDisplay> display, std::
     
     int currentIndex = 0;
     
-    float intensity = 0.2;
+    float intensity = 0.12;
+    float highlightIntensity = 0.17;
     
     lines->beginUpdate();
     
@@ -112,9 +113,10 @@ void GlobeVisualization::updateLineDisplay(shared_ptr<MapDisplay> display, std::
             Color lineColorA = Color(intensity, intensity,intensity, 1.0);
             Color lineColorB = Color(intensity, intensity, intensity, 1.0);
 
+            // Equator and artic circle get a little brightness bump
             if((j == 10) || (j==2) || (j==18)) {
-                lineColorA = Color(0.4f, 0.4f, 0.4f, 1.0f);
-                lineColorB = Color(0.4f, 0.4f, 0.4f, 1.0f);
+                lineColorA = Color(highlightIntensity, highlightIntensity, highlightIntensity, 1.0f);
+                lineColorB = Color(highlightIntensity, highlightIntensity, highlightIntensity, 1.0f);
             }
             Point3 positionA = polarToCartesian(latitude, longitude, 1.1);
             Point3 positionB = polarToCartesian(latitude, nextLongitude, 1.1);
