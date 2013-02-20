@@ -155,6 +155,10 @@
 }
 
 -(IBAction)submit:(id)sender {
+    [self.nameField resignFirstResponder];
+    [self.emailField resignFirstResponder];
+    [self.phoneField resignFirstResponder];
+    
     // suppress forms that are gonna fail
     if((self.nameField.text.length == 0) || (self.emailField.text.length == 0)) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Missing required fields" message:@"Please enter both a name and email address." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
