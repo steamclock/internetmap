@@ -47,12 +47,11 @@ public class InfoPopup extends PopupWindow{
                     doSales();
                     break;
                 case 2: //link
-                    Log.d(TAG, "TODO: link");
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.peer1.com/node/3325"));
                     mContext.startActivity(browserIntent);
                     break;
                 case 3: //credits
-                    Log.d(TAG, "TODO: credits");
+                    doCredits();
                     break;
                 default:
                     Log.e(TAG, "can't happen");
@@ -66,6 +65,19 @@ public class InfoPopup extends PopupWindow{
         LayoutInflater layoutInflater = (LayoutInflater)mContext.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View popupView = layoutInflater.inflate(R.layout.contactsales, null);
         SalesPopup popup = new SalesPopup(mContext, popupView);
+        //show it
+        View mainView = mContext.findViewById(R.id.mainLayout);
+        Assert.assertNotNull(mainView);
+        popup.setWidth(mainView.getWidth());
+        popup.setHeight(mainView.getHeight());
+        int gravity = Gravity.BOTTOM; //to avoid offset issues
+        popup.showAtLocation(mainView, gravity, 0, 0);
+    }
+    
+    private void doCredits() {
+        LayoutInflater layoutInflater = (LayoutInflater)mContext.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View popupView = layoutInflater.inflate(R.layout.credits, null);
+        CreditsPopup popup = new CreditsPopup(mContext, popupView);
         //show it
         View mainView = mContext.findViewById(R.id.mainLayout);
         Assert.assertNotNull(mainView);
