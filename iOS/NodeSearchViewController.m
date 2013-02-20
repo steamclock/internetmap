@@ -122,7 +122,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return (self.searchResults.count ? self.searchResults.count : 1) + ([self haveSpecialFirstItem] ? 1 : 0);
+    return self.searchResults.count + 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -168,6 +168,10 @@
     
     //make a regular item
     if (row >= self.searchResults.count) {
+        // I don't think it ever actually gets in here any more (it only shows this text if there
+        // are no results and no special item, i.e. find host, and it shoudl always show find
+        // hos tif there are no results. Gonna leave it jsut in case for now.
+        // TODO: investigate
         cell.textLabel.text = @"No results found";
     }else {
         NodeWrapper* node = self.searchResults[row];
