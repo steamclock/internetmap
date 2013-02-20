@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A6F3F55D1640F1FB0070E6AE"
-               BuildableName = "Internet Map.app"
-               BlueprintName = "InternetMap"
+               BuildableName = "internetmap.app"
+               BlueprintName = "Internet Map"
                ReferencedContainer = "container:InternetMap.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -33,8 +33,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A6F3F55D1640F1FB0070E6AE"
-            BuildableName = "Internet Map.app"
-            BlueprintName = "InternetMap"
+            BuildableName = "internetmap.app"
+            BlueprintName = "Internet Map"
             ReferencedContainer = "container:InternetMap.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -52,8 +52,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A6F3F55D1640F1FB0070E6AE"
-            BuildableName = "Internet Map.app"
-            BlueprintName = "InternetMap"
+            BuildableName = "internetmap.app"
+            BlueprintName = "Internet Map"
             ReferencedContainer = "container:InternetMap.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -70,8 +70,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A6F3F55D1640F1FB0070E6AE"
-            BuildableName = "Internet Map.app"
-            BlueprintName = "InternetMap"
+            BuildableName = "internetmap.app"
+            BlueprintName = "Internet Map"
             ReferencedContainer = "container:InternetMap.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

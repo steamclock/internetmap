@@ -1227,9 +1227,9 @@
 			productReference = A6551E4616C5CBF600340590 /* libExternalCode.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		A6F3F55D1640F1FB0070E6AE /* InternetMap */ = {
+		A6F3F55D1640F1FB0070E6AE /* Internet Map */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A6F3F58D1640F1FB0070E6AE /* Build configuration list for PBXNativeTarget "InternetMap" */;
+			buildConfigurationList = A6F3F58D1640F1FB0070E6AE /* Build configuration list for PBXNativeTarget "Internet Map" */;
 			buildPhases = (
 				A6F3F55A1640F1FB0070E6AE /* Sources */,
 				A6F3F55B1640F1FB0070E6AE /* Frameworks */,
@@ -1239,7 +1239,7 @@
 			);
 			dependencies = (
 			);
-			name = InternetMap;
+			name = "Internet Map";
 			productName = InternetMap;
 			productReference = A6F3F55E1640F1FB0070E6AE /* internetmap.app */;
 			productType = "com.apple.product-type.application";
@@ -1266,7 +1266,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A6F3F55D1640F1FB0070E6AE /* InternetMap */,
+				A6F3F55D1640F1FB0070E6AE /* Internet Map */,
 				A6551E4516C5CBF600340590 /* ExternalCode */,
 			);
 		};
@@ -1574,7 +1574,7 @@
 					"\"$(SRCROOT)/Android/obj/local/armeabi\"",
 					"\"$(SRCROOT)/External Code/TestFlightSDK\"",
 				);
-				PRODUCT_NAME = "Internet Map";
+				PRODUCT_NAME = internetmap;
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				STRIP_INSTALLED_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
@@ -1639,7 +1639,7 @@
 					"\"$(SRCROOT)/Android/obj/local/armeabi\"",
 					"\"$(SRCROOT)/External Code/TestFlightSDK\"",
 				);
-				PRODUCT_NAME = "Internet Map";
+				PRODUCT_NAME = internetmap;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
@@ -1733,7 +1733,7 @@
 					"\"$(SRCROOT)/Android/obj/local/armeabi\"",
 					"\"$(SRCROOT)/External Code/TestFlightSDK\"",
 				);
-				PRODUCT_NAME = "Internet Map";
+				PRODUCT_NAME = internetmap;
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1754,7 +1754,7 @@
 					"\"$(SRCROOT)/Android/obj/local/armeabi\"",
 					"\"$(SRCROOT)/External Code/TestFlightSDK\"",
 				);
-				PRODUCT_NAME = "Internet Map";
+				PRODUCT_NAME = internetmap;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
@@ -1787,7 +1787,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Optimized;
 		};
-		A6F3F58D1640F1FB0070E6AE /* Build configuration list for PBXNativeTarget "InternetMap" */ = {
+		A6F3F58D1640F1FB0070E6AE /* Build configuration list for PBXNativeTarget "Internet Map" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A6F3F58E1640F1FB0070E6AE /* Debug */,
