@@ -41,7 +41,7 @@ public class InfoPopup extends PopupWindow{
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 switch (position) {
                 case 0: //help
-                    Log.d(TAG, "TODO: help");
+                    doHelp();
                     break;
                 case 1: //sales
                     doSales();
@@ -78,6 +78,19 @@ public class InfoPopup extends PopupWindow{
         LayoutInflater layoutInflater = (LayoutInflater)mContext.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View popupView = layoutInflater.inflate(R.layout.credits, null);
         CreditsPopup popup = new CreditsPopup(mContext, popupView);
+        //show it
+        View mainView = mContext.findViewById(R.id.mainLayout);
+        Assert.assertNotNull(mainView);
+        popup.setWidth(mainView.getWidth());
+        popup.setHeight(mainView.getHeight());
+        int gravity = Gravity.BOTTOM; //to avoid offset issues
+        popup.showAtLocation(mainView, gravity, 0, 0);
+    }
+    
+    private void doHelp() {
+        LayoutInflater layoutInflater = (LayoutInflater)mContext.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View popupView = layoutInflater.inflate(R.layout.help, null);
+        HelpPopup popup = new HelpPopup(mContext, popupView);
         //show it
         View mainView = mContext.findViewById(R.id.mainLayout);
         Assert.assertNotNull(mainView);
