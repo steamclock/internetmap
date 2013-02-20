@@ -105,6 +105,7 @@
         android:visibility="invisible"
         android:progressDrawable="@drawable/seekbar_progress"
         android:thumbOffset="-2dp"
+        android:maxHeight="4.5dp"
         android:thumb="@drawable/seek_thumb_normal" />
 
     <ImageView
