@@ -60,13 +60,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 @property (strong, nonatomic) SCTracerouteUtility* tracer;
 
-
 @property (nonatomic) NSTimeInterval updateTime;
-
 
 @property (nonatomic) NSString* cachedCurrentASN;
 
-@property (nonatomic) int minTimelineYear;
 @property (nonatomic, strong) void (^afterViewReset)(void);
 
 /* UIKit Overlay */
@@ -94,6 +91,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (strong, nonatomic) NodeTooltipViewController* nodeTooltipViewController;
 
 @property (strong, nonatomic) ErrorInfoView* errorInfoView;
+
+@property (strong, nonatomic) NSArray* sortedYears;
 
 @end
 
@@ -209,14 +208,18 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
     
     //setup timeline slider values
-    NSArray* sortedYears = [self.timelineInfoViewController.jsonDict.allKeys sortedArrayUsingSelector:@selector(compare:)];
-    NSAssert([sortedYears count] >= 2, @"There is not enough data in the history.json file! At least data for two years is required");
-    self.minTimelineYear = [sortedYears[0] intValue];
-    int max = [[sortedYears lastObject] intValue];
-    float diff = max-self.minTimelineYear;
+    self.sortedYears = [self.timelineInfoViewController.jsonDict.allKeys sortedArrayUsingSelector:@selector(compare:)];
+    NSAssert([self.sortedYears count] >= 2, @"There is not enough data in the history.json file! At least data for two years is required");
     self.timelineSlider.minimumValue = 0;
-    self.timelineSlider.maximumValue = diff;
-    self.timelineSlider.value = diff;
+    self.timelineSlider.maximumValue = self.sortedYears.count - 1;
+    
+    self.timelineSlider.value = self.sortedYears.count - 1;
+
+    [self.sortedYears enumerateObjectsUsingBlock:^(NSString* year, NSUInteger idx, BOOL *stop) {
+        if([year isEqualToString:@"2013"]) {
+            self.timelineSlider.value = idx;
+        }
+    }];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayInformationPopoverForCurrentNode) name:@"cameraMovementFinished" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewResetDone) name:@"cameraResetFinished" object:nil];
@@ -657,7 +660,15 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.timelineSlider.hidden = YES;
     self.timelineButton.selected = NO;
     self.playButton.hidden = YES;
-    self.timelineSlider.value = self.timelineSlider.maximumValue;
+    
+    self.timelineSlider.value = self.sortedYears.count - 1;
+    
+    [self.sortedYears enumerateObjectsUsingBlock:^(NSString* year, NSUInteger idx, BOOL *stop) {
+        if([year isEqualToString:@"2013"]) {
+            self.timelineSlider.value = idx;
+        }
+    }];
+    
     [self updateTimelineWithPopoverDismiss:NO];
     [self.timelinePopover dismissPopoverAnimated:NO];
 }
@@ -735,7 +746,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.timelineSlider.value = snappedValue;
     }
         
-    int year = (int)(self.minTimelineYear+snappedValue);
+    int year = [self.sortedYears[(int)snappedValue] intValue];
+    
     CGRect thumbRect = [self.timelineSlider thumbRectForBounds:self.timelineSlider.bounds trackRect:[self.timelineSlider trackRectForBounds:self.timelineSlider.bounds] value:snappedValue];
     thumbRect = [self.view convertRect:thumbRect fromView:self.timelineSlider];
     if (![HelperMethods deviceIsiPad]) {
@@ -761,7 +773,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     __weak ViewController* weakSelf = self;
     self.afterViewReset = ^ {
-        int year = (int)(weakSelf.minTimelineYear+weakSelf.timelineSlider.value);
+        int year = [weakSelf.sortedYears[(int)weakSelf.timelineSlider.value] intValue];
         [weakSelf.controller setTimelinePoint:[NSString stringWithFormat:@"%d0101", year]];
         if(popoverDismiss) {
             [weakSelf.timelinePopover dismissPopoverAnimated:NO];
