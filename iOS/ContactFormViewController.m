@@ -166,7 +166,7 @@
         return;
     }
     
-    void (^failure)() = ^{
+    void (^genericFailure)() = ^{
         [self dismissModalViewControllerAnimated:TRUE];
         
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Network Error" message:@"Could not complete the contact request. Please try again later." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -195,8 +195,8 @@
     NSData *data = [NSJSONSerialization dataWithJSONObject:postData options:0 error:&error];
     
     if(error) {
-        failure();
-        return;
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Internal Error" message:@"Could not build contact submit request." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];        return;
     }
     
     [request appendPostData:data];
@@ -205,26 +205,62 @@
     
     [request setCompletionBlock:^{
         NSError* error = weakRequest.error;
-        NSDictionary* jsonResponse = [NSJSONSerialization JSONObjectWithData:weakRequest.responseData options:NSJSONReadingAllowFragments error:&error];
+        NSObject* jsonResponse = [NSJSONSerialization JSONObjectWithData:weakRequest.responseData options:NSJSONReadingAllowFragments error:&error];
         
         NSLog(@"Got contact response %d %@", weakRequest.responseStatusCode, jsonResponse);
 
         if(weakRequest.responseStatusCode == 200) {
             hud.mode = MBProgressHUDModeText;
-            hud.labelText = @"Sent request";
+            hud.labelText = @"Submitted. Thank you.";
             
-            [hud hide:YES afterDelay:1.0];
+            [hud hide:YES afterDelay:2.0];
             
-            [[SCDispatchQueue mainQueue] dispatchAfter:1.0f block:^{
+            [[SCDispatchQueue mainQueue] dispatchAfter:2.0f block:^{
                 [self dismissModalViewControllerAnimated:TRUE];
             }];
         }
         else {
-            failure();
+            [hud hide:YES];
+
+            NSDictionary* responseDict = nil;
+            if([jsonResponse isKindOfClass:[NSDictionary class]]) {
+                responseDict = (NSDictionary*)jsonResponse;
+            }
+            else if ([jsonResponse isKindOfClass:[NSArray class]] &&
+                     (((NSArray*)jsonResponse).count > 0) &&
+                     [((NSArray*)jsonResponse)[0] isKindOfClass:[NSDictionary class]]) {
+                responseDict = (NSDictionary*)(((NSArray*)jsonResponse)[0]);
+            }
+            
+            if((weakRequest.responseStatusCode == 422) && responseDict) {
+                if([[responseDict valueForKey:@"field"] isEqualToString:@"email"]) {
+                    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Invalid email" message:@"Please enter a valid email address." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    [alert show];
+                }
+                else if([responseDict valueForKey:@"error"]) {
+                    NSString* message;
+                    
+                    if([responseDict valueForKey:@"field"]) {
+                        message = [NSString stringWithFormat:@"%@ : %@", [responseDict valueForKey:@"error"], [responseDict valueForKey:@"field"] ];
+                    }
+                    else {
+                        message = [NSString stringWithFormat:@"%@", [responseDict valueForKey:@"error"] ];
+                    }
+                    
+                    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Submit Error" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    [alert show];
+                }
+                else {
+                    genericFailure();
+                }
+            }
+            else {
+                genericFailure();
+            }
         }
     }];
     
-    [request setFailedBlock:failure];
+    [request setFailedBlock:genericFailure];
     
     [request startAsynchronous];
 }
