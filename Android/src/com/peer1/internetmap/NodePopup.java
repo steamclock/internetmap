@@ -80,4 +80,14 @@ public class NodePopup extends PopupWindow {
             tracerouteBtn.setVisibility(isUsersNode ? android.view.View.GONE : android.view.View.VISIBLE);
         }*/
     }
+    
+    /**
+     * For some reason popupwindow doesn't have this.
+     * @return the real height of the popup based on the layout.
+     */
+    public int getMeasuredHeight() {
+        //update the layout for current data
+        getContentView().measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        return getContentView().getMeasuredHeight();
+    }
 }

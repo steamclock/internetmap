@@ -663,10 +663,11 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                 gravity = Gravity.CENTER_VERTICAL | Gravity.RIGHT;
                 width = mainView.getWidth() / 2;
             }
-            Log.d(TAG, String.format("width: %d", width));
             mNodePopup.setWindowLayoutMode(width, LayoutParams.WRAP_CONTENT);
             mNodePopup.setWidth(width);
+            mNodePopup.setHeight(mNodePopup.getMeasuredHeight()); //work around weird bugs
             mNodePopup.showAtLocation(mainView, gravity, 0, 0);
+            //Log.d(TAG, String.format("showing : %d", mNodePopup.getHeight()));
         }
     }
     
