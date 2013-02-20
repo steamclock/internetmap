@@ -104,6 +104,7 @@
         android:layout_alignParentLeft="true"
         android:visibility="invisible"
         android:progressDrawable="@drawable/seekbar_progress"
+        android:thumbOffset="-2dp"
         android:thumb="@drawable/seek_thumb_normal" />
 
     <ImageView
