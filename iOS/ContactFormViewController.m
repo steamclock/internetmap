@@ -184,7 +184,7 @@
                                @"LeadSource" : @"Map of the Internet",
                                @"Website_Source__c" : platform };
     
-    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"http://www.peer1.com/lead-submit"]];
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"http://www.peer1.com/contact-sales"]];
     [request setRequestMethod:@"POST"];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
     
