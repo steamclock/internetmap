@@ -180,7 +180,6 @@
     NSDictionary* postData = @{@"fullName" : self.nameField.text,
                                @"email" : self.emailField.text,
                                @"phone" : self.phoneField.text,
-                               @"company" : @"Unknown",
                                @"LeadSource" : @"Map of the Internet",
                                @"Website_Source__c" : platform };
     
