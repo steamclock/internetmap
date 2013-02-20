@@ -63,7 +63,7 @@
 
 
         if (self.isDisplayingCurrentNode) {
-            self.title = @"You are here.";
+            self.title = @"You Are Here";
             if (![HelperMethods isStringEmptyOrNil:textDescription]) {
                 [self.firstGroupOfStrings addObject:textDescription];
             }
