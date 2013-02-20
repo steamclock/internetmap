@@ -289,9 +289,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.controller resetIdleTimer];
     [self dismissNodeInfoPopover];
     if (![self.controller selectHoveredNode]) { //couldn't select node
-        [self.controller deselectCurrentNode];
-        [self.controller resetZoomAndRotationAnimatedForOrientation:![HelperMethods deviceIsiPad]];
-    }
+        if(self.controller.targetNode != INT_MAX) {
+            [self.controller deselectCurrentNode];
+            [self.controller resetZoomAndRotationAnimatedForOrientation:![HelperMethods deviceIsiPad]];
+        }
+    }	
 }
 
 - (void)handleDoubleTap:(UIGestureRecognizer*)gestureRecongizer {
