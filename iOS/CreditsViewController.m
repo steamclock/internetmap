@@ -14,6 +14,26 @@
 
 @implementation CreditsViewController
 
++(CGSize) currentSize
+{
+    return [CreditsViewController sizeInOrientation:[UIApplication sharedApplication].statusBarOrientation];
+}
+
++(CGSize) sizeInOrientation:(UIInterfaceOrientation)orientation
+{
+    CGSize size = [UIScreen mainScreen].bounds.size;
+    UIApplication *application = [UIApplication sharedApplication];
+    if (UIInterfaceOrientationIsLandscape(orientation))
+    {
+        size = CGSizeMake(size.height, size.width);
+    }
+    if (application.statusBarHidden == NO)
+    {
+        size.height -= MIN(application.statusBarFrame.size.width, application.statusBarFrame.size.height);
+    }
+    return size;
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -45,9 +65,13 @@
     UIWebView* webView = [[UIWebView alloc] init];
     CGRect webViewFrame = background.frame;
 
+    webViewFrame.size.height = [CreditsViewController currentSize].height;
+
     if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         webViewFrame.origin.x += 300;
         webViewFrame.size.width -= 600;
+        
+        webView.scrollView.scrollEnabled = FALSE;
     }
     
     webView.frame = webViewFrame;
@@ -60,7 +84,8 @@
     
     webView.backgroundColor = [UIColor clearColor];
     webView.opaque = NO;
-    webView.scrollView.showsVerticalScrollIndicator = NO;
+    webView.scrollView.showsVerticalScrollIndicator = YES;
+    webView.scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
     
     // Start webview faded out, load happens async, and this way we can fade it in rather
     // than popping when the load finishes. Slightly less jarring that way.
@@ -88,6 +113,7 @@
     [UIView animateWithDuration:1.0 animations:^{
         webView.alpha = 1.0f;
     }];
+    [webView.scrollView flashScrollIndicators];
 }
 
 -(IBAction)close:(id)sender {
