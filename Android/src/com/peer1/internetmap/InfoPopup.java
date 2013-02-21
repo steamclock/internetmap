@@ -41,7 +41,7 @@ public class InfoPopup extends PopupWindow{
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 switch (position) {
                 case 0: //help
-                    Log.d(TAG, "TODO: help");
+                    mContext.showHelp();
                     break;
                 case 1: //sales
                     doSales();
