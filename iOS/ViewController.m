@@ -592,7 +592,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         [tableforPopover setHighlightCurrentRow:NO];
         self.infoPopover = [[WEPopoverController alloc] initWithContentViewController:tableforPopover];
         self.infoPopover.delegate = self;
-        tableforPopover.items = @[ @"Help", @"Hosting & Cloud Services", @"Learn more at Peer1.com", @"Credits" ];
+        tableforPopover.items = @[ @"Help", @"Hosting & Cloud Services", @"Learn more at peer1.com", @"Credits" ];
         [self.infoPopover setPopoverContentSize:tableforPopover.contentSizeForViewInPopover];
         if (![HelperMethods deviceIsiPad]) {
             WEPopoverContainerViewProperties *prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
