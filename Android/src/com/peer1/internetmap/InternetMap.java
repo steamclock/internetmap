@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Point;
@@ -27,6 +28,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.ScaleGestureDetector;
 import android.view.GestureDetector;
@@ -37,6 +39,7 @@ import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewTreeObserver;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
 import com.peer1.internetmap.ASNRequest.ASNResponseHandler;
@@ -82,7 +85,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         nativeOnCreate(isSmallScreen());
 
         setContentView(R.layout.main);
-        SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceview);
+        final SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceview);
         surfaceView.getHolder().addCallback(this);
 
         mGestureDetector = new GestureDetectorCompat(this, new MyGestureListener());
@@ -103,6 +106,36 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         anim.setFillAfter(true);
         anim.setFillEnabled(true);
         logo.setAnimation(anim);
+        
+        //possibly show first-run slides
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (prefs.getBoolean("firstrun", true)) {
+            //delay showing the slides until we're fully loaded
+            ViewTreeObserver observer = surfaceView.getViewTreeObserver();
+            observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @SuppressWarnings("deprecation") //it's not worth an api check just because the name changed
+                public void onGlobalLayout() {
+                    showHelp();
+                    prefs.edit().putBoolean("firstrun", false).commit();
+                    //get the observer again to avoid crashes
+                    ViewTreeObserver observer2 = surfaceView.getViewTreeObserver();
+                    observer2.removeGlobalOnLayoutListener(this);
+                }
+            });
+        }
+    }
+    
+    public void showHelp() {
+        LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View popupView = layoutInflater.inflate(R.layout.help, null);
+        HelpPopup popup = new HelpPopup(this, popupView);
+        //show it
+        View mainView = findViewById(R.id.mainLayout);
+        Assert.assertNotNull(mainView);
+        popup.setWidth(mainView.getWidth());
+        popup.setHeight(mainView.getHeight());
+        int gravity = Gravity.BOTTOM; //to avoid offset issues
+        popup.showAtLocation(mainView, gravity, 0, 0);
     }
     
     public void forceOrientation() {
