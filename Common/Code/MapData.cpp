@@ -346,9 +346,9 @@ void MapData::loadUnified(const std::string& text) {
         ConnectionPointer connection(new Connection());
         
         sourceText = nextToken(sourceText, token, &lineEnd);
-        connection->first = nodesByAsn[token];
+        connection->first = nodes[atoi(token)];
         sourceText = nextToken(sourceText, token, &lineEnd);
-        connection->second = nodesByAsn[token];
+        connection->second = nodes[atoi(token)];
         
         if (connection->first && connection->second) {
             connection->first->connections.push_back(connection);
