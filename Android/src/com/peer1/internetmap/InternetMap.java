@@ -794,7 +794,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             surfaceView.getLocationOnScreen(location);
             int top = location[1];
             int left = location[0];
-            Log.d(TAG, String.format("onDown %f %f %d %d", x, y, top, left));
+            //Log.d(TAG, String.format("onDown %f %f %d %d", x, y, top, left));
             mController.setAllowIdleAnimation(false);
             mController.handleTouchDownAtPoint(x - left, y - top);
             return true;
@@ -803,7 +803,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
                 float distanceY) {
-            Log.d(TAG, String.format("onScroll: x %f y %f", distanceX, distanceY));
+            //Log.d(TAG, String.format("onScroll: x %f y %f", distanceX, distanceY));
             mController.rotateRadiansXY(distance2radians(distanceX), distance2radians(distanceY));
             return true;
         }
@@ -811,7 +811,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         @Override
         public boolean onFling(MotionEvent event1, MotionEvent event2, 
                 float velocityX, float velocityY) {
-            Log.d(TAG, String.format("onFling: vx %f vy %f", velocityX, velocityY));
+            //Log.d(TAG, String.format("onFling: vx %f vy %f", velocityX, velocityY));
             mController.startMomentumPanWithVelocity(velocityAdjust(velocityX), velocityAdjust(velocityY));
             return true;
         }
@@ -833,7 +833,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
             float scale = detector.getScaleFactor() - 1;
-            Log.d(TAG, String.format("scale: %f", scale));
+            //Log.d(TAG, String.format("scale: %f", scale));
             mController.zoomByScale(scale);
             return true;
         }
@@ -841,7 +841,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         @Override
         public void onScaleEnd(ScaleGestureDetector detector) {
             float scale = detector.getScaleFactor() - 1;
-            Log.d(TAG, String.format("scaleEnd: %f", scale));
+            //Log.d(TAG, String.format("scaleEnd: %f", scale));
             mController.startMomentumZoomWithVelocity(scale * 50);
         }
     }
@@ -851,7 +851,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         @Override
         public boolean onRotate(RotateGestureDetector detector) {
             float rotate = detector.getRotateFactor();
-            Log.d(TAG, String.format("!!rotate: %f", rotate));
+            //Log.d(TAG, String.format("!!rotate: %f", rotate));
             mController.rotateRadiansZ(-rotate);
             return true;
         }
@@ -859,7 +859,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         @Override
         public void onRotateEnd(RotateGestureDetector detector) {
             float velocity = detector.getRotateFactor(); //FIXME not actually velocity. always seems to be 0
-            Log.d(TAG, String.format("!!!!rotateEnd: %f", velocity));
+            //Log.d(TAG, String.format("!!!!rotateEnd: %f", velocity));
             mController.startMomentumRotationWithVelocity(velocity * 50);
         }
     }
