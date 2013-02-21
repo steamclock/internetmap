@@ -3,6 +3,7 @@ package com.peer1.internetmap;
 import java.io.UnsupportedEncodingException;
 
 import org.apache.http.entity.StringEntity;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -129,13 +130,32 @@ public class SalesPopup extends PopupWindow{
             @Override
             public void onFailure(Throwable error, String content) {
                 Log.d(TAG, String.format("error: '%s' content: '%s'", error.getMessage(), content));
-                int messageId;
+                String message = "";
                 if (error.getMessage().equals("Unprocessable Entity")) {
-                    messageId = R.string.submitFailInvalid;
-                } else {
-                    messageId = R.string.submitFail;
+                    try {
+                        JSONArray jsonArray = new JSONArray(content);
+                        JSONObject jsonObject = jsonArray.getJSONObject(0);
+                        String field = jsonObject.getString("field");
+                        if (field.equals("email")) {
+                            //friendly message
+                            message = mContext.getString(R.string.submitFailEmail);
+                        } else {
+                            //raw error text
+                            message = jsonObject.getString("error");
+                            if (!message.isEmpty() && !field.isEmpty()) {
+                                message += " : " + field;
+                            }
+                        }
+                    } catch (Exception e) {
+                        Log.d(TAG, String.format("json error: %s", e.getMessage()));
+                    }
                 }
-                Toast.makeText(mContext, mContext.getString(messageId),  Toast.LENGTH_SHORT).show();
+                
+                if (message.isEmpty()){
+                    //generic error message
+                    message = mContext.getString(R.string.submitFail);
+                }
+                Toast.makeText(mContext, message,  Toast.LENGTH_SHORT).show();
                 button.setEnabled(true);
                 progress.setVisibility(View.INVISIBLE);
             }

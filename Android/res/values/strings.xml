@@ -32,7 +32,7 @@
     <string name="requiredEmail">Email cannot be empty.</string>
     <string name="submitSuccess">Message Sent.</string>
     <string name="submitFail">Could not complete the contact request. Please try again later.</string>
-    <string name="submitFailInvalid">Could not complete the contact request; one or more fields are invalid.</string>
+    <string name="submitFailEmail">Please enter a valid email address.</string>
     <string name="next">Next ></string>
     <string name="finish">Finish</string>
 </resources>
