@@ -115,7 +115,7 @@ public class SalesPopup extends PopupWindow{
         
         //send it off to the internet
         AsyncHttpClient client = new AsyncHttpClient();
-        client.post(null, "http://www.peer1.com/lead-submit", entity, "application/json", new AsyncHttpResponseHandler(){
+        client.post(null, "http://www.peer1.com/contact-sales", entity, "application/json", new AsyncHttpResponseHandler(){
             @Override
             public void onStart(){
                 Log.d(TAG, "started");
