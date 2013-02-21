@@ -225,7 +225,7 @@ void MapData::loadFromAttrString(const std::string& json){
     friendlyTypeStrings[(int)AS_UNKNOWN] = "Unknown Network Type";
     friendlyTypeStrings[(int)AS_T1] = "Large ISP";
     friendlyTypeStrings[(int)AS_T2] = "Small ISP";
-    friendlyTypeStrings[(int)AS_COMP] = "Customer Network";
+    friendlyTypeStrings[(int)AS_COMP] = "Organization Network";
     friendlyTypeStrings[(int)AS_EDU] = "University";
     friendlyTypeStrings[(int)AS_IX] = "Internet Exchange Point";
     friendlyTypeStrings[(int)AS_NIC] = "Network Information Center";
