@@ -360,6 +360,9 @@ void cameraMoveFinishedCallback(void) {
 void cameraResetFinishedCallback(void){
     callThreadsafeVoidMethod("threadsafeCameraResetCallback");
 }
+void loadFinishedCallback() {
+    callThreadsafeVoidMethod("threadsafeLoadFinishedCallback");
+}
 
 // TODO
 void lostSelectedNodeCallback(void) {

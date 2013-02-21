@@ -106,22 +106,14 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         anim.setFillAfter(true);
         anim.setFillEnabled(true);
         logo.setAnimation(anim);
-        
+    }
+    
+    void onBackendLoaded() {
         //possibly show first-run slides
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (prefs.getBoolean("firstrun", true)) {
-            //delay showing the slides until we're fully loaded
-            ViewTreeObserver observer = surfaceView.getViewTreeObserver();
-            observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @SuppressWarnings("deprecation") //it's not worth an api check just because the name changed
-                public void onGlobalLayout() {
-                    showHelp();
-                    prefs.edit().putBoolean("firstrun", false).commit();
-                    //get the observer again to avoid crashes
-                    ViewTreeObserver observer2 = surfaceView.getViewTreeObserver();
-                    observer2.removeGlobalOnLayoutListener(this);
-                }
-            });
+            showHelp();
+            prefs.edit().putBoolean("firstrun", false).commit();
         }
     }
     
@@ -767,6 +759,13 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                     mCameraResetHandler.handle();
                     mCameraResetHandler = null;
                 }
+            }
+        });
+    }
+    public void threadsafeLoadFinishedCallback() {
+        mHandler.post(new Runnable() {
+            public void run() {
+                onBackendLoaded();
             }
         });
     }

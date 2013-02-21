@@ -14,6 +14,7 @@
 #include <common/Camera.hpp>
 
 void DetachThreadFromVM(void);
+void loadFinishedCallback();
 
 Renderer::Renderer(bool smallScreen) {
     LOG_INFO("Renderer instance created");
@@ -305,6 +306,7 @@ bool Renderer::initialize() {
 
     LOG("created map controller");
 
+    loadFinishedCallback();
     return true;
 }
 
