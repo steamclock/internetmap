@@ -26,7 +26,7 @@ public class ASNRequest {
         public void onFailure(Throwable error, String content);
     }
 
-    private static final String BASE_URL = "http://72.51.24.24:8080/";
+    private static final String BASE_URL = "http://asnl.peer1.com/v1/";
 
     private static final AsyncHttpClient client = new AsyncHttpClient();
 
