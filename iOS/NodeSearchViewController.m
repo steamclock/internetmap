@@ -122,7 +122,15 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.searchResults.count + 1;
+    int count = self.searchResults.count;
+    if ([self haveSpecialFirstItem]) {
+        count++;
+    }
+    if (count == 0) {
+        //show a 'no results' item
+        count++;
+    }
+    return count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
