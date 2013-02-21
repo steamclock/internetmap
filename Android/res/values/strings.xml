@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Internet Map</string>
     <color name="orange">#FCA100</color>
-    <string name="youarehere">You are here.</string>
+    <string name="youarehere">You are here</string>
     <string name="nomoredata">No additional data.</string>
     <string name="nodata">No data.</string>
     <string name="oneconnection">One Connection</string>
@@ -18,7 +18,7 @@
     <string name="invalidHost">Can\'t find host \'%s\'</string>
     <string name="yourLocation">Your Location</string>
     <string name="infoHelp">Help</string>
-    <string name="infoSales">Contact Sales</string>
+    <string name="infoSales">Hosting &amp; Cloud Services</string>
     <string name="infoLink">Learn more at Peer1.com</string>
     <string name="infoCredits">Credits</string>
     <string name="loading">Loading %s...</string>
