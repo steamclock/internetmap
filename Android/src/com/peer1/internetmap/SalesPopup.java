@@ -79,9 +79,8 @@ public class SalesPopup extends PopupWindow{
         //package up the data
         JSONObject postData = new JSONObject();
         try {
-            postData.put("company", "Unknown");
             postData.put("LeadSource", "Map of the Internet");
-            postData.put("Website_Source__c", "Android"); //FIXME ?
+            postData.put("Website_Source__c", mContext.isSmallScreen() ? "Android Phone" : "Android Tablet");
             
             EditText nameEdit = (EditText) getContentView().findViewById(R.id.nameEdit);
             postData.put("fullName", nameEdit.getText().toString());
