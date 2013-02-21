@@ -189,6 +189,7 @@
 		A6F3F5671640F1FB0070E6AE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5661640F1FB0070E6AE /* CoreGraphics.framework */; };
 		A6F3F5691640F1FB0070E6AE /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5681640F1FB0070E6AE /* GLKit.framework */; };
 		A6F3F56B1640F1FB0070E6AE /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F56A1640F1FB0070E6AE /* OpenGLES.framework */; };
+		A6FC709016D5A93C004FB989 /* unified.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6FC708F16D5A93C004FB989 /* unified.txt */; };
 		D403BBDE16C1DF2F008AA000 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = D403BBD816C1DF2F008AA000 /* LICENSE */; };
 		D403BBE016C1DF2F008AA000 /* README in Resources */ = {isa = PBXBuildFile; fileRef = D403BBDA16C1DF2F008AA000 /* README */; };
 		D468090416795D4600A2C1CC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D468090216795CC200A2C1CC /* SystemConfiguration.framework */; };
@@ -485,6 +486,7 @@
 		A6F3F5661640F1FB0070E6AE /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		A6F3F5681640F1FB0070E6AE /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		A6F3F56A1640F1FB0070E6AE /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		A6FC708F16D5A93C004FB989 /* unified.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = unified.txt; path = Common/Data/unified.txt; sourceTree = "<group>"; };
 		D403BB9616C1D9C2008AA000 /* cc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cc.h; sourceTree = "<group>"; };
 		D403BB9716C1D9C2008AA000 /* icmp6.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = icmp6.h; sourceTree = "<group>"; };
 		D403BB9816C1D9C2008AA000 /* icmp_var.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = icmp_var.h; sourceTree = "<group>"; };
@@ -735,6 +737,7 @@
 		A600AADA16A664E9003B1028 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				A6FC708F16D5A93C004FB989 /* unified.txt */,
 				A6551EBD16CDB22900340590 /* credits.html */,
 				A686E9B916B62915009B070E /* history.json */,
 				A600AAD316A664DF003B1028 /* as2attr.txt */,
@@ -1398,6 +1401,7 @@
 				84E0672716D5ADA200751B7B /* Icon@2x.png in Resources */,
 				84E0672916D5ADC100751B7B /* Icon@2x.png in Resources */,
 				84E0672B16D5ADCA00751B7B /* Icon-72@2x.png in Resources */,
+				A6FC709016D5A93C004FB989 /* unified.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

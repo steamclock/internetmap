@@ -40,7 +40,12 @@ MapController::MapController() :
 //    _visualizations.push_back(VisualizationPointer(new TypeVisualization("T1", AS_T1)));
     
     data->visualization = _visualizations[0];
-    
+
+#if 0
+    // Old style loading, three seperate files. If we need to refresh data, we need to either
+    // turn this back on permentntly, or turn it back on temporarily, and comment in the
+    // dump of the unified data (path is hardcoded for that right now, so make sure you
+    // change it).
     setTimelinePoint("", false);
     
     clock_t start = clock();
@@ -65,6 +70,18 @@ MapController::MapController() :
     data->loadASInfo(asinfoText);
 
     LOG("parse asinfo.json: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
+    
+    //data->dumpUnified();
+
+#else
+    lastTimelinePoint = "20130101";
+    clock_t start = clock();
+    std::string unifiedText;
+    loadTextResource(&unifiedText, "unified", "txt");
+    data->loadUnified(unifiedText);
+    updateDisplay(false);
+    LOG("load unified.txt: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
+#endif
     
     data->visualization->activate(data->nodes);
     data->createNodeBoxes();

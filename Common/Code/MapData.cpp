@@ -11,6 +11,8 @@
 #include "MapDisplay.hpp"
 #include <sstream>
 #include <stdlib.h>
+#include <fstream>
+#include <assert.h>
 
 // TODO: figure out how to do this right
 #ifdef ANDROID
@@ -48,10 +50,10 @@ void split( std::vector<std::string> & theStringVector,  /* Altered/returned val
 
 static const int MAX_TOKEN_SIZE = 256;
 
-const char* nextToken(const char* source, char* token, bool* lineEnd) {
+const char* nextToken(const char* source, char* token, bool* lineEnd, char separator = ' ') {
     *lineEnd = false;
     
-    while ((*source != ' ') && (*source != '\n') && (*source != 0)) {
+    while ((*source != separator) && (*source != '\n') && (*source != 0)) {
         *token++ = *source++;
     }
     
@@ -60,7 +62,7 @@ const char* nextToken(const char* source, char* token, bool* lineEnd) {
     *token = 0;
 
     if(*source != 0) {
-        while ((*source == ' ') || (*source == '\n')) {
+        while ((*source == separator) || (*source == '\n')) {
             source++;
             *lineEnd |= *source == '\n';
         }
@@ -282,6 +284,88 @@ void MapData::loadASInfo(const std::string& json){
     }
 }
 
+void MapData::loadUnified(const std::string& text) {
+    const char* sourceText = text.c_str();
+    
+    char token[MAX_TOKEN_SIZE];
+    bool lineEnd;
+    int numNodes, numConnections;
+    
+    // Grab header data (node and connection counts)
+    sourceText = nextToken(sourceText, token, &lineEnd);
+    numNodes = atof(token);
+    
+    sourceText = nextToken(sourceText, token, &lineEnd);
+    numConnections = atof(token);
+    
+    nodes.reserve(numNodes);
+    
+    for (int i = 0; i < numNodes; i++) {
+        NodePointer node = NodePointer(new Node());
+        node->timelineActive = true;
+        node->activeDefault = true;
+        
+        sourceText = nextToken(sourceText, token, &lineEnd, '\t');
+        node->asn = token;
+
+        sourceText = nextToken(sourceText, token, &lineEnd, '\t');
+        if(token[0] != '?') {
+            node->rawTextDescription = token;
+        }
+
+        sourceText = nextToken(sourceText, token, &lineEnd, '\t');
+        node->type = atoi(token);
+
+        sourceText = nextToken(sourceText, token, &lineEnd, '\t');
+        node->hasLatLong = atoi(token);
+        
+        sourceText = nextToken(sourceText, token, &lineEnd, '\t');
+        node->latitude = atof(token);
+
+        sourceText = nextToken(sourceText, token, &lineEnd, '\t');
+        node->longitude = atof(token);
+                
+        sourceText = nextToken(sourceText, token, &lineEnd, '\t');
+        node->positionX = node->defaultPositionX = atof(token);
+        
+        sourceText = nextToken(sourceText, token, &lineEnd, '\t');
+        node->positionY = node->defaultPositionY = atof(token);
+
+        sourceText = nextToken(sourceText, token, &lineEnd, '\t');
+        node->importance = node->defaultImportance = atof(token);
+
+        assert(lineEnd);
+        
+        node->index = nodes.size();
+        nodes.push_back(node);
+        nodesByAsn[node->asn] = node;
+    }
+
+    // Load connections
+    for (int i = 0; i < numConnections; i++) {
+        ConnectionPointer connection(new Connection());
+        
+        sourceText = nextToken(sourceText, token, &lineEnd);
+        connection->first = nodesByAsn[token];
+        sourceText = nextToken(sourceText, token, &lineEnd);
+        connection->second = nodesByAsn[token];
+        
+        if (connection->first && connection->second) {
+            connection->first->connections.push_back(connection);
+            connection->second->connections.push_back(connection);
+            connections.push_back(connection);
+        }
+    }
+    
+    defaultConnections = connections;
+    
+    LOG("loaded default data: %d nodes, %d connections", (int)(nodes.size()), numConnections);
+    
+    visualization->activate(nodes);
+    
+    createNodeBoxes();
+}
+
 void MapData::createNodeBoxes() {
     boxesForNodes.erase(boxesForNodes.begin(), boxesForNodes.end());
     
@@ -320,3 +404,29 @@ IndexBoxPointer MapData::indexBoxForPoint(const Point3& point) {
     return boxesForNodes[posInArray];
 }
 
+void MapData::dumpUnified(void) {
+    std::ofstream out("/Users/nigel/Downloads/unified.txt");
+    out << nodes.size() << std::endl;
+    out << connections.size() << std::endl;
+    
+    for(int i = 0; i < nodes.size(); i++) {
+        std::string desc = nodes[i]->rawTextDescription;
+        if(desc.length() == 0) {
+            desc = "?";
+        }
+        
+        out << nodes[i]->asn << "\t"
+            << desc << "\t"
+            << nodes[i]->type << "\t"
+            << nodes[i]->hasLatLong << "\t"
+            << nodes[i]->latitude << "\t"
+            << nodes[i]->longitude << "\t"
+            << nodes[i]->positionX << "\t"
+            << nodes[i]->positionY << "\t"
+            << nodes[i]->importance << "\t" << std::endl;
+    }
+    
+    for(int i = 0; i < connections.size(); i++) {
+        out << connections[i]->first->index << " " << connections[i]->second->index << std::endl;
+    }
+}

@@ -34,10 +34,13 @@ public:
     void loadFromString(const std::string& data);
     void loadFromAttrString(const std::string& json);
     void loadASInfo(const std::string& asinfo);
+    void loadUnified(const std::string& unified);
 
     void resetToDefault();
     
     void createNodeBoxes();
+    
+    void dumpUnified(void);
 
     NodePointer nodeAtIndex(unsigned int index);
     

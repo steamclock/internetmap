@@ -18,7 +18,7 @@
 
 enum
 {
-    AS_UNKNOWN,
+    AS_UNKNOWN = 0,
     AS_T1,
     AS_T2,
     AS_COMP,
