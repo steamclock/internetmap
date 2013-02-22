@@ -102,11 +102,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:visibility="invisible"
-        android:progressDrawable="@drawable/seekbar_progress"
-        android:thumbOffset="-2dp"
+        android:layout_marginLeft="@dimen/contentPadding"
+        android:layout_marginRight="@dimen/contentPadding"
         android:maxHeight="5dp"
-        android:thumb="@drawable/seek_thumb_normal" />
+        android:progressDrawable="@drawable/seekbar_progress"
+        android:thumb="@drawable/seek_thumb_normal"
+        android:thumbOffset="-2dp"
+        android:visibility="invisible" />
 
     <ImageView
         android:id="@+id/peerLogo"
