@@ -3,6 +3,8 @@ package com.peer1.internetmap;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
+import junit.framework.Assert;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -89,24 +91,23 @@ public class SearchPopup extends PopupWindow{
         private ArrayList<? extends SearchItem> mFilteredNodes;
         
         @Override
-        //highlight the first item
+        //highlight the first item, and give an icon to the 'your location' item.
         public View getView(int position, View convertView, ViewGroup parent) {
             TextView textView = (TextView) super.getView(position, convertView, parent);
+            boolean isFirstItem = (position == 0);
             boolean isShowingYouAreHere = false;
-            if (getCount() > 0 && position == 0) {
+            if (isFirstItem) {
+                Assert.assertTrue(getCount() > 0);
                 SearchItem item = getItem(0);
                 isShowingYouAreHere = item.getClass() == LocationItem.class;
             }
+            
+            int color = isFirstItem ? mContext.getResources().getColor(R.color.orange) : Color.WHITE;
+            Drawable img = isShowingYouAreHere ? mContext.getResources().getDrawable(R.drawable.youarehere_selected) : null;
 
-            if(isShowingYouAreHere) {
-                textView.setTextColor(mContext.getResources().getColor(R.color.orange));
-                Drawable img = getContext().getResources().getDrawable( R.drawable.youarehere_selected );
-                textView.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null);
-            }else {
-                textView.setTextColor(Color.WHITE);
-                textView.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
-            }
-
+            textView.setTextColor(color);
+            textView.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null);
+            
             return textView;
         }
         
