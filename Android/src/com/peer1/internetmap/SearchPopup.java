@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -91,11 +92,21 @@ public class SearchPopup extends PopupWindow{
         //highlight the first item
         public View getView(int position, View convertView, ViewGroup parent) {
             TextView textView = (TextView) super.getView(position, convertView, parent);
-            if (position == 0) {
-                textView.setTextColor(mContext.getResources().getColor(R.color.orange));
-            } else {
-                textView.setTextColor(Color.WHITE);
+            boolean isShowingYouAreHere = false;
+            if (getCount() > 0 && position == 0) {
+                SearchItem item = getItem(0);
+                isShowingYouAreHere = item.getClass() == LocationItem.class;
             }
+
+            if(isShowingYouAreHere) {
+                textView.setTextColor(mContext.getResources().getColor(R.color.orange));
+                Drawable img = getContext().getResources().getDrawable( R.drawable.youarehere_selected );
+                textView.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null);
+            }else {
+                textView.setTextColor(Color.WHITE);
+                textView.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+            }
+
             return textView;
         }
         
