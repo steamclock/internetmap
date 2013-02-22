@@ -22,6 +22,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -39,7 +40,6 @@ import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-import android.view.ViewTreeObserver;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
 import com.peer1.internetmap.ASNRequest.ASNResponseHandler;
@@ -518,17 +518,21 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             arrowOffset = 0;
             needsUpdate = false;
         } else {
-            width = LayoutParams.WRAP_CONTENT; //mainView.getWidth() / 2;
+            width = LayoutParams.WRAP_CONTENT;
             //calculate offset to line up with the timelineBar
             int barWidth = seekBar.getWidth();
             int maxProgress = seekBar.getMax();
             int popupWidth = mTimelinePopup.getMeasuredWidth();
             
-            //FIXME something is going slightly wrong around here and I don't know why.
-            //the location is accurate for 2000 and 2006, but ever so slightly off for other points.
-            int progressXLocation = (int)(barWidth * (float)progress / maxProgress);
-            int progressXCenter = progressXLocation + seekBar.getThumbOffset();
-            offset = progressXCenter - popupWidth/2; //center over the thumb
+            Drawable thumb = getResources().getDrawable(R.drawable.seek_thumb_normal);
+            float thumbOffset = (float) (thumb.getIntrinsicWidth() / 2.0);
+            //now get the  distance from the screen edge to min. thumb centre
+            float barOffset = thumbOffset + seekBar.getPaddingLeft();
+            
+            float innerBarWidth = barWidth - barOffset*2; //measure from the center of the thumb at its max/min
+            float progressRelativeXCenter = (innerBarWidth * (float)progress / maxProgress);
+            float progressXCenter = progressRelativeXCenter + barOffset;
+            offset = (int)(progressXCenter - popupWidth/2.0); //center over the thumb
             
             //get the arrow in the right place even at the edges
             //note: I'm assuming barWidth == screenWidth
@@ -541,7 +545,6 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                 arrowOffset = 0;
             }
             
-            //Log.d(TAG, String.format("bar: %d popup: %d thumb: %d location: %d offset: %d", barWidth, popupWidth, progressXLocation, progressXCenter, offset));
             needsUpdate = true;
         }
         if (!mTimelinePopup.isShowing()) {
