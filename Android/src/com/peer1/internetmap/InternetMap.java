@@ -679,7 +679,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             //and most of its size setters only take absolute numbers; setWindowLayoutMode is the exception
             //but, setWindowLayoutMode doesn't properly handle absolute numbers either, so we may have to call *both*.
             if (mInTimelineMode) {
-                gravity = Gravity.CENTER; //FIXME it should be a bit above center but that's hard
+                gravity = Gravity.CENTER;
                 width = mainView.getWidth();
                 if (! isSmallScreen()) {
                     //full width looks odd on tablets
@@ -694,8 +694,26 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             }
             mNodePopup.setWindowLayoutMode(width, LayoutParams.WRAP_CONTENT);
             mNodePopup.setWidth(width);
-            mNodePopup.setHeight(mNodePopup.getMeasuredHeight()); //work around weird bugs
-            mNodePopup.showAtLocation(mainView, gravity, 0, 0);
+            int height = mNodePopup.getMeasuredHeight();
+            mNodePopup.setHeight(height); //work around weird bugs
+            
+            //now that the height is calculated, we can calculate any offset
+            int offset;
+            if (mInTimelineMode) {
+                //move it up by half the height
+                offset = -height/2;
+            } else {
+                offset = 0;
+            }
+            if (gravity != Gravity.BOTTOM) {
+                //account for the top bar
+                int location[] = new int[2];
+                mainView.getLocationOnScreen(location);
+                int top = location[1];
+                offset += top / 2;
+            }
+            
+            mNodePopup.showAtLocation(mainView, gravity, 0, offset);
             //Log.d(TAG, String.format("showing : %d", mNodePopup.getHeight()));
         }
     }
