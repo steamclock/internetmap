@@ -510,11 +510,12 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         Log.d(TAG, year);
         
         //update size/position
-        int width, offset;
+        int width, offset, arrowOffset;
         boolean needsUpdate;
         if (isSmallScreen()) {
             width = LayoutParams.MATCH_PARENT;
             offset = 0;
+            arrowOffset = 0;
             needsUpdate = false;
         } else {
             width = LayoutParams.WRAP_CONTENT; //mainView.getWidth() / 2;
@@ -522,11 +523,24 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             int barWidth = seekBar.getWidth();
             int maxProgress = seekBar.getMax();
             int popupWidth = mTimelinePopup.getMeasuredWidth();
+            
             //FIXME something is going slightly wrong around here and I don't know why.
             //the location is accurate for 2000 and 2006, but ever so slightly off for other points.
             int progressXLocation = (int)(barWidth * (float)progress / maxProgress);
             int progressXCenter = progressXLocation + seekBar.getThumbOffset();
-            offset = progressXCenter - popupWidth/2; //center
+            offset = progressXCenter - popupWidth/2; //center over the thumb
+            
+            //get the arrow in the right place even at the edges
+            //note: I'm assuming barWidth == screenWidth
+            int end = barWidth - popupWidth;
+            if (offset < 0) {
+                arrowOffset = offset;
+            } else if (offset > end) {
+                arrowOffset = offset - end;
+            } else {
+                arrowOffset = 0;
+            }
+            
             //Log.d(TAG, String.format("bar: %d popup: %d thumb: %d location: %d offset: %d", barWidth, popupWidth, progressXLocation, progressXCenter, offset));
             needsUpdate = true;
         }
@@ -534,8 +548,9 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             //Log.d(TAG, "first show");
             mTimelinePopup.setWindowLayoutMode(width, LayoutParams.WRAP_CONTENT);
             mTimelinePopup.showAsDropDown(seekBar, offset, 0);
-        } else if (needsUpdate) {
-            mTimelinePopup.update(seekBar, offset, 0, -1, -1);
+        }
+        if (needsUpdate) {
+            mTimelinePopup.updateOffsets(seekBar, offset, arrowOffset);
         }
     }
 

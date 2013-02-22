@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.TranslateAnimation;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -14,6 +15,7 @@ import android.widget.TextView;
 public class TimelinePopup extends PopupWindow {
     private static String TAG = "TimelinePopup";
     private Context mContext;
+    private int mArrowOffset;
     
     public TimelinePopup(Context context, View view) {
         super(view);
@@ -49,5 +51,22 @@ public class TimelinePopup extends PopupWindow {
         //update the layout for current data
         getContentView().measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         return getContentView().getMeasuredWidth();
+    }
+    
+    /**
+     * update both the regular positioning and the arrow position
+     */
+    public void updateOffsets(View seekBar, int xOffset, int arrowOffset) {
+        update(seekBar, xOffset, 0, -1, -1);
+        
+        View arrow = getContentView().findViewById(R.id.arrow);
+        //arrow.setTranslationX(arrowOffset);
+        //settranslationx isn't available in api 10, so we work around this with an animation.
+        TranslateAnimation anim = new TranslateAnimation(mArrowOffset, arrowOffset, 0, 0);
+        anim.setFillAfter(true);
+        anim.setDuration(100);
+        arrow.startAnimation(anim);
+        Log.d(TAG, "animating");
+        mArrowOffset = arrowOffset;
     }
 }
