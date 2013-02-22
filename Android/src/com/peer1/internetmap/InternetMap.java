@@ -224,7 +224,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         
         //ensure we clean up when the touch ends
         if (event.getAction() == MotionEvent.ACTION_CANCEL || event.getAction() == MotionEvent.ACTION_UP) {
-            Log.d(TAG, "touch end");
+            //Log.d(TAG, "touch end");
             mController.setAllowIdleAnimation(true);
             mController.unhoverNode();
         }
@@ -840,7 +840,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         @Override
         //note: if double tap is used this should probably s/Up/Confirmed
         public boolean onSingleTapUp(MotionEvent e) {
-            Log.d(TAG, "tap!");
+            //Log.d(TAG, "tap!");
             boolean selected = mController.selectHoveredNode();
             if (!selected && mNodePopup != null) {
                 mNodePopup.dismiss();

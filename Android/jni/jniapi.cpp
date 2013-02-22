@@ -122,7 +122,6 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_handleTou
 
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_zoomByScale(JNIEnv* jenv, jobject obj,
         float scale) {
-    LOG("zoom");
     renderer->bufferedZoom(scale);
 }
 
