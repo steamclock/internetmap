@@ -221,7 +221,9 @@ public class SearchPopup extends PopupWindow{
                 android.R.id.text1);
         final ListView listView = (ListView) getContentView().findViewById(R.id.searchResultsView);
         listView.setAdapter(adapter);
+        final EditText input = (EditText) getContentView().findViewById(R.id.searchEdit);
 
+        //handle item clicks
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 SearchItem item = adapter.getItem(position);
@@ -231,15 +233,15 @@ public class SearchPopup extends PopupWindow{
                 } else if (item instanceof LocationItem) {
                     context.youAreHereButtonPressed();
                 } else { //FindHostItem
-                    FindHostItem fhi = (FindHostItem)item;
-                    context.findHost(fhi.host);
+                    //the text in the item may be out of date, so, get the text out of the search input.
+                    String host = input.getText().toString();
+                    context.findHost(host);
                 }
                 SearchPopup.this.dismiss();
             }
         });
         
         //set up the input field
-        EditText input = (EditText) getContentView().findViewById(R.id.searchEdit);
         input.addTextChangedListener(new TextWatcher(){
             public void afterTextChanged(Editable s) {
                 String filter = s.toString();
