@@ -109,6 +109,10 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
     
     void onBackendLoaded() {
+        //turn off loading feedback
+        ProgressBar loader = (ProgressBar) findViewById(R.id.loadingSpinner);
+        loader.setVisibility(View.GONE);
+        
         //possibly show first-run slides
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (prefs.getBoolean("firstrun", true)) {
