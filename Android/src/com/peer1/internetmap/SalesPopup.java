@@ -130,7 +130,8 @@ public class SalesPopup extends PopupWindow{
             public void onFailure(Throwable error, String content) {
                 Log.d(TAG, String.format("error: '%s' content: '%s'", error.getMessage(), content));
                 String message = "";
-                if (error.getMessage().equals("Unprocessable Entity")) {
+                String errorType = error.getMessage(); //we have to use this instead of the http code
+                if (errorType != null && errorType.equals("Unprocessable Entity")) {
                     try {
                         JSONArray jsonArray = new JSONArray(content);
                         JSONObject jsonObject = jsonArray.getJSONObject(0);
