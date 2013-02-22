@@ -680,7 +680,11 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             //but, setWindowLayoutMode doesn't properly handle absolute numbers either, so we may have to call *both*.
             if (mInTimelineMode) {
                 gravity = Gravity.CENTER; //FIXME it should be a bit above center but that's hard
-                width = mainView.getWidth() / 2;
+                width = mainView.getWidth();
+                if (! isSmallScreen()) {
+                    //full width looks odd on tablets
+                    width = width / 2;
+                }
             } else if (isSmallScreen()) {
                 gravity = Gravity.BOTTOM;
                 width = LayoutParams.MATCH_PARENT;
