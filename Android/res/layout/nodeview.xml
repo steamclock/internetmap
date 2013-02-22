@@ -30,7 +30,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/titlebarPadding"
                 android:layout_weight="1"
-                android:maxLines="1"
+                android:singleLine="true"
                 android:text="&lt;title>"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@android:color/black"
