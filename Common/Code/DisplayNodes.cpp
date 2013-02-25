@@ -13,7 +13,7 @@
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
-static const int MAX_DISPLAY_NODES = 40000;
+static const int MAX_DISPLAY_NODES = 55000;
 
 // GL vertex data for nodes
 struct RawDisplayNode {

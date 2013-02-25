@@ -17,8 +17,6 @@
 		1F524E2916DB4CB4007244C5 /* 19960101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F524E2616DB4CB4007244C5 /* 19960101.txt */; };
 		1F524E2A16DB4CB4007244C5 /* 19970101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F524E2716DB4CB4007244C5 /* 19970101.txt */; };
 		1F524E2B16DB4CB4007244C5 /* 19980101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F524E2816DB4CB4007244C5 /* 19980101.txt */; };
-		1F524E2E16DB4F40007244C5 /* 19940101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F524E2C16DB4F40007244C5 /* 19940101.txt */; };
-		1F524E2F16DB4F40007244C5 /* 19950101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F524E2D16DB4F40007244C5 /* 19950101.txt */; };
 		1F524E3216DB6B0C007244C5 /* 20140101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F524E3016DB6B0C007244C5 /* 20140101.txt */; };
 		1F524E3316DB6B0C007244C5 /* 20150101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F524E3116DB6B0C007244C5 /* 20150101.txt */; };
 		1F524E3516DB6D98007244C5 /* 20200101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F524E3416DB6D98007244C5 /* 20200101.txt */; };
@@ -199,6 +197,8 @@
 		A6F3F5691640F1FB0070E6AE /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5681640F1FB0070E6AE /* GLKit.framework */; };
 		A6F3F56B1640F1FB0070E6AE /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F56A1640F1FB0070E6AE /* OpenGLES.framework */; };
 		A6FC709016D5A93C004FB989 /* unified.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6FC708F16D5A93C004FB989 /* unified.txt */; };
+		A6FC709316DBF2B2004FB989 /* 19940101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6FC709116DBF2B2004FB989 /* 19940101.txt */; };
+		A6FC709416DBF2B2004FB989 /* 19950101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6FC709216DBF2B2004FB989 /* 19950101.txt */; };
 		D403BBDE16C1DF2F008AA000 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = D403BBD816C1DF2F008AA000 /* LICENSE */; };
 		D403BBE016C1DF2F008AA000 /* README in Resources */ = {isa = PBXBuildFile; fileRef = D403BBDA16C1DF2F008AA000 /* README */; };
 		D468090416795D4600A2C1CC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D468090216795CC200A2C1CC /* SystemConfiguration.framework */; };
@@ -235,8 +235,6 @@
 		1F524E2616DB4CB4007244C5 /* 19960101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 19960101.txt; path = Common/data/19960101.txt; sourceTree = "<group>"; };
 		1F524E2716DB4CB4007244C5 /* 19970101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 19970101.txt; path = Common/data/19970101.txt; sourceTree = "<group>"; };
 		1F524E2816DB4CB4007244C5 /* 19980101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 19980101.txt; path = Common/data/19980101.txt; sourceTree = "<group>"; };
-		1F524E2C16DB4F40007244C5 /* 19940101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 19940101.txt; path = ../../data/aspipeline/out/19940101.txt; sourceTree = "<group>"; };
-		1F524E2D16DB4F40007244C5 /* 19950101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 19950101.txt; path = ../../data/aspipeline/out/19950101.txt; sourceTree = "<group>"; };
 		1F524E3016DB6B0C007244C5 /* 20140101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20140101.txt; path = Common/data/20140101.txt; sourceTree = "<group>"; };
 		1F524E3116DB6B0C007244C5 /* 20150101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20150101.txt; path = Common/data/20150101.txt; sourceTree = "<group>"; };
 		1F524E3416DB6D98007244C5 /* 20200101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20200101.txt; path = Common/data/20200101.txt; sourceTree = "<group>"; };
@@ -505,6 +503,8 @@
 		A6F3F5681640F1FB0070E6AE /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		A6F3F56A1640F1FB0070E6AE /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		A6FC708F16D5A93C004FB989 /* unified.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = unified.txt; path = Common/Data/unified.txt; sourceTree = "<group>"; };
+		A6FC709116DBF2B2004FB989 /* 19940101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 19940101.txt; path = Common/Data/19940101.txt; sourceTree = "<group>"; };
+		A6FC709216DBF2B2004FB989 /* 19950101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 19950101.txt; path = Common/Data/19950101.txt; sourceTree = "<group>"; };
 		D403BB9616C1D9C2008AA000 /* cc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cc.h; sourceTree = "<group>"; };
 		D403BB9716C1D9C2008AA000 /* icmp6.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = icmp6.h; sourceTree = "<group>"; };
 		D403BB9816C1D9C2008AA000 /* icmp_var.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = icmp_var.h; sourceTree = "<group>"; };
@@ -760,8 +760,8 @@
 				A686E9B916B62915009B070E /* history.json */,
 				A600AAD316A664DF003B1028 /* as2attr.txt */,
 				A600AAD416A664E0003B1028 /* asinfo.json */,
-				1F524E2C16DB4F40007244C5 /* 19940101.txt */,
-				1F524E2D16DB4F40007244C5 /* 19950101.txt */,
+				A6FC709116DBF2B2004FB989 /* 19940101.txt */,
+				A6FC709216DBF2B2004FB989 /* 19950101.txt */,
 				1F524E2616DB4CB4007244C5 /* 19960101.txt */,
 				1F524E2716DB4CB4007244C5 /* 19970101.txt */,
 				1F524E2816DB4CB4007244C5 /* 19980101.txt */,
@@ -1433,11 +1433,11 @@
 				1F524E2916DB4CB4007244C5 /* 19960101.txt in Resources */,
 				1F524E2A16DB4CB4007244C5 /* 19970101.txt in Resources */,
 				1F524E2B16DB4CB4007244C5 /* 19980101.txt in Resources */,
-				1F524E2E16DB4F40007244C5 /* 19940101.txt in Resources */,
-				1F524E2F16DB4F40007244C5 /* 19950101.txt in Resources */,
 				1F524E3216DB6B0C007244C5 /* 20140101.txt in Resources */,
 				1F524E3316DB6B0C007244C5 /* 20150101.txt in Resources */,
 				1F524E3516DB6D98007244C5 /* 20200101.txt in Resources */,
+				A6FC709316DBF2B2004FB989 /* 19940101.txt in Resources */,
+				A6FC709416DBF2B2004FB989 /* 19950101.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
