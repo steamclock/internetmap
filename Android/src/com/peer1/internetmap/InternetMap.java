@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 
 import android.view.animation.AlphaAnimation;
@@ -64,7 +66,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     
     private int mUserNodeIndex = -1; //cache user's node from "you are here"
     private JSONObject mTimelineHistory; //history data for timeline
-    private int mTimelineMinYear;
+    private ArrayList<String> mTimelineYears; //sorted year mapping
+    private int m2013Index; //index of 2013 in mTimelineYears
     public int mCurrentVisualization; //cached for the visualization popup
     private boolean mInTimelineMode; //true if we're showing the timeline
     private CallbackHandler mCameraResetHandler;
@@ -437,30 +440,22 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                     e.printStackTrace();
                 }
                 
-                //get range
-                String minYear = "9999";
-                String maxYear = "0";
+                //get seekbar -> year mapping
+                mTimelineYears = new ArrayList<String>();  
                 Iterator<?> it = mTimelineHistory.keys();
                 while(it.hasNext()){
-                    //note: even though years are numbers, since all the ones we use are 2xxx, a string comparison is safe.
                     String year = (String)it.next();
-                    if (year.compareTo(minYear) < 0) {
-                        minYear = year;
-                    }
-                    if (year.compareTo(maxYear) > 0) {
-                        maxYear = year;
-                    }
+                    mTimelineYears.add(year);
                 }
-                Log.d(TAG, String.format("year span: %s to %s", minYear, maxYear));
-                
-                int min = Integer.parseInt(minYear);
-                int max = Integer.parseInt(maxYear);
-                int range = max - min;
-                timelineBar.setMax(range);
-                mTimelineMinYear = min;
+                Assert.assertTrue("Timeline must have at least two years", mTimelineYears.size() > 1);
+
+                timelineBar.setMax(mTimelineYears.size() - 1);
+                Collections.sort(mTimelineYears);
+                m2013Index = mTimelineYears.indexOf("2013");
+                Assert.assertTrue("Can't find 2013 in timeline data", m2013Index != -1);
             }
 
-            timelineBar.setProgress(timelineBar.getMax());
+            timelineBar.setProgress(m2013Index);
             timelineBar.setVisibility(View.VISIBLE);
             timelineBar.requestLayout(); //hack to work around SurfaceView bug on some phones
             
@@ -469,7 +464,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             if (mNodePopup != null) mNodePopup.dismiss();
             //get the timeline popup up (even if the slider didn't change)
             createTimelinePopup();
-            showTimelinePopup(timelineBar, timelineBar.getMax());
+            showTimelinePopup(timelineBar, timelineBar.getProgress());
         }
     }
     
@@ -477,7 +472,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         if (mInTimelineMode) {
             SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
             timelineBar.setVisibility(View.INVISIBLE);
-            resetViewAndSetTimeline(mTimelineMinYear + timelineBar.getMax());
+            resetViewAndSetTimeline(m2013Index);
             mInTimelineMode = false;
             ToggleButton button = (ToggleButton)findViewById(R.id.timelineButton);
             button.setChecked(false);
@@ -505,7 +500,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     
     void showTimelinePopup(SeekBar seekBar, int progress) {
         Assert.assertNotNull(mTimelinePopup);
-        String year = Integer.toString(progress + mTimelineMinYear);
+        String year = mTimelineYears.get(progress);
         mTimelinePopup.setData(year, mTimelineHistory.optString(year));
         Log.d(TAG, year);
         
@@ -575,12 +570,11 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         }
         
         public void onStopTrackingTouch(SeekBar seekBar) {
-            int year = mTimelineMinYear + seekBar.getProgress();
-            resetViewAndSetTimeline(year);
+            resetViewAndSetTimeline(seekBar.getProgress());
         }
     }
     
-    public void resetViewAndSetTimeline(final int year) {
+    public void resetViewAndSetTimeline(final int yearIndex) {
         if (mNodePopup != null) {
             mNodePopup.dismiss();
         }
@@ -592,6 +586,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         
         mCameraResetHandler = new CallbackHandler(){
             public void handle() {
+                String year = mTimelineYears.get(yearIndex);
                 mController.setTimelinePoint(year);
                 if (mTimelinePopup != null) {
                     mTimelinePopup.dismiss();

@@ -14,7 +14,7 @@ public class MapControllerWrapper {
     public native NodeWrapper nodeByAsn(String asn);
     public native void updateTargetForIndex(int index);
     public native NodeWrapper[] allNodes();
-    public native void setTimelinePoint(int year);
+    public native void setTimelinePoint(String year);
     public native String[] visualizationNames();
     public native void setVisualization(int index);
     public native void deselectCurrentNode();
