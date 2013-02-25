@@ -11,6 +11,7 @@
 #include "Camera.hpp"
 #include "DefaultVisualization.hpp"
 #import "NodeWrapper+CPPHelpers.h"
+#import "GlobeVisualization.hpp"
 
 //TODO: move these to a better place
 
@@ -60,9 +61,9 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
 
 - (id)init {
     if (self = [super init]) {
-        _controller = new MapController();
+        GlobeVisualization::setPortrait(![HelperMethods deviceIsiPad]);
         
-        _controller->display->camera->resetZoomAndRotationAnimated(![HelperMethods deviceIsiPad]);
+        _controller = new MapController();
 
         if(![HelperMethods deviceIsiPad]) {
             // On phone we want a slightly different starting camera rotation/orientation
