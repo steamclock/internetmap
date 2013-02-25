@@ -47,6 +47,13 @@ static const int NUM_PAGES = 3;
         self.content.frame = origFrame;
     }
     else {
+        CGRect origFrame = self.content.frame;
+        origFrame.origin.x = 0;
+        origFrame.origin.y = 0;
+        origFrame.size.width = 1024;
+        origFrame.size.height = 768;
+        self.content.frame = origFrame;
+        
         self.background.image = [UIImage imageNamed:@"ipad-bg.png"];
     }
     
@@ -57,7 +64,12 @@ static const int NUM_PAGES = 3;
     for(int i = 0; i < NUM_PAGES; i++) {
         UIImageView* page = [[UIImageView alloc] initWithFrame:frame];
         frame.origin.x += frame.size.width;
-        page.image = [UIImage imageNamed:[NSString stringWithFormat:@"screen%d.png", i+1]];
+        if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+            page.image = [UIImage imageNamed:[NSString stringWithFormat:@"screen%d.png", i+1]];
+        }
+        else {
+            page.image = [UIImage imageNamed:[NSString stringWithFormat:@"screen%d-ipad.png", i+1]];
+        }
         [self.content addSubview:page];
     }
     

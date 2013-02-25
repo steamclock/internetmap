@@ -199,6 +199,12 @@
 		A6FC709016D5A93C004FB989 /* unified.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6FC708F16D5A93C004FB989 /* unified.txt */; };
 		A6FC709316DBF2B2004FB989 /* 19940101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6FC709116DBF2B2004FB989 /* 19940101.txt */; };
 		A6FC709416DBF2B2004FB989 /* 19950101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6FC709216DBF2B2004FB989 /* 19950101.txt */; };
+		A6FC709B16DC25BF004FB989 /* screen1-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = A6FC709516DC25BF004FB989 /* screen1-ipad.png */; };
+		A6FC709C16DC25BF004FB989 /* screen1-ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A6FC709616DC25BF004FB989 /* screen1-ipad@2x.png */; };
+		A6FC709D16DC25BF004FB989 /* screen2-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = A6FC709716DC25BF004FB989 /* screen2-ipad.png */; };
+		A6FC709E16DC25BF004FB989 /* screen2-ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A6FC709816DC25BF004FB989 /* screen2-ipad@2x.png */; };
+		A6FC709F16DC25BF004FB989 /* screen3-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = A6FC709916DC25BF004FB989 /* screen3-ipad.png */; };
+		A6FC70A016DC25BF004FB989 /* screen3-ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A6FC709A16DC25BF004FB989 /* screen3-ipad@2x.png */; };
 		D403BBDE16C1DF2F008AA000 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = D403BBD816C1DF2F008AA000 /* LICENSE */; };
 		D403BBE016C1DF2F008AA000 /* README in Resources */ = {isa = PBXBuildFile; fileRef = D403BBDA16C1DF2F008AA000 /* README */; };
 		D468090416795D4600A2C1CC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D468090216795CC200A2C1CC /* SystemConfiguration.framework */; };
@@ -505,6 +511,12 @@
 		A6FC708F16D5A93C004FB989 /* unified.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = unified.txt; path = Common/Data/unified.txt; sourceTree = "<group>"; };
 		A6FC709116DBF2B2004FB989 /* 19940101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 19940101.txt; path = Common/Data/19940101.txt; sourceTree = "<group>"; };
 		A6FC709216DBF2B2004FB989 /* 19950101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 19950101.txt; path = Common/Data/19950101.txt; sourceTree = "<group>"; };
+		A6FC709516DC25BF004FB989 /* screen1-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "screen1-ipad.png"; path = "iOS/Images/screen1-ipad.png"; sourceTree = SOURCE_ROOT; };
+		A6FC709616DC25BF004FB989 /* screen1-ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "screen1-ipad@2x.png"; path = "iOS/Images/screen1-ipad@2x.png"; sourceTree = SOURCE_ROOT; };
+		A6FC709716DC25BF004FB989 /* screen2-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "screen2-ipad.png"; path = "iOS/Images/screen2-ipad.png"; sourceTree = SOURCE_ROOT; };
+		A6FC709816DC25BF004FB989 /* screen2-ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "screen2-ipad@2x.png"; path = "iOS/Images/screen2-ipad@2x.png"; sourceTree = SOURCE_ROOT; };
+		A6FC709916DC25BF004FB989 /* screen3-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "screen3-ipad.png"; path = "iOS/Images/screen3-ipad.png"; sourceTree = SOURCE_ROOT; };
+		A6FC709A16DC25BF004FB989 /* screen3-ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "screen3-ipad@2x.png"; path = "iOS/Images/screen3-ipad@2x.png"; sourceTree = SOURCE_ROOT; };
 		D403BB9616C1D9C2008AA000 /* cc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cc.h; sourceTree = "<group>"; };
 		D403BB9716C1D9C2008AA000 /* icmp6.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = icmp6.h; sourceTree = "<group>"; };
 		D403BB9816C1D9C2008AA000 /* icmp_var.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = icmp_var.h; sourceTree = "<group>"; };
@@ -820,6 +832,12 @@
 				A6551E8416CAE32D00340590 /* screen3-highlight@2x.png */,
 				A6551E8516CAE32D00340590 /* screen3.png */,
 				A6551E8616CAE32D00340590 /* screen3@2x.png */,
+				A6FC709516DC25BF004FB989 /* screen1-ipad.png */,
+				A6FC709616DC25BF004FB989 /* screen1-ipad@2x.png */,
+				A6FC709716DC25BF004FB989 /* screen2-ipad.png */,
+				A6FC709816DC25BF004FB989 /* screen2-ipad@2x.png */,
+				A6FC709916DC25BF004FB989 /* screen3-ipad.png */,
+				A6FC709A16DC25BF004FB989 /* screen3-ipad@2x.png */,
 			);
 			name = "First Use";
 			sourceTree = "<group>";
@@ -1438,6 +1456,12 @@
 				1F524E3516DB6D98007244C5 /* 20200101.txt in Resources */,
 				A6FC709316DBF2B2004FB989 /* 19940101.txt in Resources */,
 				A6FC709416DBF2B2004FB989 /* 19950101.txt in Resources */,
+				A6FC709B16DC25BF004FB989 /* screen1-ipad.png in Resources */,
+				A6FC709C16DC25BF004FB989 /* screen1-ipad@2x.png in Resources */,
+				A6FC709D16DC25BF004FB989 /* screen2-ipad.png in Resources */,
+				A6FC709E16DC25BF004FB989 /* screen2-ipad@2x.png in Resources */,
+				A6FC709F16DC25BF004FB989 /* screen3-ipad.png in Resources */,
+				A6FC70A016DC25BF004FB989 /* screen3-ipad@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
