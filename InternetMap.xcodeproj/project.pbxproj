@@ -13,6 +13,15 @@
 		1175AA0416AA091800B93031 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1175AA0316AA091800B93031 /* CoreText.framework */; };
 		1175AA3216AA117800B93031 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1175AA3116AA117800B93031 /* libxml2.dylib */; };
 		1175AA3416AA117F00B93031 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1175AA3316AA117F00B93031 /* ImageIO.framework */; };
+		1F524E2516DB3F42007244C5 /* 19990101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F524E2416DB3F42007244C5 /* 19990101.txt */; };
+		1F524E2916DB4CB4007244C5 /* 19960101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F524E2616DB4CB4007244C5 /* 19960101.txt */; };
+		1F524E2A16DB4CB4007244C5 /* 19970101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F524E2716DB4CB4007244C5 /* 19970101.txt */; };
+		1F524E2B16DB4CB4007244C5 /* 19980101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F524E2816DB4CB4007244C5 /* 19980101.txt */; };
+		1F524E2E16DB4F40007244C5 /* 19940101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F524E2C16DB4F40007244C5 /* 19940101.txt */; };
+		1F524E2F16DB4F40007244C5 /* 19950101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F524E2D16DB4F40007244C5 /* 19950101.txt */; };
+		1F524E3216DB6B0C007244C5 /* 20140101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F524E3016DB6B0C007244C5 /* 20140101.txt */; };
+		1F524E3316DB6B0C007244C5 /* 20150101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F524E3116DB6B0C007244C5 /* 20150101.txt */; };
+		1F524E3516DB6D98007244C5 /* 20200101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F524E3416DB6D98007244C5 /* 20200101.txt */; };
 		84E0672316D5AC9A00751B7B /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 84E0672216D5AC9A00751B7B /* Icon-72.png */; };
 		84E0672516D5ACA300751B7B /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 84E0672416D5ACA300751B7B /* Icon.png */; };
 		84E0672716D5ADA200751B7B /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84E0672616D5ADA200751B7B /* Icon@2x.png */; };
@@ -222,6 +231,15 @@
 		1175AA0316AA091800B93031 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		1175AA3116AA117800B93031 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		1175AA3316AA117F00B93031 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		1F524E2416DB3F42007244C5 /* 19990101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 19990101.txt; path = Common/data/19990101.txt; sourceTree = "<group>"; };
+		1F524E2616DB4CB4007244C5 /* 19960101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 19960101.txt; path = Common/data/19960101.txt; sourceTree = "<group>"; };
+		1F524E2716DB4CB4007244C5 /* 19970101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 19970101.txt; path = Common/data/19970101.txt; sourceTree = "<group>"; };
+		1F524E2816DB4CB4007244C5 /* 19980101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 19980101.txt; path = Common/data/19980101.txt; sourceTree = "<group>"; };
+		1F524E2C16DB4F40007244C5 /* 19940101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 19940101.txt; path = ../../data/aspipeline/out/19940101.txt; sourceTree = "<group>"; };
+		1F524E2D16DB4F40007244C5 /* 19950101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 19950101.txt; path = ../../data/aspipeline/out/19950101.txt; sourceTree = "<group>"; };
+		1F524E3016DB6B0C007244C5 /* 20140101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20140101.txt; path = Common/data/20140101.txt; sourceTree = "<group>"; };
+		1F524E3116DB6B0C007244C5 /* 20150101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20150101.txt; path = Common/data/20150101.txt; sourceTree = "<group>"; };
+		1F524E3416DB6D98007244C5 /* 20200101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20200101.txt; path = Common/data/20200101.txt; sourceTree = "<group>"; };
 		84E0672216D5AC9A00751B7B /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
 		84E0672416D5ACA300751B7B /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		84E0672616D5ADA200751B7B /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
@@ -742,6 +760,12 @@
 				A686E9B916B62915009B070E /* history.json */,
 				A600AAD316A664DF003B1028 /* as2attr.txt */,
 				A600AAD416A664E0003B1028 /* asinfo.json */,
+				1F524E2C16DB4F40007244C5 /* 19940101.txt */,
+				1F524E2D16DB4F40007244C5 /* 19950101.txt */,
+				1F524E2616DB4CB4007244C5 /* 19960101.txt */,
+				1F524E2716DB4CB4007244C5 /* 19970101.txt */,
+				1F524E2816DB4CB4007244C5 /* 19980101.txt */,
+				1F524E2416DB3F42007244C5 /* 19990101.txt */,
 				A6E1D5A516B9DA2A00D8B26F /* 20000102.txt */,
 				A6E1D5A616B9DA2A00D8B26F /* 20010101.txt */,
 				A6E1D5A716B9DA2A00D8B26F /* 20020101.txt */,
@@ -757,6 +781,9 @@
 				A6E1D5B116B9DA2A00D8B26F /* 20110102.txt */,
 				A6E1D5B216B9DA2A00D8B26F /* 20120102.txt */,
 				A6E1D5B316B9DA2A00D8B26F /* 20130102.txt */,
+				1F524E3016DB6B0C007244C5 /* 20140101.txt */,
+				1F524E3116DB6B0C007244C5 /* 20150101.txt */,
+				1F524E3416DB6D98007244C5 /* 20200101.txt */,
 			);
 			name = Data;
 			sourceTree = "<group>";
@@ -1402,6 +1429,15 @@
 				84E0672916D5ADC100751B7B /* Icon@2x.png in Resources */,
 				84E0672B16D5ADCA00751B7B /* Icon-72@2x.png in Resources */,
 				A6FC709016D5A93C004FB989 /* unified.txt in Resources */,
+				1F524E2516DB3F42007244C5 /* 19990101.txt in Resources */,
+				1F524E2916DB4CB4007244C5 /* 19960101.txt in Resources */,
+				1F524E2A16DB4CB4007244C5 /* 19970101.txt in Resources */,
+				1F524E2B16DB4CB4007244C5 /* 19980101.txt in Resources */,
+				1F524E2E16DB4F40007244C5 /* 19940101.txt in Resources */,
+				1F524E2F16DB4F40007244C5 /* 19950101.txt in Resources */,
+				1F524E3216DB6B0C007244C5 /* 20140101.txt in Resources */,
+				1F524E3316DB6B0C007244C5 /* 20150101.txt in Resources */,
+				1F524E3516DB6D98007244C5 /* 20200101.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

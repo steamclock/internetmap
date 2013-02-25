@@ -49,14 +49,14 @@ public:
     float defaultPositionY;
     
     std::string typeString;
-    std::string name;
+//    std::string name;
     std::string rawTextDescription; //raw node description; do not use in the UI (use friendlyDescription instead)
-    std::string dateRegistered;
-    std::string address;
-    std::string city;
-    std::string state;
-    std::string postalCode;
-    std::string country;
+//    std::string dateRegistered;
+//    std::string address;
+//    std::string city;
+//    std::string state;
+//    std::string postalCode;
+//    std::string country;
     
     bool hasLatLong;
     float latitude;

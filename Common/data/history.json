@@ -1,4 +1,10 @@
 {
+    "1994" : "1994",
+    "1995" : "1995",
+    "1996" : "1996",
+    "1997" : "1997",
+    "1998" : "1998",
+    "1999" : "1999",
     "2000" : "The <b>.com Bubble</b> collapses",
     "2001" : "<b>Wikipedia</b> launches",
     "2002" : "Internet population surpasses <b>500 million</b>",
@@ -12,5 +18,8 @@
     "2010" : "<b>4G Wireless</b> launches<br /><b>Facebook</b> reaches 400 million users<br /><b>Smartphones</b> out-sell PCs",
     "2011" : "<b>Google+</b> launches<br /><b>Twitter and Facebook</b> play a large role in the Middle East revolts",
     "2012" : "<b>SOPA blackout day</b> for net neutrality",
-    "2013" : "Over <b>2.4 billion</b> Internet users worldwide"
+    "2013" : "Over <b>2.4 billion</b> Internet users worldwide",
+    "2014" : "2014",
+    "2015" : "2015",
+    "2020" : "2020",
 }
