@@ -14,10 +14,10 @@
 
 static const float IndexBoxMinX = -8;
 static const float IndexBoxMaxX = 8;
-static const float IndexBoxMinY = -2;
-static const float IndexBoxMaxY = 2;
-static const float IndexBoxMinZ = -2;
-static const float IndexBoxMaxZ = 2;
+static const float IndexBoxMinY = -2.1;
+static const float IndexBoxMaxY = 2.1;
+static const float IndexBoxMinZ = -2.1;
+static const float IndexBoxMaxZ = 2.1;
 static const float lengthX = -IndexBoxMinX + IndexBoxMaxX;
 static const float lengthY = -IndexBoxMinY + IndexBoxMaxY;
 static const float lengthZ = -IndexBoxMinZ + IndexBoxMaxZ;
