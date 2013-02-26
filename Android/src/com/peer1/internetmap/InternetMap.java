@@ -91,10 +91,10 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         final SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceview);
         surfaceView.getHolder().addCallback(this);
 
+        //init a bunch of pointers
         mGestureDetector = new GestureDetectorCompat(this, new MyGestureListener());
         mScaleDetector = new ScaleGestureDetector(this, new ScaleListener());
         mRotateDetector = new RotateGestureDetector(this, new RotateListener());
-        
         mController = new MapControllerWrapper();
         mHandler = new Handler();
         
@@ -122,6 +122,17 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             showHelp();
             prefs.edit().putBoolean("firstrun", false).commit();
         }
+
+        //reset all the togglebuttons that android helpfully restores for us :P
+        ToggleButton button = (ToggleButton) findViewById(R.id.searchButton);
+        button.setChecked(false);
+        button = (ToggleButton) findViewById(R.id.visualizationsButton);
+        button.setChecked(false);
+        button = (ToggleButton) findViewById(R.id.timelineButton);
+        button.setChecked(false);
+        button = (ToggleButton) findViewById(R.id.infoButton);
+        button.setChecked(false);
+            
     }
     
     public void showHelp() {
