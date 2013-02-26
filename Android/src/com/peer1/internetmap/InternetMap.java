@@ -77,6 +77,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     private CallbackHandler mCameraResetHandler;
     private TimelinePopup mTimelinePopup;
     public ArrayList<SearchNode> mAllSearchNodes; //cache of nodes for search
+    public boolean mDoneLoading;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -156,6 +157,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                 Log.d(TAG, String.format("converted %d nodes", mAllSearchNodes.size()));
             }
         });
+        
+        mDoneLoading = true;
     }
     
     public void showHelp() {
@@ -248,7 +251,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
     public void surfaceCreated(SurfaceHolder holder) {
         View loader = findViewById(R.id.loadingSpinner);
-        if (loader.getVisibility() != View.GONE) {
+        if (mDoneLoading && loader.getVisibility() != View.GONE) {
             //something went weird, reset the UI
             Log.d(TAG, "resetting loader and button state");
             loader.setVisibility(View.GONE);
