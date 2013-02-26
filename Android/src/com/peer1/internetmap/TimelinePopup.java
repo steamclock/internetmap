@@ -1,34 +1,51 @@
 package com.peer1.internetmap;
 
+import junit.framework.Assert;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.text.Html;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.RelativeLayout.LayoutParams;
 import android.view.animation.TranslateAnimation;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
  * Timeline information popup
  */
-public class TimelinePopup extends PopupWindow {
+public class TimelinePopup {
     private static String TAG = "TimelinePopup";
     private Context mContext;
     private int mArrowOffset;
+    private View mView;
+    private RelativeLayout mParentView;
+    private int mWidthMode;
+    private boolean mIsShowing;
     
-    public TimelinePopup(Context context, View view) {
-        super(view);
+    public TimelinePopup(InternetMap context) {
         mContext = context;
-        setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.translucentBlack)));
-        setHeight(100); //a fake height so that showAsDropDown doesn't mess up.
+        LayoutInflater layoutInflater = (LayoutInflater)context.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mView = layoutInflater.inflate(R.layout.timelinepopup, null);
+        
+        if (context.isSmallScreen()) {
+            mView.findViewById(R.id.arrow).setVisibility(View.GONE);
+            mWidthMode = LayoutParams.MATCH_PARENT;
+        } else {
+            mWidthMode = LayoutParams.WRAP_CONTENT;
+        }
+        
+        mParentView = (RelativeLayout) context.findViewById(R.id.mainLayout);
+        Assert.assertNotNull(mParentView);
     }
     
     public void setData(String year, String mainText) {
         //put it in the right views
-        TextView titleView = (TextView) getContentView().findViewById(R.id.titleView);
+        TextView titleView = (TextView) mView.findViewById(R.id.titleView);
         titleView.setText(year);
-        TextView mainTextView = (TextView) getContentView().findViewById(R.id.mainTextView);
+        TextView mainTextView = (TextView) mView.findViewById(R.id.mainTextView);
         if (mainText.isEmpty()) {
             mainTextView.setText(mContext.getString(R.string.nodata));
         } else {
@@ -38,7 +55,7 @@ public class TimelinePopup extends PopupWindow {
     
     //note: don't call this twice in a row
     public void showLoadingText() {
-        TextView titleView = (TextView) getContentView().findViewById(R.id.titleView);
+        TextView titleView = (TextView) mView.findViewById(R.id.titleView);
         CharSequence year = titleView.getText();
         titleView.setText(String.format(mContext.getString(R.string.loading), year));
     }
@@ -49,17 +66,27 @@ public class TimelinePopup extends PopupWindow {
      */
     public int getMeasuredWidth() {
         //update the layout for current data
-        getContentView().measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        return getContentView().getMeasuredWidth();
+        mView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        return mView.getMeasuredWidth();
+    }
+    
+    public boolean isShowing() {
+        return mIsShowing;
     }
     
     /**
-     * update both the regular positioning and the arrow position
+     * show/update this popup.
+     * 
+     * updates both the regular positioning and the arrow position
      */
-    public void updateOffsets(View seekBar, int xOffset, int arrowOffset) {
-        update(seekBar, xOffset, 0, -1, -1);
+    public void showWithOffsets(int xOffset, int arrowOffset) {
+        LayoutParams params = new LayoutParams(mWidthMode, LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.ABOVE, R.id.timelineSeekBar);
+        params.setMargins(xOffset, 0, 0, 0);
+        mParentView.removeView(mView);
+        mParentView.addView(mView, params);
         
-        View arrow = getContentView().findViewById(R.id.arrow);
+        View arrow = mView.findViewById(R.id.arrow);
         //arrow.setTranslationX(arrowOffset);
         //settranslationx isn't available in api 10, so we work around this with an animation.
         TranslateAnimation anim = new TranslateAnimation(mArrowOffset, arrowOffset, 0, 0);
@@ -68,5 +95,12 @@ public class TimelinePopup extends PopupWindow {
         arrow.startAnimation(anim);
         Log.d(TAG, "animating");
         mArrowOffset = arrowOffset;
+        
+        mIsShowing = true;
+    }
+
+    public void dismiss() {
+        mParentView.removeView(mView);
+        mIsShowing = false;
     }
 }

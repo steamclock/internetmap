@@ -526,17 +526,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     
     void createTimelinePopup() {
         Assert.assertNull(mTimelinePopup);
-        LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-        View popupView = layoutInflater.inflate(R.layout.timelinepopup, null);
-        if (isSmallScreen()) {
-            popupView.findViewById(R.id.arrow).setVisibility(View.GONE);
-        }
-        mTimelinePopup = new TimelinePopup(InternetMap.this, popupView);
-        mTimelinePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            public void onDismiss() {
-                mTimelinePopup = null;
-            }
-        });
+        mTimelinePopup = new TimelinePopup(this);
     }
     
     void showTimelinePopup(SeekBar seekBar, int progress) {
@@ -546,15 +536,13 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         Log.d(TAG, year);
         
         //update size/position
-        int width, offset, arrowOffset;
+        int offset, arrowOffset;
         boolean needsUpdate;
         if (isSmallScreen()) {
-            width = LayoutParams.MATCH_PARENT;
             offset = 0;
             arrowOffset = 0;
-            needsUpdate = false;
+            needsUpdate = ! mTimelinePopup.isShowing();
         } else {
-            width = LayoutParams.WRAP_CONTENT;
             //calculate offset to line up with the timelineBar
             int barWidth = seekBar.getWidth();
             int maxProgress = seekBar.getMax();
@@ -572,27 +560,26 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             
             //get the arrow in the right place even at the edges
             //note: I'm assuming barWidth == screenWidth
+            //also, we now need to keep the popup on-screen manually.
             int end = barWidth - popupWidth;
             if (offset < 0) {
                 arrowOffset = offset;
+                offset = 0;
             } else if (offset > end) {
                 arrowOffset = offset - end;
+                offset = end;
             } else {
                 arrowOffset = 0;
             }
             
             needsUpdate = true;
         }
-        if (!mTimelinePopup.isShowing()) {
-            //Log.d(TAG, "first show");
-            mTimelinePopup.setWindowLayoutMode(width, LayoutParams.WRAP_CONTENT);
-            mTimelinePopup.showAsDropDown(seekBar, offset, 0);
-        }
+        
         if (needsUpdate) {
-            mTimelinePopup.updateOffsets(seekBar, offset, arrowOffset);
+            mTimelinePopup.showWithOffsets(offset, arrowOffset);
         }
     }
-
+    
     private class TimelineListener implements SeekBar.OnSeekBarChangeListener{
         
         public void onStartTrackingTouch(SeekBar seekBar) {
@@ -631,6 +618,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                 mController.setTimelinePoint(year);
                 if (mTimelinePopup != null) {
                     mTimelinePopup.dismiss();
+                    mTimelinePopup = null;
                 }
             }
         };
