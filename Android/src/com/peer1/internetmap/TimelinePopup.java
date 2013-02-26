@@ -29,8 +29,10 @@ public class TimelinePopup {
         mView = layoutInflater.inflate(R.layout.timelinepopup, null);
         
         if (context.isSmallScreen()) {
-            //no arrow, full width
+            //padding instead of arrow, and full width
             mView.findViewById(R.id.arrow).setVisibility(View.GONE);
+            mView.findViewById(R.id.LinearLayout1).setPadding(0, 0, 0, 10);
+            
             mWidthMode = LayoutParams.MATCH_PARENT;
             View content = mView.findViewById(R.id.mainTextView);
             android.view.ViewGroup.LayoutParams params = content.getLayoutParams();
