@@ -1,11 +1,11 @@
 {
-    "1994" : "1994",
-    "1995" : "1995",
-    "1996" : "1996",
-    "1997" : "1997",
-    "1998" : "1998",
-    "1999" : "1999",
-    "2000" : "The <b>.com Bubble</b> collapses",
+    "1994" : "<b>BGP-4</b> introduced as the global distributed routing protocol for the internet",
+    "1995" : "<b>Amazon</b> launches<br /><b>16 million</b> Internet users worldwide",
+    "1996" : "Beginning of the <b>browser</b> wars<br /><b>36 million</b> Internet users worldwide",
+    "1997" : "Debut of web animation tool <b>Flash</b><br /><b>76 million</b> Internet users worldwide",
+    "1998" : "<b>Google</b> launches<br /><b>147 million</b> Internet users worldwide",
+    "1999" : "<b>Napster</b> launches<br /><b>195 million</b> Internet users worldwide",
+    "2000" : "The <b>.com Bubble</b> collapses<br /><b>368 million</b> Internet users worldwide",
     "2001" : "<b>Wikipedia</b> launches",
     "2002" : "Internet population surpasses <b>500 million</b>",
     "2003" : "Apple launches the <b>iTunes Store</b><br /><b>Skype</b> launches<br /><b>MySpace</b> opens its doors",
@@ -19,7 +19,7 @@
     "2011" : "<b>Google+</b> launches<br /><b>Twitter and Facebook</b> play a large role in the Middle East revolts",
     "2012" : "<b>SOPA blackout day</b> for net neutrality",
     "2013" : "Over <b>2.4 billion</b> Internet users worldwide",
-    "2014" : "2014",
-    "2015" : "2015",
-    "2020" : "2020"
+    "2014" : "Projected growth",
+    "2015" : "Projected growth",
+    "2020" : "Projected growth"
 }
