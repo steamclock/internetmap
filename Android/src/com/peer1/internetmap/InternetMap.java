@@ -47,6 +47,8 @@ import android.view.ViewGroup.LayoutParams;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
 import com.peer1.internetmap.ASNRequest.ASNResponseHandler;
+import com.peer1.internetmap.SearchPopup.SearchNode;
+
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.UpdateManager;
 
@@ -74,6 +76,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     private boolean mInTimelineMode; //true if we're showing the timeline
     private CallbackHandler mCameraResetHandler;
     private TimelinePopup mTimelinePopup;
+    public ArrayList<SearchNode> mAllSearchNodes; //cache of nodes for search
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -134,7 +137,25 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         button.setChecked(false);
         button = (ToggleButton) findViewById(R.id.infoButton);
         button.setChecked(false);
-            
+        
+        //start loading the search nodes
+        mHandler.post(new Runnable() {
+            public void run() {
+                NodeWrapper[] rawNodes = mController.allNodes();
+                Log.d(TAG, String.format("loaded %d nodes", rawNodes.length));
+                
+                //initial search results: use all the nodes!
+                mAllSearchNodes = new ArrayList<SearchNode>(rawNodes.length);
+                for (int i = 0; i < rawNodes.length; i++) {
+                    if (rawNodes[i] != null) {
+                        mAllSearchNodes.add(new SearchNode(rawNodes[i]));
+                    } else {
+                        //Log.d(TAG, "caught null node"); //FIXME catch this in jni
+                    }
+                }
+                Log.d(TAG, String.format("converted %d nodes", mAllSearchNodes.size()));
+            }
+        });
     }
     
     public void showHelp() {

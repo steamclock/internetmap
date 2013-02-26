@@ -29,7 +29,7 @@ public class SearchPopup extends PopupWindow{
     private Context mContext;
     
     /** required interface for arrayadapter items */
-    private interface SearchItem {
+    public interface SearchItem {
         public String toString();
     }
     /**
@@ -39,7 +39,7 @@ public class SearchPopup extends PopupWindow{
      * This implements the required interface for ArrayAdapter use and filtering.
      *
      */
-    private class SearchNode implements SearchItem {
+    public static class SearchNode implements SearchItem {
         public final NodeWrapper node;
         
         SearchNode(NodeWrapper node) {
@@ -201,21 +201,8 @@ public class SearchPopup extends PopupWindow{
         setOutsideTouchable(true); //make touching outside dismiss the popup
         setFocusable(true); //make clicks work
         setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE); //show keyboard
-
-        //set up the results list
-        NodeWrapper[] rawNodes = mController.allNodes();
-        Log.d(TAG, String.format("loaded %d nodes", rawNodes.length));
         
-        //initial search results: use all the nodes!
-        mAllNodes = new ArrayList<SearchNode>(rawNodes.length);
-        for (int i = 0; i < rawNodes.length; i++) {
-            if (rawNodes[i] != null) {
-                mAllNodes.add(new SearchNode(rawNodes[i]));
-            } else {
-                //Log.d(TAG, "caught null node"); //FIXME catch this in jni
-            }
-        }
-        Log.d(TAG, String.format("converted %d nodes", mAllNodes.size()));
+        mAllNodes = context.mAllSearchNodes;
         
         final NodeAdapter adapter = new NodeAdapter(context, android.R.layout.simple_list_item_1,
                 android.R.id.text1);
