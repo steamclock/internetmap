@@ -2,15 +2,13 @@ package com.peer1.internetmap;
 
 import junit.framework.Assert;
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.RelativeLayout.LayoutParams;
-import android.view.animation.TranslateAnimation;
-import android.widget.PopupWindow;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.RelativeLayout;
+import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 
 /**
@@ -31,8 +29,13 @@ public class TimelinePopup {
         mView = layoutInflater.inflate(R.layout.timelinepopup, null);
         
         if (context.isSmallScreen()) {
+            //no arrow, full width
             mView.findViewById(R.id.arrow).setVisibility(View.GONE);
             mWidthMode = LayoutParams.MATCH_PARENT;
+            View content = mView.findViewById(R.id.mainTextView);
+            android.view.ViewGroup.LayoutParams params = content.getLayoutParams();
+            params.width = LayoutParams.MATCH_PARENT;
+            content.setLayoutParams(params);
         } else {
             mWidthMode = LayoutParams.WRAP_CONTENT;
         }
@@ -80,7 +83,7 @@ public class TimelinePopup {
      * updates both the regular positioning and the arrow position
      */
     public void showWithOffsets(int xOffset, int arrowOffset) {
-        LayoutParams params = new LayoutParams(mWidthMode, LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mWidthMode, LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.ABOVE, R.id.timelineSeekBar);
         params.setMargins(xOffset, 0, 0, 0);
         mParentView.removeView(mView);
