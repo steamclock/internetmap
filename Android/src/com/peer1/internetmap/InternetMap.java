@@ -8,6 +8,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.view.animation.AlphaAnimation;
 import android.view.animation.AnimationUtils;
@@ -336,6 +338,18 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         progress.setVisibility(View.VISIBLE);
         button.setVisibility(View.INVISIBLE);
         
+        //asn requests are unreliable sometimes, so set a backup timeout
+        final Runnable backupTimer = new Runnable() {
+            public void run() {
+                Log.d(TAG, "backup timer hit");
+                showError(getString(R.string.asnAssociationFail));
+                //stop animating
+                progress.setVisibility(View.INVISIBLE);
+                button.setVisibility(View.VISIBLE);
+            }
+        };
+        mHandler.postDelayed(backupTimer, 10000);
+        
         //dns lookup in the background
         new AsyncTask<Void, Void, String>() {
             @Override
@@ -355,6 +369,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                     //stop animating
                     progress.setVisibility(View.INVISIBLE);
                     button.setVisibility(View.VISIBLE);
+                    mHandler.removeCallbacks(backupTimer);
                 } else {
                     Log.d(TAG, addrString);
                     ASNRequest.fetchASNForIP(addrString, new ASNResponseHandler() {
@@ -367,6 +382,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                         //stop animating
                         progress.setVisibility(View.INVISIBLE);
                         button.setVisibility(View.VISIBLE);
+                        mHandler.removeCallbacks(backupTimer);
                     }
 
                     public void onSuccess(JSONObject response) {
@@ -390,13 +406,26 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
 
     public void youAreHereButtonPressed() {
-
         //check internet status
         boolean isConnected = haveConnectivity();
         
         if (!isConnected) {
             return;
         }
+        
+        //asn requests are unreliable sometimes, so set a backup timeout
+        final Runnable backupTimer = new Runnable() {
+            public void run() {
+                Log.d(TAG, "backup timer hit");
+                showError(getString(R.string.currentASNFail));
+                //stop animating
+                ProgressBar progress = (ProgressBar) findViewById(R.id.searchProgressBar);
+                Button button = (Button) findViewById(R.id.searchButton);
+                progress.setVisibility(View.INVISIBLE);
+                button.setVisibility(View.VISIBLE);
+            }
+        };
+        mHandler.postDelayed(backupTimer, 10000);
 
         //do an ASN request to get the user's ASN
         ASNRequest.fetchCurrentASNWithResponseHandler(new ASNResponseHandler() {
@@ -415,6 +444,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                 Button button = (Button) findViewById(R.id.searchButton);
                 progress.setVisibility(View.INVISIBLE);
                 button.setVisibility(View.VISIBLE);
+                mHandler.removeCallbacks(backupTimer);
             }
 
             public void onSuccess(JSONObject response) {
