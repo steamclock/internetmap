@@ -116,6 +116,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/contentPadding"
+        android:layout_marginRight="@dimen/contentPadding"
         android:src="@drawable/peer1_logo" />
 
     <ProgressBar
