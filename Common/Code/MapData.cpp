@@ -261,6 +261,18 @@ void MapData::loadASInfo(const std::string& json){
         std::vector<std::string> members = root.getMemberNames();
         for (unsigned int i = 0; i < members.size(); i++) {
             NodePointer node = nodesByAsn[members[i]];
+            
+            if(!node) {
+                node = NodePointer(new Node());
+                node->asn = members[i];
+                node->type = AS_UNKNOWN;
+                node->timelineActive = false;
+                
+                node->index = nodes.size();
+                nodes.push_back(node);
+                nodesByAsn[node->asn] = node;
+            }
+            
             if (node) {
                 Json::Value as = root[members[i]];
 //                node->name = as[1].asString();
