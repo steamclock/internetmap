@@ -329,16 +329,21 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         button.setChecked(true);
         
         if (mSearchPopup == null) {
-            LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-            View popupView = layoutInflater.inflate(R.layout.searchview, null);
-            mSearchPopup = new SearchPopup(this, mController, popupView);
-            mSearchPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                public void onDismiss() {
-                    mSearchPopup = null;
-                    button.setChecked(false);
+            //this can be slow to load, so delay it until the UI updates the button
+            mHandler.post(new Runnable(){
+                public void run(){
+                    LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                    View popupView = layoutInflater.inflate(R.layout.searchview, null);
+                    mSearchPopup = new SearchPopup(InternetMap.this, mController, popupView);
+                    mSearchPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                        public void onDismiss() {
+                            mSearchPopup = null;
+                            button.setChecked(false);
+                        }
+                    });
+                    mSearchPopup.showAsDropDown(findViewById(R.id.searchButton));
                 }
             });
-            mSearchPopup.showAsDropDown(findViewById(R.id.searchButton));
         }
     }
     
