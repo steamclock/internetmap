@@ -226,9 +226,25 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
+        View loader = findViewById(R.id.loadingSpinner);
+        if (loader.getVisibility() != View.GONE) {
+            //something went weird, reset the UI
+            Log.d(TAG, "resetting loader and button state");
+            loader.setVisibility(View.GONE);
+            
+            ToggleButton button = (ToggleButton) findViewById(R.id.searchButton);
+            button.setChecked(false);
+            button = (ToggleButton) findViewById(R.id.visualizationsButton);
+            button.setChecked(false);
+            button = (ToggleButton) findViewById(R.id.timelineButton);
+            button.setChecked(false);
+            button = (ToggleButton) findViewById(R.id.infoButton);
+            button.setChecked(false);
+        }
     }
 
     public void surfaceDestroyed(SurfaceHolder holder) {
+        Log.d(TAG, "surface destroyed");
         nativeSetSurface(null, 1.0f);
     }
 
