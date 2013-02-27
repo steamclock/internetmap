@@ -12,7 +12,7 @@
     <string name="asnAssociationFail">Couldn\'t find a node associated with your host.</string>
     <string name="tracerouteStartIPFail">Error: ASN couldn\'t be resolved into IP. Please try another node!</string>
     <string name="noInternet">This feature requires internet access.</string>
-    <color name="translucentBlack">#C8000000</color>
+    <color name="translucentBlack">#D9000000</color>
     <string name="searchHint">Type a company or domain...</string>
     <string name="findHost">Find host \'%s\'</string>
     <string name="invalidHost">Can\'t find host \'%s\'</string>
