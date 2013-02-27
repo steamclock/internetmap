@@ -13,6 +13,7 @@
 @interface NodeTooltipViewController : UIViewController
 
 @property (nonatomic) NodeWrapper* node;
+@property (strong) NSString* text;
 
 - (id)initWithNode:(NodeWrapper*)node;
 

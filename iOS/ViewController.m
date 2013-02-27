@@ -687,9 +687,22 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
     
     if (self.timelineSlider.hidden == NO) {
+        BOOL simulated = NO;
+        
+        int year = [self.sortedYears[(int)self.timelineSlider.value] intValue];
+        if((year > 2013) || (year < 2000)) {
+            simulated = YES;
+        }
+
         // in timeline mdoe, we just show tooltip-style popover
         [self.nodeInformationPopover dismissPopoverAnimated:NO];
-        self.nodeInformationPopover = [[WEPopoverController alloc] initWithContentViewController:[[NodeTooltipViewController alloc] initWithNode:node]];
+        NodeTooltipViewController* content = [[NodeTooltipViewController alloc] initWithNode:node];
+        self.nodeInformationPopover = [[WEPopoverController alloc] initWithContentViewController:content];
+        
+        if(simulated) {
+            content.text = @"Simulated";
+        }
+        
         self.nodeInformationPopover.passthroughViews = @[self.view];
         CGPoint center = [self.controller getCoordinatesForNodeAtIndex:self.controller.targetNode];
         [self.nodeInformationPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];

@@ -35,12 +35,16 @@
     label.textColor = [UIColor whiteColor];
     label.textAlignment = UITextAlignmentCenter;
     label.font = [UIFont fontWithName:@"HelveticaNeue" size:22];
-    if ([HelperMethods isStringEmptyOrNil:self.node.rawTextDescription]) {
-        label.text = [NSString stringWithFormat:@"AS%@", self.node.asn];
-    }else {
-        
-        
-        label.text = self.node.friendlyDescription;
+    
+    if(self.text) {
+        label.text = self.text;
+    }
+    else {
+        if ([HelperMethods isStringEmptyOrNil:self.node.rawTextDescription]) {
+            label.text = [NSString stringWithFormat:@"AS%@", self.node.asn];
+        }else {
+            label.text = self.node.friendlyDescription;
+        }
     }
     [self.view addSubview:label];
 }
