@@ -71,7 +71,34 @@ MapController::MapController() :
 
     LOG("parse asinfo.json: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
     
-    //data->dumpUnified();
+/*
+    setTimelinePoint("19940101");
+    setTimelinePoint("19950101");
+    setTimelinePoint("19960101");
+    setTimelinePoint("19970101");
+    setTimelinePoint("19980101");
+    setTimelinePoint("19990101");
+    setTimelinePoint("20000101");
+    setTimelinePoint("20010101");
+    setTimelinePoint("20020101");
+    setTimelinePoint("20030101");
+    setTimelinePoint("20040101");
+    setTimelinePoint("20050101");
+    setTimelinePoint("20060101");
+    setTimelinePoint("20070101");
+    setTimelinePoint("20080101");
+    setTimelinePoint("20090101");
+    setTimelinePoint("20100101");
+    setTimelinePoint("20110101");
+    setTimelinePoint("20120101");
+    setTimelinePoint("20140101");
+    setTimelinePoint("20150101");
+    setTimelinePoint("20200101");
+
+    setTimelinePoint("20130101");
+
+    data->dumpUnified();
+ */
 
 #else
     lastTimelinePoint = "20130101";

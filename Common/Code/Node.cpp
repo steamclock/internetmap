@@ -13,7 +13,8 @@ Node::Node() :
     hasLatLong(false),
     latitude(0.0f),
     longitude(0.0f),
-    activeDefault(false)
+    activeDefault(false),
+    neverLoaded(false)
 {}
 
 std::string Node::friendlyDescription() {

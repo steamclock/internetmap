@@ -41,6 +41,7 @@ public:
     int type;
     bool timelineActive;
     bool visualizationActive;
+    bool neverLoaded;
     
     // cached values for newest data, so that we can switch back quickly
     float activeDefault;

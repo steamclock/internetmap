@@ -131,6 +131,7 @@ void MapData::loadFromString(const std::string& text) {
         if(node) {
             // already thre, just mark as active
             node->timelineActive = true;
+            node->neverLoaded = false;
         }
         else {
             // Not there, create
@@ -257,6 +258,8 @@ void MapData::loadASInfo(const std::string& json){
     Json::Value root;
     Json::Reader reader;
     bool success = reader.parse(json, root);
+    
+    int missing = 0;
     if(success) {
         std::vector<std::string> members = root.getMemberNames();
         for (unsigned int i = 0; i < members.size(); i++) {
@@ -268,9 +271,13 @@ void MapData::loadASInfo(const std::string& json){
                 node->type = AS_UNKNOWN;
                 node->timelineActive = false;
                 
+                node->neverLoaded = true;
+                
                 node->index = nodes.size();
                 nodes.push_back(node);
                 nodesByAsn[node->asn] = node;
+                
+                missing++;
             }
             
             if (node) {
@@ -294,6 +301,8 @@ void MapData::loadASInfo(const std::string& json){
             }
         }
     }
+    
+    LOG("%d nodes added by asinfo", missing);
 }
 
 void MapData::loadUnified(const std::string& text) {
@@ -314,8 +323,6 @@ void MapData::loadUnified(const std::string& text) {
     
     for (int i = 0; i < numNodes; i++) {
         NodePointer node = NodePointer(new Node());
-        node->timelineActive = true;
-        node->activeDefault = true;
         
         sourceText = nextToken(sourceText, token, &lineEnd, '\t');
         node->asn = token;
@@ -327,6 +334,9 @@ void MapData::loadUnified(const std::string& text) {
 
         sourceText = nextToken(sourceText, token, &lineEnd, '\t');
         node->type = atoi(token);
+
+        sourceText = nextToken(sourceText, token, &lineEnd, '\t');
+        node->timelineActive = node->activeDefault = atoi(token);
 
         sourceText = nextToken(sourceText, token, &lineEnd, '\t');
         node->hasLatLong = atoi(token);
@@ -418,11 +428,33 @@ IndexBoxPointer MapData::indexBoxForPoint(const Point3& point) {
 
 void MapData::dumpUnified(void) {
     std::ofstream out("/Users/nigel/Downloads/unified.txt");
-    out << nodes.size() << std::endl;
-    out << connections.size() << std::endl;
+    
+    int numNodes =0;
+    int numConnections = 0;
+
+    for(int i = 0; i < nodes.size(); i++) {
+        if(!nodes[i]->neverLoaded) {
+            numNodes++;
+        }
+    }
+
+    for(int i = 0; i < connections.size(); i++) {
+        if(!nodes[connections[i]->first->index]->neverLoaded && !nodes[connections[i]->second->index]->neverLoaded) {
+            numConnections++;
+        }
+    }
+
+
+    out << numNodes << std::endl;
+    out << numConnections << std::endl;
     
     for(int i = 0; i < nodes.size(); i++) {
+        if(nodes[i]->neverLoaded) {
+            continue;
+        }
+        
         std::string desc = nodes[i]->rawTextDescription;
+        
         if(desc.length() == 0) {
             desc = "?";
         }
@@ -430,6 +462,7 @@ void MapData::dumpUnified(void) {
         out << nodes[i]->asn << "\t"
             << desc << "\t"
             << nodes[i]->type << "\t"
+            << nodes[i]->timelineActive << "\t"
             << nodes[i]->hasLatLong << "\t"
             << nodes[i]->latitude << "\t"
             << nodes[i]->longitude << "\t"
@@ -439,6 +472,10 @@ void MapData::dumpUnified(void) {
     }
     
     for(int i = 0; i < connections.size(); i++) {
+        if(nodes[connections[i]->first->index]->neverLoaded || nodes[connections[i]->second->index]->neverLoaded) {
+            continue;
+        }
+
         out << connections[i]->first->index << " " << connections[i]->second->index << std::endl;
     }
 }
