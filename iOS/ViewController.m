@@ -325,6 +325,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                 if (self.nodeTooltipViewController.node != node) {
                     self.nodeTooltipViewController = [[NodeTooltipViewController alloc] initWithNode:node];
                     
+                    int year = [self.sortedYears[(int)self.timelineSlider.value] intValue];
+                    if((year > 2013) || (year < 2000)) {
+                        self.nodeTooltipViewController.text = @"Simulated data";
+                    }
+                    
                     [self.nodeTooltipPopover dismissPopoverAnimated:NO];
                     self.nodeTooltipPopover = [[WEPopoverController alloc] initWithContentViewController:self.nodeTooltipViewController];
                     self.nodeTooltipPopover.passthroughViews = @[self.view];
