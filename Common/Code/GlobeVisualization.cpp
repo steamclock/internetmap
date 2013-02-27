@@ -73,7 +73,7 @@ Color GlobeVisualization::nodeColor(NodePointer node) {
 }
 
 float GlobeVisualization::nodeSize(NodePointer node) {
-    return 0.005 + 0.2 * powf(node->importance, .60);
+    return 0.005 + 0.2 * powf(node->importance, .90);
 }
 
 void GlobeVisualization::updateLineDisplay(shared_ptr<MapDisplay> display, std::vector<ConnectionPointer>connections) {

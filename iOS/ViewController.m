@@ -700,7 +700,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.nodeInformationPopover = [[WEPopoverController alloc] initWithContentViewController:content];
         
         if(simulated) {
-            content.text = @"Simulated";
+            content.text = @"Simulated data";
         }
         
         self.nodeInformationPopover.passthroughViews = @[self.view];
