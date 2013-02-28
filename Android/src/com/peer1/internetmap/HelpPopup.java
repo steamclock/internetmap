@@ -105,4 +105,17 @@ public class HelpPopup extends Activity{
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onBackPressed() {
+        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        int prev = pager.getCurrentItem() - 1;
+        if (prev < 0) {
+            //first slide: normal back behaviour
+            super.onBackPressed();
+        } else {
+            //go back one slide
+            pager.setCurrentItem(prev);
+        }
+    }
 }
