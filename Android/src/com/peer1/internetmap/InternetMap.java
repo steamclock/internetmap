@@ -92,7 +92,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         
         //try to get into the best orientation before initializing the backend
         forceOrientation();
-        nativeOnCreate(isSmallScreen());
+        mDoneLoading = nativeOnCreate(isSmallScreen());
+        //no real create -> no pending callback. we'll check mDoneLoading later to compensate.
 
         setContentView(R.layout.main);
         final SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceview);
@@ -148,8 +149,6 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                 }
             }
         });
-        
-        mDoneLoading = true;
     }
     
     public void loadSearchNodes() {
@@ -242,20 +241,10 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
-        View loader = findViewById(R.id.loadingSpinner);
-        if (mDoneLoading && loader.getVisibility() != View.GONE) {
-            //something went weird, reset the UI
-            Log.d(TAG, "resetting loader and button state");
-            loader.setVisibility(View.GONE);
-            
-            ToggleButton button = (ToggleButton) findViewById(R.id.searchButton);
-            button.setChecked(false);
-            button = (ToggleButton) findViewById(R.id.visualizationsButton);
-            button.setChecked(false);
-            button = (ToggleButton) findViewById(R.id.timelineButton);
-            button.setChecked(false);
-            button = (ToggleButton) findViewById(R.id.infoButton);
-            button.setChecked(false);
+        if (!mDoneLoading) {
+            Log.d(TAG, "manually finishing the load");
+            onBackendLoaded();
+            mDoneLoading = true;
         }
     }
 
@@ -838,7 +827,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
 
     //native wrappers
-    public native void nativeOnCreate(boolean smallScreen);
+    public native boolean nativeOnCreate(boolean smallScreen);
     public native void nativeOnResume();
     public native void nativeOnPause();
     public native void nativeOnDestroy();
