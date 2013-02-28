@@ -157,6 +157,7 @@ public class SearchPopup extends PopupWindow{
             protected void publishResults(CharSequence constraint,
                     FilterResults results) {
                 mFilteredNodes = (ArrayList<SearchItem>)results.values;
+                Assert.assertNotNull(mFilteredNodes);
                 Log.d(TAG, String.format("matched %d nodes", results.count));
                 notifyDataSetChanged();
             }

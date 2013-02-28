@@ -143,23 +143,30 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         //start loading the search nodes
         mHandler.post(new Runnable() {
             public void run() {
-                NodeWrapper[] rawNodes = mController.allNodes();
-                Log.d(TAG, String.format("loaded %d nodes", rawNodes.length));
-                
-                //initial search results: use all the nodes!
-                mAllSearchNodes = new ArrayList<SearchNode>(rawNodes.length);
-                for (int i = 0; i < rawNodes.length; i++) {
-                    if (rawNodes[i] != null) {
-                        mAllSearchNodes.add(new SearchNode(rawNodes[i]));
-                    } else {
-                        //Log.d(TAG, "caught null node"); //FIXME catch this in jni
-                    }
+                if (mAllSearchNodes == null) {
+                    loadSearchNodes();
                 }
-                Log.d(TAG, String.format("converted %d nodes", mAllSearchNodes.size()));
             }
         });
         
         mDoneLoading = true;
+    }
+    
+    public void loadSearchNodes() {
+        Assert.assertNull(mAllSearchNodes);
+        
+        NodeWrapper[] rawNodes = mController.allNodes();
+        Log.d(TAG, String.format("loaded %d nodes", rawNodes.length));
+        
+        mAllSearchNodes = new ArrayList<SearchNode>(rawNodes.length);
+        for (int i = 0; i < rawNodes.length; i++) {
+            if (rawNodes[i] != null) {
+                mAllSearchNodes.add(new SearchNode(rawNodes[i]));
+            } else {
+                //Log.d(TAG, "caught null node"); //FIXME catch this in jni
+            }
+        }
+        Log.d(TAG, String.format("converted %d nodes", mAllSearchNodes.size()));
     }
     
     public void showHelp() {
@@ -341,6 +348,11 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             //this can be slow to load, so delay it until the UI updates the button
             mHandler.post(new Runnable(){
                 public void run(){
+                    
+                    if (mAllSearchNodes == null) {
+                        loadSearchNodes();
+                    }
+                    
                     LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                     View popupView = layoutInflater.inflate(R.layout.searchview, null);
                     mSearchPopup = new SearchPopup(InternetMap.this, mController, popupView);
