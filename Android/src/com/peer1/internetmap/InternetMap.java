@@ -22,6 +22,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -162,16 +163,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
     
     public void showHelp() {
-        LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View popupView = layoutInflater.inflate(R.layout.help, null);
-        HelpPopup popup = new HelpPopup(this, popupView);
-        //show it
-        View mainView = findViewById(R.id.mainLayout);
-        Assert.assertNotNull(mainView);
-        popup.setWidth(mainView.getWidth());
-        popup.setHeight(mainView.getHeight());
-        int gravity = Gravity.BOTTOM; //to avoid offset issues
-        popup.showAtLocation(mainView, gravity, 0, 0);
+        Intent intent = new Intent(this, HelpPopup.class);
+        startActivity(intent);
     }
     
     public void forceOrientation() {
