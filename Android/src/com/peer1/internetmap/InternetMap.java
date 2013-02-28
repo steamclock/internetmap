@@ -676,21 +676,11 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
     
     public boolean haveConnectivity(){
-        //check Internet status
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = (activeNetwork == null) ? false : activeNetwork.isConnectedOrConnecting();
-        if (!isConnected) {
-            showError(getString(R.string.noInternet));
-            return false;
-        } else {
-        	return true;
-        }
+        return Helper.haveConnectivity(this);
     }
     
     public void showError(String message) {
-        //TODO: I'm not sure if a dialog or a toast is most appropriate for errors.
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        Helper.showError(this, message);
     }
     
     public void selectNodeByASN(JSONObject response, boolean cacheIndex) {
@@ -716,14 +706,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
     
     public boolean isSmallScreen() {
-        Configuration config = getResources().getConfiguration();
-        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            //if the user forces a phone to landscape mode, the big-screen UI fits better.
-            return false;
-        }
-        int screenSize = config.screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
-        Log.d(TAG, String.format("size: %d", screenSize));
-        return screenSize <= Configuration.SCREENLAYOUT_SIZE_NORMAL;
+        return Helper.isSmallScreen(this);
     }
 
     //called from c++ via threadsafeShowNodePopup

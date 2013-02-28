@@ -21,5 +21,13 @@
             </intent-filter>
         </activity>
         <activity android:name="net.hockeyapp.android.UpdateActivity" />
+        <activity
+            android:name=".SalesPopup"
+            android:label="@string/contactSalesHeader"
+            android:parentActivityName=".InternetMap" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".InternetMap" />
+        </activity>
     </application>
 </manifest>

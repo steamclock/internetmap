@@ -62,16 +62,8 @@ public class InfoPopup extends PopupWindow{
     }
 
     private void doSales() {
-        LayoutInflater layoutInflater = (LayoutInflater)mContext.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View popupView = layoutInflater.inflate(R.layout.contactsales, null);
-        SalesPopup popup = new SalesPopup(mContext, popupView);
-        //show it
-        View mainView = mContext.findViewById(R.id.mainLayout);
-        Assert.assertNotNull(mainView);
-        popup.setWidth(mainView.getWidth());
-        popup.setHeight(mainView.getHeight());
-        int gravity = Gravity.BOTTOM; //to avoid offset issues
-        popup.showAtLocation(mainView, gravity, 0, 0);
+        Intent intent = new Intent(mContext, SalesPopup.class);
+        mContext.startActivity(intent);
     }
     
     private void doCredits() {

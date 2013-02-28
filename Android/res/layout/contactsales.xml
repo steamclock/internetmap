@@ -5,36 +5,6 @@
     android:background="@color/translucentBlack"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:id="@+id/headerLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="@string/contactSalesHeader"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/orange" />
-
-        <ImageButton
-            android:id="@+id/closeBtn"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:background="@color/orange"
-            android:onClick="dismissNodePopup"
-            android:src="@drawable/x_icon" />
-
-    </RelativeLayout>
-
     <LinearLayout
         android:id="@+id/contentLayout2"
         android:layout_width="wrap_content"

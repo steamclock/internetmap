@@ -10,7 +10,13 @@ import org.json.JSONObject;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -19,24 +25,19 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-public class SalesPopup extends PopupWindow{
+public class SalesPopup extends Activity{
     private static String TAG = "SalesPopup";
-    private InternetMap mContext;
 
-    public SalesPopup(final InternetMap context, View view) {
-        super(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        setOutsideTouchable(true);
-        setFocusable(true);
-        mContext = context;
+    @SuppressLint("NewApi")
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.contactsales);
 
-        View closeButton = getContentView().findViewById(R.id.closeBtn);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View arg0) {
-                SalesPopup.this.dismiss();
-            }
-        });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
-        View submitButton = getContentView().findViewById(R.id.submitButton);
+        View submitButton = findViewById(R.id.submitButton);
         submitButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
                 //validate (split so that we do not short-circuit past any check).
@@ -49,29 +50,39 @@ public class SalesPopup extends PopupWindow{
             }
         });
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case android.R.id.home:
+            NavUtils.navigateUpFromSameTask(this);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     
     private boolean validateName() {
-        EditText nameEdit = (EditText) getContentView().findViewById(R.id.nameEdit);
+        EditText nameEdit = (EditText) findViewById(R.id.nameEdit);
         if (nameEdit.getText().length() == 0) {
             //ideally we'd use setError, but it's unbelievably buggy, so we're stuck with a toast :P
-            Toast.makeText(mContext, mContext.getString(R.string.requiredName),  Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.requiredName),  Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
     }
 
     private boolean validateEmail() {
-        EditText edit = (EditText) getContentView().findViewById(R.id.emailEdit);
+        EditText edit = (EditText) findViewById(R.id.emailEdit);
         if (edit.getText().length() == 0) {
             //ideally we'd use setError, but it's unbelievably buggy, so we're stuck with a toast :P
-            Toast.makeText(mContext, mContext.getString(R.string.requiredEmail),  Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.requiredEmail),  Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
     }
     
     private void submit() {
-        if (!mContext.haveConnectivity()) {
+        if (!Helper.haveConnectivity(this)) {
             return;
         }
         Log.d(TAG, "submit");
@@ -80,13 +91,13 @@ public class SalesPopup extends PopupWindow{
         JSONObject postData = new JSONObject();
         try {
             postData.put("LeadSource", "Map of the Internet");
-            postData.put("Website_Source__c", mContext.isSmallScreen() ? "Android Phone" : "Android Tablet");
+            postData.put("Website_Source__c", Helper.isSmallScreen(this) ? "Android Phone" : "Android Tablet");
             
-            EditText nameEdit = (EditText) getContentView().findViewById(R.id.nameEdit);
+            EditText nameEdit = (EditText) findViewById(R.id.nameEdit);
             postData.put("fullName", nameEdit.getText().toString());
-            EditText emailEdit = (EditText) getContentView().findViewById(R.id.emailEdit);
+            EditText emailEdit = (EditText) findViewById(R.id.emailEdit);
             postData.put("email", emailEdit.getText().toString());
-            EditText phoneEdit = (EditText) getContentView().findViewById(R.id.phoneEdit);
+            EditText phoneEdit = (EditText) findViewById(R.id.phoneEdit);
             postData.put("phone", phoneEdit.getText().toString());
         } catch (JSONException e) {
             //I'm not feeding it anything risky, it'll be fine.
@@ -107,10 +118,10 @@ public class SalesPopup extends PopupWindow{
         Log.d(TAG, "starting httpclient");
         
         //prevent doubleclicking
-        final Button button = (Button) getContentView().findViewById(R.id.submitButton);
+        final Button button = (Button) findViewById(R.id.submitButton);
         button.setEnabled(false);
         //start spinning
-        final ProgressBar progress = (ProgressBar) getContentView().findViewById(R.id.progressBar);
+        final ProgressBar progress = (ProgressBar) findViewById(R.id.progressBar);
         progress.setVisibility(View.VISIBLE);
         
         //send it off to the internet
@@ -123,8 +134,8 @@ public class SalesPopup extends PopupWindow{
             @Override
             public void onSuccess(String response) {
                 Log.d(TAG, String.format("Success! response: %s", response));
-                Toast.makeText(mContext, mContext.getString(R.string.submitSuccess),  Toast.LENGTH_SHORT).show();
-                SalesPopup.this.dismiss();
+                Toast.makeText(SalesPopup.this, getString(R.string.submitSuccess),  Toast.LENGTH_SHORT).show();
+                NavUtils.navigateUpFromSameTask(SalesPopup.this);
             }
             @Override
             public void onFailure(Throwable error, String content) {
@@ -138,7 +149,7 @@ public class SalesPopup extends PopupWindow{
                         String field = jsonObject.getString("field");
                         if (field.equals("email")) {
                             //friendly message
-                            message = mContext.getString(R.string.submitFailEmail);
+                            message = getString(R.string.submitFailEmail);
                         } else {
                             //raw error text
                             message = jsonObject.getString("error");
@@ -153,9 +164,9 @@ public class SalesPopup extends PopupWindow{
                 
                 if (message.isEmpty()){
                     //generic error message
-                    message = mContext.getString(R.string.submitFail);
+                    message = getString(R.string.submitFail);
                 }
-                Toast.makeText(mContext, message,  Toast.LENGTH_SHORT).show();
+                Helper.showError(SalesPopup.this, message);
                 button.setEnabled(true);
                 progress.setVisibility(View.INVISIBLE);
             }
