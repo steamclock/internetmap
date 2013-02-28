@@ -1,5 +1,7 @@
 package com.peer1.internetmap;
 
+import java.io.InputStream;
+
 import android.content.Context;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
@@ -37,5 +39,16 @@ public class Helper {
         } else {
             return true;
         }
+    }
+
+    public static byte[] readFileAsBytes(Context context, String filePath) throws java.io.IOException {
+        InputStream input = context.getAssets().open(filePath);
+
+        int size = input.available();
+        byte[] buffer = new byte[size];
+        input.read(buffer);
+        input.close();
+
+        return buffer;
     }
 }

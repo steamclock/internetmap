@@ -184,15 +184,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
 
     public byte[] readFileAsBytes(String filePath) throws java.io.IOException {
-        Log.i(TAG, String.format("Reading %s", filePath));
-        InputStream input = getAssets().open(filePath);
-
-        int size = input.available();
-        byte[] buffer = new byte[size];
-        input.read(buffer);
-        input.close();
-
-        return buffer;
+        return Helper.readFileAsBytes(this, filePath);
     }
 
     @Override

@@ -29,5 +29,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".InternetMap" />
         </activity>
+        <activity
+            android:name=".CreditsPopup"
+            android:parentActivityName=".InternetMap" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".InternetMap" />
+        </activity>
     </application>
 </manifest>
