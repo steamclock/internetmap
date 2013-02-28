@@ -744,15 +744,22 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             if (mNodePopup == null) {
                 LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                 View popupView;
+                boolean isSimulated;
                 if (mInTimelineMode) {
                     popupView = layoutInflater.inflate(R.layout.nodetimelineview, null);
+                    //get the year to find out if data is simulated
+                    SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
+                    String yearStr = this.mTimelineYears.get(timelineBar.getProgress());
+                    int year = Integer.parseInt(yearStr);
+                    isSimulated = year < 2000 || year > 2013;
                 } else {
+                    isSimulated = false;
                     popupView = layoutInflater.inflate(R.layout.nodeview, null);
                     if (isSmallScreen()) {
                         popupView.findViewById(R.id.leftArrow).setVisibility(View.GONE);
                     }
                 }
-                mNodePopup = new NodePopup(this, popupView, mInTimelineMode);
+                mNodePopup = new NodePopup(this, popupView, mInTimelineMode, isSimulated);
                 mNodePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     public void onDismiss() {
                         mNodePopup = null;

@@ -36,4 +36,5 @@
     <string name="submitFailEmail">Please enter a valid email address.</string>
     <string name="next">Next ></string>
     <string name="finish">Finish</string>
+    <string name="simulated">Simulated Data</string>
 </resources>
