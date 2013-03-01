@@ -1,20 +1,22 @@
 package com.peer1.internetmap;
 
 import junit.framework.Assert;
-import android.content.Context;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 
-public class HelpPopup extends PopupWindow{
+public class HelpPopup extends Activity{
     private static String TAG = "HelpPopup";
-    private Context mContext;
     private int[] mSlideIDs; //resource ids for the slide images
     
     /**
@@ -34,7 +36,7 @@ public class HelpPopup extends PopupWindow{
         
         @Override
         public Object instantiateItem(View collection, int position) {
-            ImageView imageView = new ImageView(mContext);
+            ImageView imageView = new ImageView(HelpPopup.this);
             imageView.setImageResource(mSlideIDs[position]);
             
             ViewPager pager = (ViewPager) collection;
@@ -48,13 +50,17 @@ public class HelpPopup extends PopupWindow{
         }
     }
 
-    public HelpPopup(final InternetMap context, View view) {
-        super(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        setOutsideTouchable(true);
-        setFocusable(true);
-        mContext = context;
+
+    @SuppressLint("NewApi")
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.help);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         
-        final ViewPager pager = (ViewPager) view.findViewById(R.id.pager);
+        final ViewPager pager = (ViewPager) findViewById(R.id.pager);
         Assert.assertNotNull(pager);
 
         //pager slides
@@ -64,13 +70,13 @@ public class HelpPopup extends PopupWindow{
         pager.setAdapter(adapter);
         
         //next/close button
-        final Button nextButton = (Button) getContentView().findViewById(R.id.nextButton);
+        final Button nextButton = (Button) findViewById(R.id.nextButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
                 int next = pager.getCurrentItem() + 1;
                 if (next >= mSlideIDs.length) {
                     //done
-                    HelpPopup.this.dismiss();
+                    NavUtils.navigateUpFromSameTask(HelpPopup.this);
                 } else {
                     //next slide
                     pager.setCurrentItem(next);
@@ -82,11 +88,34 @@ public class HelpPopup extends PopupWindow{
         final int[] dotsImages = { R.drawable.screen1_dots, R.drawable.screen2_dots, R.drawable.screen3_dots };
         pager.setOnPageChangeListener(new SimpleOnPageChangeListener() {
             public void onPageSelected (int position) {
-                ImageView dots = (ImageView) getContentView().findViewById(R.id.dots);
+                ImageView dots = (ImageView) findViewById(R.id.dots);
                 dots.setImageResource(dotsImages[position]);
                 boolean lastSlide = (position + 1) == mSlideIDs.length;
                 nextButton.setText(lastSlide ? R.string.finish : R.string.next);
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case android.R.id.home:
+            NavUtils.navigateUpFromSameTask(this);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        int prev = pager.getCurrentItem() - 1;
+        if (prev < 0) {
+            //first slide: normal back behaviour
+            super.onBackPressed();
+        } else {
+            //go back one slide
+            pager.setCurrentItem(prev);
+        }
     }
 }

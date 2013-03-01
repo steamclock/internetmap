@@ -22,6 +22,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -91,7 +92,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         
         //try to get into the best orientation before initializing the backend
         forceOrientation();
-        nativeOnCreate(isSmallScreen());
+        mDoneLoading = nativeOnCreate(isSmallScreen());
+        //no real create -> no pending callback. we'll check mDoneLoading later to compensate.
 
         setContentView(R.layout.main);
         final SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceview);
@@ -142,36 +144,33 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         //start loading the search nodes
         mHandler.post(new Runnable() {
             public void run() {
-                NodeWrapper[] rawNodes = mController.allNodes();
-                Log.d(TAG, String.format("loaded %d nodes", rawNodes.length));
-                
-                //initial search results: use all the nodes!
-                mAllSearchNodes = new ArrayList<SearchNode>(rawNodes.length);
-                for (int i = 0; i < rawNodes.length; i++) {
-                    if (rawNodes[i] != null) {
-                        mAllSearchNodes.add(new SearchNode(rawNodes[i]));
-                    } else {
-                        //Log.d(TAG, "caught null node"); //FIXME catch this in jni
-                    }
+                if (mAllSearchNodes == null) {
+                    loadSearchNodes();
                 }
-                Log.d(TAG, String.format("converted %d nodes", mAllSearchNodes.size()));
             }
         });
+    }
+    
+    public void loadSearchNodes() {
+        Assert.assertNull(mAllSearchNodes);
         
-        mDoneLoading = true;
+        NodeWrapper[] rawNodes = mController.allNodes();
+        Log.d(TAG, String.format("loaded %d nodes", rawNodes.length));
+        
+        mAllSearchNodes = new ArrayList<SearchNode>(rawNodes.length);
+        for (int i = 0; i < rawNodes.length; i++) {
+            if (rawNodes[i] != null) {
+                mAllSearchNodes.add(new SearchNode(rawNodes[i]));
+            } else {
+                //Log.d(TAG, "caught null node"); //FIXME catch this in jni
+            }
+        }
+        Log.d(TAG, String.format("converted %d nodes", mAllSearchNodes.size()));
     }
     
     public void showHelp() {
-        LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View popupView = layoutInflater.inflate(R.layout.help, null);
-        HelpPopup popup = new HelpPopup(this, popupView);
-        //show it
-        View mainView = findViewById(R.id.mainLayout);
-        Assert.assertNotNull(mainView);
-        popup.setWidth(mainView.getWidth());
-        popup.setHeight(mainView.getHeight());
-        int gravity = Gravity.BOTTOM; //to avoid offset issues
-        popup.showAtLocation(mainView, gravity, 0, 0);
+        Intent intent = new Intent(this, HelpPopup.class);
+        startActivity(intent);
     }
     
     public void forceOrientation() {
@@ -184,15 +183,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
 
     public byte[] readFileAsBytes(String filePath) throws java.io.IOException {
-        Log.i(TAG, String.format("Reading %s", filePath));
-        InputStream input = getAssets().open(filePath);
-
-        int size = input.available();
-        byte[] buffer = new byte[size];
-        input.read(buffer);
-        input.close();
-
-        return buffer;
+        return Helper.readFileAsBytes(this, filePath);
     }
 
     @Override
@@ -250,20 +241,10 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
-        View loader = findViewById(R.id.loadingSpinner);
-        if (mDoneLoading && loader.getVisibility() != View.GONE) {
-            //something went weird, reset the UI
-            Log.d(TAG, "resetting loader and button state");
-            loader.setVisibility(View.GONE);
-            
-            ToggleButton button = (ToggleButton) findViewById(R.id.searchButton);
-            button.setChecked(false);
-            button = (ToggleButton) findViewById(R.id.visualizationsButton);
-            button.setChecked(false);
-            button = (ToggleButton) findViewById(R.id.timelineButton);
-            button.setChecked(false);
-            button = (ToggleButton) findViewById(R.id.infoButton);
-            button.setChecked(false);
+        if (!mDoneLoading) {
+            Log.d(TAG, "manually finishing the load");
+            onBackendLoaded();
+            mDoneLoading = true;
         }
     }
 
@@ -356,6 +337,11 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             //this can be slow to load, so delay it until the UI updates the button
             mHandler.post(new Runnable(){
                 public void run(){
+                    
+                    if (mAllSearchNodes == null) {
+                        loadSearchNodes();
+                    }
+                    
                     LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                     View popupView = layoutInflater.inflate(R.layout.searchview, null);
                     mSearchPopup = new SearchPopup(InternetMap.this, mController, popupView);
@@ -676,21 +662,11 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
     
     public boolean haveConnectivity(){
-        //check Internet status
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = (activeNetwork == null) ? false : activeNetwork.isConnectedOrConnecting();
-        if (!isConnected) {
-            showError(getString(R.string.noInternet));
-            return false;
-        } else {
-        	return true;
-        }
+        return Helper.haveConnectivity(this);
     }
     
     public void showError(String message) {
-        //TODO: I'm not sure if a dialog or a toast is most appropriate for errors.
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        Helper.showError(this, message);
     }
     
     public void selectNodeByASN(JSONObject response, boolean cacheIndex) {
@@ -716,14 +692,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
     
     public boolean isSmallScreen() {
-        Configuration config = getResources().getConfiguration();
-        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            //if the user forces a phone to landscape mode, the big-screen UI fits better.
-            return false;
-        }
-        int screenSize = config.screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
-        Log.d(TAG, String.format("size: %d", screenSize));
-        return screenSize <= Configuration.SCREENLAYOUT_SIZE_NORMAL;
+        return Helper.isSmallScreen(this);
     }
 
     //called from c++ via threadsafeShowNodePopup
@@ -744,15 +713,22 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             if (mNodePopup == null) {
                 LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                 View popupView;
+                boolean isSimulated;
                 if (mInTimelineMode) {
                     popupView = layoutInflater.inflate(R.layout.nodetimelineview, null);
+                    //get the year to find out if data is simulated
+                    SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
+                    String yearStr = this.mTimelineYears.get(timelineBar.getProgress());
+                    int year = Integer.parseInt(yearStr);
+                    isSimulated = year < 2000 || year > 2013;
                 } else {
+                    isSimulated = false;
                     popupView = layoutInflater.inflate(R.layout.nodeview, null);
                     if (isSmallScreen()) {
                         popupView.findViewById(R.id.leftArrow).setVisibility(View.GONE);
                     }
                 }
-                mNodePopup = new NodePopup(this, popupView, mInTimelineMode);
+                mNodePopup = new NodePopup(this, popupView, mInTimelineMode, isSimulated);
                 mNodePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     public void onDismiss() {
                         mNodePopup = null;
@@ -851,7 +827,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
 
     //native wrappers
-    public native void nativeOnCreate(boolean smallScreen);
+    public native boolean nativeOnCreate(boolean smallScreen);
     public native void nativeOnResume();
     public native void nativeOnPause();
     public native void nativeOnDestroy();

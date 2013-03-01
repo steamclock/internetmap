@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.peer1.internetmap"
-      android:versionCode="4"
+      android:versionCode="5"
       android:versionName="1.0">
 	<uses-sdk android:minSdkVersion="10" android:targetSdkVersion="17" />
 	<uses-feature android:glEsVersion="0x00020000" android:required="true" />
@@ -13,7 +13,7 @@
 
 	<supports-screens android:resizeable="false" android:normalScreens="true" android:anyDensity="true" android:smallScreens="true" android:xlargeScreens="true" android:largeScreens="true"/>
     <application android:label="@string/app_name" android:icon="@drawable/ic_launcher" android:allowBackup="false">
-        <activity android:name="InternetMap"
+        <activity android:name=".InternetMap"
                   android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,5 +21,27 @@
             </intent-filter>
         </activity>
         <activity android:name="net.hockeyapp.android.UpdateActivity" />
+        <activity
+            android:name=".SalesPopup"
+            android:label="@string/contactSalesHeader"
+            android:parentActivityName=".InternetMap" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".InternetMap" />
+        </activity>
+        <activity
+            android:name=".CreditsPopup"
+            android:parentActivityName=".InternetMap" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".InternetMap" />
+        </activity>
+        <activity
+            android:name=".HelpPopup"
+            android:parentActivityName=".InternetMap" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".InternetMap" />
+        </activity>
     </application>
 </manifest>

@@ -2,37 +2,46 @@ package com.peer1.internetmap;
 
 import java.io.IOException;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.MenuItem;
 import android.webkit.WebView;
-import android.widget.PopupWindow;
 
-public class CreditsPopup extends PopupWindow{
+public class CreditsPopup extends Activity{
     private static String TAG = "CreditsPopup";
 
-    public CreditsPopup(final InternetMap context, View view) {
-        super(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        setOutsideTouchable(true);
-        setFocusable(true);
+    @SuppressLint("NewApi")
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.credits);
 
-        //close button
-        View closeButton = getContentView().findViewById(R.id.closeBtn);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View arg0) {
-                CreditsPopup.this.dismiss();
-            }
-        });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         //set text
-        WebView webView = (WebView) getContentView().findViewById(R.id.textView);
+        WebView webView = (WebView) findViewById(R.id.textView);
         try {
-            String html = new String(context.readFileAsBytes("data/credits.html"));
+            String html = new String(Helper.readFileAsBytes(this, "data/credits.html"));
             webView.loadData(html, "text/html", null);
         } catch (IOException e) {
             e.printStackTrace();
         }
         //some magic to make the webview transparent despite bugs
-        webView.setBackgroundColor(context.getResources().getColor(R.color.translucentBlack));
+        webView.setBackgroundColor(getResources().getColor(R.color.translucentBlack));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case android.R.id.home:
+            NavUtils.navigateUpFromSameTask(this);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

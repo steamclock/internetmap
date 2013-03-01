@@ -16,11 +16,13 @@ public class NodePopup extends PopupWindow {
     private static String TAG = "NodePopup";
     private Context mContext;
     private boolean mIsTimelineView;
+    private boolean mIsSimulated;
     
-    public NodePopup(Context context, View view, boolean isTimelineView) {
+    public NodePopup(Context context, View view, boolean isTimelineView, boolean isSimulated) {
         super(view);
         mContext = context;
         mIsTimelineView = isTimelineView;
+        mIsSimulated = isSimulated;
     }
     
     public void setNode(NodeWrapper node) {
@@ -28,47 +30,52 @@ public class NodePopup extends PopupWindow {
     }
     public void setNode(NodeWrapper node, boolean isUsersNode) {
         //set up content
-        ArrayList<String> strings = new ArrayList<String>(4);
-        if (isUsersNode && !mIsTimelineView) {
-            strings.add(mContext.getString(R.string.youarehere));
-        }
-        String desc = node.friendlyDescription();
-        if (!desc.isEmpty()) {
-            strings.add(desc);
-        }
-        strings.add("AS" + node.asn);
-        if (!mIsTimelineView) {
-            if (!node.typeString.isEmpty()) {
-                strings.add(node.typeString);
+        String title;
+        if (mIsSimulated) {
+            title = mContext.getString(R.string.simulated);
+        } else {
+            ArrayList<String> strings = new ArrayList<String>(4);
+            if (isUsersNode && !mIsTimelineView) {
+                strings.add(mContext.getString(R.string.youarehere));
             }
-            //FIXME show # connections only on tablets..?
-            if (node.numberOfConnections == 1) {
-                strings.add(mContext.getString(R.string.oneconnection));
-            } else {
-                //<num> connections
-                strings.add(String.format(mContext.getString(R.string.nconnections), node.numberOfConnections));
+            String desc = node.friendlyDescription();
+            if (!desc.isEmpty()) {
+                strings.add(desc);
             }
-        }
-        
-        //split into title/rest
-        String title = strings.get(0);
-        if (!mIsTimelineView) {
-            StringBuilder mainText = new StringBuilder();
-            if (strings.size() <= 1) {
-                //default text
-                mainText.append(mContext.getString(R.string.nomoredata));
-            } else {
-                //join the strings with \n
-                mainText.append(strings.get(1));
-                for (int i = 2; i < strings.size(); i++) {
-                    mainText.append("\n");
-                    mainText.append(strings.get(i));
+            strings.add("AS" + node.asn);
+            if (!mIsTimelineView) {
+                if (!node.typeString.isEmpty()) {
+                    strings.add(node.typeString);
+                }
+                //FIXME show # connections only on tablets..?
+                if (node.numberOfConnections == 1) {
+                    strings.add(mContext.getString(R.string.oneconnection));
+                } else {
+                    //<num> connections
+                    strings.add(String.format(mContext.getString(R.string.nconnections), node.numberOfConnections));
                 }
             }
 
-            //put it in the right views
-            TextView mainTextView = (TextView) getContentView().findViewById(R.id.mainTextView);
-            mainTextView.setText(mainText);
+            //split into title/rest
+            title = strings.get(0);
+            if (!mIsTimelineView) {
+                StringBuilder mainText = new StringBuilder();
+                if (strings.size() <= 1) {
+                    //default text
+                    mainText.append(mContext.getString(R.string.nomoredata));
+                } else {
+                    //join the strings with \n
+                    mainText.append(strings.get(1));
+                    for (int i = 2; i < strings.size(); i++) {
+                        mainText.append("\n");
+                        mainText.append(strings.get(i));
+                    }
+                }
+
+                //put it in the right views
+                TextView mainTextView = (TextView) getContentView().findViewById(R.id.mainTextView);
+                mainTextView.setText(mainText);
+            }
         }
         TextView titleView = (TextView) getContentView().findViewById(R.id.titleView);
         titleView.setText(title);
