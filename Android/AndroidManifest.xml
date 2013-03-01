@@ -14,7 +14,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 	<supports-screens android:resizeable="false" android:normalScreens="true" android:anyDensity="true" android:smallScreens="true" android:xlargeScreens="true" android:largeScreens="true"/>
-    <application android:label="@string/app_name" android:icon="@drawable/ic_launcher" android:allowBackup="false">
+    <application android:label="@string/app_name" android:icon="@drawable/ic_launcher" 
+                android:allowBackup="false" android:hardwareAccelerated="true">
         <activity android:name=".InternetMap"
                   android:label="@string/app_name">
             <intent-filter>
