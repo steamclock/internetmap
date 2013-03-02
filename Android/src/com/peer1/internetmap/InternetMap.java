@@ -88,7 +88,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
         Log.i(TAG, "onCreate()");
         //check HockeyApp for updates (comment this out for release)
-        UpdateManager.register(this, APP_ID);
+        //UpdateManager.register(this, APP_ID);
         
         //try to get into the best orientation before initializing the backend
         forceOrientation();
