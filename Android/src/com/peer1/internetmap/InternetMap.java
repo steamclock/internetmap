@@ -492,7 +492,6 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
 
     public void timelineButtonPressed(View view) {
-        Log.d(TAG, "timeline");
         if (mInTimelineMode) {
             dismissPopups(); //leave timeline mode
         } else {
@@ -697,7 +696,6 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
     //called from c++ via threadsafeShowNodePopup
     public void showNodePopup() {
-        Log.d(TAG, "showNodePopup");
         //get the current node
         int index = mController.targetNodeIndex();
         Log.d(TAG, String.format("node at index %d", index));

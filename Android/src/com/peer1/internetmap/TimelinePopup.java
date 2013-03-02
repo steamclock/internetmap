@@ -98,7 +98,6 @@ public class TimelinePopup {
         anim.setFillAfter(true);
         anim.setDuration(100);
         arrow.startAnimation(anim);
-        Log.d(TAG, "animating");
         mArrowOffset = arrowOffset;
         
         mIsShowing = true;

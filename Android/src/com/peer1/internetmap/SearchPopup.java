@@ -125,7 +125,6 @@ public class SearchPopup extends PopupWindow{
                     //default, full list + location
                     nodes.add(locationItem);
                     nodes.addAll(mAllNodes);
-                    Log.d(TAG, "default nodes");
                 } else {
                     //filter it
                     Log.d(TAG, "filtering...");
@@ -233,7 +232,6 @@ public class SearchPopup extends PopupWindow{
         input.addTextChangedListener(new TextWatcher(){
             public void afterTextChanged(Editable s) {
                 String filter = s.toString();
-                Log.d(TAG, filter);
                 mFilter.filter(filter);
             }
             //unneeded abstract stuff
