@@ -85,7 +85,7 @@ public class SalesPopup extends Activity{
         if (!Helper.haveConnectivity(this)) {
             return;
         }
-        Log.d(TAG, "submit");
+        //Log.d(TAG, "submit");
         
         //package up the data
         JSONObject postData = new JSONObject();

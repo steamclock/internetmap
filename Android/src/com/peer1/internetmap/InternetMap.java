@@ -155,7 +155,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         Assert.assertNull(mAllSearchNodes);
         
         NodeWrapper[] rawNodes = mController.allNodes();
-        Log.d(TAG, String.format("loaded %d nodes", rawNodes.length));
+        //Log.d(TAG, String.format("loaded %d nodes", rawNodes.length));
         
         mAllSearchNodes = new ArrayList<SearchNode>(rawNodes.length);
         for (int i = 0; i < rawNodes.length; i++) {
@@ -165,7 +165,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                 //Log.d(TAG, "caught null node"); //FIXME catch this in jni
             }
         }
-        Log.d(TAG, String.format("converted %d nodes", mAllSearchNodes.size()));
+        //Log.d(TAG, String.format("converted %d nodes", mAllSearchNodes.size()));
     }
     
     public void showHelp() {
@@ -176,7 +176,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     public void forceOrientation() {
         Configuration config = getResources().getConfiguration();
         int screenSize = config.screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
-        Log.d(TAG, String.format("Size: %d", screenSize));
+        //Log.d(TAG, String.format("Size: %d", screenSize));
         int orientation = (screenSize <= Configuration.SCREENLAYOUT_SIZE_NORMAL) ? 
                 ActivityInfo.SCREEN_ORIENTATION_PORTRAIT : ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
         setRequestedOrientation(orientation);
@@ -358,7 +358,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
     
     public void findHost(final String host) {
-        Log.d(TAG, String.format("find host: %s", host));
+        //Log.d(TAG, String.format("find host: %s", host));
         if (!haveConnectivity()) {
             return;
         }
@@ -563,7 +563,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         Assert.assertNotNull(mTimelinePopup);
         String year = mTimelineYears.get(progress);
         mTimelinePopup.setData(year, mTimelineHistory.optString(year));
-        Log.d(TAG, year);
+        //Log.d(TAG, year);
         
         //update size/position
         int offset, arrowOffset;
@@ -673,7 +673,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         try {
             String asnWithAS = response.getString("payload");
             String asnString = asnWithAS.substring(2);
-            Log.d(TAG, String.format("2asn: %s", asnString));
+            //.d(TAG, String.format("2asn: %s", asnString));
             //yay, an ASN! turn it into a node so we can target it.
             NodeWrapper node = mController.nodeByAsn(asnString);
             if (node != null) {
@@ -698,16 +698,16 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     public void showNodePopup() {
         //get the current node
         int index = mController.targetNodeIndex();
-        Log.d(TAG, String.format("node at index %d", index));
+        //Log.d(TAG, String.format("node at index %d", index));
         NodeWrapper node = mController.nodeAtIndex(index);
         if (node == null) {
-            Log.d(TAG, "is null");
+            //Log.d(TAG, "is null");
             if (mNodePopup != null) {
                 mNodePopup.dismiss();
             }
         } else {
             //node is ok; show the popup
-            Log.d(TAG, String.format("has index %d and asn %s", node.index, node.asn));
+            //Log.d(TAG, String.format("has index %d and asn %s", node.index, node.asn));
             if (mNodePopup == null) {
                 LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                 View popupView;
