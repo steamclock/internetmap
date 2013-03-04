@@ -856,7 +856,17 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             }
         });
     }
-    
+
+    @Override
+    public void onBackPressed(){
+
+        if (mNodePopup != null || mInTimelineMode) {
+            dismissPopups();
+        }else {
+            super.onBackPressed();
+        }
+
+    }
 
     static {
         System.loadLibrary("internetmaprenderer");
