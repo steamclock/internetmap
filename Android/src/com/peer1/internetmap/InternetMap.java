@@ -433,7 +433,9 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
     
     public void dismissSearchPopup(View unused) {
-        mSearchPopup.dismiss();
+        if (mSearchPopup != null) {
+            mSearchPopup.dismiss();
+        }
     }
 
     public void youAreHereButtonPressed() {
@@ -785,7 +787,9 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     
     //callbacks from the nodePopup UI
     public void dismissNodePopup(View unused) {
-        mNodePopup.dismiss();
+        if (mNodePopup != null) {
+            mNodePopup.dismiss();
+        }
     }
     
     public void runTraceroute(View unused) throws JSONException, UnsupportedEncodingException{
