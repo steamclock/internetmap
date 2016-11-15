@@ -8,12 +8,12 @@
 
 class VertexBuffer {
 protected:
-    unsigned long _size;
+    unsigned int _size;
     unsigned int _vertexBuffer;
     unsigned char* _lockedVertices;
     
 public:
-    VertexBuffer(long size);
+    VertexBuffer(int size);
     VertexBuffer();
     
     void beginUpdate(void);
