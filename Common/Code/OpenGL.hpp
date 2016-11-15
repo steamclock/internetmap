@@ -17,7 +17,7 @@ extern bool gHasMapBuffer;
 bool InitOpenGLExtensions(void);
 
 #else
-bool InitOpenGLExtensions(void) {return true;}
+static inline bool InitOpenGLExtensions(void) {return true;}
 static const bool gHasMapBuffer = true;
 
 #ifdef BUILD_MAC
