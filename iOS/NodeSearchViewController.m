@@ -41,7 +41,7 @@
 {
     [super viewDidLoad];
     
-    self.title = @"Search Nodes";
+    self.title = NSLocalizedString(@"Search Nodes", nil);
     
     UIView* orangeBackground = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.preferredContentSize.width, 44)];
     orangeBackground.backgroundColor = UI_ORANGE_COLOR;
@@ -61,7 +61,7 @@
     // Attributed strings in iOS 6 only
     if([self.textField respondsToSelector:@selector(setAttributedPlaceholder:)]) {
         UIColor *color = [UIColor darkGrayColor];
-        self.textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Type a company or domain..." attributes:@{NSForegroundColorAttributeName: color}];
+        self.textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Type a company or domain...", nil) attributes:@{NSForegroundColorAttributeName: color}];
     }
     else {
         // On iOS 5, we can set the colour (easily) and the default is pretty ugly, so
@@ -163,7 +163,7 @@
             if(self.showHostLookup) {
                 cell.textLabel.text = [NSString stringWithFormat:@"Find host '%@'", [self.textField.text lowercaseString] ];
             } else {
-                cell.textLabel.text = @"Your Location";
+                cell.textLabel.text = NSLocalizedString(@"Your Location", nil);
                 cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"youarehere_selected.png"]];
             }
             cell.textLabel.textColor = UI_ORANGE_COLOR;
@@ -180,7 +180,7 @@
         // are no results and no special item, i.e. find host, and it shoudl always show find
         // hos tif there are no results. Gonna leave it jsut in case for now.
         // TODO: investigate
-        cell.textLabel.text = @"No results found";
+        cell.textLabel.text = NSLocalizedString(@"No results found", nil);
     }else {
         NodeWrapper* node = self.searchResults[row];
         cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", node.asn, node.friendlyDescription];

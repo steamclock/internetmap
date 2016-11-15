@@ -63,7 +63,7 @@
 
 
         if (self.isDisplayingCurrentNode) {
-            self.title = @"You Are Here";
+            self.title = NSLocalizedString(@"You Are Here", nil);
             if (![HelperMethods isStringEmptyOrNil:textDescription]) {
                 [self.firstGroupOfStrings addObject:textDescription];
             }
@@ -177,7 +177,7 @@
         float tracerouteButtonY = self.preferredContentSize.height-TRACEROUTE_BUTTON_HEIGHT-verticalPad;
         self.tracerouteButton.frame = CGRectMake(20, tracerouteButtonY, 280, TRACEROUTE_BUTTON_HEIGHT);
         self.tracerouteButton.titleLabel.font = [UIFont fontWithName:FONT_NAME_REGULAR size:20];
-        [self.tracerouteButton setTitle:@"Perform Traceroute" forState:UIControlStateNormal];
+        [self.tracerouteButton setTitle:NSLocalizedString(@"Perform Traceroute", nil) forState:UIControlStateNormal];
         [self.tracerouteButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [self.tracerouteButton setBackgroundImage:[[UIImage imageNamed:@"traceroute-button"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 22, 0, 22)] forState:UIControlStateNormal];
         [self.tracerouteButton addTarget:self action:@selector(tracerouteButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -203,7 +203,7 @@
     detailsLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:18];
     detailsLabel.textColor = FONT_COLOR_GRAY;
     detailsLabel.backgroundColor = [UIColor clearColor];
-    detailsLabel.text = @"Details of Traceroute";
+    detailsLabel.text = NSLocalizedString(@"Details of Traceroute", nil);
     [self.tracerouteContainerView addSubview:detailsLabel];
 
     UIView* dividerView = [[UIView alloc] initWithFrame:CGRectMake(detailsLabel.x, detailsLabel.y+detailsLabel.height+verticalPad/2, detailsLabel.width, 1)];
@@ -265,7 +265,7 @@
             [self.delegate performSelector:@selector(tracerouteButtonTapped)];
         }
     }else {
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No Internet connection" message:@"Please connect to the internet." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"No Internet connection", nil) message:NSLocalizedString(@"Please connect to the internet.", nil) delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
         [alert show];
     }
 }

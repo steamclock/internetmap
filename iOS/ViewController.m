@@ -541,7 +541,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             }];
         }
     }else {
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No Internet connection" message:@"Please connect to the internet." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"No Internet connection", nil) message:NSLocalizedString(@"Please connect to the internet.", nil) delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
         [alert show];
     }
 }
@@ -865,7 +865,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             };
         }];
     } else {
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No Internet connection" message:@"Please connect to the internet." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"No Internet connection", nil) message:NSLocalizedString(@"Please connect to the internet.", nil) delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
         [alert show];
     }
 }
@@ -965,7 +965,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)couldntResolveIP{
     self.nodeInformationViewController.tracerouteTextView.textColor = [UIColor redColor];
-    self.nodeInformationViewController.tracerouteTextView.text = @"Error: ASN couldn't be resolved into IP. Please try another node!";
+    self.nodeInformationViewController.tracerouteTextView.text = NSLocalizedString(@"Error: ASN couldn't be resolved into IP. Please try another node!", nil);
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         [self.errorInfoView setErrorString:@"Failed to get IP for ASN."];
