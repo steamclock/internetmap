@@ -108,7 +108,7 @@
         self.contentHeight = height;
 
         float width = [HelperMethods deviceIsiPad] ? 443 : [[UIScreen mainScreen] bounds].size.width;
-        [self setContentSizeForViewInPopover:CGSizeMake(width, height)];
+        [self setPreferredContentSize:CGSizeMake(width, height)];
 
 
     }
@@ -119,23 +119,23 @@
     float verticalPad = [HelperMethods deviceIsiPad] ? VERTICAL_PADDING_IPAD : VERTICAL_PADDING_IPHONE;
     [super viewDidLoad];
     
-    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.contentSizeForViewInPopover.width, self.contentSizeForViewInPopover.height)];
-    self.scrollView.contentSize = CGSizeMake(self.contentSizeForViewInPopover.width, self.contentHeight-TOP_BACKGROUND_HEIGHT);
+    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.preferredContentSize.width, self.preferredContentSize.height)];
+    self.scrollView.contentSize = CGSizeMake(self.preferredContentSize.width, self.contentHeight-TOP_BACKGROUND_HEIGHT);
     self.scrollView.scrollEnabled = ![HelperMethods deviceIsiPad];
     [self.view addSubview:self.scrollView];
     
     UIImage* xImage = [UIImage imageNamed:@"x-icon"];
     
-    UIView* orangeBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.contentSizeForViewInPopover.width, TOP_BACKGROUND_HEIGHT)];
+    UIView* orangeBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.preferredContentSize.width, TOP_BACKGROUND_HEIGHT)];
     orangeBackgroundView.backgroundColor = UI_ORANGE_COLOR;
     [self.view addSubview:orangeBackgroundView];
     
-    self.topLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, -2, self.contentSizeForViewInPopover.width-xImage.size.width-25, TOP_BACKGROUND_HEIGHT)];
+    self.topLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, -2, self.preferredContentSize.width-xImage.size.width-25, TOP_BACKGROUND_HEIGHT)];
     self.topLabel.font = [UIFont fontWithName:FONT_NAME_MEDIUM size:24];
     self.topLabel.textColor = [UIColor blackColor];
     self.topLabel.backgroundColor = [UIColor clearColor];
     self.topLabel.text = self.title;
-    self.topLabel.minimumFontSize = 14;
+    self.topLabel.minimumScaleFactor = 0.5;
     self.topLabel.adjustsFontSizeToFitWidth = YES;
     [orangeBackgroundView addSubview:self.topLabel];
     
@@ -167,14 +167,14 @@
         connectionsLabel.textColor = FONT_COLOR_GRAY;
         connectionsLabel.backgroundColor = [UIColor clearColor];
         NSString* conn = self.node.numberOfConnections == 1 ? @"Connection" : @"Connections";
-        connectionsLabel.text = [NSString stringWithFormat:@"%i %@", self.node.numberOfConnections, conn];
+        connectionsLabel.text = [NSString stringWithFormat:@"%zd %@", self.node.numberOfConnections, conn];
         [self.scrollView addSubview:connectionsLabel];
         [self.infoLabels addObject:connectionsLabel];
     }
     
     if (!self.isDisplayingCurrentNode) {
         self.tracerouteButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        float tracerouteButtonY = self.contentSizeForViewInPopover.height-TRACEROUTE_BUTTON_HEIGHT-verticalPad;
+        float tracerouteButtonY = self.preferredContentSize.height-TRACEROUTE_BUTTON_HEIGHT-verticalPad;
         self.tracerouteButton.frame = CGRectMake(20, tracerouteButtonY, 280, TRACEROUTE_BUTTON_HEIGHT);
         self.tracerouteButton.titleLabel.font = [UIFont fontWithName:FONT_NAME_REGULAR size:20];
         [self.tracerouteButton setTitle:@"Perform Traceroute" forState:UIControlStateNormal];
@@ -188,7 +188,7 @@
     self.tracerouteContainerView.hidden = YES;
     [self.scrollView addSubview:self.tracerouteContainerView];
 
-    CGFloat boxWidth = (self.contentSizeForViewInPopover.width-20-30-30-20)/3.0; //total width subtracted by outer and inner margins and divided by three
+    CGFloat boxWidth = (self.preferredContentSize.width-20-30-30-20)/3.0; //total width subtracted by outer and inner margins and divided by three
     
     self.box1 = [[LabelNumberBoxView alloc] initWithFrame:CGRectMake(20, orangeBackgroundView.y+orangeBackgroundView.height+6, boxWidth, INFO_BOX_HEIGHT) labelText:@"IP Hops" numberText:@"0"];
     [self.tracerouteContainerView addSubview:self.box1];
@@ -240,10 +240,10 @@
     if ([HelperMethods deviceHasInternetConnection]) {
         //UI setup
         if ([HelperMethods deviceIsiPad]) {
-            self.contentSizeForViewInPopover = CGSizeMake(self.contentSizeForViewInPopover.width, TOP_BACKGROUND_HEIGHT+contentHeight);
+            self.preferredContentSize = CGSizeMake(self.preferredContentSize.width, TOP_BACKGROUND_HEIGHT+contentHeight);
             self.scrollView.frame = CGRectMake(0, 0, self.scrollView.width, contentHeight);
         }
-        self.scrollView.contentSize = CGSizeMake(self.contentSizeForViewInPopover.width, contentHeight);
+        self.scrollView.contentSize = CGSizeMake(self.preferredContentSize.width, contentHeight);
         
 
         
@@ -272,10 +272,14 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     float verticalPad = [HelperMethods deviceIsiPad] ? VERTICAL_PADDING_IPAD : VERTICAL_PADDING_IPHONE;
-    CGSize size = [self.tracerouteTextView.text sizeWithFont:self.tracerouteTextView.font constrainedToSize:CGSizeMake(self.tracerouteTextView.width, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+    // TODO: word wrap?
+    CGSize size = [self.tracerouteTextView.text boundingRectWithSize:CGSizeMake(self.tracerouteTextView.width, CGFLOAT_MAX)
+                                                             options:NSStringDrawingUsesLineFragmentOrigin
+                                                          attributes:@{NSFontAttributeName: self.tracerouteTextView.font}
+                                                             context:nil].size;
     self.tracerouteTextView.height = size.height+verticalPad*2;
     float contentHeight = self.box1.height+verticalPad+LABELS_HEIGHT+verticalPad+MIN(self.tracerouteTextView.height, size.height)+verticalPad*3;
-    self.scrollView.contentSize = CGSizeMake(self.contentSizeForViewInPopover.width, TOP_BACKGROUND_HEIGHT+contentHeight);
+    self.scrollView.contentSize = CGSizeMake(self.preferredContentSize.width, TOP_BACKGROUND_HEIGHT+contentHeight);
 }
 
 - (void)tracerouteTimerFired {
@@ -283,18 +287,22 @@
 }
 
 - (void)tracerouteDone {
-    CGSize size = [self.tracerouteTextView.text sizeWithFont:self.tracerouteTextView.font constrainedToSize:CGSizeMake(self.tracerouteTextView.width, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+    // TODO: word wrap?
+    CGSize size = [self.tracerouteTextView.text boundingRectWithSize:CGSizeMake(self.tracerouteTextView.width, CGFLOAT_MAX)
+                                                              options:NSStringDrawingUsesLineFragmentOrigin
+                                                           attributes:@{NSFontAttributeName: self.tracerouteTextView.font}
+                                                              context:nil].size;
     float verticalPad = [HelperMethods deviceIsiPad] ? VERTICAL_PADDING_IPAD : VERTICAL_PADDING_IPHONE;
     float contentHeight = TOP_BACKGROUND_HEIGHT+self.box1.height+verticalPad+LABELS_HEIGHT+verticalPad+verticalPad;
     if ([HelperMethods deviceIsiPad]) {
-        self.contentSizeForViewInPopover = CGSizeMake(self.contentSizeForViewInPopover.width, contentHeight+MIN(self.tracerouteTextView.height, size.height));
+        self.preferredContentSize = CGSizeMake(self.preferredContentSize.width, contentHeight+MIN(self.tracerouteTextView.height, size.height));
     }else {
         self.tracerouteTextView.height = size.height+verticalPad;
-        self.scrollView.contentSize = CGSizeMake(self.contentSizeForViewInPopover.width, contentHeight+size.height+verticalPad);
+        self.scrollView.contentSize = CGSizeMake(self.preferredContentSize.width, contentHeight+size.height+verticalPad);
     }
     [UIView animateWithDuration:1 animations:^{
         if (![HelperMethods deviceIsiPad]) {
-            self.scrollView.frame = CGRectMake(0, 0, self.scrollView.width, self.contentSizeForViewInPopover.height);
+            self.scrollView.frame = CGRectMake(0, 0, self.scrollView.width, self.preferredContentSize.height);
         }
     }];
 

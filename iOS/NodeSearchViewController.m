@@ -28,10 +28,10 @@
     self = [super init];
     if (self) {
         if ([HelperMethods deviceIsiPad]) {
-            self.contentSizeForViewInPopover = CGSizeMake(400, 290);
+            self.preferredContentSize = CGSizeMake(400, 290);
         }else {
             CGSize screenSize = [[UIScreen mainScreen] bounds].size;
-            self.contentSizeForViewInPopover = CGSizeMake(screenSize.width, screenSize.height-20-55-216); //status bar height, buttons, keyboard
+            self.preferredContentSize = CGSizeMake(screenSize.width, screenSize.height-20-55-216); //status bar height, buttons, keyboard
         }
     }
     return self;
@@ -43,12 +43,12 @@
     
     self.title = @"Search Nodes";
     
-    UIView* orangeBackground = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.contentSizeForViewInPopover.width, 44)];
+    UIView* orangeBackground = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.preferredContentSize.width, 44)];
     orangeBackground.backgroundColor = UI_ORANGE_COLOR;
     [self.view addSubview:orangeBackground];
     
     UIImage* doneImage = [UIImage imageNamed:@"x-icon"];
-    self.textField = [[UITextField alloc] initWithFrame:CGRectMake(10, 5, self.contentSizeForViewInPopover.width-doneImage.size.width-22, 44)];
+    self.textField = [[UITextField alloc] initWithFrame:CGRectMake(10, 5, self.preferredContentSize.width-doneImage.size.width-22, 44)];
     [self.textField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     self.textField.backgroundColor = [UIColor clearColor];
     self.textField.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -77,7 +77,7 @@
     [doneButton addTarget:self action:@selector(done) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:doneButton];
     
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(self.textField.x-10, self.textField.y+self.textField.height, self.contentSizeForViewInPopover.width-25, self.contentSizeForViewInPopover.height-self.textField.height-20) style:UITableViewStylePlain];
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(self.textField.x-10, self.textField.y+self.textField.height, self.preferredContentSize.width-25, self.preferredContentSize.height-self.textField.height-20) style:UITableViewStylePlain];
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
@@ -122,7 +122,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    int count = self.searchResults.count;
+    NSInteger count = self.searchResults.count;
     if ([self haveSpecialFirstItem]) {
         count++;
     }
@@ -155,7 +155,7 @@
     cell.textLabel.textColor = [UIColor whiteColor];
     cell.accessoryView = nil;
 
-    int row = indexPath.row;
+    NSInteger row = indexPath.row;
     
     if ([self haveSpecialFirstItem]) {
         if(row == 0) {
@@ -202,7 +202,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    int row = indexPath.row;
+    NSInteger row = indexPath.row;
     
     if ([self haveSpecialFirstItem]) {
         if(row == 0) {

@@ -112,7 +112,7 @@
     NSInteger code = (NSInteger)header->code;
     
     NSLog(@"Packet for IP: %@", [NSString stringWithFormat:@"%d.%d.%d.%d", IPHeader->sourceAddress[0], IPHeader->sourceAddress[1], IPHeader->sourceAddress[3], IPHeader->sourceAddress[4]]);
-    NSLog(@"ICMP Type: %d and Code: %d", type, code);
+    NSLog(@"ICMP Type: %ld and Code: %ld", (long)type, (long)code);
 }
 
 #pragma mark - Process packets
@@ -167,7 +167,7 @@
             packetRecord.responseAddress = ipInPacket;
             
             // Report find
-            [self foundNewIP:ipInPacket withReport:[NSString stringWithFormat:@"%@  %.2fms", ipInPacket, packetRecord.rtt] withSequenceNumber:sequenceNumber];
+            [self foundNewIP:ipInPacket withReport:[NSString stringWithFormat:@"%@  %.2fms", ipInPacket, packetRecord.rtt] withSequenceNumber:(int)sequenceNumber];
             
             doneTraceroute = [self reachedTargetIP:ipInPacket];
             
@@ -218,7 +218,7 @@
     if (numberOfTimeoutsForIP > 0) {
         if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:withHops:)]) {
             NSArray* hops = self.hopsForCurrentIP;
-            [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: * * * Hop did not reply or timed out.", self.hopsForCurrentIP.count] withHops:hops];
+            [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%lu: * * * Hop did not reply or timed out.", (unsigned long)self.hopsForCurrentIP.count] withHops:hops];
             self.totalHopsTimedOut++;
             
             //Send m0ar packets?
@@ -228,7 +228,7 @@
         
         if (self.totalHopsTimedOut >= 3) {
             NSArray* hops = self.hopsForCurrentIP;
-            [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%d: * * * Hop did not reply or timed out.", self.hopsForCurrentIP.count] withHops:hops];
+            [self.delegate tracerouteDidFindHop:[NSString stringWithFormat:@"%lu: * * * Hop did not reply or timed out.", (unsigned long)self.hopsForCurrentIP.count] withHops:hops];
             
             
             if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidTimeout:)]) {
@@ -250,7 +250,7 @@
         //[self.hopsForCurrentIP addObject:ip];
         [self.hopsForCurrentIP replaceObjectAtIndex:sequenceNumber withObject:ip];
         
-        NSString* reported = [NSString stringWithFormat:@"%d: %@", self.hopsForCurrentIP.count, report];
+        NSString* reported = [NSString stringWithFormat:@"%lu: %@", (unsigned long)self.hopsForCurrentIP.count, report];
         if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidFindHop:withHops:)]) {
             NSArray* hops = self.hopsForCurrentIP;
             [self.delegate tracerouteDidFindHop:reported withHops:hops];

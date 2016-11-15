@@ -8,7 +8,7 @@
 #include "Types.hpp"
 #include <stdlib.h>
 
-VertexBuffer::VertexBuffer(int size) :
+VertexBuffer::VertexBuffer(long size) :
 _size(size),
 _vertexBuffer(0),
 _lockedVertices(0)

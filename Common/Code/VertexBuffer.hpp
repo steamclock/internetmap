@@ -8,17 +8,17 @@
 
 class VertexBuffer {
 protected:
-    unsigned int _size;
+    unsigned long _size;
     unsigned int _vertexBuffer;
     unsigned char* _lockedVertices;
     
 public:
-    VertexBuffer(int size);
+    VertexBuffer(long size);
     VertexBuffer();
     
     void beginUpdate(void);
     void endUpdate(void);
-    int vertexCount(void);
+    long vertexCount(void);
 };
 
 #endif /* defined(__InternetMap__VertexBuffer__) */

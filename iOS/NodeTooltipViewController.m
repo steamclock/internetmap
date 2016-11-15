@@ -20,7 +20,7 @@
     self = [super init];
     if (self) {
         self.node = node;
-        self.contentSizeForViewInPopover = CGSizeMake(320, 44);
+        self.preferredContentSize = CGSizeMake(320, 44);
     }
     return self;
 }
@@ -29,11 +29,11 @@
 {
     [super viewDidLoad];
     
-    UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, self.contentSizeForViewInPopover.width-10, 26)];
-    label.centerY = self.contentSizeForViewInPopover.height/2;
+    UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, self.preferredContentSize.width-10, 26)];
+    label.centerY = self.preferredContentSize.height/2;
     label.backgroundColor = [UIColor clearColor];
     label.textColor = [UIColor whiteColor];
-    label.textAlignment = UITextAlignmentCenter;
+    label.textAlignment = NSTextAlignmentCenter;
     label.font = [UIFont fontWithName:@"HelveticaNeue" size:22];
     
     if(self.text) {

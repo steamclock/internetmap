@@ -159,13 +159,13 @@ static const int TIMEOUT = 10;
             
             getnameinfo(address, address->sa_len, ipAddress, INET6_ADDRSTRLEN, nil, 0, NI_NUMERICHOST);
             
-            if (ipAddress == nil) {
-                CFRelease(hostRef);
-                [[SCDispatchQueue mainQueue] dispatchAsync:^{
-                    result(nil);
-                }];
-                return;
-            }
+//            if (ipAddress == nil) {
+//                CFRelease(hostRef);
+//                [[SCDispatchQueue mainQueue] dispatchAsync:^{
+//                    result(nil);
+//                }];
+//                return;
+//            }
             
             [addresses addObject:[NSString stringWithCString:ipAddress encoding:NSASCIIStringEncoding]];
         }

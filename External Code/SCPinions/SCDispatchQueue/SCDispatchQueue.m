@@ -30,7 +30,7 @@
 
 #import "SCDispatchQueue.h"
 
-@interface SCDispatchQueue () 
+@interface SCDispatchQueue ()
 @property dispatch_queue_t queue;
 @end
 
@@ -111,20 +111,17 @@ static int uniqueQueueId = 0;
 {
     if((self = [super init])) {
         self.queue = dispatch_queue_create([name cStringUsingEncoding:NSUTF8StringEncoding], NULL);
-    }    
+        dispatch_queue_set_specific(self.queue, (__bridge void *)self, (__bridge void *)self.queue, NULL);
+    }
     return self;
 }
 
 -(id)initWithDispatchQueue:(dispatch_queue_t)inQueue {
     if((self = [super init])) {
-        dispatch_retain(inQueue);
         self.queue = inQueue;
-    }    
-    return self;    
-}
-
--(void)dealloc {
-    dispatch_release(self.queue);
+        dispatch_queue_set_specific(self.queue, (__bridge void *)self, (__bridge void *)self.queue, NULL);
+    }
+    return self;
 }
 
 -(void)dispatchAsync:(void(^)())block {
@@ -132,7 +129,7 @@ static int uniqueQueueId = 0;
 }
 
 -(void)dispatchSync:(void(^)())block {
-    if (dispatch_get_current_queue() == self.queue) {
+    if ([self isCurrent]) {
         block();
     }
     else {
@@ -141,18 +138,18 @@ static int uniqueQueueId = 0;
 }
 
 #define DISPATCH_SYNC_RETURN_IMPLIMENTATION(type, block, queue) \
-    __block type ret;\
-    \
-    if (dispatch_get_current_queue() == queue) {\
-        return block();\
-    }\
-    else {\
-        dispatch_sync(queue, ^{\
-            ret = block();\
-        });\
-    }\
-    \
-    return ret;
+__block type ret;\
+\
+if ([self isCurrent]) {\
+return block();\
+}\
+else {\
+dispatch_sync(queue, ^{\
+ret = block();\
+});\
+}\
+\
+return ret;
 
 -(id)dispatchSyncWithObjectReturn:(id(^)())block {
     DISPATCH_SYNC_RETURN_IMPLIMENTATION(id, block, self.queue);
@@ -191,7 +188,7 @@ static int uniqueQueueId = 0;
         BOOL shouldContinue = block();
         
         if(!shouldContinue) {
-            dispatch_release(timer);
+            timer = NULL;
         }
     };
     
@@ -201,11 +198,11 @@ static int uniqueQueueId = 0;
 }
 
 -(void)dispatchSyncFast:(void(^)())block {
-    dispatch_sync(self.queue, block);    
+    dispatch_sync(self.queue, block);
 }
 
 -(BOOL)isCurrent {
-    return dispatch_get_current_queue() == self.queue;
+    return dispatch_get_specific((__bridge void *)self) == (__bridge void *)(self.queue);
 }
 
 @end
@@ -224,10 +221,6 @@ static int uniqueQueueId = 0;
     }
     
     return self;
-}
-
--(void)dealloc {
-    dispatch_release(self.group);
 }
 
 -(void)dispatchAsync:(void(^)())block {

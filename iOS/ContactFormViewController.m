@@ -151,7 +151,7 @@
 }
 
 -(IBAction)done:(id)sender {
-    [self dismissModalViewControllerAnimated:TRUE];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(IBAction)submit:(id)sender {
@@ -167,7 +167,7 @@
     }
     
     void (^genericFailure)() = ^{
-        [self dismissModalViewControllerAnimated:TRUE];
+        [self dismissViewControllerAnimated:YES completion:nil];
         
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Network Error" message:@"Could not complete the contact request. Please try again later." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
@@ -176,9 +176,9 @@
     MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.removeFromSuperViewOnHide = YES;
     hud.mode = MBProgressHUDModeIndeterminate;
-    hud.labelText = @"Sending contact request...";
+    hud.label.text = @"Sending contact request...";
     
-    [hud show:YES];
+    [hud showAnimated:YES];
 
     NSString* platform =  ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) ? @"iPhone" : @"iPad";
     NSDictionary* postData = @{@"fullName" : self.nameField.text,
@@ -211,16 +211,16 @@
 
         if(weakRequest.responseStatusCode == 200) {
             hud.mode = MBProgressHUDModeText;
-            hud.labelText = @"Submitted. Thank you.";
+            hud.label.text = @"Submitted. Thank you.";
             
-            [hud hide:YES afterDelay:2.0];
+            [hud hideAnimated:YES afterDelay:2.0];
             
             [[SCDispatchQueue mainQueue] dispatchAfter:2.0f block:^{
-                [self dismissModalViewControllerAnimated:TRUE];
+                [self dismissViewControllerAnimated:YES completion:nil];
             }];
         }
         else {
-            [hud hide:YES];
+            [hud hideAnimated:YES];
 
             NSDictionary* responseDict = nil;
             if([jsonResponse isKindOfClass:[NSDictionary class]]) {

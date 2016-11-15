@@ -85,11 +85,11 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
 
 #pragma mark - Custom properties
 
-- (NSUInteger)targetNode{
+- (unsigned int)targetNode{
     return _controller->targetNode;
 }
 
-- (void)setTargetNode:(NSUInteger)targetNode {
+- (void)setTargetNode:(unsigned int)targetNode {
     _controller->targetNode = targetNode;
 }
 

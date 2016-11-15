@@ -11,7 +11,7 @@
 
 @interface StringListViewController ()
 
-@property (nonatomic, assign) int selectedRow;
+@property (nonatomic, assign) NSInteger selectedRow;
 @property (nonatomic, assign) BOOL highlightSelectedRow;
 
 @end
@@ -22,7 +22,7 @@
 {
     self = [super initWithStyle:style];
     if (self) {
-        self.contentSizeForViewInPopover = CGSizeMake(320, 150);
+        self.preferredContentSize = CGSizeMake(320, 150);
     }
     return self;
 }
@@ -38,8 +38,8 @@
     _items = items;
     //update size
     int itemHeight = 44; //according to the internet
-    int totalHeight = items.count * itemHeight;
-    self.contentSizeForViewInPopover = CGSizeMake(320, totalHeight);
+    NSInteger totalHeight = items.count * itemHeight;
+    self.preferredContentSize = CGSizeMake(320, totalHeight);
 }
 
 - (void)viewDidLoad
@@ -141,7 +141,7 @@
     }
     [self.tableView reloadData];
     if(self.selectedBlock) {
-        self.selectedBlock(indexPath.row);
+        self.selectedBlock((int)indexPath.row);
     }
 }
 

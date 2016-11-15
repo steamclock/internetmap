@@ -26,7 +26,7 @@
     } else {
         self.viewController = [[ViewController alloc] initWithNibName:@"ViewController_iPad" bundle:nil];
     }
-    self.viewController.wantsFullScreenLayout = YES;
+    self.viewController.edgesForExtendedLayout = UIRectEdgeAll;
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
     return YES;

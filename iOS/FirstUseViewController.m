@@ -33,6 +33,7 @@ static const int NUM_PAGES = 3;
 }
 
 -(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     self.content.delegate = self;
     
     // Do idiom specific setup
@@ -109,7 +110,7 @@ static const int NUM_PAGES = 3;
  
     if(page == (NUM_PAGES - 1)) {
         // Last page, dismiss
-        [self dismissModalViewControllerAnimated:YES];
+        [self dismissViewControllerAnimated:YES completion:nil];
     }
     else {
         //Trigger scroll to next page
