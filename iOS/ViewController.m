@@ -243,9 +243,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    bool firstUseEnabled = NO;
     bool shownFirstUse = [[NSUserDefaults standardUserDefaults] boolForKey:@"shownFirstUse"];
     
-    if(!shownFirstUse) {
+    if(!shownFirstUse && firstUseEnabled) {
         [[NSUserDefaults standardUserDefaults] setBool:TRUE forKey:@"shownFirstUse"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         [self showFirstUse];
