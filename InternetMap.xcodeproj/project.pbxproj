@@ -80,7 +80,6 @@
 		A6551E9F16CB07EE00340590 /* contact-sales-field@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A6551E9D16CB07EE00340590 /* contact-sales-field@2x.png */; };
 		A6551EA216CC5B8500340590 /* contact-sales-field-highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = A6551EA016CC5B8500340590 /* contact-sales-field-highlighted.png */; };
 		A6551EA316CC5B8500340590 /* contact-sales-field-highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A6551EA116CC5B8500340590 /* contact-sales-field-highlighted@2x.png */; };
-		A6551EA916CC65CB00340590 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A6551EA516CC65CB00340590 /* libTestFlight.a */; };
 		A6551EBC16CDAC8B00340590 /* CreditsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6551EBB16CDAC8A00340590 /* CreditsViewController.m */; };
 		A6551EBE16CDB22900340590 /* credits.html in Resources */ = {isa = PBXBuildFile; fileRef = A6551EBD16CDB22900340590 /* credits.html */; };
 		A6551EC216CEB88700340590 /* ExpandedScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6551EC116CEB88700340590 /* ExpandedScrollView.m */; };
@@ -290,10 +289,6 @@
 		A6551E9D16CB07EE00340590 /* contact-sales-field@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "contact-sales-field@2x.png"; path = "iOS/Images/contact-sales-field@2x.png"; sourceTree = SOURCE_ROOT; };
 		A6551EA016CC5B8500340590 /* contact-sales-field-highlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "contact-sales-field-highlighted.png"; path = "iOS/Images/contact-sales-field-highlighted.png"; sourceTree = SOURCE_ROOT; };
 		A6551EA116CC5B8500340590 /* contact-sales-field-highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "contact-sales-field-highlighted@2x.png"; path = "iOS/Images/contact-sales-field-highlighted@2x.png"; sourceTree = SOURCE_ROOT; };
-		A6551EA516CC65CB00340590 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
-		A6551EA616CC65CB00340590 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
-		A6551EA716CC65CB00340590 /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
-		A6551EA816CC65CB00340590 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		A6551EBA16CDAC8A00340590 /* CreditsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CreditsViewController.h; path = iOS/CreditsViewController.h; sourceTree = SOURCE_ROOT; };
 		A6551EBB16CDAC8A00340590 /* CreditsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CreditsViewController.m; path = iOS/CreditsViewController.m; sourceTree = SOURCE_ROOT; };
 		A6551EBD16CDB22900340590 /* credits.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = credits.html; path = Common/Data/credits.html; sourceTree = "<group>"; };
@@ -633,7 +628,6 @@
 				A6F3F5671640F1FB0070E6AE /* CoreGraphics.framework in Frameworks */,
 				A6F3F5691640F1FB0070E6AE /* GLKit.framework in Frameworks */,
 				A6F3F56B1640F1FB0070E6AE /* OpenGLES.framework in Frameworks */,
-				A6551EA916CC65CB00340590 /* libTestFlight.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -686,7 +680,6 @@
 			isa = PBXGroup;
 			children = (
 				A625263016CEF30A0015DF37 /* MBProgressHUD */,
-				A6551EA416CC65CB00340590 /* TestFlightSDK */,
 				D403BBD716C1DF2F008AA000 /* libtraceroute */,
 				D403BB9516C1D9C2008AA000 /* netinet */,
 				A686EAE516B62D05009B070E /* SCDispatchQueue */,
@@ -843,18 +836,6 @@
 			);
 			name = "First Use";
 			sourceTree = "<group>";
-		};
-		A6551EA416CC65CB00340590 /* TestFlightSDK */ = {
-			isa = PBXGroup;
-			children = (
-				A6551EA516CC65CB00340590 /* libTestFlight.a */,
-				A6551EA616CC65CB00340590 /* README.md */,
-				A6551EA716CC65CB00340590 /* release_notes.md */,
-				A6551EA816CC65CB00340590 /* TestFlight.h */,
-			);
-			name = TestFlightSDK;
-			path = "External Code/TestFlightSDK";
-			sourceTree = SOURCE_ROOT;
 		};
 		A686EA9F16B62BDD009B070E /* Shaders */ = {
 			isa = PBXGroup;
@@ -1663,11 +1644,7 @@
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/iOS/InternetMap-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/Android/obj/local/armeabi\"",
-					"\"$(SRCROOT)/External Code/TestFlightSDK\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.peer1.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = internetmap;
 				RUN_CLANG_STATIC_ANALYZER = YES;
@@ -1743,11 +1720,7 @@
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/iOS/InternetMap-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/Android/obj/local/armeabi\"",
-					"\"$(SRCROOT)/External Code/TestFlightSDK\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.peer1.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = internetmap;
 				PROVISIONING_PROFILE = "";
@@ -1867,11 +1840,7 @@
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/iOS/InternetMap-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/Android/obj/local/armeabi\"",
-					"\"$(SRCROOT)/External Code/TestFlightSDK\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.peer1.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = internetmap;
 				RUN_CLANG_STATIC_ANALYZER = YES;
@@ -1890,11 +1859,7 @@
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/iOS/InternetMap-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/Android/obj/local/armeabi\"",
-					"\"$(SRCROOT)/External Code/TestFlightSDK\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.peer1.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = internetmap;
 				PROVISIONING_PROFILE = "";
