@@ -88,59 +88,59 @@ void DefaultVisualization::updateLineDisplay(shared_ptr<MapDisplay> display, std
     display->visualizationLines = shared_ptr<DisplayLines>();
     return;
     
-    if (deviceIsOld()) {
-        display->visualizationLines = shared_ptr<DisplayLines>();
-        return;
-    }
-    
-    std::vector<ConnectionPointer> filteredConnections;
-    
-    // We are only drawing lines to nodes with > 0.01 importance, filter those out
-    for (unsigned int i = 0; i < connections.size(); i++) {
-        ConnectionPointer connection = connections[i];
-        if ((connection->first->importance > 0.01) && (connection->second->importance > 0.01)) {
-            filteredConnections.push_back(connection);
-        }
-    }
-    
-    int skipLines = 10;
-    
-    shared_ptr<DisplayLines> lines(new DisplayLines(filteredConnections.size() / skipLines));
-    
-    lines->beginUpdate();
-    
-    int currentIndex = 0;
-    int count = 0;
-    for(unsigned int i = 0; i < filteredConnections.size(); i++) {
-        ConnectionPointer connection = filteredConnections[i];
-        count++;
-        
-        if((count % skipLines) != 0) {
-            continue;
-        }
-        
-        NodePointer a = connection->first;
-        NodePointer b = connection->second;
-        
-        float lineImportanceA = std::max(a->importance - 0.01f, 0.0f) * 1.5f;
-        Color lineColorA = Color(lineImportanceA, lineImportanceA, lineImportanceA, 1.0);
-        
-        float lineImportanceB = std::max(b->importance - 0.01f, 0.0f) * 1.5f;
-        Color lineColorB = Color(lineImportanceB, lineImportanceB, lineImportanceB, 1.0);
-        
-        Point3 positionA = nodePosition(a);
-        Point3 positionB = nodePosition(b);
-        
-        Point3 outsideA = MapUtilities().pointOnSurfaceOfNode(nodeSize(a), positionA, positionB);
-        Point3 outsideB = MapUtilities().pointOnSurfaceOfNode(nodeSize(b), positionB, positionA);
-        
-        lines->updateLine(currentIndex, outsideA, lineColorA, outsideB, lineColorB);
-        currentIndex++;
-    }
-    
-    lines->endUpdate();;
-    
-    display->visualizationLines = lines;
+//    if (deviceIsOld()) {
+//        display->visualizationLines = shared_ptr<DisplayLines>();
+//        return;
+//    }
+//    
+//    std::vector<ConnectionPointer> filteredConnections;
+//    
+//    // We are only drawing lines to nodes with > 0.01 importance, filter those out
+//    for (unsigned int i = 0; i < connections.size(); i++) {
+//        ConnectionPointer connection = connections[i];
+//        if ((connection->first->importance > 0.01) && (connection->second->importance > 0.01)) {
+//            filteredConnections.push_back(connection);
+//        }
+//    }
+//    
+//    int skipLines = 10;
+//    
+//    shared_ptr<DisplayLines> lines(new DisplayLines(filteredConnections.size() / skipLines));
+//    
+//    lines->beginUpdate();
+//    
+//    int currentIndex = 0;
+//    int count = 0;
+//    for(unsigned int i = 0; i < filteredConnections.size(); i++) {
+//        ConnectionPointer connection = filteredConnections[i];
+//        count++;
+//        
+//        if((count % skipLines) != 0) {
+//            continue;
+//        }
+//        
+//        NodePointer a = connection->first;
+//        NodePointer b = connection->second;
+//        
+//        float lineImportanceA = std::max(a->importance - 0.01f, 0.0f) * 1.5f;
+//        Color lineColorA = Color(lineImportanceA, lineImportanceA, lineImportanceA, 1.0);
+//        
+//        float lineImportanceB = std::max(b->importance - 0.01f, 0.0f) * 1.5f;
+//        Color lineColorB = Color(lineImportanceB, lineImportanceB, lineImportanceB, 1.0);
+//        
+//        Point3 positionA = nodePosition(a);
+//        Point3 positionB = nodePosition(b);
+//        
+//        Point3 outsideA = MapUtilities().pointOnSurfaceOfNode(nodeSize(a), positionA, positionB);
+//        Point3 outsideB = MapUtilities().pointOnSurfaceOfNode(nodeSize(b), positionB, positionA);
+//        
+//        lines->updateLine(currentIndex, outsideA, lineColorA, outsideB, lineColorB);
+//        currentIndex++;
+//    }
+//    
+//    lines->endUpdate();;
+//    
+//    display->visualizationLines = lines;
 }
 
 
@@ -159,7 +159,7 @@ void DefaultVisualization::resetDisplayForSelectedNodes(shared_ptr<MapDisplay> d
 
     //TODO: this could be handled better, by reusing the vertex buffer and not recreating every time.
     //doesn't matter too much at this point because there can only be one node selected at the same time
-    shared_ptr<DisplayNodes> theNodes(new DisplayNodes(nodes.size()));
+    shared_ptr<DisplayNodes> theNodes(new DisplayNodes((int)nodes.size()));
     display->selectedNodes = theNodes;
     
     updateDisplayForSelectedNodes(display, nodes);

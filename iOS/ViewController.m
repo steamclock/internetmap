@@ -242,9 +242,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    bool firstUseEnabled = NO;
     bool shownFirstUse = [[NSUserDefaults standardUserDefaults] boolForKey:@"shownFirstUse"];
     
-    if(!shownFirstUse) {
+    if(!shownFirstUse && firstUseEnabled) {
         [[NSUserDefaults standardUserDefaults] setBool:TRUE forKey:@"shownFirstUse"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         [self showFirstUse];
@@ -482,7 +484,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         searchController.delegate = self;
         
         self.nodeSearchPopover = [[WEPopoverController alloc] initWithContentViewController:searchController];
-        [self.nodeSearchPopover setPopoverContentSize:searchController.contentSizeForViewInPopover];
+        [self.nodeSearchPopover setPopoverContentSize:searchController.preferredContentSize];
         self.nodeSearchPopover.delegate = self;
         
         if (![HelperMethods deviceIsiPad]) {
@@ -499,17 +501,17 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)showFirstUse {
     FirstUseViewController* firstUse = [[FirstUseViewController alloc] initWithNibName:@"FirstUseViewController" bundle:[NSBundle mainBundle]];
-    [self presentModalViewController:firstUse animated:YES];
+    [self presentViewController:firstUse animated:YES completion:nil];
 }
 
 -(void)showContactForm {
     ContactFormViewController* contact = [[ContactFormViewController alloc] initWithNibName:@"ContactFormViewController" bundle:[NSBundle mainBundle]];
-    [self presentModalViewController:contact animated:YES];
+    [self presentViewController:contact animated:YES completion:nil];
 }
 
 -(void)showCredits {
     CreditsViewController* credits = [[CreditsViewController alloc] initWithNibName:nil bundle:[NSBundle mainBundle]];
-    [self presentModalViewController:credits animated:YES];
+    [self presentViewController:credits animated:YES completion:nil];
 }
 
 -(void)selectYouAreHereNode {
@@ -540,7 +542,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             }];
         }
     }else {
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No Internet connection" message:@"Please connect to the internet." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"No Internet connection", nil) message:NSLocalizedString(@"Please connect to the internet.", nil) delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
         [alert show];
     }
 }
@@ -559,7 +561,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.visualizationSelectionPopover = [[WEPopoverController alloc] initWithContentViewController:tableforPopover];
         self.visualizationSelectionPopover.delegate = self;
         tableforPopover.items = [self.controller visualizationNames];
-        [self.visualizationSelectionPopover setPopoverContentSize:tableforPopover.contentSizeForViewInPopover];
+        [self.visualizationSelectionPopover setPopoverContentSize:tableforPopover.preferredContentSize];
         if (![HelperMethods deviceIsiPad]) {
             WEPopoverContainerViewProperties *prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
             prop.upArrowImageName = nil;
@@ -598,7 +600,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.infoPopover = [[WEPopoverController alloc] initWithContentViewController:tableforPopover];
         self.infoPopover.delegate = self;
         tableforPopover.items = @[ @"Help", @"Hosting & Cloud Services", @"Learn more at peer1.com", @"Credits" ];
-        [self.infoPopover setPopoverContentSize:tableforPopover.contentSizeForViewInPopover];
+        [self.infoPopover setPopoverContentSize:tableforPopover.preferredContentSize];
         if (![HelperMethods deviceIsiPad]) {
             WEPopoverContainerViewProperties *prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
             prop.upArrowImageName = nil;
@@ -622,7 +624,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                     [self showCredits];
                     break;
                 default: //can't happen
-                    NSLog(@"Unexpected info index %d!!", index);
+                    NSLog(@"Unexpected info index %zd!!", index);
             }
             
             [weakSelf.infoPopover dismissPopoverAnimated:YES];
@@ -776,7 +778,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         [self.timelinePopover dismissPopoverAnimated:NO];
         
         [self.timelineInfoViewController setYear:year];
-        [self.timelinePopover setPopoverContentSize:self.timelineInfoViewController.contentSizeForViewInPopover];
+        [self.timelinePopover setPopoverContentSize:self.timelineInfoViewController.preferredContentSize];
         [self.timelinePopover presentPopoverFromRect:thumbRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];
     }
 }
@@ -864,7 +866,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             };
         }];
     } else {
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No Internet connection" message:@"Please connect to the internet." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"No Internet connection", nil) message:NSLocalizedString(@"Please connect to the internet.", nil) delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
         [alert show];
     }
 }
@@ -893,7 +895,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     CGRect displayRect;
     
     if (![HelperMethods deviceIsiPad]) {
-        displayRect = CGRectMake(160, self.controller.displaySize.height-self.nodeInformationViewController.contentSizeForViewInPopover.height, 1, 1);
+        displayRect = CGRectMake(160, self.controller.displaySize.height-self.nodeInformationViewController.preferredContentSize.height, 1, 1);
     }else {
         displayRect = CGRectMake(512.0f, 384.0f, 1, 1);
     }
@@ -944,7 +946,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                 //So, if we can contact even one machine within an ASN - any one at all - we know we travel through that ASN
                 //We select randomly because why the heck not? It's all a guess as to which will respond. :)
                 if ([ips count]) {
-                    uint32_t rnd = arc4random_uniform([ips count]);
+                    uint32_t rnd = arc4random_uniform((unsigned int)[ips count]);
                     NSString* arbitraryIP = [NSString stringWithFormat:@"%@", ips[rnd]];
                     NSLog(@"Starting traceroute with IP: %@", arbitraryIP );
                     self.tracer = [SCTracerouteUtility tracerouteWithAddress:arbitraryIP];
@@ -964,7 +966,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)couldntResolveIP{
     self.nodeInformationViewController.tracerouteTextView.textColor = [UIColor redColor];
-    self.nodeInformationViewController.tracerouteTextView.text = @"Error: ASN couldn't be resolved into IP. Please try another node!";
+    self.nodeInformationViewController.tracerouteTextView.text = NSLocalizedString(@"Error: ASN couldn't be resolved into IP. Please try another node!", nil);
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         [self.errorInfoView setErrorString:@"Failed to get IP for ASN."];
@@ -1004,7 +1006,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     NSMutableArray* mergedAsnHops = [NSMutableArray new];
     
     __block NSString* lastAsn = nil;
-    __block int lastIndex = -1;
+    __block NSInteger lastIndex = -1;
     
     // Put our ASN at the start of the list, just in case
     NodeWrapper* us = [self.controller nodeByASN:self.cachedCurrentASN];
@@ -1033,7 +1035,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         [self.controller highlightRoute:mergedAsnHops];
     }
     
-    self.nodeInformationViewController.box2.numberLabel.text = [NSString stringWithFormat:@"%i", [mergedAsnHops count]];
+    self.nodeInformationViewController.box2.numberLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)[mergedAsnHops count]];
 }
 
 - (void)tracerouteDidFindHop:(NSString*)report withHops:(NSArray *)hops{

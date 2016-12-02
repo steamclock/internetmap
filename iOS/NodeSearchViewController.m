@@ -28,10 +28,10 @@
     self = [super init];
     if (self) {
         if ([HelperMethods deviceIsiPad]) {
-            self.contentSizeForViewInPopover = CGSizeMake(400, 290);
+            self.preferredContentSize = CGSizeMake(400, 290);
         }else {
             CGSize screenSize = [[UIScreen mainScreen] bounds].size;
-            self.contentSizeForViewInPopover = CGSizeMake(screenSize.width, screenSize.height-20-55-216); //status bar height, buttons, keyboard
+            self.preferredContentSize = CGSizeMake(screenSize.width, screenSize.height-20-55-216); //status bar height, buttons, keyboard
         }
     }
     return self;
@@ -41,14 +41,14 @@
 {
     [super viewDidLoad];
     
-    self.title = @"Search Nodes";
+    self.title = NSLocalizedString(@"Search Nodes", nil);
     
-    UIView* orangeBackground = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.contentSizeForViewInPopover.width, 44)];
+    UIView* orangeBackground = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.preferredContentSize.width, 44)];
     orangeBackground.backgroundColor = UI_ORANGE_COLOR;
     [self.view addSubview:orangeBackground];
     
     UIImage* doneImage = [UIImage imageNamed:@"x-icon"];
-    self.textField = [[UITextField alloc] initWithFrame:CGRectMake(10, 5, self.contentSizeForViewInPopover.width-doneImage.size.width-22, 44)];
+    self.textField = [[UITextField alloc] initWithFrame:CGRectMake(10, 5, self.preferredContentSize.width-doneImage.size.width-22, 44)];
     [self.textField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     self.textField.backgroundColor = [UIColor clearColor];
     self.textField.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -61,7 +61,7 @@
     // Attributed strings in iOS 6 only
     if([self.textField respondsToSelector:@selector(setAttributedPlaceholder:)]) {
         UIColor *color = [UIColor darkGrayColor];
-        self.textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Type a company or domain..." attributes:@{NSForegroundColorAttributeName: color}];
+        self.textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Type a company or domain...", nil) attributes:@{NSForegroundColorAttributeName: color}];
     }
     else {
         // On iOS 5, we can set the colour (easily) and the default is pretty ugly, so
@@ -77,7 +77,7 @@
     [doneButton addTarget:self action:@selector(done) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:doneButton];
     
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(self.textField.x-10, self.textField.y+self.textField.height, self.contentSizeForViewInPopover.width-25, self.contentSizeForViewInPopover.height-self.textField.height-20) style:UITableViewStylePlain];
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(self.textField.x-10, self.textField.y+self.textField.height, self.preferredContentSize.width-25, self.preferredContentSize.height-self.textField.height-20) style:UITableViewStylePlain];
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
@@ -122,7 +122,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    int count = self.searchResults.count;
+    NSInteger count = self.searchResults.count;
     if ([self haveSpecialFirstItem]) {
         count++;
     }
@@ -155,7 +155,7 @@
     cell.textLabel.textColor = [UIColor whiteColor];
     cell.accessoryView = nil;
 
-    int row = indexPath.row;
+    NSInteger row = indexPath.row;
     
     if ([self haveSpecialFirstItem]) {
         if(row == 0) {
@@ -163,7 +163,7 @@
             if(self.showHostLookup) {
                 cell.textLabel.text = [NSString stringWithFormat:@"Find host '%@'", [self.textField.text lowercaseString] ];
             } else {
-                cell.textLabel.text = @"Your Location";
+                cell.textLabel.text = NSLocalizedString(@"Your Location", nil);
                 cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"youarehere_selected.png"]];
             }
             cell.textLabel.textColor = UI_ORANGE_COLOR;
@@ -180,7 +180,7 @@
         // are no results and no special item, i.e. find host, and it shoudl always show find
         // hos tif there are no results. Gonna leave it jsut in case for now.
         // TODO: investigate
-        cell.textLabel.text = @"No results found";
+        cell.textLabel.text = NSLocalizedString(@"No results found", nil);
     }else {
         NodeWrapper* node = self.searchResults[row];
         cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", node.asn, node.friendlyDescription];
@@ -202,7 +202,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    int row = indexPath.row;
+    NSInteger row = indexPath.row;
     
     if ([self haveSpecialFirstItem]) {
         if(row == 0) {

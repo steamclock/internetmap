@@ -6,18 +6,10 @@
 #import "AppDelegate.h"
 #import "ViewController.h"
 
-#if defined(BUILD_USE_TESTFLIGHT)
-#import "TestFlight.h"
-#endif
-
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-#if defined(BUILD_USE_TESTFLIGHT)
-    [TestFlight takeOff:@"930df570489c022cda8738689f465368_MTcxOTU2MjAxMy0wMS0wNyAxNjoyOTo0Ni4yNTY5MTk"];
-#endif
-    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
     // Override point for customization after application launch.
@@ -26,7 +18,7 @@
     } else {
         self.viewController = [[ViewController alloc] initWithNibName:@"ViewController_iPad" bundle:nil];
     }
-    self.viewController.wantsFullScreenLayout = YES;
+    self.viewController.edgesForExtendedLayout = UIRectEdgeAll;
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
     return YES;

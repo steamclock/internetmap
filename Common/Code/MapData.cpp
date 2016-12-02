@@ -157,7 +157,7 @@ void MapData::loadFromString(const std::string& text) {
                 nodes[node->index] = node;
             } else {
                 //regular nodes can just be appended.
-                node->index = nodes.size();
+                node->index = static_cast<int>(nodes.size());
                 nodes.push_back(node);
             }
             nodesByAsn[node->asn] = node;
@@ -273,7 +273,7 @@ void MapData::loadASInfo(const std::string& json){
                 
                 node->neverLoaded = true;
                 
-                node->index = nodes.size();
+                node->index = static_cast<int>(nodes.size());
                 nodes.push_back(node);
                 nodesByAsn[node->asn] = node;
                 
@@ -358,7 +358,7 @@ void MapData::loadUnified(const std::string& text) {
 
         assert(lineEnd);
         
-        node->index = nodes.size();
+        node->index = static_cast<int>(nodes.size());
         nodes.push_back(node);
         nodesByAsn[node->asn] = node;
     }

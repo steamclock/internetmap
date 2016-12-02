@@ -10,6 +10,7 @@
 #import "HelperMethods.h"
 #import "ASIFormDataRequest.h"
 #import "MBProgressHUD.h"
+#import "SCDispatchQueue.h"
 
 @interface ContactFormViewController ()
 
@@ -91,13 +92,13 @@
     }
 
     if(field == self.nameField) {
-        self.nameField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Name (Required)" attributes:@{NSForegroundColorAttributeName: color}];
+        self.nameField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Name (Required)", nil) attributes:@{NSForegroundColorAttributeName: color}];
     }
     else if (field == self.phoneField) {
-        self.phoneField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Phone" attributes:@{NSForegroundColorAttributeName: color}];
+        self.phoneField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Phone", nil) attributes:@{NSForegroundColorAttributeName: color}];
     }
     else if(field == self.emailField) {
-        self.emailField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Email (Required)" attributes:@{NSForegroundColorAttributeName: color}];
+        self.emailField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Email (Required)", nil) attributes:@{NSForegroundColorAttributeName: color}];
     }
 }
 
@@ -151,7 +152,7 @@
 }
 
 -(IBAction)done:(id)sender {
-    [self dismissModalViewControllerAnimated:TRUE];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(IBAction)submit:(id)sender {
@@ -161,24 +162,24 @@
     
     // suppress forms that are gonna fail
     if((self.nameField.text.length == 0) || (self.emailField.text.length == 0)) {
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Missing required fields" message:@"Please enter both a name and email address." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Missing required fields", nil) message:NSLocalizedString(@"Please enter both a name and email address.", nil) delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
         return;
     }
     
     void (^genericFailure)() = ^{
-        [self dismissModalViewControllerAnimated:TRUE];
+        [self dismissViewControllerAnimated:YES completion:nil];
         
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Network Error" message:@"Could not complete the contact request. Please try again later." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Network Error", nil) message:NSLocalizedString(@"Could not complete the contact request. Please try again later.", nil) delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
     };
     
     MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.removeFromSuperViewOnHide = YES;
     hud.mode = MBProgressHUDModeIndeterminate;
-    hud.labelText = @"Sending contact request...";
+    hud.label.text = NSLocalizedString(@"Sending contact request...", nil);
     
-    [hud show:YES];
+    [hud showAnimated:YES];
 
     NSString* platform =  ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) ? @"iPhone" : @"iPad";
     NSDictionary* postData = @{@"fullName" : self.nameField.text,
@@ -211,16 +212,16 @@
 
         if(weakRequest.responseStatusCode == 200) {
             hud.mode = MBProgressHUDModeText;
-            hud.labelText = @"Submitted. Thank you.";
+            hud.label.text = @"Submitted. Thank you.";
             
-            [hud hide:YES afterDelay:2.0];
+            [hud hideAnimated:YES afterDelay:2.0];
             
             [[SCDispatchQueue mainQueue] dispatchAfter:2.0f block:^{
-                [self dismissModalViewControllerAnimated:TRUE];
+                [self dismissViewControllerAnimated:YES completion:nil];
             }];
         }
         else {
-            [hud hide:YES];
+            [hud hideAnimated:YES];
 
             NSDictionary* responseDict = nil;
             if([jsonResponse isKindOfClass:[NSDictionary class]]) {

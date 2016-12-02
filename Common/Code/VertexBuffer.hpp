@@ -18,7 +18,7 @@ public:
     
     void beginUpdate(void);
     void endUpdate(void);
-    int vertexCount(void);
+    long vertexCount(void);
 };
 
 #endif /* defined(__InternetMap__VertexBuffer__) */

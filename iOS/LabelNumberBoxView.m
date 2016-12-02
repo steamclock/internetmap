@@ -19,7 +19,7 @@
         self.textLabel.backgroundColor = [UIColor clearColor];
         self.textLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:15];
         self.textLabel.textColor = FONT_COLOR_GRAY;
-        self.textLabel.textAlignment = UITextAlignmentCenter;
+        self.textLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:self.textLabel];
         
         self.dividerView = [[UIView alloc] initWithFrame:CGRectMake(0, self.textLabel.y+self.textLabel.height, self.width, 1)];
@@ -32,7 +32,7 @@
         self.numberLabel.backgroundColor = [UIColor clearColor];
         self.numberLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:28];
         self.numberLabel.textColor = FONT_COLOR_GRAY;
-        self.numberLabel.textAlignment = UITextAlignmentCenter;
+        self.numberLabel.textAlignment = NSTextAlignmentCenter;
         self.numberLabel.adjustsFontSizeToFitWidth = YES;
         [self addSubview:self.numberLabel];
     }

@@ -57,7 +57,7 @@
 }
 
 - (int)numberOfConnections {
-    return _node->connections.size();
+    return static_cast<int>(_node->connections.size());
 }
 
 - (void)setAsn:(NSString *)asn {

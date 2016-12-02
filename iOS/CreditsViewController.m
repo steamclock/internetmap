@@ -77,9 +77,9 @@
     webView.frame = webViewFrame;
 
     NSString *filePath = [[NSBundle mainBundle] pathForResource:@"credits" ofType:@"html"];
-    NSData *htmlData = [NSData dataWithContentsOfFile:filePath];
-    if (htmlData) {
-        [webView loadData:htmlData MIMEType:@"text/html" textEncodingName:@"UTF-8" baseURL:nil];
+    NSString *html = [NSString stringWithContentsOfFile:filePath encoding:NSUnicodeStringEncoding error: nil];
+    if (html) {
+        [webView loadHTMLString:html baseURL:nil];
     }
     
     webView.backgroundColor = [UIColor clearColor];
@@ -117,7 +117,7 @@
 }
 
 -(IBAction)close:(id)sender {
-    [self dismissModalViewControllerAnimated:TRUE];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {

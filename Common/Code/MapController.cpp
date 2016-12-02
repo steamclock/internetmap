@@ -297,7 +297,7 @@ void MapController::highlightRoute(std::vector<NodePointer> nodeList) {
     }
     
 
-    shared_ptr<DisplayLines> lines(new DisplayLines(nodeList.size() - 1));
+    shared_ptr<DisplayLines> lines(new DisplayLines(static_cast<int>(nodeList.size() - 1)));
     lines->beginUpdate();
     Color lineColor = ColorFromRGB(0xffa300);
     
@@ -310,7 +310,7 @@ void MapController::highlightRoute(std::vector<NodePointer> nodeList) {
     lines->endUpdate();
     lines->setWidth(5.0);
 
-    shared_ptr<DisplayNodes> selectedNodes(new DisplayNodes(nodeList.size()));
+    shared_ptr<DisplayNodes> selectedNodes(new DisplayNodes(static_cast<int>(nodeList.size())));
     
     selectedNodes->beginUpdate();
     display->nodes->beginUpdate();
@@ -479,8 +479,8 @@ void MapController::update(TimeInterval currentTime) {
 }
 
 void MapController::updateDisplay(bool blend) {
-    display->nodes->setCount(data->nodes.size());
-    display->targetNodes->setCount(data->nodes.size());
+    display->nodes->setCount(static_cast<int>(data->nodes.size()));
+    display->targetNodes->setCount(static_cast<int>(data->nodes.size()));
     
     if(blend) {
         data->visualization->updateDisplayForNodes(display->targetNodes, data->nodes);

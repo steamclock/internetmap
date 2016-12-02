@@ -20,10 +20,10 @@
 		1F524E3216DB6B0C007244C5 /* 20140101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F524E3016DB6B0C007244C5 /* 20140101.txt */; };
 		1F524E3316DB6B0C007244C5 /* 20150101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F524E3116DB6B0C007244C5 /* 20150101.txt */; };
 		1F524E3516DB6D98007244C5 /* 20200101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F524E3416DB6D98007244C5 /* 20200101.txt */; };
+		7D5284871DDA7A6800E42C5F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5284861DDA7A6800E42C5F /* QuartzCore.framework */; };
 		84E0672316D5AC9A00751B7B /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 84E0672216D5AC9A00751B7B /* Icon-72.png */; };
 		84E0672516D5ACA300751B7B /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 84E0672416D5ACA300751B7B /* Icon.png */; };
 		84E0672716D5ADA200751B7B /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84E0672616D5ADA200751B7B /* Icon@2x.png */; };
-		84E0672916D5ADC100751B7B /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84E0672816D5ADC100751B7B /* Icon@2x.png */; };
 		84E0672B16D5ADCA00751B7B /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84E0672A16D5ADCA00751B7B /* Icon-72@2x.png */; };
 		A600AAD616A664E1003B1028 /* as2attr.txt in Resources */ = {isa = PBXBuildFile; fileRef = A600AAD316A664DF003B1028 /* as2attr.txt */; };
 		A600AAD716A664E1003B1028 /* asinfo.json in Resources */ = {isa = PBXBuildFile; fileRef = A600AAD416A664E0003B1028 /* asinfo.json */; };
@@ -80,7 +80,6 @@
 		A6551E9F16CB07EE00340590 /* contact-sales-field@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A6551E9D16CB07EE00340590 /* contact-sales-field@2x.png */; };
 		A6551EA216CC5B8500340590 /* contact-sales-field-highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = A6551EA016CC5B8500340590 /* contact-sales-field-highlighted.png */; };
 		A6551EA316CC5B8500340590 /* contact-sales-field-highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A6551EA116CC5B8500340590 /* contact-sales-field-highlighted@2x.png */; };
-		A6551EA916CC65CB00340590 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A6551EA516CC65CB00340590 /* libTestFlight.a */; };
 		A6551EBC16CDAC8B00340590 /* CreditsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6551EBB16CDAC8A00340590 /* CreditsViewController.m */; };
 		A6551EBE16CDB22900340590 /* credits.html in Resources */ = {isa = PBXBuildFile; fileRef = A6551EBD16CDB22900340590 /* credits.html */; };
 		A6551EC216CEB88700340590 /* ExpandedScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6551EC116CEB88700340590 /* ExpandedScrollView.m */; };
@@ -244,6 +243,7 @@
 		1F524E3016DB6B0C007244C5 /* 20140101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20140101.txt; path = Common/data/20140101.txt; sourceTree = "<group>"; };
 		1F524E3116DB6B0C007244C5 /* 20150101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20150101.txt; path = Common/data/20150101.txt; sourceTree = "<group>"; };
 		1F524E3416DB6D98007244C5 /* 20200101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20200101.txt; path = Common/data/20200101.txt; sourceTree = "<group>"; };
+		7D5284861DDA7A6800E42C5F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		84E0672216D5AC9A00751B7B /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
 		84E0672416D5ACA300751B7B /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		84E0672616D5ADA200751B7B /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
@@ -289,10 +289,6 @@
 		A6551E9D16CB07EE00340590 /* contact-sales-field@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "contact-sales-field@2x.png"; path = "iOS/Images/contact-sales-field@2x.png"; sourceTree = SOURCE_ROOT; };
 		A6551EA016CC5B8500340590 /* contact-sales-field-highlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "contact-sales-field-highlighted.png"; path = "iOS/Images/contact-sales-field-highlighted.png"; sourceTree = SOURCE_ROOT; };
 		A6551EA116CC5B8500340590 /* contact-sales-field-highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "contact-sales-field-highlighted@2x.png"; path = "iOS/Images/contact-sales-field-highlighted@2x.png"; sourceTree = SOURCE_ROOT; };
-		A6551EA516CC65CB00340590 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
-		A6551EA616CC65CB00340590 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
-		A6551EA716CC65CB00340590 /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
-		A6551EA816CC65CB00340590 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		A6551EBA16CDAC8A00340590 /* CreditsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CreditsViewController.h; path = iOS/CreditsViewController.h; sourceTree = SOURCE_ROOT; };
 		A6551EBB16CDAC8A00340590 /* CreditsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CreditsViewController.m; path = iOS/CreditsViewController.m; sourceTree = SOURCE_ROOT; };
 		A6551EBD16CDB22900340590 /* credits.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = credits.html; path = Common/Data/credits.html; sourceTree = "<group>"; };
@@ -617,6 +613,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D5284871DDA7A6800E42C5F /* QuartzCore.framework in Frameworks */,
 				A6551E6316C5CCB300340590 /* libExternalCode.a in Frameworks */,
 				114DD47D167AA6850061CB36 /* MobileCoreServices.framework in Frameworks */,
 				1175AA3416AA117F00B93031 /* ImageIO.framework in Frameworks */,
@@ -631,7 +628,6 @@
 				A6F3F5671640F1FB0070E6AE /* CoreGraphics.framework in Frameworks */,
 				A6F3F5691640F1FB0070E6AE /* GLKit.framework in Frameworks */,
 				A6F3F56B1640F1FB0070E6AE /* OpenGLES.framework in Frameworks */,
-				A6551EA916CC65CB00340590 /* libTestFlight.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -684,7 +680,6 @@
 			isa = PBXGroup;
 			children = (
 				A625263016CEF30A0015DF37 /* MBProgressHUD */,
-				A6551EA416CC65CB00340590 /* TestFlightSDK */,
 				D403BBD716C1DF2F008AA000 /* libtraceroute */,
 				D403BB9516C1D9C2008AA000 /* netinet */,
 				A686EAE516B62D05009B070E /* SCDispatchQueue */,
@@ -842,18 +837,6 @@
 			name = "First Use";
 			sourceTree = "<group>";
 		};
-		A6551EA416CC65CB00340590 /* TestFlightSDK */ = {
-			isa = PBXGroup;
-			children = (
-				A6551EA516CC65CB00340590 /* libTestFlight.a */,
-				A6551EA616CC65CB00340590 /* README.md */,
-				A6551EA716CC65CB00340590 /* release_notes.md */,
-				A6551EA816CC65CB00340590 /* TestFlight.h */,
-			);
-			name = TestFlightSDK;
-			path = "External Code/TestFlightSDK";
-			sourceTree = SOURCE_ROOT;
-		};
 		A686EA9F16B62BDD009B070E /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
@@ -1003,6 +986,7 @@
 		A6F3F5611640F1FB0070E6AE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7D5284861DDA7A6800E42C5F /* QuartzCore.framework */,
 				1175AA3316AA117F00B93031 /* ImageIO.framework */,
 				1175AA3116AA117800B93031 /* libxml2.dylib */,
 				1175AA0316AA091800B93031 /* CoreText.framework */,
@@ -1301,8 +1285,14 @@
 		A6F3F5551640F1FB0070E6AE /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0450;
+				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = Peer1;
+				TargetAttributes = {
+					A6F3F55D1640F1FB0070E6AE = {
+						DevelopmentTeam = GH868RP95T;
+						ProvisioningStyle = Automatic;
+					};
+				};
 			};
 			buildConfigurationList = A6F3F5581640F1FB0070E6AE /* Build configuration list for PBXProject "InternetMap" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1444,7 +1434,6 @@
 				84E0672316D5AC9A00751B7B /* Icon-72.png in Resources */,
 				84E0672516D5ACA300751B7B /* Icon.png in Resources */,
 				84E0672716D5ADA200751B7B /* Icon@2x.png in Resources */,
-				84E0672916D5ADC100751B7B /* Icon@2x.png in Resources */,
 				84E0672B16D5ADCA00751B7B /* Icon-72@2x.png in Resources */,
 				A6FC709016D5A93C004FB989 /* unified.txt in Resources */,
 				1F524E2516DB3F42007244C5 /* 19990101.txt in Resources */,
@@ -1580,7 +1569,7 @@
 				DSTROOT = /tmp/ExternalCode.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				RUN_CLANG_STATIC_ANALYZER = NO;
@@ -1597,7 +1586,7 @@
 				DSTROOT = /tmp/ExternalCode.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				RUN_CLANG_STATIC_ANALYZER = NO;
@@ -1609,19 +1598,32 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Peer 1 Network Enterprises, Inc";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Peer 1 Network Enterprises, Inc";
 				COPY_PHASE_STRIP = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "2E8D9CC6-FC24-4659-BA61-811592472EB5";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2E8D9CC6-FC24-4659-BA61-811592472EB5";
@@ -1634,17 +1636,16 @@
 		A6551EAD16CC697B00340590 /* AppStore */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = GH868RP95T;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iOS/InternetMap-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = BUILD_USE_TESTFLIGHT;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/iOS/InternetMap-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/Android/obj/local/armeabi\"",
-					"\"$(SRCROOT)/External Code/TestFlightSDK\"",
-				);
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.steamclock.internetmap;
 				PRODUCT_NAME = internetmap;
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				STRIP_INSTALLED_PRODUCT = YES;
@@ -1661,7 +1662,7 @@
 				DSTROOT = /tmp/ExternalCode.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				RUN_CLANG_STATIC_ANALYZER = NO;
@@ -1674,18 +1675,31 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
@@ -1698,18 +1712,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = GH868RP95T;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iOS/InternetMap-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = BUILD_USE_TESTFLIGHT;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/iOS/InternetMap-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/Android/obj/local/armeabi\"",
-					"\"$(SRCROOT)/External Code/TestFlightSDK\"",
-				);
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.steamclock.internetmap;
 				PRODUCT_NAME = internetmap;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -1727,7 +1739,7 @@
 				DSTROOT = /tmp/ExternalCode.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				RUN_CLANG_STATIC_ANALYZER = NO;
@@ -1739,26 +1751,40 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				ONLY_ACTIVE_ARCH = YES;
 				"PROVISIONING_PROFILE[sdk=*]" = "";
 				SDKROOT = iphoneos;
@@ -1771,18 +1797,31 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
@@ -1794,16 +1833,15 @@
 		A6F3F58E1640F1FB0070E6AE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = GH868RP95T;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iOS/InternetMap-Prefix.pch";
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/iOS/InternetMap-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/Android/obj/local/armeabi\"",
-					"\"$(SRCROOT)/External Code/TestFlightSDK\"",
-				);
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.steamclock.internetmap;
 				PRODUCT_NAME = internetmap;
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				WRAPPER_EXTENSION = app;
@@ -1815,16 +1853,14 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = GH868RP95T;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iOS/InternetMap-Prefix.pch";
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/iOS/InternetMap-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/Android/obj/local/armeabi\"",
-					"\"$(SRCROOT)/External Code/TestFlightSDK\"",
-				);
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.steamclock.internetmap;
 				PRODUCT_NAME = internetmap;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";

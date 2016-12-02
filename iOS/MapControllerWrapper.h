@@ -14,7 +14,7 @@
 
 
 
-@property (nonatomic) NSUInteger targetNode;
+@property (nonatomic) unsigned int targetNode;
 @property (nonatomic) CGSize displaySize;
 @property (nonatomic, readonly) float currentZoom;
 @property (nonatomic, strong) NSString* lastSearchIP;
