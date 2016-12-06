@@ -175,20 +175,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     //customize timeline slider
     float cap = 12;
     UIImage* trackImage = [[UIImage imageNamed:@"timeline-track"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, cap, 0, cap)];
-    
-    //We're setting the track images to an invisible image here
-    //instead, we are drawing an additional UIImageView in the back as the track image
-    //this is a workaround to a bug in iOS 5.x
-    UIImage* invisibleImage = [HelperMethods imageWithColor:[UIColor clearColor] size:CGSizeMake(1, 1)];
-    [self.timelineSlider setMinimumTrackImage:invisibleImage forState:UIControlStateNormal];
-    [self.timelineSlider setMaximumTrackImage:invisibleImage forState:UIControlStateNormal];
+    [self.timelineSlider setMinimumTrackImage:trackImage forState:UIControlStateNormal];
+    [self.timelineSlider setMaximumTrackImage:trackImage forState:UIControlStateNormal];
     
     [self.timelineSlider setThumbImage:[UIImage imageNamed:@"timeline-handle"] forState:UIControlStateNormal];
     [self.timelineSlider addTarget:self action:@selector(timelineSliderTouchUp:) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside | UIControlEventTouchCancel];
-    
-    UIImageView* trackImageView = [[UIImageView alloc] initWithImage:trackImage];
-    trackImageView.frame = CGRectMake(-cap, -19, self.timelineSlider.width+2*cap, trackImage.size.height);
-    [self.timelineSlider addSubview:trackImageView];
     
     if (!self.timelinePopover) {
         TimelineInfoViewController* tlv = [[TimelineInfoViewController alloc] init];
