@@ -77,14 +77,14 @@
     webView.frame = webViewFrame;
 
     NSString *filePath = [[NSBundle mainBundle] pathForResource:@"credits" ofType:@"html"];
-    NSString *html = [NSString stringWithContentsOfFile:filePath encoding:NSUnicodeStringEncoding error: nil];
+    NSString *html = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error: nil];
     if (html) {
         [webView loadHTMLString:html baseURL:nil];
     }
     
     webView.backgroundColor = [UIColor clearColor];
     webView.opaque = NO;
-    webView.scrollView.showsVerticalScrollIndicator = YES;
+    webView.scrollView.showsVerticalScrollIndicator = NO;
     webView.scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
     
     // Start webview faded out, load happens async, and this way we can fade it in rather
@@ -98,7 +98,7 @@
     //Done button
     UIImage* xImage = [UIImage imageNamed:@"x-icon"];
     UIButton* doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    CGRect doneFrame = CGRectMake(background.frame.size.width - (xImage.size.width+20), 0, xImage.size.width+20, xImage.size.height+20);
+    CGRect doneFrame = CGRectMake(background.frame.size.width - (xImage.size.width+20), 20, xImage.size.width+20, xImage.size.height+20);
     doneButton.frame = doneFrame;
     doneButton.imageView.contentMode = UIViewContentModeCenter;
     [doneButton setImage:xImage forState:UIControlStateNormal];

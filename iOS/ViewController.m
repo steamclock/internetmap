@@ -618,7 +618,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                     [self showContactForm];
                     break;
                 case 2: //URL
-                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.peer1.com/node/3325"]];
+                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.steamclock.com/blog/2013/03/mapping-the-internet/"]];
                     break;
                 case 3: //credits
                     [self showCredits];

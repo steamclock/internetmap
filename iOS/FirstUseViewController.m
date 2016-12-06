@@ -39,13 +39,7 @@ static const int NUM_PAGES = 3;
     // Do idiom specific setup
     if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         self.background.image = [UIImage imageNamed:@"iphone-bg.png"];
-        
-        // Automatic positioning doesn't handle y position of scroll view properly,
-        // need to manually position
-        CGRect origFrame = self.content.frame;
-        origFrame.origin.x = 0;
-        origFrame.origin.y = 0;
-        self.content.frame = origFrame;
+        self.view.frame = [UIApplication sharedApplication].keyWindow.frame;
     }
     else {
         CGRect origFrame = self.content.frame;

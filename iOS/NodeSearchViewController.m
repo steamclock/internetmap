@@ -55,7 +55,7 @@
     self.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     self.textField.textColor = [UIColor blackColor];
     self.textField.delegate = self;
-    self.textField.font = [UIFont fontWithName:FONT_NAME_LIGHT size:24];
+    self.textField.font = [UIFont fontWithName:FONT_NAME_LIGHT size:20];
     self.textField.returnKeyType = UIReturnKeyGo;
 
     // Attributed strings in iOS 6 only
