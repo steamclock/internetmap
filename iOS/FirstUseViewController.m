@@ -35,20 +35,13 @@ static const int NUM_PAGES = 3;
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.content.delegate = self;
+    self.view.frame = [UIApplication sharedApplication].keyWindow.frame;
     
     // Do idiom specific setup
     if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         self.background.image = [UIImage imageNamed:@"iphone-bg.png"];
-        self.view.frame = [UIApplication sharedApplication].keyWindow.frame;
     }
     else {
-        CGRect origFrame = self.content.frame;
-        origFrame.origin.x = 0;
-        origFrame.origin.y = 0;
-        origFrame.size.width = 1024;
-        origFrame.size.height = 768;
-        self.content.frame = origFrame;
-        
         self.background.image = [UIImage imageNamed:@"ipad-bg.png"];
     }
     
