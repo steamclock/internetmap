@@ -77,7 +77,7 @@
     [doneButton addTarget:self action:@selector(done) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:doneButton];
     
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(self.textField.x-10, self.textField.y+self.textField.height, self.preferredContentSize.width-25, self.preferredContentSize.height-self.textField.height-20) style:UITableViewStylePlain];
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(self.textField.x-10, self.textField.y+self.textField.height, self.preferredContentSize.width-10, self.preferredContentSize.height-self.textField.height-20) style:UITableViewStylePlain];
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
@@ -145,6 +145,7 @@
         cell.textLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:24];
         cell.selectionStyle = UITableViewCellSelectionStyleBlue;
         cell.selectedBackgroundView = [[UIView alloc] init];
+        cell.backgroundColor = [UIColor clearColor];
         
         UIView* seperator = [[UIView alloc] initWithFrame:CGRectMake(10, 43, tableView.width-10, 1)];
         seperator.backgroundColor = [UIColor grayColor];
