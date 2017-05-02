@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="titlebarPadding">8dp</dimen>
+    <dimen name="contentPadding">10dp</dimen>
+    <dimen name="timelinePadding">24dp</dimen>
+</resources>
