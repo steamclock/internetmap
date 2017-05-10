@@ -1,13 +1,25 @@
 apply plugin: 'com.android.application'
 
+def internalCommonCodePath = "../../Android_AS/app/src/main/jni/common"
+def externalCommonCodePath = "../../Common/Code"
+
+def internalCommonDataPath = "../../Android_AS/app/src/main/assets/data"
+def externalCommonDataPath = "../../Common/Data"
+
+def commonDataMakeFile = "../../Android_AS/app/src/main/jni/Android.mk"
+
+//def commonDataMakeFile = externalCommonCodePath + "/Android.mk"
+
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     useLibrary 'org.apache.http.legacy'
+    sourceCompatibility = 1.8
 
     defaultConfig {
         applicationId "com.peer1.internetmap"
-        minSdkVersion 10
+        minSdkVersion 19
         targetSdkVersion 25
         compileOptions {
             sourceCompatibility JavaVersion.VERSION_1_5
@@ -26,16 +38,54 @@ android {
         }
     }
 
+//    sourceSets {
+//        main {
+//            // Bundle so files with the final apk.
+//            // NOTE: Currently bundles all shared objects in that directory.
+//            // It was not straightforward to exclude in Android sourceSets at the time of writing,
+//            // see https://code.google.com/p/android/issues/detail?id=64957
+//            jniLibs.srcDirs = [externalCommonCodePath]
+//        }
+//    }
+
     externalNativeBuild {
         ndkBuild {
-            path '../../Android_AS/app/src/main/jni/Android.mk'
+            path commonDataMakeFile
         }
     }
 }
+
+//task copyCommonCode(type: Copy) {
+//    description = 'Copying common C++ files'
+//    from externalCommonCodePath
+//    into internalCommonCodePath
+//    include '*.cpp'
+//    include '*.hpp'
+//}
+//
+
+task copyCommonData(type: Copy) {
+    description = 'Copying common Data files'
+    from externalCommonDataPath
+    into internalCommonDataPath
+    include '*.txt'
+    include '*.json'
+    include '*.html'
+}
+//
+//
+//build.dependsOn copyCommonCode
+
+build.dependsOn copyCommonData
 
 dependencies {
     compile 'com.android.support:support-v4:25.0.1'
     compile files('libs/HockeySDK.jar')
     compile files('libs/android-async-http-1.4.2.jar')
-//    compile group: 'cz.msebera.android' , name: 'httpclient', version: '4.4.1.1'
+
+    compile 'com.squareup.retrofit2:retrofit:2.0.2'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
+
+    compile 'com.jakewharton.timber:timber:4.5.1'
 }

@@ -49,9 +49,16 @@ import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
 import com.peer1.internetmap.ASNRequest.ASNResponseHandler;
 import com.peer1.internetmap.SearchPopup.SearchNode;
+import com.peer1.internetmap.models.ASN;
+import com.peer1.internetmap.models.GlobalIP;
+import com.peer1.internetmap.network.NetworkCallback;
+import com.peer1.internetmap.network.common.CommonClient;
 
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.UpdateManager;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
@@ -417,7 +424,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                     }
 
                     public void onSuccess(JSONObject response) {
-                        selectNodeByASN(response, false);
+                        // TODO update
+                        //selectNodeByASN(response, false);
                     }
                 
                     public void onFailure(Throwable e, String response) {
@@ -460,37 +468,51 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         };
         mHandler.postDelayed(backupTimer, 10000);
 
-        //do an ASN request to get the user's ASN
-        ASNRequest.fetchCurrentASNWithResponseHandler(new ASNResponseHandler() {
-            public void onStart() {
-                Log.d(TAG, "asnrequest start");
-                //animate
-                ProgressBar progress = (ProgressBar) findViewById(R.id.searchProgressBar);
-                Button button = (Button) findViewById(R.id.searchButton);
-                progress.setVisibility(View.VISIBLE);
-                button.setVisibility(View.INVISIBLE);
-            }
-            public void onFinish() {
-                Log.d(TAG, "asnrequest finish");
-                //stop animating
-                ProgressBar progress = (ProgressBar) findViewById(R.id.searchProgressBar);
-                Button button = (Button) findViewById(R.id.searchButton);
-                progress.setVisibility(View.INVISIBLE);
-                button.setVisibility(View.VISIBLE);
-                mHandler.removeCallbacks(backupTimer);
+        CommonClient.getInstance().getUserASN(new NetworkCallback<ASN>() {
+            @Override
+            public void onRequestResponse(Call<ASN> call, Response<ASN> response) {
+                selectNodeByASN(response.body(), true);
             }
 
-            public void onSuccess(JSONObject response) {
-                   selectNodeByASN(response, true);
-            }
-        
-            public void onFailure(Throwable e, String response) {
-                //tell the user
+            @Override
+            public void onRequestFailure(Call<ASN> call, Throwable t) {
                 String message = getString(R.string.currentASNFail);
                 showError(message);
-                Log.d(TAG, message);
             }
         });
+
+
+//        //do an ASN request to get the user's ASN
+//        ASNRequest.fetchCurrentASNWithResponseHandler(new ASNResponseHandler() {
+//            public void onStart() {
+//                Log.d(TAG, "asnrequest start");
+//                //animate
+//                ProgressBar progress = (ProgressBar) findViewById(R.id.searchProgressBar);
+//                Button button = (Button) findViewById(R.id.searchButton);
+//                progress.setVisibility(View.VISIBLE);
+//                button.setVisibility(View.INVISIBLE);
+//            }
+//            public void onFinish() {
+//                Log.d(TAG, "asnrequest finish");
+//                //stop animating
+//                ProgressBar progress = (ProgressBar) findViewById(R.id.searchProgressBar);
+//                Button button = (Button) findViewById(R.id.searchButton);
+//                progress.setVisibility(View.INVISIBLE);
+//                button.setVisibility(View.VISIBLE);
+//                mHandler.removeCallbacks(backupTimer);
+//            }
+//
+//            public void onSuccess(JSONObject response) {
+//                   selectNodeByASN(response, true);
+//            }
+//
+//            public void onFailure(Throwable e, String response) {
+//                //tell the user
+//                String message = getString(R.string.currentASNFail);
+//                showError(message);
+//                Log.d(TAG, message);
+//            }
+//        });
     }
 
     public void timelineButtonPressed(View view) {
@@ -669,8 +691,25 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     public void showError(String message) {
         Helper.showError(this, message);
     }
-    
-    public void selectNodeByASN(JSONObject response, boolean cacheIndex) {
+
+    public void selectNodeByASN(ASN asn, boolean cacheIndex) {
+        try {
+            NodeWrapper node = mController.nodeByAsn(asn.getASNString());
+            if (node != null) {
+                if (cacheIndex) {
+                    mUserNodeIndex = node.index;
+                }
+                mController.updateTargetForIndex(node.index);
+            } else {
+                showError(getString(R.string.asnAssociationFail));
+            }
+        } catch (Exception e) {
+            Log.d(TAG, String.format("can't parse response"));
+            showError(getString(R.string.asnAssociationFail));
+        }
+    }
+
+    public void selectNodeByASNOld(JSONObject response, boolean cacheIndex) {
         //expected response format: {"payload":"ASxxxx"}
         try {
             String asnWithAS = response.getString("payload");
@@ -720,7 +759,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                     SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
                     String yearStr = this.mTimelineYears.get(timelineBar.getProgress());
                     int year = Integer.parseInt(yearStr);
-                    isSimulated = year < 2000 || year > 2013;
+                    isSimulated = year < 2000 || year > 2017;
                 } else {
                     isSimulated = false;
                     popupView = layoutInflater.inflate(R.layout.nodeview, null);

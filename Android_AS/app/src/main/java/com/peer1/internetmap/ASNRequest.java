@@ -1,13 +1,23 @@
 package com.peer1.internetmap;
 
+import android.widget.Toast;
+
 import java.io.UnsupportedEncodingException;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.peer1.internetmap.models.GlobalIP;
+import com.peer1.internetmap.network.NetworkCallback;
+import com.peer1.internetmap.network.Peer1.Peer1Client;
+import com.peer1.internetmap.network.common.CommonAPI;
+import com.peer1.internetmap.network.common.CommonClient;
 
 import org.apache.http.entity.StringEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Requests the user's ASN from the internet.
@@ -117,7 +127,48 @@ public class ASNRequest {
         });
     }
     
-    public static void fetchCurrentASNWithResponseHandler(final ASNResponseHandler finHandler) {
+//    public static void fetchCurrentASNWithResponseHandler(final ASNResponseHandler finHandler) {
+//
+//        CommonClient.getInstance().getGlobalIP().enqueue(new NetworkCallback<GlobalIP>() {
+//            @Override
+//            public void onRequestResponse(Call<GlobalIP> call, Response<GlobalIP> response) {
+//                GlobalIP result = response.body();
+//
+//                if (result.ip == null || result.ip.isEmpty()) {
+//                    // ERROR
+//                } else {
+//                    //fetchASNForIP(ip, true, finHandler);
+//                    Toast.makeText()
+//                }
+//
+//
+//                if (result != null && !result.isEmpty()) {
+//                    try {
+//                        JSONObject jsonObject = new JSONObject(result);
+//                        String ip = jsonObject.getString("payload");
+//
+//                        if (ip != null && !ip.isEmpty()) {
+//                            fetchASNForIP(ip, true, finHandler);
+//                        } else {
+//                            finHandler.onFailure(new Throwable(""), null);
+//                        }
+//                    } catch (Exception e) {
+//                        finHandler.onFailure(e, e.getMessage());
+//                    }
+//
+//                } else {
+//                    finHandler.onFailure(new Throwable(""), null);
+//                }
+//            }
+//
+//            @Override
+//            public void onRequestFailure(Call<GlobalIP> call, Throwable t) {
+//
+//            }
+//        });
+//    }
+
+    public static void fetchCurrentASNWithResponseHandlerOld(final ASNResponseHandler finHandler) {
         fetchGlobalIPWithResponseHandler(new AsyncHttpResponseHandler() {
 
             @Override
