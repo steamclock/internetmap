@@ -1,4 +1,4 @@
-package com.peer1.internetmap.network;
+package com.peer1.internetmap.network.common;
 
 import android.app.Activity;
 import retrofit2.Call;
@@ -7,17 +7,17 @@ import retrofit2.Response;
 import timber.log.Timber;
 
 
-public abstract class NetworkCallback<T> implements Callback<T> {
+public abstract class CommonCallback<T> implements Callback<T> {
 
-    public NetworkCallback() {
+    public CommonCallback() {
         super();
     }
 
-    public NetworkCallback(Activity activity) {
+    public CommonCallback(Activity activity) {
         super();
     }
 
-    public NetworkCallback(final Activity activity, final String loadingString) {
+    public CommonCallback(final Activity activity, final String loadingString) {
         super();
     }
 

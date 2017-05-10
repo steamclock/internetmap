@@ -9,6 +9,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -27,7 +28,7 @@ public class SearchPopup extends PopupWindow{
     private NodeAdapter.NodeFilter mFilter;
     private ArrayList<SearchNode> mAllNodes;
     private Context mContext;
-    
+
     /** required interface for arrayadapter items */
     public interface SearchItem {
         public String toString();
@@ -81,7 +82,13 @@ public class SearchPopup extends PopupWindow{
             return mContext.getString(R.string.yourLocation);
         }
     }
-    
+
+    private class SearchingItem implements SearchItem {
+        public String toString() {
+            return mContext.getString(R.string.searching);
+        }
+    }
+
     /**
      * An arrayadapter that can use and filter SearchNodes
      * @author chani
@@ -89,7 +96,7 @@ public class SearchPopup extends PopupWindow{
      */
     private class NodeAdapter extends ArrayAdapter<SearchItem> {
         private ArrayList<? extends SearchItem> mFilteredNodes;
-        
+
         @Override
         //highlight the first item, and give an icon to the 'your location' item.
         public View getView(int position, View convertView, ViewGroup parent) {
@@ -110,16 +117,35 @@ public class SearchPopup extends PopupWindow{
             
             return textView;
         }
-        
+
+        public void showLoading() {
+            mFilteredNodes.clear();
+
+            SearchItem searchingItem = new SearchingItem();
+            ArrayList<SearchItem> nodes = new ArrayList<SearchItem>();
+            nodes.add(searchingItem);
+            mFilteredNodes = nodes;
+            notifyDataSetChanged();
+        }
+
         /**
          * Filters the list of search results.
          * @author chani
          *
          */
         public class NodeFilter extends Filter {
+            private boolean mIsFiltering = false;
+
+            public boolean isFiltering() {
+                return mIsFiltering;
+            }
+
             private final LocationItem locationItem = new LocationItem();
+
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
+                mIsFiltering = true;
+
                 ArrayList<SearchItem> nodes = new ArrayList<SearchItem>();
                 if (constraint.length() <= 0) {
                     //default, full list + location
@@ -155,6 +181,8 @@ public class SearchPopup extends PopupWindow{
             @Override
             protected void publishResults(CharSequence constraint,
                     FilterResults results) {
+
+                mIsFiltering = false;
                 mFilteredNodes = (ArrayList<SearchItem>)results.values;
                 Assert.assertNotNull(mFilteredNodes);
                 Log.d(TAG, String.format("matched %d nodes", results.count));
@@ -203,7 +231,7 @@ public class SearchPopup extends PopupWindow{
         setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE); //show keyboard
         
         mAllNodes = context.mAllSearchNodes;
-        
+
         final NodeAdapter adapter = new NodeAdapter(context, android.R.layout.simple_list_item_1,
                 android.R.id.text1);
         final ListView listView = (ListView) getContentView().findViewById(R.id.searchResultsView);
@@ -213,6 +241,11 @@ public class SearchPopup extends PopupWindow{
         //handle item clicks
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                // Disable click if we are in the middle of a filter
+                if (mFilter.isFiltering()) {
+                    return;
+                }
+
                 SearchItem item = adapter.getItem(position);
                 if (item instanceof SearchNode) {
                     SearchNode snode = (SearchNode)item;
@@ -230,9 +263,16 @@ public class SearchPopup extends PopupWindow{
         
         //set up the input field
         input.addTextChangedListener(new TextWatcher(){
-            public void afterTextChanged(Editable s) {
-                String filter = s.toString();
-                mFilter.filter(filter);
+            public void afterTextChanged(final Editable s) {
+                // Wait short time before firing off filter.
+                searchTimeoutHandler.removeCallbacksAndMessages(null);
+                searchTimeoutHandler.postDelayed(new Runnable() {
+                    public void run() {
+                        adapter.showLoading();
+                        String filter = s.toString();
+                        mFilter.filter(filter);
+                    }
+                }, 1000);
             }
             //unneeded abstract stuff
             public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {}
@@ -250,4 +290,5 @@ public class SearchPopup extends PopupWindow{
         });
     }
 
+    Handler searchTimeoutHandler = new Handler();
 }

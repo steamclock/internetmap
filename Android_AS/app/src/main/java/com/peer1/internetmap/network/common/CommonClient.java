@@ -1,16 +1,9 @@
 package com.peer1.internetmap.network.common;
 
-import android.widget.Toast;
-
-import com.peer1.internetmap.InternetMap;
 import com.peer1.internetmap.models.ASN;
 import com.peer1.internetmap.models.GlobalIP;
-import com.peer1.internetmap.network.NetworkCallback;
 
-import okhttp3.Call;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -68,13 +61,13 @@ public class CommonClient {
     /**
      * Calls getGlobalIP and then getASNFromIP
      */
-    public void getUserASN(final NetworkCallback<ASN> callback) {
+    public void getUserASN(final CommonCallback<ASN> callback) {
 
-        getApi().getGlobalIP().enqueue(new NetworkCallback<GlobalIP>() {
+        getApi().getGlobalIP().enqueue(new CommonCallback<GlobalIP>() {
             @Override
             public void onRequestResponse(retrofit2.Call<GlobalIP> call, retrofit2.Response<GlobalIP> response) {
 
-                getApi().getASNFromIP(response.body().ip).enqueue(new NetworkCallback<ASN>() {
+                getApi().getASNFromIP(response.body().ip).enqueue(new CommonCallback<ASN>() {
                     @Override
                     public void onRequestResponse(retrofit2.Call<ASN> call, retrofit2.Response<ASN> response) {
                         callback.onResponse(call, response);

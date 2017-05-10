@@ -1,15 +1,12 @@
 package com.peer1.internetmap;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import android.view.animation.AlphaAnimation;
 import android.view.animation.AnimationUtils;
@@ -21,15 +18,12 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
@@ -50,8 +44,7 @@ import android.util.Log;
 import com.peer1.internetmap.ASNRequest.ASNResponseHandler;
 import com.peer1.internetmap.SearchPopup.SearchNode;
 import com.peer1.internetmap.models.ASN;
-import com.peer1.internetmap.models.GlobalIP;
-import com.peer1.internetmap.network.NetworkCallback;
+import com.peer1.internetmap.network.common.CommonCallback;
 import com.peer1.internetmap.network.common.CommonClient;
 
 import net.hockeyapp.android.CrashManager;
@@ -410,31 +403,28 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                     mHandler.removeCallbacks(backupTimer);
                 } else {
                     Log.d(TAG, addrString);
-                    ASNRequest.fetchASNForIP(addrString, new ASNResponseHandler() {
-                    public void onStart() {
-                        Log.d(TAG, "asnrequest2 start");
-                        //nothing to do; already animating
-                    }
-                    public void onFinish() {
-                        Log.d(TAG, "asnrequest2 finish");
-                        //stop animating
-                        progress.setVisibility(View.INVISIBLE);
-                        button.setVisibility(View.VISIBLE);
-                        mHandler.removeCallbacks(backupTimer);
-                    }
 
-                    public void onSuccess(JSONObject response) {
-                        // TODO update
-                        //selectNodeByASN(response, false);
-                    }
-                
-                    public void onFailure(Throwable e, String response) {
-                        //tell the user
-                        String message = getString(R.string.asnAssociationFail);
-                        showError(message);
-                        Log.d(TAG, message);
-                    }
-                });
+                    CommonClient.getInstance().getApi().getASNFromIP(addrString).enqueue(new CommonCallback<ASN>() {
+                        @Override
+                        public void onRequestResponse(Call<ASN> call, Response<ASN> response) {
+                            progress.setVisibility(View.INVISIBLE);
+                            button.setVisibility(View.VISIBLE);
+                            mHandler.removeCallbacks(backupTimer);
+
+                            selectNodeByASN(response.body(), false);
+                        }
+
+                        @Override
+                        public void onRequestFailure(Call<ASN> call, Throwable t) {
+                            progress.setVisibility(View.INVISIBLE);
+                            button.setVisibility(View.VISIBLE);
+                            mHandler.removeCallbacks(backupTimer);
+
+                            String message = getString(R.string.asnAssociationFail);
+                            showError(message);
+                            Log.d(TAG, message);
+                        }
+                    });
                 }
             }
         }.execute();
@@ -468,7 +458,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         };
         mHandler.postDelayed(backupTimer, 10000);
 
-        CommonClient.getInstance().getUserASN(new NetworkCallback<ASN>() {
+        CommonClient.getInstance().getUserASN(new CommonCallback<ASN>() {
             @Override
             public void onRequestResponse(Call<ASN> call, Response<ASN> response) {
                 selectNodeByASN(response.body(), true);

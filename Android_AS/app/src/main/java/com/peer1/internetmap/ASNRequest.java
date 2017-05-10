@@ -1,23 +1,13 @@
 package com.peer1.internetmap;
 
-import android.widget.Toast;
-
 import java.io.UnsupportedEncodingException;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.peer1.internetmap.models.GlobalIP;
-import com.peer1.internetmap.network.NetworkCallback;
-import com.peer1.internetmap.network.Peer1.Peer1Client;
-import com.peer1.internetmap.network.common.CommonAPI;
-import com.peer1.internetmap.network.common.CommonClient;
 
 import org.apache.http.entity.StringEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import retrofit2.Call;
-import retrofit2.Response;
 
 /**
  * Requests the user's ASN from the internet.
@@ -46,51 +36,51 @@ public class ASNRequest {
         //return BASE_URL + "invalid";
     }
 
-    private static void fetchGlobalIPWithResponseHandler(AsyncHttpResponseHandler handler) {
-
-        client.get(getAbsoluteUrl("ip"), handler);
-    }
+//    private static void fetchGlobalIPWithResponseHandler(AsyncHttpResponseHandler handler) {
+//
+//        client.get(getAbsoluteUrl("ip"), handler);
+//    }
     
-    public static void fetchASNForIP(String ip, final ASNResponseHandler finHandler) {
-        //calls from outside can't have already started, and probably want errors caught.
-        try {
-            fetchASNForIP(ip, false, finHandler);
-        } catch (Exception e) {
-            finHandler.onFailure(new Throwable(e.getMessage()), null);
-        }
-    }
+//    public static void fetchASNForIP(String ip, final ASNResponseHandler finHandler) {
+//        //calls from outside can't have already started, and probably want errors caught.
+//        try {
+//            fetchASNForIP(ip, false, finHandler);
+//        } catch (Exception e) {
+//            finHandler.onFailure(new Throwable(e.getMessage()), null);
+//        }
+//    }
     
-    private static void fetchASNForIP(String ip, final boolean alreadyStarted, final ASNResponseHandler finHandler) throws JSONException, UnsupportedEncodingException {
-        JSONObject postData = new JSONObject();
-        postData.put("ip", ip);
-        StringEntity entity = new StringEntity(postData.toString());
-        entity.setContentType("application/json");
-        client.post(null, getAbsoluteUrl("iptoasn"), entity, "application/json", new AsyncHttpResponseHandler(){
-            @Override
-            public void onStart(){
-                //only trigger start if some other part of ASNRequest didn't already do it.
-                if (!alreadyStarted) {
-                    finHandler.onStart();
-                }
-            }
-            @Override
-            public void onSuccess(String response) {
-                try {
-                    finHandler.onSuccess(new JSONObject(response));
-                } catch (JSONException e) {
-                    onFailure(new Throwable(e.getMessage()), null);
-                }
-            }
-            @Override
-            public void onFailure(Throwable error, String content) {
-                finHandler.onFailure(error, content);
-            }
-            @Override
-            public void onFinish() {
-                finHandler.onFinish();
-            }
-        });
-    }
+//    private static void fetchASNForIP(String ip, final boolean alreadyStarted, final ASNResponseHandler finHandler) throws JSONException, UnsupportedEncodingException {
+//        JSONObject postData = new JSONObject();
+//        postData.put("ip", ip);
+//        StringEntity entity = new StringEntity(postData.toString());
+//        entity.setContentType("application/json");
+//        client.post(null, getAbsoluteUrl("iptoasn"), entity, "application/json", new AsyncHttpResponseHandler(){
+//            @Override
+//            public void onStart(){
+//                //only trigger start if some other part of ASNRequest didn't already do it.
+//                if (!alreadyStarted) {
+//                    finHandler.onStart();
+//                }
+//            }
+//            @Override
+//            public void onSuccess(String response) {
+//                try {
+//                    finHandler.onSuccess(new JSONObject(response));
+//                } catch (JSONException e) {
+//                    onFailure(new Throwable(e.getMessage()), null);
+//                }
+//            }
+//            @Override
+//            public void onFailure(Throwable error, String content) {
+//                finHandler.onFailure(error, content);
+//            }
+//            @Override
+//            public void onFinish() {
+//                finHandler.onFinish();
+//            }
+//        });
+//    }
 
     public static void fetchIPsForASN(String asn, final ASNResponseHandler finHandler) throws JSONException, UnsupportedEncodingException {
         JSONObject postData = new JSONObject();
@@ -129,7 +119,7 @@ public class ASNRequest {
     
 //    public static void fetchCurrentASNWithResponseHandler(final ASNResponseHandler finHandler) {
 //
-//        CommonClient.getInstance().getGlobalIP().enqueue(new NetworkCallback<GlobalIP>() {
+//        CommonClient.getInstance().getGlobalIP().enqueue(new CommonCallback<GlobalIP>() {
 //            @Override
 //            public void onRequestResponse(Call<GlobalIP> call, Response<GlobalIP> response) {
 //                GlobalIP result = response.body();
@@ -168,43 +158,43 @@ public class ASNRequest {
 //        });
 //    }
 
-    public static void fetchCurrentASNWithResponseHandlerOld(final ASNResponseHandler finHandler) {
-        fetchGlobalIPWithResponseHandler(new AsyncHttpResponseHandler() {
-
-            @Override
-            public void onStart(){
-                finHandler.onStart();
-            }
-
-            @Override
-            public void onSuccess(String response) {
-                String errorString = "Couldn't resolve current global IP.";
-                if (response != null && !response.isEmpty()) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(response);
-                        String ip = jsonObject.getString("payload");
-                        if (ip != null && !ip.isEmpty()) {
-                            fetchASNForIP(ip, true, finHandler);
-                        } else {
-                            onFailure(new Throwable(errorString), null);
-                        }
-                    } catch (Exception e) {
-                        onFailure(new Throwable(e.getMessage()), null);
-                    }
-
-                } else {
-                    onFailure(new Throwable(errorString), null);
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable error, String content) {
-                finHandler.onFailure(error, content);
-                //if request #1 failed, then request #2 never started, so we're responsible for cleanup.
-                finHandler.onFinish();
-            }
-        });
-
-    }
+//    public static void fetchCurrentASNWithResponseHandlerOld(final ASNResponseHandler finHandler) {
+//        fetchGlobalIPWithResponseHandler(new AsyncHttpResponseHandler() {
+//
+//            @Override
+//            public void onStart(){
+//                finHandler.onStart();
+//            }
+//
+//            @Override
+//            public void onSuccess(String response) {
+//                String errorString = "Couldn't resolve current global IP.";
+//                if (response != null && !response.isEmpty()) {
+//                    try {
+//                        JSONObject jsonObject = new JSONObject(response);
+//                        String ip = jsonObject.getString("payload");
+//                        if (ip != null && !ip.isEmpty()) {
+//                            fetchASNForIP(ip, true, finHandler);
+//                        } else {
+//                            onFailure(new Throwable(errorString), null);
+//                        }
+//                    } catch (Exception e) {
+//                        onFailure(new Throwable(e.getMessage()), null);
+//                    }
+//
+//                } else {
+//                    onFailure(new Throwable(errorString), null);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Throwable error, String content) {
+//                finHandler.onFailure(error, content);
+//                //if request #1 failed, then request #2 never started, so we're responsible for cleanup.
+//                finHandler.onFinish();
+//            }
+//        });
+//
+//    }
 
 }
