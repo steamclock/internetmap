@@ -42,15 +42,23 @@ public class SearchPopup extends PopupWindow{
      */
     public static class SearchNode implements SearchItem {
         public final NodeWrapper node;
+        private final String nameLower, descLower;
         
         SearchNode(NodeWrapper node) {
             this.node = node;
+            this.nameLower = this.node.asn.toLowerCase();
+            this.descLower = this.node.rawTextDescription.toLowerCase();
         }
         
         //returns a display string for ArrayAdapter
         public String toString() {
             //display: ASN - Description
             return String.format("%s - %s", node.asn, node.friendlyDescription());
+        }
+
+        public boolean contains(String substring) {
+            String lowerSearch = substring.toLowerCase();
+            return this.nameLower.contains(lowerSearch) || this.descLower.contains(lowerSearch);
         }
         
         //return true if the node matches the search filter
@@ -154,15 +162,21 @@ public class SearchPopup extends PopupWindow{
                 } else {
                     //filter it
                     Log.d(TAG, "filtering...");
-                    Pattern pattern = Pattern.compile(Pattern.quote(constraint.toString()), Pattern.CASE_INSENSITIVE);
-                    //TODO use java style iterators
+
+                    // Old method, using RegEx - was too slow.
+                    // Pattern pattern = Pattern.compile(Pattern.quote(constraint.toString()), Pattern.CASE_INSENSITIVE);
+
                     for (int i=0; i<mAllNodes.size(); i++) {
-                        if (mAllNodes.get(i).matches(pattern)) {
+
+                        // Old method, using RegEx - was too slow.
+                        // if (mAllNodes.get(i).matches(pattern))
+
+                        if (mAllNodes.get(i).contains(constraint.toString())) {
                             nodes.add(mAllNodes.get(i));
+
                         }
                     }
-                    Log.d(TAG, "filtered!");
-                    
+
                     //'find host' option?
                     //FIXME this can't be the best way to do contains()
                     if (nodes.isEmpty() || constraint.toString().contains(".")) {
@@ -181,7 +195,7 @@ public class SearchPopup extends PopupWindow{
             @Override
             protected void publishResults(CharSequence constraint,
                     FilterResults results) {
-
+                
                 mIsFiltering = false;
                 mFilteredNodes = (ArrayList<SearchItem>)results.values;
                 Assert.assertNotNull(mFilteredNodes);
@@ -272,7 +286,7 @@ public class SearchPopup extends PopupWindow{
                         String filter = s.toString();
                         mFilter.filter(filter);
                     }
-                }, 1000);
+                }, 500);
             }
             //unneeded abstract stuff
             public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {}
