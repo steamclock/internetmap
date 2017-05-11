@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -117,8 +118,11 @@ public class SearchPopup extends PopupWindow{
                 isShowingYouAreHere = item.getClass() == LocationItem.class;
             }
             
-            int color = isFirstItem ? mContext.getResources().getColor(R.color.orange) : Color.WHITE;
-            Drawable img = isShowingYouAreHere ? mContext.getResources().getDrawable(R.drawable.youarehere_selected) : null;
+            int color = isFirstItem ? ContextCompat.getColor(mContext, R.color.colorAccent) : Color.WHITE;
+            Drawable img = isShowingYouAreHere ? mContext.getResources().getDrawable(R.drawable.youarehere) : null;
+            if (img != null) {
+                img.setColorFilter(color, android.graphics.PorterDuff.Mode.MULTIPLY);
+            }
 
             textView.setTextColor(color);
             textView.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null);
@@ -195,7 +199,7 @@ public class SearchPopup extends PopupWindow{
             @Override
             protected void publishResults(CharSequence constraint,
                     FilterResults results) {
-                
+
                 mIsFiltering = false;
                 mFilteredNodes = (ArrayList<SearchItem>)results.values;
                 Assert.assertNotNull(mFilteredNodes);

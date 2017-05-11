@@ -3,6 +3,7 @@ package com.peer1.internetmap;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -22,7 +23,7 @@ public class VisualizationPopupWindow extends PopupWindow{
         public View getView(int position, View convertView, ViewGroup parent) {
             TextView textView = (TextView) super.getView(position, convertView, parent);
             if (position == selectedRow) {
-                textView.setBackgroundColor(mContext.getResources().getColor(R.color.orange));
+                textView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorAccent));
                 textView.setTextColor(Color.BLACK);
             } else {
                 textView.setBackgroundColor(Color.TRANSPARENT);

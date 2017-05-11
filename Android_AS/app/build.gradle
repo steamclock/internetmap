@@ -80,6 +80,8 @@ build.dependsOn copyCommonData
 
 dependencies {
     compile 'com.android.support:support-v4:25.0.1'
+    compile 'com.android.support:design:25.0.1'
+
     compile files('libs/HockeySDK.jar')
     compile files('libs/android-async-http-1.4.2.jar')
 

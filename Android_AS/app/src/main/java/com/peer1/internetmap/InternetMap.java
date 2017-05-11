@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
+import android.media.Image;
+import android.support.v4.content.ContextCompat;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
@@ -132,14 +134,15 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         }
 
         //reset all the togglebuttons that android helpfully restores for us :P
-        ToggleButton button = (ToggleButton) findViewById(R.id.searchButton);
-        button.setChecked(false);
-        button = (ToggleButton) findViewById(R.id.visualizationsButton);
-        button.setChecked(false);
-        button = (ToggleButton) findViewById(R.id.timelineButton);
-        button.setChecked(false);
-        button = (ToggleButton) findViewById(R.id.infoButton);
-        button.setChecked(false);
+        ImageView imageButton = (ImageView) findViewById(R.id.searchButton);
+        imageButton.setActivated(false);
+
+        imageButton = (ImageView) findViewById(R.id.visualizationsButton);
+        imageButton.setActivated(false);
+        imageButton = (ImageView) findViewById(R.id.timelineButton);
+        imageButton.setActivated(false);
+        imageButton = (ImageView) findViewById(R.id.infoButton);
+        imageButton.setActivated(false);
         
         //start loading the search nodes
         mHandler.post(new Runnable() {
@@ -277,8 +280,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         dismissPopups();
 
         //make the button change sooner, and don't let them toggle the button while we're loading
-        final ToggleButton button = (ToggleButton)findViewById(R.id.visualizationsButton);
-        button.setChecked(true);
+        final ImageView button = (ImageView)findViewById(R.id.visualizationsButton);
+        button.setActivated(true);
         
         if (mVisualizationPopup == null) {
             LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -287,7 +290,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             mVisualizationPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 public void onDismiss() {
                     mVisualizationPopup = null;
-                    button.setChecked(false);
+                    button.setActivated(false);
                 }
             });
             mVisualizationPopup.showAsDropDown(findViewById(R.id.visualizationsButton));
@@ -309,8 +312,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         dismissPopups();
         
         //make the button change sooner, and don't let them toggle the button while we're loading
-        final ToggleButton button = (ToggleButton)findViewById(R.id.infoButton);
-        button.setChecked(true);
+        final ImageView button = (ImageView)findViewById(R.id.infoButton);
+        button.setActivated(true);
 
         if (mInfoPopup == null) {
             LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -319,7 +322,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             mInfoPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 public void onDismiss() {
                     mInfoPopup = null;
-                    button.setChecked(false);
+                    button.setActivated(false);
                 }
             });
             mInfoPopup.showAsDropDown(findViewById(R.id.infoButton));
@@ -330,8 +333,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         dismissPopups();
 
         //make the button change sooner, and don't let them toggle the button while we're loading
-        final ToggleButton button = (ToggleButton)findViewById(R.id.searchButton);
-        button.setChecked(true);
+        final ImageView button = (ImageView)findViewById(R.id.searchButton);
+        button.setActivated(true);
         
         if (mSearchPopup == null) {
             //this can be slow to load, so delay it until the UI updates the button
@@ -348,7 +351,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                     mSearchPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                         public void onDismiss() {
                             mSearchPopup = null;
-                            button.setChecked(false);
+                            button.setActivated(false);
                         }
                     });
                     mSearchPopup.showAsDropDown(findViewById(R.id.searchButton));
@@ -365,7 +368,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         
         //TODO animate
         final ProgressBar progress = (ProgressBar) findViewById(R.id.searchProgressBar);
-        final Button button = (Button) findViewById(R.id.searchButton);
+        final ImageView button = (ImageView) findViewById(R.id.searchButton);
         progress.setVisibility(View.VISIBLE);
         button.setVisibility(View.INVISIBLE);
         
@@ -451,7 +454,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                 showError(getString(R.string.currentASNFail));
                 //stop animating
                 ProgressBar progress = (ProgressBar) findViewById(R.id.searchProgressBar);
-                Button button = (Button) findViewById(R.id.searchButton);
+                ImageView button = (ImageView) findViewById(R.id.searchButton);
                 progress.setVisibility(View.INVISIBLE);
                 button.setVisibility(View.VISIBLE);
             }
@@ -559,8 +562,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             timelineBar.setVisibility(View.INVISIBLE);
             resetViewAndSetTimeline(m2013Index);
             mInTimelineMode = false;
-            ToggleButton button = (ToggleButton)findViewById(R.id.timelineButton);
-            button.setChecked(false);
+            ImageView button = (ImageView)findViewById(R.id.timelineButton);
+            button.setActivated(false);
         }
         if (mNodePopup != null) {
             mNodePopup.dismiss();
@@ -592,7 +595,10 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             int maxProgress = seekBar.getMax();
             int popupWidth = mTimelinePopup.getMeasuredWidth();
             
-            Drawable thumb = getResources().getDrawable(R.drawable.seek_thumb_normal);
+            Drawable thumb = getResources().getDrawable(R.drawable.seek_thumb_normal_transparent);
+            int color = ContextCompat.getColor(InternetMap.this, R.color.colorAccent);
+            thumb.setColorFilter(color, android.graphics.PorterDuff.Mode.MULTIPLY);
+
             float thumbOffset = (float) (thumb.getIntrinsicWidth() / 2.0);
             //now get the  distance from the screen edge to min. thumb centre
             float barOffset = thumbOffset + seekBar.getPaddingLeft();

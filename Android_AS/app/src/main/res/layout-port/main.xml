@@ -24,15 +24,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" >
 
-            <ToggleButton
+            <ImageView
                 android:id="@+id/searchButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_centerInParent="true"
-                android:background="@drawable/searchbutton"
-                android:onClick="searchButtonPressed"
-                android:textOff=""
-                android:textOn="" />
+                android:src="@drawable/searchbutton"
+                android:tint="@drawable/icon_tint"
+                android:onClick="searchButtonPressed" />
 
             <ProgressBar
                 android:id="@+id/searchProgressBar"
@@ -50,15 +49,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" >
 
-            <ToggleButton
+            <ImageView
                 android:id="@+id/visualizationsButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_centerInParent="true"
-                android:background="@drawable/visualizationsbutton"
-                android:onClick="visualizationsButtonPressed"
-                android:textOff=""
-                android:textOn="" />
+                android:src="@drawable/visualizationsbutton"
+                android:tint="@drawable/icon_tint"
+                android:onClick="visualizationsButtonPressed" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -67,15 +65,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" >
 
-            <ToggleButton
+            <ImageView
                 android:id="@+id/timelineButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_centerInParent="true"
-                android:background="@drawable/timelinebutton"
-                android:onClick="timelineButtonPressed"
-                android:textOff=""
-                android:textOn="" />
+                android:src="@drawable/timelinebutton"
+                android:tint="@drawable/icon_tint"
+                android:onClick="timelineButtonPressed" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -84,15 +81,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" >
 
-            <ToggleButton
+            <ImageView
                 android:id="@+id/infoButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_centerInParent="true"
-                android:background="@drawable/infobutton"
-                android:onClick="infoButtonPressed"
-                android:textOff=""
-                android:textOn="" />
+                android:src="@drawable/infobutton"
+                android:tint="@drawable/icon_tint"
+                android:onClick="infoButtonPressed" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -106,7 +102,8 @@
         android:paddingLeft="@dimen/timelinePadding"
         android:paddingRight="@dimen/timelinePadding"
         android:progressDrawable="@drawable/seekbar_progress"
-        android:thumb="@drawable/seek_thumb_normal"
+        android:thumb="@drawable/seek_thumb_normal_transparent"
+        android:thumbTint="@color/colorAccent"
         android:thumbOffset="-2dp"
         android:visibility="invisible" />
 
