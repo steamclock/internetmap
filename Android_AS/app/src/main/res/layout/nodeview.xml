@@ -1,5 +1,4 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/com.peer1.internetmap"
     android:id="@+id/arrowLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
@@ -68,9 +67,8 @@
                 android:layout_marginBottom="@dimen/contentPadding"
                 android:layout_marginLeft="@dimen/contentPadding"
                 android:layout_marginRight="@dimen/contentPadding"
-                android:onClick="runTraceroute"
                 android:text="@string/dotraceroute"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
         </LinearLayout>
     </LinearLayout>

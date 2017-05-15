@@ -48,6 +48,8 @@ import com.peer1.internetmap.SearchPopup.SearchNode;
 import com.peer1.internetmap.models.ASN;
 import com.peer1.internetmap.network.common.CommonCallback;
 import com.peer1.internetmap.network.common.CommonClient;
+import com.peer1.internetmap.utils.PingUtil;
+import com.peer1.internetmap.utils.TracerouteUtil;
 
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.UpdateManager;
@@ -759,6 +761,20 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                 } else {
                     isSimulated = false;
                     popupView = layoutInflater.inflate(R.layout.nodeview, null);
+                    popupView.findViewById(R.id.tracerouteBtn).setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            try {
+                                runTraceroute(v);
+                            } catch (JSONException e) {
+                                // TODO
+                                e.printStackTrace();
+                            } catch (UnsupportedEncodingException e) {
+                                // TODO
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
                     if (isSmallScreen()) {
                         popupView.findViewById(R.id.leftArrow).setVisibility(View.GONE);
                     }
@@ -826,40 +842,66 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             mNodePopup.dismiss();
         }
     }
-    
+
+    boolean tracerouteRunning = false;
+    /**
+     * Never appeared completed in Android.
+     */
     public void runTraceroute(View unused) throws JSONException, UnsupportedEncodingException{
+
+        String traceIP = mController.lastSearchIP();
+        //CommonClient.getInstance().getApi().getIPFromASN()
+
         Log.d(TAG, "TODO: traceroute");
-      //check internet status
-        boolean isConnected = haveConnectivity();
-        
-        if (!isConnected) {
+        if (tracerouteRunning) {
             return;
         }
-        String asn = "AS15169";
-        ASNRequest.fetchIPsForASN(asn, new ASNResponseHandler() {
-            public void onStart() {
+        tracerouteRunning = true;
 
-            }
-            public void onFinish() {
+        TracerouteUtil tracerouteUtil = new TracerouteUtil()
+                .initWithAddress(traceIP)
+                .setListener(new TracerouteUtil.InteractionListener() {
+                    public void tracerouteTimedOut() {
 
-            }
+                    }
+                });
 
-            public void onSuccess(JSONObject response) {
-                try {
-                	//Try and get legit payload here
-                    Log.d(TAG, String.format("payload: %s", response));
-                } catch (Exception e) {
-                    Log.d(TAG, String.format("Can't parse response: %s", response.toString()));
-                    showError(getString(R.string.tracerouteStartIPFail));
-                }
-            }
-        
-            public void onFailure(Throwable e, String response) {
-                String message = getString(R.string.tracerouteStartIPFail);
-                showError(message);
-                Log.d(TAG, message);
-            }
-        });        
+        tracerouteUtil.start();
+
+        //PingUtil.traceroute("www.google.com");
+
+        tracerouteRunning = false;
+
+//        boolean isConnected = haveConnectivity();
+//
+//        if (!isConnected) {
+//            return;
+//        }
+//        String asn = "AS15169";
+//        ASNRequest.fetchIPsForASN(asn, new ASNResponseHandler() {
+//            public void onStart() {
+//
+//            }
+//            public void onFinish() {
+//
+//            }
+//
+//            public void onSuccess(JSONObject response) {
+//                try {
+//                	//Try and get legit payload here
+//                    Log.d(TAG, String.format("payload: %s", response));
+//                } catch (Exception e) {
+//                    Log.d(TAG, String.format("Can't parse response: %s", response.toString()));
+//                    showError(getString(R.string.tracerouteStartIPFail));
+//                }
+//            }
+//
+//            public void onFailure(Throwable e, String response) {
+//                String message = getString(R.string.tracerouteStartIPFail);
+//                showError(message);
+//                Log.d(TAG, message);
+//            }
+//        });
         
     }
 

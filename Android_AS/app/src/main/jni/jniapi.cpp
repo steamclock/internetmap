@@ -28,6 +28,13 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved)
     return JNI_VERSION_1_6;
 }
 
+const char* getCharFromString(JNIEnv* env, jstring string){
+    if(string == NULL)
+        return NULL;
+
+    return  env->GetStringUTFChars(string ,0);
+}
+
 //helper function for wrappers returning a node
 jobject wrapNode(JNIEnv* jenv, NodePointer node) {
     if (!node) return 0;
@@ -35,6 +42,11 @@ jobject wrapNode(JNIEnv* jenv, NodePointer node) {
     //strings that need to be freed after
     //note: normally jni cleans these up on return to java, but allNodes just generates too many of them (the limit is 512)
     jstring asn = jenv->NewStringUTF(node->asn.c_str());
+
+    LOG("wrapNode %s", getCharFromString(jenv, asn));
+    LOG("raw %s", node->rawTextDescription.c_str());
+    LOG("type %s", node->typeString.c_str());
+
     jstring textDesc = jenv->NewStringUTF(node->rawTextDescription.c_str());
     jstring type = jenv->NewStringUTF(node->typeString.c_str());
 
@@ -208,7 +220,12 @@ JNIEXPORT jobjectArray JNICALL Java_com_peer1_internetmap_MapControllerWrapper_a
     jclass nodeWrapperClass = jenv->FindClass("com/peer1/internetmap/NodeWrapper");
     jobjectArray array = jenv->NewObjectArray(controller->data->nodes.size(), nodeWrapperClass, 0);
     //populate array
+
+    LOG("controller->data->nodes.size(): %d", controller->data->nodes.size());
+
     for (int i = 0; i < controller->data->nodes.size(); i++) {
+        LOG("Java_com_peer1_internetmap_MapControllerWrapper_allNodes %d", i);
+
         NodePointer node = controller->data->nodes[i];
         if (node && node->isActive()) {
             jobject wrapper = wrapNode(jenv, node);
@@ -274,6 +291,13 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_unhoverNo
     MapController* controller = renderer->beginControllerModification();
     controller->unhoverNode();
     renderer->endControllerModification();
+}
+
+JNIEXPORT jstring JNICALL Java_com_peer1_internetmap_MapControllerWrapper_lastSearchIP(JNIEnv* jenv, jobject obj) {
+    MapController* controller = renderer->beginControllerModification();
+    jstring ret = jenv->NewStringUTF(controller->lastSearchIP.c_str());
+    renderer->endControllerModification();
+    return ret;
 }
 
 JNIEXPORT jstring JNICALL Java_com_peer1_internetmap_NodeWrapper_nativeFriendlyDescription(JNIEnv* jenv, jobject obj, int index) {

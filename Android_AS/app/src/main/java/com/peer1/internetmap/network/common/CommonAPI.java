@@ -29,4 +29,8 @@ public interface CommonAPI {
     @GET("https://api.iptoasn.com/v1/as/ip/{ip}")
     Call<ASN> getASNFromIP(@Path("ip") String ip);
 
+    // TODO
+    //@GET("https://api.iptoasn.com/v1/as/ip/{ip}")
+    //Call<ASN> getIPFromASN(@Path("ip") String ip);
+
 }
