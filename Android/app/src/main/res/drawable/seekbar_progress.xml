@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background">
+        <nine-patch
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:src="@drawable/seekbar_background"
+            android:tint="@color/colorAccent"
+            android:dither="true"
+         />
+    </item>
+</layer-list>

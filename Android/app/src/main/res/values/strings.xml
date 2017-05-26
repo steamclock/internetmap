@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mxtoolbox_api_key">1d0e968c-47a7-4354-80dc-9cf5a590ccbf</string>
+
+
+    <string name="app_name">Internet Map</string>
+    <string name="youarehere">You are here</string>
+    <string name="nomoredata">No additional data.</string>
+    <string name="nodata">No data.</string>
+    <string name="oneconnection">One Connection</string>
+    <string name="nconnections">%d Connections</string>
+    <string name="dotraceroute">Perform Traceroute</string>
+    <string name="currentASNFail">Couldn\'t look up current address.</string>
+    <string name="asnAssociationFail">Couldn\'t find a node associated with your host.</string>
+    <string name="tracerouteStartIPFail">Error: ASN couldn\'t be resolved into IP. Please try another node!</string>
+    <string name="noInternet">This feature requires internet access.</string>
+    <string name="searchHint">Type a company or domain...</string>
+    <string name="findHost">Find host \'%s\'</string>
+    <string name="invalidHost">Can\'t find host \'%s\'</string>
+    <string name="yourLocation">Your Location</string>
+    <string name="infoHelp">Help</string>
+    <string name="infoSales">Hosting &amp; Cloud Services</string>
+    <string name="infoLink">Learn more at Peer1.com</string>
+    <string name="infoCredits">Credits</string>
+    <string name="loading">Loading %s...</string>
+    <string name="contactSalesHeader">Contact Us</string>
+    <string name="contactSalesBlurb">Learn more about our hosting and cloud services</string>
+    <string name="contactSalesFooter">peer1.com | 1.866.579.9690 | Follow us @peer1</string>
+    <string name="nameHint">Name (Required)</string>
+    <string name="phoneHint">Phone</string>
+    <string name="emailHint">Email (Required)</string>
+    <string name="submit">Submit</string>
+    <string name="requiredName">Name cannot be empty.</string>
+    <string name="requiredEmail">Email cannot be empty.</string>
+    <string name="submitSuccess">Submitted. Thank you.</string>
+    <string name="submitFail">Could not complete the contact request. Please try again later.</string>
+    <string name="submitFailEmail">Please enter a valid email address.</string>
+    <string name="next">Next ></string>
+    <string name="finish">Finish</string>
+    <string name="simulated">Simulated Data</string>
+    <string name="searching">Searching...</string>
+</resources>
