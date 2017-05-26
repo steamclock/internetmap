@@ -1,4 +1,69 @@
+# Android Project Update
 
+## Environment Setup Suggestions
+
+### Python
+
+Our datapipeline relies on running a series of python scripts to generate our data sets. Since various projects require different python versions, I recommend using a tool that will allow you to create sandboxed python environments.
+
+*Using virtiualenv*
+
+1. Install virtiualenv (https://virtualenv.pypa.io/en/stable/userguide/)
+2. Create `venv` folder where you want this environment to live. I made it sibling to our data pipleline folder.
+3. Run `> virtualenv venv` - this will generate a default python environment inside that folder
+4. Navigate into `venv` to make sure the default folders (bin, libs etc...) have been created
+5. Activate that python environment by running `source bin/activate`. When activated your terminal should be prefaced with `(venv)`, to indicate you are running in that python environment. Woo!
+
+Once setup, you should only need to reactivate the environment each time you want to work with the project. I used *pypa* to find and install missing python libs (https://www.pypa.io/en/latest/)
+
+### Android
+
+The Android project was converted to use the gradle build system via Android Studio. While I suggest you build through Android Studio, it is not required. Since it has already been converted you should be able to open it up via the *Open Exsiting Android Studio Project" option.
+
+
+## Data Pipeline Details
+
+### Details
+
+* Autonomous System (AS) link data comes from `http://www.caida.org/data/` (under `datasets/topology/`)
+* AS geo data comes from `http://dev.maxmind.com/geoip/legacy/geolite/`
+
+### Adding New Data
+
+#### Update Geo data
+1. Download new geo data (from http://dev.maxmind.com/geoip/legacy/geolite/)
+2. Run `geopipeline.py` to generate `loc.py`
+3. TODO one more step to get loc.py into json; look into smoothing out this step
+
+### Update AS Link data
+1. Go to http://data.caida.org/datasets/topology/ark/ipv4/as-links/; you may have to request this data set by entering in an email and reason for data usage.
+2. Currently we only use one file as a representative each year. Unless a particular point in the year is desired, navigate to the `team-1` folder, select the desired year and then download the first data set available for that year. (Named like `cycle-aslinks.l7.t1.cXXXXXX.YYYYMMDD.txt.gz`)
+3. Unzip and copy those files into the `aspipeline/data` folder
+4. Run `aspipeline.py`; this will generate the data files under `aspipeline/out`.
+5. Copy the files from `aspipeline/out` into the project's `Common/Data` folder.
+
+### Update C++ Files
+TODO Ideally this would not have to be done, look into ways to smooth out pipeline.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+
+
+
+
+
+
+## Notes I made while first going through the data pipeline...
 
 ===============================
 Data.caida.org
@@ -179,5 +244,60 @@ Files to update when adding a new year:
 data folder
 
 history.json: 
+
+
+===============================
+Attempting to run all existing scripts to recreate final outout data using exsiting inputs
+===============================
+
+Suggestion:
+* Install virtiualenv (https://virtualenv.pypa.io/en/stable/userguide/) to create contained python environments
+* Use pypa to install libs - Search for python libs here https://www.pypa.io/en/latest/
+
+--------------------
+aspipeline
+--------------------
+aspipeline.py
+	* ERROR: ImportError: No module named networkx
+	* SOLUTION: Install networkx (suggestion, setup custom python env)
+
+	* ERROR: ImportError: No module named p9base
+	* ISSUE: Not a standard or known 3rd party python lib
+	* SOLUTION: Jeff wrote this; add this helper script to the folder
+
+	* ERROR: generator' object has no attribute '__getitem__' ("aspipeline.py", line 479)
+	* PROBLEM: networkx lib has changed, such that the connected_components returns a generator, not a list 
+	* SOLUTION: Create sorted_components = sorted(nx.connected_components(self.graph), key=len, reverse=True) to simulate that old list
+
+
+historicalstats.py
+	* Same issue as aspipline (uses same logic) 
+	* TODO refactor so that aspipeline and historicalstats use same ASGraph class
+	* For now, since we don't have to regen the old data, will not fix
+
+projected stats in data folder
+	* No idea where these files come from
+
+getasinfo.py
+	* Needs most recent file in asgraph folder
+
+	* ERROR: socket.error: [Errno 54] Connection reset by peer
+	* NOTE: Occurs after a period of time, numerous calls made successfully; more than likely hit a new rate limit imposed by the ipduh.com services
+	* OPTIONS: use getasinfo2.py (run in batches) to save the HTML and scrape that later.
+
+
+
+
+Pipeline improvements
+
+* File naming, even though we are using not jan 1st data, need to rename files so we are not having to map them in MapCongroller::setTimelinePoint
+* Move simulated years out to json that can be generated
+
+
+Places with hardcoded dates
+* MapController::setTimelinePoint
+* hostory.json
+* INternetMap.java ==> is simualted (showNodePopup) hard codes years.
+
 
 
