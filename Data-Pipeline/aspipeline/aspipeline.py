@@ -475,14 +475,18 @@ dir = os.listdir("data")
 print "=============="
 
 for filename in dir:
-	print "Raw filename: " + filename
+	print "Input filename: " + filename
+
 	if filename[0:5] == "cycle":
 		outfilename = filename[28:36]
-	else:
+	elif filename[0:7] == "skitter":
 		outfilename = filename[17:26]
-	print filename
+	else:
+		print "Invalid file, skipping"
+		continue
+
 	outfilename += ".txt"
-	print outfilename
+	print "Printing to " + outfilename
 	asg = ASGraph("data/" + filename)
 	cg = CentralityGraph(asg, scale = 4*inches(1.714286), logbase = 2)
 	cg.writeData("out/" + outfilename);
