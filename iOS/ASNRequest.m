@@ -55,32 +55,28 @@ static const int TIMEOUT = 10;
     } else if ([ASNRequest isInvalidOrPrivate:ip]){
         result(nil);
     }
-
-    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"http://asnl.peer1.com/v1/iptoasn"]];
-    [request setTimeOutSeconds:TIMEOUT];
-    [request setRequestMethod:@"POST"];
-    [request addRequestHeader:@"Content-Type" value:@"application/json"];
     
-    NSString *dataString = [NSString stringWithFormat:@"{\"ip\":\"%@\"}", ip];
-    [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://api.iptoasn.com/v1/as/ip/%@", ip]]];
+    [request setTimeOutSeconds:TIMEOUT];
+    [request setRequestMethod:@"GET"];
+    [request addRequestHeader:@"Content-Type" value:@"application/json"];
     
     __weak ASIFormDataRequest* weakRequest = request;
     
     [request setCompletionBlock:^{
         NSError* error = weakRequest.error;
         NSDictionary* jsonResponse = [NSJSONSerialization JSONObjectWithData:weakRequest.responseData options:NSJSONReadingAllowFragments error:&error];
-        NSString* payload = [jsonResponse objectForKey:@"payload"];
-        NSString* asnWithoutPrefix = [payload substringWithRange:NSMakeRange(2, payload.length -2)];
-        result(asnWithoutPrefix);
+        NSNumber* asNumber = [jsonResponse objectForKey:@"as_number"];
+        NSString *asNumberStr = [asNumber stringValue];
+        result(asNumberStr);
     }];
     
     [request setFailedBlock:^{
         result(nil);
     }];
-
+    
     [request start];
 }
-
 
 +(void)fetchIPsForASN:(NSString*)asn response:(ASNArrayResponseBlock)response {
     
