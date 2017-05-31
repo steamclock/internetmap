@@ -83,23 +83,29 @@ static const int TIMEOUT = 10;
 
 
 +(void)fetchIPsForASN:(NSString*)asn response:(ASNArrayResponseBlock)response {
-    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"http://asnl.peer1.com/v1/asntoips"]];
+    
+    NSString *mxtoolboxAPIKey = @"1d0e968c-47a7-4354-80dc-9cf5a590ccbf";
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://api.mxtoolbox.com/api/v1/lookup/asn/as%@?authorization=%@", asn, mxtoolboxAPIKey]]];
+  
     [request setTimeOutSeconds:TIMEOUT];
-    [request setRequestMethod:@"POST"];
+    [request setRequestMethod:@"GET"];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
-    
-    NSString *dataString = [NSString stringWithFormat:@"{\"asn\":\"%@\"}", asn];
-    [request appendPostData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
-    
+
     __weak ASIFormDataRequest* weakRequest = request;
 
     [request setCompletionBlock:^{
         NSError* error = weakRequest.error;
         NSDictionary* jsonResponse = [NSJSONSerialization JSONObjectWithData:weakRequest.responseData options:NSJSONReadingAllowFragments error:&error];
-        NSArray* offTheWire = [jsonResponse objectForKey:@"payload"];
+        NSArray* offTheWire = [jsonResponse objectForKey:@"Information"];
         // We clean the array for any reserved ip spaces (sometimes 127.x.x.x shows up for loopback interfaces)
         NSMutableArray* responseArray = [[NSMutableArray alloc] init];
-        for (NSString* ip in offTheWire) {
+        
+        for (NSDictionary* asnInfo in offTheWire) {
+            NSString* ipRange = [asnInfo objectForKey:@"CIDR Range"];
+            
+            NSRange range = [ipRange rangeOfString:@"/"];
+            NSString *ip = [ipRange substringToIndex:range.location];
+            
             if (![ASNRequest isInvalidOrPrivate:ip]) {
                 [responseArray addObject:ip];
             } else {
@@ -180,9 +186,9 @@ static const int TIMEOUT = 10;
 
 
 + (void)fetchGlobalIPWithCompletionBlock:(ASNStringResponseBlock)completion {
-    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"http://asnl.peer1.com/v1/ip"]];
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"https://api.ipify.org?format=json"]];
     [request setTimeOutSeconds:TIMEOUT];
-    [request setRequestMethod:@"POST"];
+    [request setRequestMethod:@"GET"];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
     
     __weak ASIFormDataRequest* weakRequest = request;
@@ -190,7 +196,7 @@ static const int TIMEOUT = 10;
     [request setCompletionBlock:^{
         NSError* error = weakRequest.error;
         NSDictionary* jsonResponse = [NSJSONSerialization JSONObjectWithData:weakRequest.responseData options:NSJSONReadingAllowFragments error:&error];
-        NSString* offTheWire = [jsonResponse objectForKey:@"payload"];
+        NSString* offTheWire = [jsonResponse objectForKey:@"ip"];
         completion(offTheWire);
     }];
     
