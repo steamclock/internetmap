@@ -1,21 +1,23 @@
 apply plugin: 'com.android.application'
 
-def internalCommonCodePath = "../../Android/app/src/main/jni/common"
-def externalCommonCodePath = "../../Common/Code"
-
 def internalCommonDataPath = "../../Android/app/src/main/assets/data"
 def externalCommonDataPath = "../../Common/Data"
-
-def commonDataMakeFile = "../../Android/app/src/main/jni/Android.mk"
-
-//def commonDataMakeFile = externalCommonCodePath + "/Android.mk"
-
+def externalDataMakeFile = "../../Android-NDK/Android.mk"
 
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     useLibrary 'org.apache.http.legacy'
     sourceCompatibility = 1.8
+
+//    signingConfigs {
+//        release {
+//            storeFile file(RELEASE_KEYSTORE_PATH)
+//            storePassword RELASE_KEY_PASSWORD
+//            keyAlias RELEASE_KEY_ALIAS
+//            keyPassword RELEASE_KEYSTORE_PASSWORD
+//        }
+//    }
 
     defaultConfig {
         applicationId "com.peer1.internetmap"
@@ -36,24 +38,29 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
-    }
-
-//    sourceSets {
-//        main {
-//            // Bundle so files with the final apk.
-//            // NOTE: Currently bundles all shared objects in that directory.
-//            // It was not straightforward to exclude in Android sourceSets at the time of writing,
-//            // see https://code.google.com/p/android/issues/detail?id=64957
-//            jniLibs.srcDirs = [externalCommonCodePath]
+//        releaseSigned {
+//            signingConfig signingConfigs.release
+//            minifyEnabled false
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
 //        }
-//    }
+    }
 
     externalNativeBuild {
         ndkBuild {
-            path commonDataMakeFile
+            path externalDataMakeFile
         }
     }
 }
+
+// Copying files directly is creating a relative link issue with the ExternalFiles folder
+//task deleteCommonCode(type: Delete) {
+//    description = 'Deleting common C++ files'
+//    delete fileTree(internalCommonCodePath) {
+//        include '*.cpp'
+//        include '*.hpp'
+//    }
+//}
+//
 
 //task copyCommonCode(type: Copy) {
 //    description = 'Copying common C++ files'
@@ -63,6 +70,14 @@ android {
 //    include '*.hpp'
 //}
 //
+task deleteCommonData(type: Delete) {
+    description = 'Deleting common Data files'
+    delete fileTree(internalCommonDataPath) {
+        include '*.txt'
+        include '*.json'
+        include '*.html'
+    }
+}
 
 task copyCommonData(type: Copy) {
     description = 'Copying common Data files'
@@ -72,11 +87,18 @@ task copyCommonData(type: Copy) {
     include '*.json'
     include '*.html'
 }
-//
-//
-//build.dependsOn copyCommonCode
 
-build.dependsOn copyCommonData
+task synchCommonDataFiles {
+    // Copying files directly is creating a relative link issue with the ExternalFiles folder
+    //dependsOn 'deleteCommonCode'
+    //dependsOn 'copyCommonCode'
+    dependsOn 'deleteCommonData'
+    dependsOn 'copyCommonData'
+    tasks.findByName('copyCommonData').mustRunAfter 'deleteCommonData'
+}
+
+// Copy over files from Common folder
+preBuild.dependsOn(synchCommonDataFiles)
 
 dependencies {
     compile 'com.android.support:support-v4:25.0.1'

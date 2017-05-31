@@ -7,4 +7,5 @@
 build
 app/build
 /captures
+/app/src/main/assets/data/*
 .externalNativeBuild
