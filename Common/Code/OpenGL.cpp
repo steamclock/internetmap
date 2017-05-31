@@ -9,7 +9,7 @@
 
 #ifdef ANDROID 
 
-#include <egl/egl.h>
+#include <EGL/egl.h>
 
 PFNGLMAPBUFFEROESPROC glMapBufferOES;
 PFNGLUNMAPBUFFEROESPROC glUnmapBufferOES;

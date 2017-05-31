@@ -90,7 +90,7 @@ void Renderer::bufferedZoom(float zoom) {
 void Renderer::setWindow(ANativeWindow *window, float displayScale) {
     _displayScale = displayScale;
 
-    LOG("setWindow %d", window);
+    //LOG("setWindow %d", window);
     // notify render thread that window has changed
     if (!_paused) {
         pthread_mutex_lock(&_mutex);
