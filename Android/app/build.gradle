@@ -52,24 +52,6 @@ android {
     }
 }
 
-// Copying files directly is creating a relative link issue with the ExternalFiles folder
-//task deleteCommonCode(type: Delete) {
-//    description = 'Deleting common C++ files'
-//    delete fileTree(internalCommonCodePath) {
-//        include '*.cpp'
-//        include '*.hpp'
-//    }
-//}
-//
-
-//task copyCommonCode(type: Copy) {
-//    description = 'Copying common C++ files'
-//    from externalCommonCodePath
-//    into internalCommonCodePath
-//    include '*.cpp'
-//    include '*.hpp'
-//}
-//
 task deleteCommonData(type: Delete) {
     description = 'Deleting common Data files'
     delete fileTree(internalCommonDataPath) {
@@ -90,8 +72,6 @@ task copyCommonData(type: Copy) {
 
 task synchCommonDataFiles {
     // Copying files directly is creating a relative link issue with the ExternalFiles folder
-    //dependsOn 'deleteCommonCode'
-    //dependsOn 'copyCommonCode'
     dependsOn 'deleteCommonData'
     dependsOn 'copyCommonData'
     tasks.findByName('copyCommonData').mustRunAfter 'deleteCommonData'

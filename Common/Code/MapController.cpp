@@ -101,7 +101,7 @@ MapController::MapController() :
  */
 
 #else
-    lastTimelinePoint = "20130101";
+    lastTimelinePoint = "2013";
     clock_t start = clock();
     std::string unifiedText;
     loadTextResource(&unifiedText, "unified", "txt");
@@ -425,7 +425,7 @@ Vector2 MapController::getCoordinatesForNodeAtIndex(int index) {
 }
 
 void MapController::setTimelinePoint(const std::string& origName, bool blend) {
-    std::string name = (origName == "") ? "20130101" : origName;
+    std::string name = (origName == "") ? "2013" : origName;
     
     if(name == lastTimelinePoint) {
         return;
@@ -436,15 +436,15 @@ void MapController::setTimelinePoint(const std::string& origName, bool blend) {
     display->visualizationLines = shared_ptr<DisplayLines>();
     
     // remap a couple of non-jan 1st dates until we figure out a better way to track these
-    if(name == "20000101") name = "20000102";
-    if(name == "20090101") name = "20090103";
-    if(name == "20110101") name = "20110102";
-    if(name == "20120101") name = "20120102";
-    if(name == "20130101") name = "20130102";
+    //if(name == "20000101") name = "20000102";
+    //if(name == "20090101") name = "20090103";
+    //if(name == "20110101") name = "20110102";
+    //if(name == "20120101") name = "20120102";
+    //if(name == "20130101") name = "20130102";
     
     clock_t start = clock();
     
-    if((name == "20130102") && data->nodes.size() != 0) {
+    if((name == "2013") && data->nodes.size() != 0) {
         data->resetToDefault();
     }
     else {

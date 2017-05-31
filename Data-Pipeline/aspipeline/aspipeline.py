@@ -478,9 +478,9 @@ for filename in dir:
 	print "Input filename: " + filename
 
 	if filename[0:5] == "cycle":
-		outfilename = filename[28:36]
+		outfilename = filename[28:32]
 	elif filename[0:7] == "skitter":
-		outfilename = filename[17:26]
+		outfilename = filename[17:21]
 	else:
 		print "Invalid file, skipping"
 		continue
