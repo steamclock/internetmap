@@ -784,7 +784,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     __weak ViewController* weakSelf = self;
     self.afterViewReset = ^ {
         int year = [weakSelf.sortedYears[(int)weakSelf.timelineSlider.value] intValue];
-        [weakSelf.controller setTimelinePoint:[NSString stringWithFormat:@"%d0101", year]];
+        [weakSelf.controller setTimelinePoint:[NSString stringWithFormat:@"%d", year]];
         if(popoverDismiss) {
             [weakSelf.timelinePopover dismissPopoverAnimated:NO];
         }
