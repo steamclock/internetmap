@@ -71,7 +71,7 @@ MapController::MapController() :
 
     LOG("parse asinfo.json: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
     
-    /*
+    
     setTimelinePoint("1994");
     setTimelinePoint("1995");
     setTimelinePoint("1996");
@@ -91,18 +91,20 @@ MapController::MapController() :
     setTimelinePoint("2010");
     setTimelinePoint("2011");
     setTimelinePoint("2012");
+    setTimelinePoint("2013");
     setTimelinePoint("2014");
     setTimelinePoint("2015");
+    setTimelinePoint("2016");
     setTimelinePoint("2020");
 
-    setTimelinePoint("2013");
+    setTimelinePoint("2017");
 
     data->dumpUnified();
-     */
+    
  
 
 #else
-    lastTimelinePoint = "2013";
+    lastTimelinePoint = "2017";
     clock_t start = clock();
     std::string unifiedText;
     loadTextResource(&unifiedText, "unified", "txt");
@@ -426,7 +428,7 @@ Vector2 MapController::getCoordinatesForNodeAtIndex(int index) {
 }
 
 void MapController::setTimelinePoint(const std::string& origName, bool blend) {
-    std::string name = (origName == "") ? "2013" : origName;
+    std::string name = (origName == "") ? "2017" : origName;
     
     if(name == lastTimelinePoint) {
         return;
@@ -445,7 +447,7 @@ void MapController::setTimelinePoint(const std::string& origName, bool blend) {
     
     clock_t start = clock();
     
-    if((name == "2013") && data->nodes.size() != 0) {
+    if((name == "2017") && data->nodes.size() != 0) {
         data->resetToDefault();
         LOG("Resetting data to default");
     }
