@@ -223,8 +223,8 @@ JNIEXPORT jobjectArray JNICALL Java_com_peer1_internetmap_MapControllerWrapper_a
 
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_setTimelinePoint(JNIEnv* jenv, jobject obj, jstring year) {
     const char *yearCstr = jenv->GetStringUTFChars(year, 0);
-    char date[9];
-    //sprintf(date, "%s0101", yearCstr);
+    char date[5];
+    sprintf(date, "%s", yearCstr);
     jenv->ReleaseStringUTFChars(year, yearCstr);
 
     MapController* controller = renderer->beginControllerModification();
