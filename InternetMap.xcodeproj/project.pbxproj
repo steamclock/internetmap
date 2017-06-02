@@ -39,6 +39,7 @@
 		4E83361D1EDF929F0067B138 /* 2011.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8336061EDF929F0067B138 /* 2011.txt */; };
 		4E83361E1EDF929F0067B138 /* 2012.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8336071EDF929F0067B138 /* 2012.txt */; };
 		4E83361F1EDF929F0067B138 /* 2013.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8336081EDF929F0067B138 /* 2013.txt */; };
+		4EB7E70D1EE7225C00A062A8 /* globalSettings.json in Resources */ = {isa = PBXBuildFile; fileRef = 4EB7E70C1EE7225C00A062A8 /* globalSettings.json */; };
 		7D23CB571DF73C7900D82CC2 /* LaunchScreen~iphone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D23CB561DF73C7900D82CC2 /* LaunchScreen~iphone.storyboard */; };
 		7D23CB591DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D23CB581DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard */; };
 		7D5284871DDA7A6800E42C5F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5284861DDA7A6800E42C5F /* QuartzCore.framework */; };
@@ -265,6 +266,7 @@
 		4E8336061EDF929F0067B138 /* 2011.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2011.txt; path = Common/Data/2011.txt; sourceTree = "<group>"; };
 		4E8336071EDF929F0067B138 /* 2012.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2012.txt; path = Common/Data/2012.txt; sourceTree = "<group>"; };
 		4E8336081EDF929F0067B138 /* 2013.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2013.txt; path = Common/Data/2013.txt; sourceTree = "<group>"; };
+		4EB7E70C1EE7225C00A062A8 /* globalSettings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = globalSettings.json; path = Common/Data/globalSettings.json; sourceTree = "<group>"; };
 		7D23CB561DF73C7900D82CC2 /* LaunchScreen~iphone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "LaunchScreen~iphone.storyboard"; path = "iOS/LaunchScreen~iphone.storyboard"; sourceTree = SOURCE_ROOT; };
 		7D23CB581DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "LaunchScreen~ipad.storyboard"; path = "iOS/LaunchScreen~ipad.storyboard"; sourceTree = SOURCE_ROOT; };
 		7D5284861DDA7A6800E42C5F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -798,6 +800,7 @@
 				A600AAD316A664DF003B1028 /* as2attr.txt */,
 				A600AAD416A664E0003B1028 /* asinfo.json */,
 				4E80ECF51EE1DC2C00C5542F /* unified.txt */,
+				4EB7E70C1EE7225C00A062A8 /* globalSettings.json */,
 			);
 			name = Data;
 			sourceTree = "<group>";
@@ -1456,6 +1459,7 @@
 				84E0672516D5ACA300751B7B /* Icon.png in Resources */,
 				84E0672716D5ADA200751B7B /* Icon@2x.png in Resources */,
 				84E0672B16D5ADCA00751B7B /* Icon-72@2x.png in Resources */,
+				4EB7E70D1EE7225C00A062A8 /* globalSettings.json in Resources */,
 				7D23CB571DF73C7900D82CC2 /* LaunchScreen~iphone.storyboard in Resources */,
 				A6FC709B16DC25BF004FB989 /* screen1-ipad.png in Resources */,
 				A6FC709C16DC25BF004FB989 /* screen1-ipad@2x.png in Resources */,

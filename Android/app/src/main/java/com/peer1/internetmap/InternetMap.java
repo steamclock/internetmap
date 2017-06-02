@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
-import android.media.Image;
 import android.support.v4.content.ContextCompat;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.AnimationUtils;
@@ -74,7 +73,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     private int mUserNodeIndex = -1; //cache user's node from "you are here"
     private JSONObject mTimelineHistory; //history data for timeline
     private ArrayList<String> mTimelineYears; //sorted year mapping
-    private int m2013Index; //index of 2013 in mTimelineYears
+    private int mDefaultYearIndex; //index of the default year mTimelineYears
     public int mCurrentVisualization; //cached for the visualization popup
     private boolean mInTimelineMode; //true if we're showing the timeline
     private CallbackHandler mCameraResetHandler;
@@ -120,7 +119,9 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         anim.setFillEnabled(true);
         logo.setAnimation(anim);
     }
-    
+
+
+
     void onBackendLoaded() {
         //turn off loading feedback
         ProgressBar loader = (ProgressBar) findViewById(R.id.loadingSpinner);
@@ -539,11 +540,11 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
                 timelineBar.setMax(mTimelineYears.size() - 1);
                 Collections.sort(mTimelineYears);
-                m2013Index = mTimelineYears.indexOf("2017");
-                Assert.assertTrue("Can't find 2013 in timeline data", m2013Index != -1);
+                mDefaultYearIndex = mTimelineYears.indexOf(App.getGlobalSettings().getDefaultYear());
+                Assert.assertTrue("Can't find 2013 in timeline data", mDefaultYearIndex != -1);
             }
 
-            timelineBar.setProgress(m2013Index);
+            timelineBar.setProgress(mDefaultYearIndex);
             timelineBar.setVisibility(View.VISIBLE);
             timelineBar.requestLayout(); //hack to work around SurfaceView bug on some phones
             
@@ -560,7 +561,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         if (mInTimelineMode) {
             SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
             timelineBar.setVisibility(View.INVISIBLE);
-            resetViewAndSetTimeline(m2013Index);
+            resetViewAndSetTimeline(mDefaultYearIndex);
             mInTimelineMode = false;
             ImageView button = (ImageView)findViewById(R.id.timelineButton);
             button.setActivated(false);
@@ -748,14 +749,15 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             if (mNodePopup == null) {
                 LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                 View popupView;
+
                 boolean isSimulated;
+
                 if (mInTimelineMode) {
                     popupView = layoutInflater.inflate(R.layout.nodetimelineview, null);
                     //get the year to find out if data is simulated
                     SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
                     String yearStr = this.mTimelineYears.get(timelineBar.getProgress());
-                    int year = Integer.parseInt(yearStr);
-                    isSimulated = year < 2000 || year > 2017;
+                    isSimulated = App.getGlobalSettings().getSimulatedYears().contains(yearStr);
                 } else {
                     isSimulated = false;
                     popupView = layoutInflater.inflate(R.layout.nodeview, null);

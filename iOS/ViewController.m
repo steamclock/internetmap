@@ -93,6 +93,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (strong, nonatomic) ErrorInfoView* errorInfoView;
 
 @property (strong, nonatomic) NSArray* sortedYears;
+@property (strong, nonatomic) NSString* defaultYear;
+@property (strong, nonatomic) NSSet* simulatedYears;
 
 @end
 
@@ -114,8 +116,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [super viewDidLoad];
 
     self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-    
     self.preferredFramesPerSecond = 60.0f;
+    [self setGlobalSettings];
 
     if (!self.context) {
         NSLog(@"Failed to create ES context");
@@ -207,7 +209,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.timelineSlider.value = self.sortedYears.count - 1;
 
     [self.sortedYears enumerateObjectsUsingBlock:^(NSString* year, NSUInteger idx, BOOL *stop) {
-        if([year isEqualToString:@"2017"]) {
+        if([year isEqualToString:self.defaultYear]) {
             self.timelineSlider.value = idx;
         }
     }];
@@ -251,6 +253,14 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [UIView animateWithDuration:1 animations:^{
         self.logo.alpha = 0.3;
     }];
+}
+- (void)setGlobalSettings {
+    NSString* json = [[NSBundle mainBundle] pathForResource:@"globalSettings" ofType:@"json"];
+    NSDictionary* settingsDict = [NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfFile:json] options:0 error:nil];
+    self.defaultYear = [settingsDict objectForKey:@"defaultYear"];
+    
+    NSArray *simulatedYearArr = [settingsDict valueForKeyPath:@"simulatedYears"];
+    self.simulatedYears = [NSSet setWithArray:simulatedYearArr];
 }
 
 #pragma mark - GLKView and GLKViewController delegate methods
@@ -317,8 +327,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                 if (self.nodeTooltipViewController.node != node) {
                     self.nodeTooltipViewController = [[NodeTooltipViewController alloc] initWithNode:node];
                     
-                    int year = [self.sortedYears[(int)self.timelineSlider.value] intValue];
-                    if((year > 2013) || (year < 2000)) {
+                    NSString* year = self.sortedYears[(int)self.timelineSlider.value];
+                    if([self.simulatedYears containsObject:year]) {
                         self.nodeTooltipViewController.text = @"Simulated data";
                     }
                     
@@ -661,7 +671,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.timelineSlider.value = self.sortedYears.count - 1;
     
     [self.sortedYears enumerateObjectsUsingBlock:^(NSString* year, NSUInteger idx, BOOL *stop) {
-        if([year isEqualToString:@"2017"]) {
+        if([year isEqualToString:self.defaultYear]) {
             self.timelineSlider.value = idx;
         }
     }];
@@ -686,8 +696,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if (self.timelineSlider.hidden == NO) {
         BOOL simulated = NO;
         
-        int year = [self.sortedYears[(int)self.timelineSlider.value] intValue];
-        if((year > 2013) || (year < 2000)) {
+        NSString* year = self.sortedYears[(int)self.timelineSlider.value];
+        if([self.simulatedYears containsObject:year]) {
             simulated = YES;
         }
 

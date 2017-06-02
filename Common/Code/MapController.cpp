@@ -23,6 +23,12 @@
 #include <algorithm>
 #include <string>
 
+#ifdef ANDROID
+#include "jsoncpp/json.h"
+#else
+#include "json.h"
+#endif
+
 // TODO: clean this up
 void loadTextResource(std::string* resource, const std::string& base, const std::string& extension);
 void lostSelectedNodeCallback(void);
@@ -40,6 +46,10 @@ MapController::MapController() :
 //    _visualizations.push_back(VisualizationPointer(new TypeVisualization("T1", AS_T1)));
     
     data->visualization = _visualizations[0];
+    
+    std::string globalSettingsText;
+    loadTextResource(&globalSettingsText, "globalSettings", "json");
+    defaultYear = getDefaultYear(globalSettingsText);
 
 #if 0
     // Old style loading, three seperate files. If we need to refresh data, we need to either
@@ -95,16 +105,17 @@ MapController::MapController() :
     setTimelinePoint("2014");
     setTimelinePoint("2015");
     setTimelinePoint("2016");
+    setTimelinePoint("2017");
     setTimelinePoint("2020");
 
-    setTimelinePoint("2017");
+    setTimelinePoint(defaultYear);
 
     data->dumpUnified();
     
  
 
 #else
-    lastTimelinePoint = "2017";
+    lastTimelinePoint = defaultYear;
     clock_t start = clock();
     std::string unifiedText;
     loadTextResource(&unifiedText, "unified", "txt");
@@ -115,6 +126,29 @@ MapController::MapController() :
     
     data->visualization->activate(data->nodes);
     data->createNodeBoxes();
+}
+
+std::string MapController::getDefaultYear(const std::string& json) {
+
+    std::string result;
+    Json::Value root;
+    Json::Reader reader;
+    bool success = reader.parse(json, root);
+
+    if (success) {
+        std::vector<std::string> members = root.getMemberNames();
+        for (unsigned int i = 0; i < members.size(); i++) {
+            std::string key = members[i].c_str();
+
+            if (key.compare("defaultYear") == 0) {
+                Json::Value defaultYear = root[members[i]];
+                result = defaultYear.asString();
+                break;
+            }
+        }
+    }
+
+    return result;
 }
 
 void MapController::handleTouchDownAtPoint(Vector2 point) {
@@ -428,7 +462,7 @@ Vector2 MapController::getCoordinatesForNodeAtIndex(int index) {
 }
 
 void MapController::setTimelinePoint(const std::string& origName, bool blend) {
-    std::string name = (origName == "") ? "2017" : origName;
+    std::string name = (origName == "") ? defaultYear : origName;
     
     if(name == lastTimelinePoint) {
         return;
@@ -437,17 +471,10 @@ void MapController::setTimelinePoint(const std::string& origName, bool blend) {
     lastTimelinePoint = name;
     
     display->visualizationLines = shared_ptr<DisplayLines>();
-    
-    // remap a couple of non-jan 1st dates until we figure out a better way to track these
-    //if(name == "20000101") name = "20000102";
-    //if(name == "20090101") name = "20090103";
-    //if(name == "20110101") name = "20110102";
-    //if(name == "20120101") name = "20120102";
-    //if(name == "20130101") name = "20130102";
-    
+
     clock_t start = clock();
     
-    if((name == "2017") && data->nodes.size() != 0) {
+    if((name == defaultYear) && data->nodes.size() != 0) {
         data->resetToDefault();
         LOG("Resetting data to default");
     }
