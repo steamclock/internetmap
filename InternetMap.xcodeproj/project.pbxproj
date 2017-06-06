@@ -13,13 +13,32 @@
 		1175AA0416AA091800B93031 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1175AA0316AA091800B93031 /* CoreText.framework */; };
 		1175AA3216AA117800B93031 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1175AA3116AA117800B93031 /* libxml2.dylib */; };
 		1175AA3416AA117F00B93031 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1175AA3316AA117F00B93031 /* ImageIO.framework */; };
-		1F524E2516DB3F42007244C5 /* 19990101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F524E2416DB3F42007244C5 /* 19990101.txt */; };
-		1F524E2916DB4CB4007244C5 /* 19960101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F524E2616DB4CB4007244C5 /* 19960101.txt */; };
-		1F524E2A16DB4CB4007244C5 /* 19970101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F524E2716DB4CB4007244C5 /* 19970101.txt */; };
-		1F524E2B16DB4CB4007244C5 /* 19980101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F524E2816DB4CB4007244C5 /* 19980101.txt */; };
-		1F524E3216DB6B0C007244C5 /* 20140101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F524E3016DB6B0C007244C5 /* 20140101.txt */; };
-		1F524E3316DB6B0C007244C5 /* 20150101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F524E3116DB6B0C007244C5 /* 20150101.txt */; };
-		1F524E3516DB6D98007244C5 /* 20200101.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1F524E3416DB6D98007244C5 /* 20200101.txt */; };
+		4E80ECEC1EE1D72300C5542F /* 2020.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E80ECEB1EE1D72300C5542F /* 2020.txt */; };
+		4E80ECF11EE1DB7600C5542F /* 2014.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E80ECED1EE1DB7600C5542F /* 2014.txt */; };
+		4E80ECF21EE1DB7600C5542F /* 2015.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E80ECEE1EE1DB7600C5542F /* 2015.txt */; };
+		4E80ECF31EE1DB7600C5542F /* 2016.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E80ECEF1EE1DB7600C5542F /* 2016.txt */; };
+		4E80ECF41EE1DB7600C5542F /* 2017.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E80ECF01EE1DB7600C5542F /* 2017.txt */; };
+		4E80ECF61EE1DC2C00C5542F /* unified.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E80ECF51EE1DC2C00C5542F /* unified.txt */; };
+		4E83360C1EDF929F0067B138 /* 1994.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8335F51EDF929F0067B138 /* 1994.txt */; };
+		4E83360D1EDF929F0067B138 /* 1995.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8335F61EDF929F0067B138 /* 1995.txt */; };
+		4E83360E1EDF929F0067B138 /* 1996.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8335F71EDF929F0067B138 /* 1996.txt */; };
+		4E83360F1EDF929F0067B138 /* 1997.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8335F81EDF929F0067B138 /* 1997.txt */; };
+		4E8336101EDF929F0067B138 /* 1998.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8335F91EDF929F0067B138 /* 1998.txt */; };
+		4E8336111EDF929F0067B138 /* 1999.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8335FA1EDF929F0067B138 /* 1999.txt */; };
+		4E8336121EDF929F0067B138 /* 2000.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8335FB1EDF929F0067B138 /* 2000.txt */; };
+		4E8336131EDF929F0067B138 /* 2001.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8335FC1EDF929F0067B138 /* 2001.txt */; };
+		4E8336141EDF929F0067B138 /* 2002.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8335FD1EDF929F0067B138 /* 2002.txt */; };
+		4E8336151EDF929F0067B138 /* 2003.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8335FE1EDF929F0067B138 /* 2003.txt */; };
+		4E8336161EDF929F0067B138 /* 2004.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8335FF1EDF929F0067B138 /* 2004.txt */; };
+		4E8336171EDF929F0067B138 /* 2005.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8336001EDF929F0067B138 /* 2005.txt */; };
+		4E8336181EDF929F0067B138 /* 2006.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8336011EDF929F0067B138 /* 2006.txt */; };
+		4E8336191EDF929F0067B138 /* 2007.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8336021EDF929F0067B138 /* 2007.txt */; };
+		4E83361A1EDF929F0067B138 /* 2008.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8336031EDF929F0067B138 /* 2008.txt */; };
+		4E83361B1EDF929F0067B138 /* 2009.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8336041EDF929F0067B138 /* 2009.txt */; };
+		4E83361C1EDF929F0067B138 /* 2010.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8336051EDF929F0067B138 /* 2010.txt */; };
+		4E83361D1EDF929F0067B138 /* 2011.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8336061EDF929F0067B138 /* 2011.txt */; };
+		4E83361E1EDF929F0067B138 /* 2012.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8336071EDF929F0067B138 /* 2012.txt */; };
+		4E83361F1EDF929F0067B138 /* 2013.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8336081EDF929F0067B138 /* 2013.txt */; };
 		7D23CB571DF73C7900D82CC2 /* LaunchScreen~iphone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D23CB561DF73C7900D82CC2 /* LaunchScreen~iphone.storyboard */; };
 		7D23CB591DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D23CB581DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard */; };
 		7D5284871DDA7A6800E42C5F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5284861DDA7A6800E42C5F /* QuartzCore.framework */; };
@@ -174,21 +193,6 @@
 		A686EB1616B63290009B070E /* node.vsh in Resources */ = {isa = PBXBuildFile; fileRef = A686EAA316B62BDD009B070E /* node.vsh */; };
 		A686EB1716B63290009B070E /* selectedNode.fsh in Resources */ = {isa = PBXBuildFile; fileRef = A686EAA416B62BDD009B070E /* selectedNode.fsh */; };
 		A686EB2216B89601009B070E /* nodeBlend.vsh in Resources */ = {isa = PBXBuildFile; fileRef = A686EB1F16B895F3009B070E /* nodeBlend.vsh */; };
-		A6E1D5B416B9DA2A00D8B26F /* 20000102.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5A516B9DA2A00D8B26F /* 20000102.txt */; };
-		A6E1D5B516B9DA2A00D8B26F /* 20010101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5A616B9DA2A00D8B26F /* 20010101.txt */; };
-		A6E1D5B616B9DA2A00D8B26F /* 20020101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5A716B9DA2A00D8B26F /* 20020101.txt */; };
-		A6E1D5B716B9DA2A00D8B26F /* 20030101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5A816B9DA2A00D8B26F /* 20030101.txt */; };
-		A6E1D5B816B9DA2A00D8B26F /* 20040101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5A916B9DA2A00D8B26F /* 20040101.txt */; };
-		A6E1D5B916B9DA2A00D8B26F /* 20050101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5AA16B9DA2A00D8B26F /* 20050101.txt */; };
-		A6E1D5BA16B9DA2A00D8B26F /* 20060101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5AB16B9DA2A00D8B26F /* 20060101.txt */; };
-		A6E1D5BB16B9DA2A00D8B26F /* 20070101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5AC16B9DA2A00D8B26F /* 20070101.txt */; };
-		A6E1D5BC16B9DA2A00D8B26F /* 20080101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5AD16B9DA2A00D8B26F /* 20080101.txt */; };
-		A6E1D5BD16B9DA2A00D8B26F /* 20080102.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5AE16B9DA2A00D8B26F /* 20080102.txt */; };
-		A6E1D5BE16B9DA2A00D8B26F /* 20090103.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5AF16B9DA2A00D8B26F /* 20090103.txt */; };
-		A6E1D5BF16B9DA2A00D8B26F /* 20100101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5B016B9DA2A00D8B26F /* 20100101.txt */; };
-		A6E1D5C016B9DA2A00D8B26F /* 20110102.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5B116B9DA2A00D8B26F /* 20110102.txt */; };
-		A6E1D5C116B9DA2A00D8B26F /* 20120102.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5B216B9DA2A00D8B26F /* 20120102.txt */; };
-		A6E1D5C216B9DA2A00D8B26F /* 20130102.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6E1D5B316B9DA2A00D8B26F /* 20130102.txt */; };
 		A6E1D5C516B9EC7100D8B26F /* ExpandedSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = A6E1D5C416B9EC7100D8B26F /* ExpandedSlider.m */; };
 		A6E1D5CC16B9EFFB00D8B26F /* TypeVisualization.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6E1D5CA16B9EFFB00D8B26F /* TypeVisualization.cpp */; };
 		A6E1D5D416BAEFEA00D8B26F /* GlobeVisualization.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6E1D5D216BAEFEA00D8B26F /* GlobeVisualization.cpp */; };
@@ -197,9 +201,6 @@
 		A6F3F5671640F1FB0070E6AE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5661640F1FB0070E6AE /* CoreGraphics.framework */; };
 		A6F3F5691640F1FB0070E6AE /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5681640F1FB0070E6AE /* GLKit.framework */; };
 		A6F3F56B1640F1FB0070E6AE /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F56A1640F1FB0070E6AE /* OpenGLES.framework */; };
-		A6FC709016D5A93C004FB989 /* unified.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6FC708F16D5A93C004FB989 /* unified.txt */; };
-		A6FC709316DBF2B2004FB989 /* 19940101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6FC709116DBF2B2004FB989 /* 19940101.txt */; };
-		A6FC709416DBF2B2004FB989 /* 19950101.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6FC709216DBF2B2004FB989 /* 19950101.txt */; };
 		A6FC709B16DC25BF004FB989 /* screen1-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = A6FC709516DC25BF004FB989 /* screen1-ipad.png */; };
 		A6FC709C16DC25BF004FB989 /* screen1-ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A6FC709616DC25BF004FB989 /* screen1-ipad@2x.png */; };
 		A6FC709D16DC25BF004FB989 /* screen2-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = A6FC709716DC25BF004FB989 /* screen2-ipad.png */; };
@@ -238,13 +239,32 @@
 		1175AA0316AA091800B93031 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		1175AA3116AA117800B93031 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		1175AA3316AA117F00B93031 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
-		1F524E2416DB3F42007244C5 /* 19990101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 19990101.txt; path = Common/data/19990101.txt; sourceTree = "<group>"; };
-		1F524E2616DB4CB4007244C5 /* 19960101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 19960101.txt; path = Common/data/19960101.txt; sourceTree = "<group>"; };
-		1F524E2716DB4CB4007244C5 /* 19970101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 19970101.txt; path = Common/data/19970101.txt; sourceTree = "<group>"; };
-		1F524E2816DB4CB4007244C5 /* 19980101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 19980101.txt; path = Common/data/19980101.txt; sourceTree = "<group>"; };
-		1F524E3016DB6B0C007244C5 /* 20140101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20140101.txt; path = Common/data/20140101.txt; sourceTree = "<group>"; };
-		1F524E3116DB6B0C007244C5 /* 20150101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20150101.txt; path = Common/data/20150101.txt; sourceTree = "<group>"; };
-		1F524E3416DB6D98007244C5 /* 20200101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20200101.txt; path = Common/data/20200101.txt; sourceTree = "<group>"; };
+		4E80ECEB1EE1D72300C5542F /* 2020.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2020.txt; path = Common/Data/2020.txt; sourceTree = "<group>"; };
+		4E80ECED1EE1DB7600C5542F /* 2014.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2014.txt; path = Common/Data/2014.txt; sourceTree = "<group>"; };
+		4E80ECEE1EE1DB7600C5542F /* 2015.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2015.txt; path = Common/Data/2015.txt; sourceTree = "<group>"; };
+		4E80ECEF1EE1DB7600C5542F /* 2016.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2016.txt; path = Common/Data/2016.txt; sourceTree = "<group>"; };
+		4E80ECF01EE1DB7600C5542F /* 2017.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2017.txt; path = Common/Data/2017.txt; sourceTree = "<group>"; };
+		4E80ECF51EE1DC2C00C5542F /* unified.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = unified.txt; path = Common/Data/unified.txt; sourceTree = "<group>"; };
+		4E8335F51EDF929F0067B138 /* 1994.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 1994.txt; path = Common/Data/1994.txt; sourceTree = "<group>"; };
+		4E8335F61EDF929F0067B138 /* 1995.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 1995.txt; path = Common/Data/1995.txt; sourceTree = "<group>"; };
+		4E8335F71EDF929F0067B138 /* 1996.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 1996.txt; path = Common/Data/1996.txt; sourceTree = "<group>"; };
+		4E8335F81EDF929F0067B138 /* 1997.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 1997.txt; path = Common/Data/1997.txt; sourceTree = "<group>"; };
+		4E8335F91EDF929F0067B138 /* 1998.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 1998.txt; path = Common/Data/1998.txt; sourceTree = "<group>"; };
+		4E8335FA1EDF929F0067B138 /* 1999.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 1999.txt; path = Common/Data/1999.txt; sourceTree = "<group>"; };
+		4E8335FB1EDF929F0067B138 /* 2000.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2000.txt; path = Common/Data/2000.txt; sourceTree = "<group>"; };
+		4E8335FC1EDF929F0067B138 /* 2001.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2001.txt; path = Common/Data/2001.txt; sourceTree = "<group>"; };
+		4E8335FD1EDF929F0067B138 /* 2002.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2002.txt; path = Common/Data/2002.txt; sourceTree = "<group>"; };
+		4E8335FE1EDF929F0067B138 /* 2003.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2003.txt; path = Common/Data/2003.txt; sourceTree = "<group>"; };
+		4E8335FF1EDF929F0067B138 /* 2004.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2004.txt; path = Common/Data/2004.txt; sourceTree = "<group>"; };
+		4E8336001EDF929F0067B138 /* 2005.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2005.txt; path = Common/Data/2005.txt; sourceTree = "<group>"; };
+		4E8336011EDF929F0067B138 /* 2006.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2006.txt; path = Common/Data/2006.txt; sourceTree = "<group>"; };
+		4E8336021EDF929F0067B138 /* 2007.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2007.txt; path = Common/Data/2007.txt; sourceTree = "<group>"; };
+		4E8336031EDF929F0067B138 /* 2008.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2008.txt; path = Common/Data/2008.txt; sourceTree = "<group>"; };
+		4E8336041EDF929F0067B138 /* 2009.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2009.txt; path = Common/Data/2009.txt; sourceTree = "<group>"; };
+		4E8336051EDF929F0067B138 /* 2010.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2010.txt; path = Common/Data/2010.txt; sourceTree = "<group>"; };
+		4E8336061EDF929F0067B138 /* 2011.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2011.txt; path = Common/Data/2011.txt; sourceTree = "<group>"; };
+		4E8336071EDF929F0067B138 /* 2012.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2012.txt; path = Common/Data/2012.txt; sourceTree = "<group>"; };
+		4E8336081EDF929F0067B138 /* 2013.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2013.txt; path = Common/Data/2013.txt; sourceTree = "<group>"; };
 		7D23CB561DF73C7900D82CC2 /* LaunchScreen~iphone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "LaunchScreen~iphone.storyboard"; path = "iOS/LaunchScreen~iphone.storyboard"; sourceTree = SOURCE_ROOT; };
 		7D23CB581DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "LaunchScreen~ipad.storyboard"; path = "iOS/LaunchScreen~ipad.storyboard"; sourceTree = SOURCE_ROOT; };
 		7D5284861DDA7A6800E42C5F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -481,21 +501,6 @@
 		A686EAF016B62D40009B070E /* WETouchableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WETouchableView.h; path = "External Code/WEPopover/Classes/Popover/WETouchableView.h"; sourceTree = SOURCE_ROOT; };
 		A686EAF116B62D40009B070E /* WETouchableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = WETouchableView.m; path = "External Code/WEPopover/Classes/Popover/WETouchableView.m"; sourceTree = SOURCE_ROOT; };
 		A686EB1F16B895F3009B070E /* nodeBlend.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = nodeBlend.vsh; sourceTree = "<group>"; };
-		A6E1D5A516B9DA2A00D8B26F /* 20000102.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20000102.txt; path = Common/Data/20000102.txt; sourceTree = "<group>"; };
-		A6E1D5A616B9DA2A00D8B26F /* 20010101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20010101.txt; path = Common/Data/20010101.txt; sourceTree = "<group>"; };
-		A6E1D5A716B9DA2A00D8B26F /* 20020101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20020101.txt; path = Common/Data/20020101.txt; sourceTree = "<group>"; };
-		A6E1D5A816B9DA2A00D8B26F /* 20030101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20030101.txt; path = Common/Data/20030101.txt; sourceTree = "<group>"; };
-		A6E1D5A916B9DA2A00D8B26F /* 20040101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20040101.txt; path = Common/Data/20040101.txt; sourceTree = "<group>"; };
-		A6E1D5AA16B9DA2A00D8B26F /* 20050101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20050101.txt; path = Common/Data/20050101.txt; sourceTree = "<group>"; };
-		A6E1D5AB16B9DA2A00D8B26F /* 20060101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20060101.txt; path = Common/Data/20060101.txt; sourceTree = "<group>"; };
-		A6E1D5AC16B9DA2A00D8B26F /* 20070101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20070101.txt; path = Common/Data/20070101.txt; sourceTree = "<group>"; };
-		A6E1D5AD16B9DA2A00D8B26F /* 20080101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20080101.txt; path = Common/Data/20080101.txt; sourceTree = "<group>"; };
-		A6E1D5AE16B9DA2A00D8B26F /* 20080102.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20080102.txt; path = Common/Data/20080102.txt; sourceTree = "<group>"; };
-		A6E1D5AF16B9DA2A00D8B26F /* 20090103.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20090103.txt; path = Common/Data/20090103.txt; sourceTree = "<group>"; };
-		A6E1D5B016B9DA2A00D8B26F /* 20100101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20100101.txt; path = Common/Data/20100101.txt; sourceTree = "<group>"; };
-		A6E1D5B116B9DA2A00D8B26F /* 20110102.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20110102.txt; path = Common/Data/20110102.txt; sourceTree = "<group>"; };
-		A6E1D5B216B9DA2A00D8B26F /* 20120102.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20120102.txt; path = Common/Data/20120102.txt; sourceTree = "<group>"; };
-		A6E1D5B316B9DA2A00D8B26F /* 20130102.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 20130102.txt; path = Common/Data/20130102.txt; sourceTree = "<group>"; };
 		A6E1D5C316B9EC7100D8B26F /* ExpandedSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExpandedSlider.h; path = iOS/ExpandedSlider.h; sourceTree = SOURCE_ROOT; };
 		A6E1D5C416B9EC7100D8B26F /* ExpandedSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ExpandedSlider.m; path = iOS/ExpandedSlider.m; sourceTree = SOURCE_ROOT; };
 		A6E1D5CA16B9EFFB00D8B26F /* TypeVisualization.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TypeVisualization.cpp; path = Common/Code/TypeVisualization.cpp; sourceTree = SOURCE_ROOT; };
@@ -508,9 +513,6 @@
 		A6F3F5661640F1FB0070E6AE /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		A6F3F5681640F1FB0070E6AE /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		A6F3F56A1640F1FB0070E6AE /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
-		A6FC708F16D5A93C004FB989 /* unified.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = unified.txt; path = Common/Data/unified.txt; sourceTree = "<group>"; };
-		A6FC709116DBF2B2004FB989 /* 19940101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 19940101.txt; path = Common/Data/19940101.txt; sourceTree = "<group>"; };
-		A6FC709216DBF2B2004FB989 /* 19950101.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 19950101.txt; path = Common/Data/19950101.txt; sourceTree = "<group>"; };
 		A6FC709516DC25BF004FB989 /* screen1-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "screen1-ipad.png"; path = "iOS/Images/screen1-ipad.png"; sourceTree = SOURCE_ROOT; };
 		A6FC709616DC25BF004FB989 /* screen1-ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "screen1-ipad@2x.png"; path = "iOS/Images/screen1-ipad@2x.png"; sourceTree = SOURCE_ROOT; };
 		A6FC709716DC25BF004FB989 /* screen2-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "screen2-ipad.png"; path = "iOS/Images/screen2-ipad.png"; sourceTree = SOURCE_ROOT; };
@@ -766,35 +768,36 @@
 		A600AADA16A664E9003B1028 /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				A6FC708F16D5A93C004FB989 /* unified.txt */,
+				4E8335F51EDF929F0067B138 /* 1994.txt */,
+				4E8335F61EDF929F0067B138 /* 1995.txt */,
+				4E8335F71EDF929F0067B138 /* 1996.txt */,
+				4E8335F81EDF929F0067B138 /* 1997.txt */,
+				4E8335F91EDF929F0067B138 /* 1998.txt */,
+				4E8335FA1EDF929F0067B138 /* 1999.txt */,
+				4E8335FB1EDF929F0067B138 /* 2000.txt */,
+				4E8335FC1EDF929F0067B138 /* 2001.txt */,
+				4E8335FD1EDF929F0067B138 /* 2002.txt */,
+				4E8335FE1EDF929F0067B138 /* 2003.txt */,
+				4E8335FF1EDF929F0067B138 /* 2004.txt */,
+				4E8336001EDF929F0067B138 /* 2005.txt */,
+				4E8336011EDF929F0067B138 /* 2006.txt */,
+				4E8336021EDF929F0067B138 /* 2007.txt */,
+				4E8336031EDF929F0067B138 /* 2008.txt */,
+				4E8336041EDF929F0067B138 /* 2009.txt */,
+				4E8336051EDF929F0067B138 /* 2010.txt */,
+				4E8336061EDF929F0067B138 /* 2011.txt */,
+				4E8336071EDF929F0067B138 /* 2012.txt */,
+				4E8336081EDF929F0067B138 /* 2013.txt */,
+				4E80ECED1EE1DB7600C5542F /* 2014.txt */,
+				4E80ECEE1EE1DB7600C5542F /* 2015.txt */,
+				4E80ECEF1EE1DB7600C5542F /* 2016.txt */,
+				4E80ECF01EE1DB7600C5542F /* 2017.txt */,
+				4E80ECEB1EE1D72300C5542F /* 2020.txt */,
 				A6551EBD16CDB22900340590 /* credits.html */,
 				A686E9B916B62915009B070E /* history.json */,
 				A600AAD316A664DF003B1028 /* as2attr.txt */,
 				A600AAD416A664E0003B1028 /* asinfo.json */,
-				A6FC709116DBF2B2004FB989 /* 19940101.txt */,
-				A6FC709216DBF2B2004FB989 /* 19950101.txt */,
-				1F524E2616DB4CB4007244C5 /* 19960101.txt */,
-				1F524E2716DB4CB4007244C5 /* 19970101.txt */,
-				1F524E2816DB4CB4007244C5 /* 19980101.txt */,
-				1F524E2416DB3F42007244C5 /* 19990101.txt */,
-				A6E1D5A516B9DA2A00D8B26F /* 20000102.txt */,
-				A6E1D5A616B9DA2A00D8B26F /* 20010101.txt */,
-				A6E1D5A716B9DA2A00D8B26F /* 20020101.txt */,
-				A6E1D5A816B9DA2A00D8B26F /* 20030101.txt */,
-				A6E1D5A916B9DA2A00D8B26F /* 20040101.txt */,
-				A6E1D5AA16B9DA2A00D8B26F /* 20050101.txt */,
-				A6E1D5AB16B9DA2A00D8B26F /* 20060101.txt */,
-				A6E1D5AC16B9DA2A00D8B26F /* 20070101.txt */,
-				A6E1D5AD16B9DA2A00D8B26F /* 20080101.txt */,
-				A6E1D5AE16B9DA2A00D8B26F /* 20080102.txt */,
-				A6E1D5AF16B9DA2A00D8B26F /* 20090103.txt */,
-				A6E1D5B016B9DA2A00D8B26F /* 20100101.txt */,
-				A6E1D5B116B9DA2A00D8B26F /* 20110102.txt */,
-				A6E1D5B216B9DA2A00D8B26F /* 20120102.txt */,
-				A6E1D5B316B9DA2A00D8B26F /* 20130102.txt */,
-				1F524E3016DB6B0C007244C5 /* 20140101.txt */,
-				1F524E3116DB6B0C007244C5 /* 20150101.txt */,
-				1F524E3416DB6D98007244C5 /* 20200101.txt */,
+				4E80ECF51EE1DC2C00C5542F /* unified.txt */,
 			);
 			name = Data;
 			sourceTree = "<group>";
@@ -1295,7 +1298,7 @@
 				ORGANIZATIONNAME = Peer1;
 				TargetAttributes = {
 					A6F3F55D1640F1FB0070E6AE = {
-						DevelopmentTeam = GH868RP95T;
+						DevelopmentTeam = XUVW46PTJ7;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -1334,27 +1337,34 @@
 				A686EB1016B63282009B070E /* ARSMaquettePro-Light.otf in Resources */,
 				A686EB1116B63282009B070E /* ARSMaquettePro-Medium.otf in Resources */,
 				A686EB1216B63282009B070E /* ARSMaquettePro-Regular.otf in Resources */,
+				4E80ECF11EE1DB7600C5542F /* 2014.txt in Resources */,
 				A600AAD616A664E1003B1028 /* as2attr.txt in Resources */,
 				A600AAD716A664E1003B1028 /* asinfo.json in Resources */,
 				A686E9BA16B62915009B070E /* history.json in Resources */,
 				A686E9CF16B6299D009B070E /* InfoPlist.strings in Resources */,
+				4E8336121EDF929F0067B138 /* 2000.txt in Resources */,
 				A686EA0016B62A9D009B070E /* eye_selected.png in Resources */,
 				A686EA0116B62A9D009B070E /* eye_selected@2x.png in Resources */,
 				A686EA0216B62A9D009B070E /* eye.png in Resources */,
 				A686EA0316B62A9D009B070E /* eye@2x.png in Resources */,
+				4E83361F1EDF929F0067B138 /* 2013.txt in Resources */,
 				A686EA0416B62A9D009B070E /* peer1-logo.png in Resources */,
+				4E8336171EDF929F0067B138 /* 2005.txt in Resources */,
 				A686EA0516B62A9D009B070E /* peer1-logo@2x.png in Resources */,
 				A686EA0616B62A9D009B070E /* popoverArrowDownSimple.png in Resources */,
 				A686EA0716B62A9D009B070E /* popoverArrowDownSimple@2x.png in Resources */,
 				A686EA0816B62A9D009B070E /* popoverArrowLeftSimple.png in Resources */,
+				4E83361E1EDF929F0067B138 /* 2012.txt in Resources */,
 				A686EA0916B62A9D009B070E /* popoverArrowLeftSimple@2x.png in Resources */,
 				A686EA0A16B62A9D009B070E /* popoverArrowRightSimple.png in Resources */,
 				A686EA0B16B62A9D009B070E /* popoverArrowRightSimple@2x.png in Resources */,
 				A686EA0C16B62A9D009B070E /* popoverArrowUpSimple.png in Resources */,
 				A686EA0D16B62A9D009B070E /* popoverArrowUpSimple@2x.png in Resources */,
 				A686EA0E16B62A9D009B070E /* popoverBgSimple.png in Resources */,
+				4E83360E1EDF929F0067B138 /* 1996.txt in Resources */,
 				A686EA0F16B62A9D009B070E /* popoverBgSimple@2x.png in Resources */,
 				A686EA1016B62A9D009B070E /* popupArrow-timeline.png in Resources */,
+				4E80ECF61EE1DC2C00C5542F /* unified.txt in Resources */,
 				A686EA1116B62A9D009B070E /* popupArrow-timeline@2x.png in Resources */,
 				A686EA1216B62A9D009B070E /* search_selected.png in Resources */,
 				A686EA1316B62A9D009B070E /* search_selected@2x.png in Resources */,
@@ -1362,15 +1372,22 @@
 				A686EA1516B62A9D009B070E /* search@2x.png in Resources */,
 				A686EA1616B62A9D009B070E /* timeline-handle.png in Resources */,
 				A686EA1716B62A9D009B070E /* timeline-handle@2x.png in Resources */,
+				4E83361D1EDF929F0067B138 /* 2011.txt in Resources */,
 				A686EA1816B62A9D009B070E /* timeline-play.png in Resources */,
 				A686EA1916B62A9D009B070E /* timeline-play@2x.png in Resources */,
 				A686EA1A16B62A9D009B070E /* timeline-track.png in Resources */,
 				A686EA1B16B62A9D009B070E /* timeline-track@2x.png in Resources */,
 				A686EA1C16B62A9D009B070E /* traceroute-button.png in Resources */,
+				4E80ECF31EE1DB7600C5542F /* 2016.txt in Resources */,
 				A686EA1D16B62A9D009B070E /* traceroute-button@2x.png in Resources */,
+				4E80ECEC1EE1D72300C5542F /* 2020.txt in Resources */,
 				A686EA1E16B62A9D009B070E /* travelback_selected.png in Resources */,
+				4E83360C1EDF929F0067B138 /* 1994.txt in Resources */,
 				A686EA1F16B62A9D009B070E /* travelback_selected@2x.png in Resources */,
 				A686EA2016B62A9D009B070E /* travelback.png in Resources */,
+				4E8336141EDF929F0067B138 /* 2002.txt in Resources */,
+				4E8336101EDF929F0067B138 /* 1998.txt in Resources */,
+				4E83361B1EDF929F0067B138 /* 2009.txt in Resources */,
 				A686EA2116B62A9D009B070E /* travelback@2x.png in Resources */,
 				A686EA2216B62A9D009B070E /* x-icon.png in Resources */,
 				A686EA2316B62A9D009B070E /* x-icon@2x.png in Resources */,
@@ -1379,31 +1396,19 @@
 				A686EA2616B62A9D009B070E /* youarehere-icon-flag.png in Resources */,
 				A686EA2716B62A9D009B070E /* youarehere-icon-flag@2x.png in Resources */,
 				A686EA2816B62A9D009B070E /* youarehere-icon.png in Resources */,
+				4E8336161EDF929F0067B138 /* 2004.txt in Resources */,
 				A686EA2916B62A9D009B070E /* youarehere-icon@2x.png in Resources */,
 				A686EA2A16B62A9D009B070E /* youarehere.png in Resources */,
 				A686EA2B16B62A9D009B070E /* youarehere@2x.png in Resources */,
+				4E8336191EDF929F0067B138 /* 2007.txt in Resources */,
 				A686EA4E16B62B23009B070E /* ViewController_iPad.xib in Resources */,
 				A686EA4F16B62B23009B070E /* ViewController_iPhone.xib in Resources */,
-				A6E1D5B416B9DA2A00D8B26F /* 20000102.txt in Resources */,
-				A6E1D5B516B9DA2A00D8B26F /* 20010101.txt in Resources */,
-				A6E1D5B616B9DA2A00D8B26F /* 20020101.txt in Resources */,
-				A6E1D5B716B9DA2A00D8B26F /* 20030101.txt in Resources */,
-				A6E1D5B816B9DA2A00D8B26F /* 20040101.txt in Resources */,
-				A6E1D5B916B9DA2A00D8B26F /* 20050101.txt in Resources */,
-				A6E1D5BA16B9DA2A00D8B26F /* 20060101.txt in Resources */,
-				A6E1D5BB16B9DA2A00D8B26F /* 20070101.txt in Resources */,
-				A6E1D5BC16B9DA2A00D8B26F /* 20080101.txt in Resources */,
-				A6E1D5BD16B9DA2A00D8B26F /* 20080102.txt in Resources */,
-				A6E1D5BE16B9DA2A00D8B26F /* 20090103.txt in Resources */,
-				A6E1D5BF16B9DA2A00D8B26F /* 20100101.txt in Resources */,
-				A6E1D5C016B9DA2A00D8B26F /* 20110102.txt in Resources */,
-				A6E1D5C116B9DA2A00D8B26F /* 20120102.txt in Resources */,
-				A6E1D5C216B9DA2A00D8B26F /* 20130102.txt in Resources */,
 				D403BBDE16C1DF2F008AA000 /* LICENSE in Resources */,
 				D403BBE016C1DF2F008AA000 /* README in Resources */,
 				E4BEB53E16CAE8E500F236F5 /* info_selected.png in Resources */,
 				E4BEB53F16CAE8E500F236F5 /* info_selected@2x.png in Resources */,
 				E4BEB54016CAE8E500F236F5 /* info.png in Resources */,
+				4E8336131EDF929F0067B138 /* 2001.txt in Resources */,
 				E4BEB54116CAE8E500F236F5 /* info@2x.png in Resources */,
 				A6551E6916CAC1AF00340590 /* FirstUseViewController.xib in Resources */,
 				A6551E6F16CAE31100340590 /* ipad-bg.png in Resources */,
@@ -1411,15 +1416,20 @@
 				A6551E7116CAE31100340590 /* iphone-bg.png in Resources */,
 				7D23CB591DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard in Resources */,
 				A6551E7216CAE31100340590 /* iphone-bg@2x.png in Resources */,
+				4E80ECF41EE1DB7600C5542F /* 2017.txt in Resources */,
 				A6551E7716CAE32100340590 /* next-button.png in Resources */,
 				A6551E7816CAE32100340590 /* next-button@2x.png in Resources */,
+				4E8336111EDF929F0067B138 /* 1999.txt in Resources */,
 				A6551E8716CAE32D00340590 /* screen1-highlight.png in Resources */,
 				A6551E8816CAE32D00340590 /* screen1-highlight@2x.png in Resources */,
 				A6551E8916CAE32D00340590 /* screen1.png in Resources */,
 				A6551E8A16CAE32D00340590 /* screen1@2x.png in Resources */,
+				4E83361C1EDF929F0067B138 /* 2010.txt in Resources */,
 				A6551E8B16CAE32D00340590 /* screen2-highlight.png in Resources */,
 				A6551E8C16CAE32D00340590 /* screen2-highlight@2x.png in Resources */,
 				A6551E8D16CAE32D00340590 /* screen2.png in Resources */,
+				4E8336181EDF929F0067B138 /* 2006.txt in Resources */,
+				4E80ECF21EE1DB7600C5542F /* 2015.txt in Resources */,
 				A6551E8E16CAE32D00340590 /* screen2@2x.png in Resources */,
 				A6551E8F16CAE32D00340590 /* screen3-highlight.png in Resources */,
 				A6551E9016CAE32D00340590 /* screen3-highlight@2x.png in Resources */,
@@ -1427,32 +1437,26 @@
 				A6551E9216CAE32D00340590 /* screen3@2x.png in Resources */,
 				A6551E9516CAF38800340590 /* finish.png in Resources */,
 				A6551E9616CAF38800340590 /* finish@2x.png in Resources */,
+				4E83360F1EDF929F0067B138 /* 1997.txt in Resources */,
 				A6551E9B16CAFC7000340590 /* ContactFormViewController.xib in Resources */,
 				A6551E9E16CB07EE00340590 /* contact-sales-field.png in Resources */,
 				A6551E9F16CB07EE00340590 /* contact-sales-field@2x.png in Resources */,
 				A6551EA216CC5B8500340590 /* contact-sales-field-highlighted.png in Resources */,
+				4E83361A1EDF929F0067B138 /* 2008.txt in Resources */,
 				A6551EA316CC5B8500340590 /* contact-sales-field-highlighted@2x.png in Resources */,
 				A6551EBE16CDB22900340590 /* credits.html in Resources */,
 				A64C750F16D2E10900CBCC0D /* Default-568h@2x.png in Resources */,
+				4E8336151EDF929F0067B138 /* 2003.txt in Resources */,
 				A64C751016D2E10900CBCC0D /* Default-Landscape@2x.png in Resources */,
 				A64C751116D2E10900CBCC0D /* Default-Landscape.png in Resources */,
 				A64C751216D2E10900CBCC0D /* Default.png in Resources */,
 				A64C751316D2E10900CBCC0D /* Default@2x.png in Resources */,
+				4E83360D1EDF929F0067B138 /* 1995.txt in Resources */,
 				84E0672316D5AC9A00751B7B /* Icon-72.png in Resources */,
 				84E0672516D5ACA300751B7B /* Icon.png in Resources */,
 				84E0672716D5ADA200751B7B /* Icon@2x.png in Resources */,
 				84E0672B16D5ADCA00751B7B /* Icon-72@2x.png in Resources */,
-				A6FC709016D5A93C004FB989 /* unified.txt in Resources */,
-				1F524E2516DB3F42007244C5 /* 19990101.txt in Resources */,
-				1F524E2916DB4CB4007244C5 /* 19960101.txt in Resources */,
-				1F524E2A16DB4CB4007244C5 /* 19970101.txt in Resources */,
-				1F524E2B16DB4CB4007244C5 /* 19980101.txt in Resources */,
 				7D23CB571DF73C7900D82CC2 /* LaunchScreen~iphone.storyboard in Resources */,
-				1F524E3216DB6B0C007244C5 /* 20140101.txt in Resources */,
-				1F524E3316DB6B0C007244C5 /* 20150101.txt in Resources */,
-				1F524E3516DB6D98007244C5 /* 20200101.txt in Resources */,
-				A6FC709316DBF2B2004FB989 /* 19940101.txt in Resources */,
-				A6FC709416DBF2B2004FB989 /* 19950101.txt in Resources */,
 				A6FC709B16DC25BF004FB989 /* screen1-ipad.png in Resources */,
 				A6FC709C16DC25BF004FB989 /* screen1-ipad@2x.png in Resources */,
 				A6FC709D16DC25BF004FB989 /* screen2-ipad.png in Resources */,
@@ -1645,7 +1649,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = GH868RP95T;
+				DEVELOPMENT_TEAM = XUVW46PTJ7;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iOS/InternetMap-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "";
@@ -1721,7 +1725,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = GH868RP95T;
+				DEVELOPMENT_TEAM = XUVW46PTJ7;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iOS/InternetMap-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "";
@@ -1842,7 +1846,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = GH868RP95T;
+				DEVELOPMENT_TEAM = XUVW46PTJ7;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iOS/InternetMap-Prefix.pch";
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
@@ -1861,7 +1865,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = GH868RP95T;
+				DEVELOPMENT_TEAM = XUVW46PTJ7;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iOS/InternetMap-Prefix.pch";
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;

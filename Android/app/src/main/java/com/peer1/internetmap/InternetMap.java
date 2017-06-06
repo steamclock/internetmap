@@ -539,7 +539,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
 
                 timelineBar.setMax(mTimelineYears.size() - 1);
                 Collections.sort(mTimelineYears);
-                m2013Index = mTimelineYears.indexOf("2013");
+                m2013Index = mTimelineYears.indexOf("2017");
                 Assert.assertTrue("Can't find 2013 in timeline data", m2013Index != -1);
             }
 

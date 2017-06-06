@@ -207,7 +207,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.timelineSlider.value = self.sortedYears.count - 1;
 
     [self.sortedYears enumerateObjectsUsingBlock:^(NSString* year, NSUInteger idx, BOOL *stop) {
-        if([year isEqualToString:@"2013"]) {
+        if([year isEqualToString:@"2017"]) {
             self.timelineSlider.value = idx;
         }
     }];
@@ -661,7 +661,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.timelineSlider.value = self.sortedYears.count - 1;
     
     [self.sortedYears enumerateObjectsUsingBlock:^(NSString* year, NSUInteger idx, BOOL *stop) {
-        if([year isEqualToString:@"2013"]) {
+        if([year isEqualToString:@"2017"]) {
             self.timelineSlider.value = idx;
         }
     }];
@@ -784,7 +784,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     __weak ViewController* weakSelf = self;
     self.afterViewReset = ^ {
         int year = [weakSelf.sortedYears[(int)weakSelf.timelineSlider.value] intValue];
-        [weakSelf.controller setTimelinePoint:[NSString stringWithFormat:@"%d0101", year]];
+        [weakSelf.controller setTimelinePoint:[NSString stringWithFormat:@"%d", year]];
         if(popoverDismiss) {
             [weakSelf.timelinePopover dismissPopoverAnimated:NO];
         }

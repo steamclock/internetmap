@@ -71,37 +71,40 @@ MapController::MapController() :
 
     LOG("parse asinfo.json: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
     
-/*
-    setTimelinePoint("19940101");
-    setTimelinePoint("19950101");
-    setTimelinePoint("19960101");
-    setTimelinePoint("19970101");
-    setTimelinePoint("19980101");
-    setTimelinePoint("19990101");
-    setTimelinePoint("20000101");
-    setTimelinePoint("20010101");
-    setTimelinePoint("20020101");
-    setTimelinePoint("20030101");
-    setTimelinePoint("20040101");
-    setTimelinePoint("20050101");
-    setTimelinePoint("20060101");
-    setTimelinePoint("20070101");
-    setTimelinePoint("20080101");
-    setTimelinePoint("20090101");
-    setTimelinePoint("20100101");
-    setTimelinePoint("20110101");
-    setTimelinePoint("20120101");
-    setTimelinePoint("20140101");
-    setTimelinePoint("20150101");
-    setTimelinePoint("20200101");
+    
+    setTimelinePoint("1994");
+    setTimelinePoint("1995");
+    setTimelinePoint("1996");
+    setTimelinePoint("1997");
+    setTimelinePoint("1998");
+    setTimelinePoint("1999");
+    setTimelinePoint("2000");
+    setTimelinePoint("2001");
+    setTimelinePoint("2002");
+    setTimelinePoint("2003");
+    setTimelinePoint("2004");
+    setTimelinePoint("2005");
+    setTimelinePoint("2006");
+    setTimelinePoint("2007");
+    setTimelinePoint("2008");
+    setTimelinePoint("2009");
+    setTimelinePoint("2010");
+    setTimelinePoint("2011");
+    setTimelinePoint("2012");
+    setTimelinePoint("2013");
+    setTimelinePoint("2014");
+    setTimelinePoint("2015");
+    setTimelinePoint("2016");
+    setTimelinePoint("2020");
 
-    setTimelinePoint("20130101");
+    setTimelinePoint("2017");
 
     data->dumpUnified();
- */
+    
+ 
 
 #else
-    lastTimelinePoint = "20130101";
+    lastTimelinePoint = "2017";
     clock_t start = clock();
     std::string unifiedText;
     loadTextResource(&unifiedText, "unified", "txt");
@@ -425,7 +428,7 @@ Vector2 MapController::getCoordinatesForNodeAtIndex(int index) {
 }
 
 void MapController::setTimelinePoint(const std::string& origName, bool blend) {
-    std::string name = (origName == "") ? "20130101" : origName;
+    std::string name = (origName == "") ? "2017" : origName;
     
     if(name == lastTimelinePoint) {
         return;
@@ -436,22 +439,25 @@ void MapController::setTimelinePoint(const std::string& origName, bool blend) {
     display->visualizationLines = shared_ptr<DisplayLines>();
     
     // remap a couple of non-jan 1st dates until we figure out a better way to track these
-    if(name == "20000101") name = "20000102";
-    if(name == "20090101") name = "20090103";
-    if(name == "20110101") name = "20110102";
-    if(name == "20120101") name = "20120102";
-    if(name == "20130101") name = "20130102";
+    //if(name == "20000101") name = "20000102";
+    //if(name == "20090101") name = "20090103";
+    //if(name == "20110101") name = "20110102";
+    //if(name == "20120101") name = "20120102";
+    //if(name == "20130101") name = "20130102";
     
     clock_t start = clock();
     
-    if((name == "20130102") && data->nodes.size() != 0) {
+    if((name == "2017") && data->nodes.size() != 0) {
         data->resetToDefault();
+        LOG("Resetting data to default");
     }
     else {
         std::string dataText;
         loadTextResource(&dataText, name, "txt");
         data->loadFromString(dataText);
+        //LOG("Loading data for %s", name.c_str());
     }
+
     LOG("reloaded for timeline point: %.2fms", (float(clock() - start) / CLOCKS_PER_SEC) * 1000);
     start = clock();
     updateDisplay(blend);
