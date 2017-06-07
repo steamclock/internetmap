@@ -39,6 +39,9 @@
 		4E83361D1EDF929F0067B138 /* 2011.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8336061EDF929F0067B138 /* 2011.txt */; };
 		4E83361E1EDF929F0067B138 /* 2012.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8336071EDF929F0067B138 /* 2012.txt */; };
 		4E83361F1EDF929F0067B138 /* 2013.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8336081EDF929F0067B138 /* 2013.txt */; };
+		4E9A00011EE8A12E00FC19E4 /* peer1-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E9AFFFE1EE8A12E00FC19E4 /* peer1-logo.png */; };
+		4E9A00021EE8A12E00FC19E4 /* peer1-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E9AFFFF1EE8A12E00FC19E4 /* peer1-logo@2x.png */; };
+		4E9A00031EE8A12E00FC19E4 /* peer1-logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E9A00001EE8A12E00FC19E4 /* peer1-logo@3x.png */; };
 		4EB7E70D1EE7225C00A062A8 /* globalSettings.json in Resources */ = {isa = PBXBuildFile; fileRef = 4EB7E70C1EE7225C00A062A8 /* globalSettings.json */; };
 		7D23CB571DF73C7900D82CC2 /* LaunchScreen~iphone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D23CB561DF73C7900D82CC2 /* LaunchScreen~iphone.storyboard */; };
 		7D23CB591DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D23CB581DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard */; };
@@ -112,8 +115,6 @@
 		A686EA0116B62A9D009B070E /* eye_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9D516B62A9D009B070E /* eye_selected@2x.png */; };
 		A686EA0216B62A9D009B070E /* eye.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9D616B62A9D009B070E /* eye.png */; };
 		A686EA0316B62A9D009B070E /* eye@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9D716B62A9D009B070E /* eye@2x.png */; };
-		A686EA0416B62A9D009B070E /* peer1-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9D816B62A9D009B070E /* peer1-logo.png */; };
-		A686EA0516B62A9D009B070E /* peer1-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9D916B62A9D009B070E /* peer1-logo@2x.png */; };
 		A686EA0616B62A9D009B070E /* popoverArrowDownSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9DA16B62A9D009B070E /* popoverArrowDownSimple.png */; };
 		A686EA0716B62A9D009B070E /* popoverArrowDownSimple@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9DB16B62A9D009B070E /* popoverArrowDownSimple@2x.png */; };
 		A686EA0816B62A9D009B070E /* popoverArrowLeftSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9DC16B62A9D009B070E /* popoverArrowLeftSimple.png */; };
@@ -266,6 +267,9 @@
 		4E8336061EDF929F0067B138 /* 2011.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2011.txt; path = Common/Data/2011.txt; sourceTree = "<group>"; };
 		4E8336071EDF929F0067B138 /* 2012.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2012.txt; path = Common/Data/2012.txt; sourceTree = "<group>"; };
 		4E8336081EDF929F0067B138 /* 2013.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2013.txt; path = Common/Data/2013.txt; sourceTree = "<group>"; };
+		4E9A00001EE8A12E00FC19E4 /* peer1-logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "peer1-logo@3x.png"; path = "../../internetmap-ios/internetmap/iOS/Images/peer1-logo@3x.png"; sourceTree = "<group>"; };
+		4E9AFFFE1EE8A12E00FC19E4 /* peer1-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "peer1-logo.png"; path = "../../internetmap-ios/internetmap/iOS/Images/peer1-logo.png"; sourceTree = "<group>"; };
+		4E9AFFFF1EE8A12E00FC19E4 /* peer1-logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "peer1-logo@2x.png"; path = "../../internetmap-ios/internetmap/iOS/Images/peer1-logo@2x.png"; sourceTree = "<group>"; };
 		4EB7E70C1EE7225C00A062A8 /* globalSettings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = globalSettings.json; path = Common/Data/globalSettings.json; sourceTree = "<group>"; };
 		7D23CB561DF73C7900D82CC2 /* LaunchScreen~iphone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "LaunchScreen~iphone.storyboard"; path = "iOS/LaunchScreen~iphone.storyboard"; sourceTree = SOURCE_ROOT; };
 		7D23CB581DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "LaunchScreen~ipad.storyboard"; path = "iOS/LaunchScreen~ipad.storyboard"; sourceTree = SOURCE_ROOT; };
@@ -333,8 +337,6 @@
 		A686E9D516B62A9D009B070E /* eye_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "eye_selected@2x.png"; path = "iOS/Images/eye_selected@2x.png"; sourceTree = SOURCE_ROOT; };
 		A686E9D616B62A9D009B070E /* eye.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = eye.png; path = iOS/Images/eye.png; sourceTree = SOURCE_ROOT; };
 		A686E9D716B62A9D009B070E /* eye@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "eye@2x.png"; path = "iOS/Images/eye@2x.png"; sourceTree = SOURCE_ROOT; };
-		A686E9D816B62A9D009B070E /* peer1-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "peer1-logo.png"; path = "iOS/Images/peer1-logo.png"; sourceTree = SOURCE_ROOT; };
-		A686E9D916B62A9D009B070E /* peer1-logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "peer1-logo@2x.png"; path = "iOS/Images/peer1-logo@2x.png"; sourceTree = SOURCE_ROOT; };
 		A686E9DA16B62A9D009B070E /* popoverArrowDownSimple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = popoverArrowDownSimple.png; path = iOS/Images/popoverArrowDownSimple.png; sourceTree = SOURCE_ROOT; };
 		A686E9DB16B62A9D009B070E /* popoverArrowDownSimple@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "popoverArrowDownSimple@2x.png"; path = "iOS/Images/popoverArrowDownSimple@2x.png"; sourceTree = SOURCE_ROOT; };
 		A686E9DC16B62A9D009B070E /* popoverArrowLeftSimple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = popoverArrowLeftSimple.png; path = iOS/Images/popoverArrowLeftSimple.png; sourceTree = SOURCE_ROOT; };
@@ -1184,6 +1186,9 @@
 		D4CEA32016694E53004B8E8A /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				4E9AFFFE1EE8A12E00FC19E4 /* peer1-logo.png */,
+				4E9AFFFF1EE8A12E00FC19E4 /* peer1-logo@2x.png */,
+				4E9A00001EE8A12E00FC19E4 /* peer1-logo@3x.png */,
 				E4BEB53A16CAE8E500F236F5 /* info_selected.png */,
 				E4BEB53B16CAE8E500F236F5 /* info_selected@2x.png */,
 				E4BEB53C16CAE8E500F236F5 /* info.png */,
@@ -1197,8 +1202,6 @@
 				A686E9D516B62A9D009B070E /* eye_selected@2x.png */,
 				A686E9D616B62A9D009B070E /* eye.png */,
 				A686E9D716B62A9D009B070E /* eye@2x.png */,
-				A686E9D816B62A9D009B070E /* peer1-logo.png */,
-				A686E9D916B62A9D009B070E /* peer1-logo@2x.png */,
 				A686E9DA16B62A9D009B070E /* popoverArrowDownSimple.png */,
 				A686E9DB16B62A9D009B070E /* popoverArrowDownSimple@2x.png */,
 				A686E9DC16B62A9D009B070E /* popoverArrowLeftSimple.png */,
@@ -1330,6 +1333,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4E9A00031EE8A12E00FC19E4 /* peer1-logo@3x.png in Resources */,
 				A686EB2216B89601009B070E /* nodeBlend.vsh in Resources */,
 				A686EB1316B63290009B070E /* line.fsh in Resources */,
 				A686EB1416B63290009B070E /* line.vsh in Resources */,
@@ -1351,9 +1355,7 @@
 				A686EA0216B62A9D009B070E /* eye.png in Resources */,
 				A686EA0316B62A9D009B070E /* eye@2x.png in Resources */,
 				4E83361F1EDF929F0067B138 /* 2013.txt in Resources */,
-				A686EA0416B62A9D009B070E /* peer1-logo.png in Resources */,
 				4E8336171EDF929F0067B138 /* 2005.txt in Resources */,
-				A686EA0516B62A9D009B070E /* peer1-logo@2x.png in Resources */,
 				A686EA0616B62A9D009B070E /* popoverArrowDownSimple.png in Resources */,
 				A686EA0716B62A9D009B070E /* popoverArrowDownSimple@2x.png in Resources */,
 				A686EA0816B62A9D009B070E /* popoverArrowLeftSimple.png in Resources */,
@@ -1388,6 +1390,7 @@
 				4E83360C1EDF929F0067B138 /* 1994.txt in Resources */,
 				A686EA1F16B62A9D009B070E /* travelback_selected@2x.png in Resources */,
 				A686EA2016B62A9D009B070E /* travelback.png in Resources */,
+				4E9A00021EE8A12E00FC19E4 /* peer1-logo@2x.png in Resources */,
 				4E8336141EDF929F0067B138 /* 2002.txt in Resources */,
 				4E8336101EDF929F0067B138 /* 1998.txt in Resources */,
 				4E83361B1EDF929F0067B138 /* 2009.txt in Resources */,
@@ -1464,6 +1467,7 @@
 				A6FC709B16DC25BF004FB989 /* screen1-ipad.png in Resources */,
 				A6FC709C16DC25BF004FB989 /* screen1-ipad@2x.png in Resources */,
 				A6FC709D16DC25BF004FB989 /* screen2-ipad.png in Resources */,
+				4E9A00011EE8A12E00FC19E4 /* peer1-logo.png in Resources */,
 				A6FC709E16DC25BF004FB989 /* screen2-ipad@2x.png in Resources */,
 				A6FC709F16DC25BF004FB989 /* screen3-ipad.png in Resources */,
 				A6FC70A016DC25BF004FB989 /* screen3-ipad@2x.png in Resources */,
