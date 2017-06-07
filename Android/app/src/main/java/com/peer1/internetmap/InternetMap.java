@@ -518,9 +518,15 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
     }
 
     public void timelineButtonPressed(View view) {
+
+        final ImageView button = (ImageView)findViewById(R.id.timelineButton);
+
+
         if (mInTimelineMode) {
+            button.setActivated(false);
             dismissPopups(); //leave timeline mode
         } else {
+            button.setActivated(true);
             dismissPopups();
             mController.resetZoomAndRotationAnimated(isSmallScreen());
             
