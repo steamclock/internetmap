@@ -42,6 +42,8 @@
 		4E9A00011EE8A12E00FC19E4 /* peer1-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E9AFFFE1EE8A12E00FC19E4 /* peer1-logo.png */; };
 		4E9A00021EE8A12E00FC19E4 /* peer1-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E9AFFFF1EE8A12E00FC19E4 /* peer1-logo@2x.png */; };
 		4E9A00031EE8A12E00FC19E4 /* peer1-logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E9A00001EE8A12E00FC19E4 /* peer1-logo@3x.png */; };
+		4E9A00121EE8A64700FC19E4 /* Nexa Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4E9A00101EE8A64700FC19E4 /* Nexa Bold.otf */; };
+		4E9A00131EE8A64700FC19E4 /* Nexa Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4E9A00111EE8A64700FC19E4 /* Nexa Light.otf */; };
 		4EB7E70D1EE7225C00A062A8 /* globalSettings.json in Resources */ = {isa = PBXBuildFile; fileRef = 4EB7E70C1EE7225C00A062A8 /* globalSettings.json */; };
 		7D23CB571DF73C7900D82CC2 /* LaunchScreen~iphone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D23CB561DF73C7900D82CC2 /* LaunchScreen~iphone.storyboard */; };
 		7D23CB591DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D23CB581DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard */; };
@@ -268,6 +270,8 @@
 		4E8336071EDF929F0067B138 /* 2012.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2012.txt; path = Common/Data/2012.txt; sourceTree = "<group>"; };
 		4E8336081EDF929F0067B138 /* 2013.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2013.txt; path = Common/Data/2013.txt; sourceTree = "<group>"; };
 		4E9A00001EE8A12E00FC19E4 /* peer1-logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "peer1-logo@3x.png"; path = "../../internetmap-ios/internetmap/iOS/Images/peer1-logo@3x.png"; sourceTree = "<group>"; };
+		4E9A00101EE8A64700FC19E4 /* Nexa Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Nexa Bold.otf"; path = "Common/Fonts/Nexa/Nexa Bold.otf"; sourceTree = SOURCE_ROOT; };
+		4E9A00111EE8A64700FC19E4 /* Nexa Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Nexa Light.otf"; path = "Common/Fonts/Nexa/Nexa Light.otf"; sourceTree = SOURCE_ROOT; };
 		4E9AFFFE1EE8A12E00FC19E4 /* peer1-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "peer1-logo.png"; path = "../../internetmap-ios/internetmap/iOS/Images/peer1-logo.png"; sourceTree = "<group>"; };
 		4E9AFFFF1EE8A12E00FC19E4 /* peer1-logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "peer1-logo@2x.png"; path = "../../internetmap-ios/internetmap/iOS/Images/peer1-logo@2x.png"; sourceTree = "<group>"; };
 		4EB7E70C1EE7225C00A062A8 /* globalSettings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = globalSettings.json; path = Common/Data/globalSettings.json; sourceTree = "<group>"; };
@@ -744,6 +748,7 @@
 		1180CF54169B80E300F1FB73 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				4E9A000F1EE8A35000FC19E4 /* Nexa */,
 				1180CF55169B80E300F1FB73 /* ARSMaquettePro */,
 			);
 			path = Fonts;
@@ -767,6 +772,15 @@
 				A686EAAB16B62BF1009B070E /* TTTAttributedLabel.m */,
 			);
 			path = TTTAttributedLabel;
+			sourceTree = "<group>";
+		};
+		4E9A000F1EE8A35000FC19E4 /* Nexa */ = {
+			isa = PBXGroup;
+			children = (
+				4E9A00101EE8A64700FC19E4 /* Nexa Bold.otf */,
+				4E9A00111EE8A64700FC19E4 /* Nexa Light.otf */,
+			);
+			name = Nexa;
 			sourceTree = "<group>";
 		};
 		A600AADA16A664E9003B1028 /* Data */ = {
@@ -1336,6 +1350,7 @@
 				4E9A00031EE8A12E00FC19E4 /* peer1-logo@3x.png in Resources */,
 				A686EB2216B89601009B070E /* nodeBlend.vsh in Resources */,
 				A686EB1316B63290009B070E /* line.fsh in Resources */,
+				4E9A00121EE8A64700FC19E4 /* Nexa Bold.otf in Resources */,
 				A686EB1416B63290009B070E /* line.vsh in Resources */,
 				A686EB1516B63290009B070E /* node.fsh in Resources */,
 				A686EB1616B63290009B070E /* node.vsh in Resources */,
@@ -1457,6 +1472,7 @@
 				A64C751116D2E10900CBCC0D /* Default-Landscape.png in Resources */,
 				A64C751216D2E10900CBCC0D /* Default.png in Resources */,
 				A64C751316D2E10900CBCC0D /* Default@2x.png in Resources */,
+				4E9A00131EE8A64700FC19E4 /* Nexa Light.otf in Resources */,
 				4E83360D1EDF929F0067B138 /* 1995.txt in Resources */,
 				84E0672316D5AC9A00751B7B /* Icon-72.png in Resources */,
 				84E0672516D5ACA300751B7B /* Icon.png in Resources */,
