@@ -1,15 +1,12 @@
 package com.peer1.internetmap;
 
-import java.io.UnsupportedEncodingException;
-
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 
-import org.apache.http.entity.StringEntity;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
+ * NOTE, no longer used, we have moved to using Retrofit and OKHttp via the CommonClient class.
+
  * Requests the user's ASN from the internet.
  *
  * to get the ASN, call ASNRequest.fetchCurrentASNWithResponseHandler()
@@ -82,40 +79,40 @@ public class ASNRequest {
 //        });
 //    }
 
-    public static void fetchIPsForASN(String asn, final ASNResponseHandler finHandler) throws JSONException, UnsupportedEncodingException {
-        JSONObject postData = new JSONObject();
-        postData.put("asn", asn);
-        StringEntity entity = null;
-        try{
-        	entity = new StringEntity(postData.toString());
-        } catch (UnsupportedEncodingException error) {
-        	System.err.println ( error ) ; 
-        	// Do we want to notify the user if we have some kind of encoding exception?
-        }
-        entity.setContentType("application/json");
-        client.post(null, getAbsoluteUrl("asntoips"), entity, "application/json", new AsyncHttpResponseHandler(){
-            @Override
-            public void onStart(){
-                finHandler.onStart();
-            }
-            @Override
-            public void onSuccess(String response) {
-                try {
-                    finHandler.onSuccess(new JSONObject(response));
-                } catch (JSONException e) {
-                    onFailure(new Throwable(e.getMessage()), null);
-                }   
-            }
-            @Override
-            public void onFailure(Throwable error, String content) {
-                finHandler.onFailure(error, content);
-            }
-            @Override
-            public void onFinish() {
-                finHandler.onFinish();
-            }
-        });
-    }
+//    public static void fetchIPsForASN(String asn, final ASNResponseHandler finHandler) throws JSONException, UnsupportedEncodingException {
+//        JSONObject postData = new JSONObject();
+//        postData.put("asn", asn);
+//        StringEntity entity = null;
+//        try{
+//        	entity = new StringEntity(postData.toString());
+//        } catch (UnsupportedEncodingException error) {
+//        	System.err.println ( error ) ;
+//        	// Do we want to notify the user if we have some kind of encoding exception?
+//        }
+//        entity.setContentType("application/json");
+//        client.post(null, getAbsoluteUrl("asntoips"), entity, "application/json", new AsyncHttpResponseHandler(){
+//            @Override
+//            public void onStart(){
+//                finHandler.onStart();
+//            }
+//            @Override
+//            public void onSuccess(String response) {
+//                try {
+//                    finHandler.onSuccess(new JSONObject(response));
+//                } catch (JSONException e) {
+//                    onFailure(new Throwable(e.getMessage()), null);
+//                }
+//            }
+//            @Override
+//            public void onFailure(Throwable error, String content) {
+//                finHandler.onFailure(error, content);
+//            }
+//            @Override
+//            public void onFinish() {
+//                finHandler.onFinish();
+//            }
+//        });
+//    }
     
 //    public static void fetchCurrentASNWithResponseHandler(final ASNResponseHandler finHandler) {
 //
