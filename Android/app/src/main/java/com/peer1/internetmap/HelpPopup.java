@@ -2,20 +2,18 @@ package com.peer1.internetmap;
 
 import junit.framework.Assert;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-public class HelpPopup extends Activity{
+public class HelpPopup extends BaseActivity {
     private static String TAG = "HelpPopup";
     private int[] mSlideIDs; //resource ids for the slide images
     

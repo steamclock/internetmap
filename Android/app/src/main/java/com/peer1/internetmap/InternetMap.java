@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
+import android.app.Activity;
+import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.AnimationUtils;
@@ -18,7 +20,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -42,7 +43,7 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
-import com.peer1.internetmap.ASNRequest.ASNResponseHandler;
+
 import com.peer1.internetmap.SearchPopup.SearchNode;
 import com.peer1.internetmap.models.ASN;
 import com.peer1.internetmap.network.common.CommonCallback;
@@ -53,8 +54,9 @@ import net.hockeyapp.android.UpdateManager;
 
 import retrofit2.Call;
 import retrofit2.Response;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class InternetMap extends Activity implements SurfaceHolder.Callback {
+public class InternetMap extends BaseActivity implements SurfaceHolder.Callback {
 
     private static String TAG = "InternetMap";
     private final String APP_ID = "9a3f1d8d25e8728007a8abf2d420beb9"; //HockeyApp id
@@ -69,7 +71,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     private InfoPopup mInfoPopup;
     private SearchPopup mSearchPopup;
     private NodePopup mNodePopup;
-    
+
     private int mUserNodeIndex = -1; //cache user's node from "you are here"
     private JSONObject mTimelineHistory; //history data for timeline
     private ArrayList<String> mTimelineYears; //sorted year mapping
@@ -106,7 +108,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
         mRotateDetector = new RotateGestureDetector(this, new RotateListener());
         mController = new MapControllerWrapper();
         mHandler = new Handler();
-        
+
         SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
         timelineBar.setOnSeekBarChangeListener(new TimelineListener());
 
@@ -356,6 +358,12 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                         }
                     });
                     mSearchPopup.showAsDropDown(findViewById(R.id.searchButton));
+                    popupView.findViewById(R.id.closeBtn).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dismissSearchPopup();
+                        }
+                    });
                 }
             });
         }
@@ -433,8 +441,8 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             }
         }.execute();
     }
-    
-    public void dismissSearchPopup(View unused) {
+
+    public void dismissSearchPopup() {
         if (mSearchPopup != null) {
             mSearchPopup.dismiss();
         }
@@ -773,6 +781,12 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
                         mController.resetZoomAndRotationAnimated(isSmallScreen());
                     }
                 });
+                popupView.findViewById(R.id.closeBtn).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dismissNodePopup();
+                    }
+                });
             }
             boolean isUserNode = (node.index == mUserNodeIndex);
             mNodePopup.setNode(node, isUserNode);
@@ -823,7 +837,7 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
     }
     
     //callbacks from the nodePopup UI
-    public void dismissNodePopup(View unused) {
+    public void dismissNodePopup() {
         if (mNodePopup != null) {
             mNodePopup.dismiss();
         }
@@ -838,30 +852,30 @@ public class InternetMap extends Activity implements SurfaceHolder.Callback {
             return;
         }
         String asn = "AS15169";
-        ASNRequest.fetchIPsForASN(asn, new ASNResponseHandler() {
-            public void onStart() {
-
-            }
-            public void onFinish() {
-
-            }
-
-            public void onSuccess(JSONObject response) {
-                try {
-                	//Try and get legit payload here
-                    Log.d(TAG, String.format("payload: %s", response));
-                } catch (Exception e) {
-                    Log.d(TAG, String.format("Can't parse response: %s", response.toString()));
-                    showError(getString(R.string.tracerouteStartIPFail));
-                }
-            }
-        
-            public void onFailure(Throwable e, String response) {
-                String message = getString(R.string.tracerouteStartIPFail);
-                showError(message);
-                Log.d(TAG, message);
-            }
-        });        
+//        ASNRequest.fetchIPsForASN(asn, new ASNResponseHandler() {
+//            public void onStart() {
+//
+//            }
+//            public void onFinish() {
+//
+//            }
+//
+//            public void onSuccess(JSONObject response) {
+//                try {
+//                	//Try and get legit payload here
+//                    Log.d(TAG, String.format("payload: %s", response));
+//                } catch (Exception e) {
+//                    Log.d(TAG, String.format("Can't parse response: %s", response.toString()));
+//                    showError(getString(R.string.tracerouteStartIPFail));
+//                }
+//            }
+//
+//            public void onFailure(Throwable e, String response) {
+//                String message = getString(R.string.tracerouteStartIPFail);
+//                showError(message);
+//                Log.d(TAG, message);
+//            }
+//        });
         
     }
 
