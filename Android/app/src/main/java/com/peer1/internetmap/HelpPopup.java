@@ -62,7 +62,7 @@ public class HelpPopup extends BaseActivity {
         Assert.assertNotNull(pager);
 
         //pager slides
-        int[] images = { R.drawable.screen1, R.drawable.screen2, R.drawable.screen3 };
+        int[] images = { R.drawable.help01, R.drawable.help02, R.drawable.help03 };
         mSlideIDs = images;
         ImageAdapter adapter = new ImageAdapter();
         pager.setAdapter(adapter);
