@@ -112,6 +112,34 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
         timelineBar.setOnSeekBarChangeListener(new TimelineListener());
 
+        findViewById(R.id.timelineButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timelineButtonPressed(v);
+            }
+        });
+
+        findViewById(R.id.visualizationsButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                visualizationsButtonPressed(v);
+            }
+        });
+
+        findViewById(R.id.infoButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                infoButtonPressed(v);
+            }
+        });
+
+        findViewById(R.id.searchButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchButtonPressed(v);
+            }
+        });
+
         //fade out logo a bit after
         ImageView logo = (ImageView) findViewById(R.id.peerLogo);
         AlphaAnimation anim = new AlphaAnimation(1, 0.3f);
@@ -121,8 +149,6 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         anim.setFillEnabled(true);
         logo.setAnimation(anim);
     }
-
-
 
     void onBackendLoaded() {
         //turn off loading feedback
@@ -587,7 +613,11 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
     }
     
     void createTimelinePopup() {
-        Assert.assertNull(mTimelinePopup);
+        //Assert.assertNull(mTimelinePopup);
+        if (mTimelinePopup != null) {
+            mTimelinePopup.dismiss();
+        }
+
         mTimelinePopup = new TimelinePopup(this);
     }
     

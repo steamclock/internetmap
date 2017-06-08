@@ -30,7 +30,6 @@
                 android:layout_height="48dp"
                 android:src="@drawable/searchbutton"
                 android:tint="@drawable/icon_tint"
-                android:onClick="searchButtonPressed"
                 android:textOff=""
                 android:textOn="" />
 
@@ -51,7 +50,6 @@
             android:layout_height="48dp"
             android:src="@drawable/visualizationsbutton"
             android:tint="@drawable/icon_tint"
-            android:onClick="visualizationsButtonPressed"
             android:layout_marginRight="10dp" />
 
         <ImageView
@@ -60,7 +58,6 @@
             android:layout_height="48dp"
             android:src="@drawable/timelinebutton"
             android:tint="@drawable/icon_tint"
-            android:onClick="timelineButtonPressed"
             android:layout_marginRight="10dp" />
         
         <ImageView
@@ -68,8 +65,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/infobutton"
-            android:tint="@drawable/icon_tint"
-            android:onClick="infoButtonPressed" />
+            android:tint="@drawable/icon_tint" />
     </LinearLayout>
 
    <SeekBar

@@ -30,8 +30,7 @@
                 android:layout_height="48dp"
                 android:layout_centerInParent="true"
                 android:src="@drawable/searchbutton"
-                android:tint="@drawable/icon_tint"
-                android:onClick="searchButtonPressed" />
+                android:tint="@drawable/icon_tint" />
 
             <ProgressBar
                 android:id="@+id/searchProgressBar"
@@ -55,8 +54,7 @@
                 android:layout_height="48dp"
                 android:layout_centerInParent="true"
                 android:src="@drawable/visualizationsbutton"
-                android:tint="@drawable/icon_tint"
-                android:onClick="visualizationsButtonPressed" />
+                android:tint="@drawable/icon_tint" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -71,8 +69,7 @@
                 android:layout_height="48dp"
                 android:layout_centerInParent="true"
                 android:src="@drawable/timelinebutton"
-                android:tint="@drawable/icon_tint"
-                android:onClick="timelineButtonPressed" />
+                android:tint="@drawable/icon_tint" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -87,10 +84,19 @@
                 android:layout_height="48dp"
                 android:layout_centerInParent="true"
                 android:src="@drawable/infobutton"
-                android:tint="@drawable/icon_tint"
-                android:onClick="infoButtonPressed" />
+                android:tint="@drawable/icon_tint" />
         </RelativeLayout>
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/peerLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/contentPadding"
+        android:layout_marginRight="@dimen/contentPadding"
+        android:src="@drawable/peer1_logo" />
 
     <SeekBar
         android:id="@+id/timelineSeekBar"
@@ -104,18 +110,9 @@
         android:progressDrawable="@drawable/seekbar_progress"
         android:thumb="@drawable/seek_thumb_normal_transparent"
         android:thumbTint="@color/colorAccent"
+        android:background="@color/colorPrimaryDark"
         android:thumbOffset="-2dp"
-        android:visibility="invisible" />
-
-    <ImageView
-        android:id="@+id/peerLogo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="@dimen/contentPadding"
-        android:layout_marginRight="@dimen/contentPadding"
-        android:src="@drawable/peer1_logo" />
+        android:visibility="gone" />
 
     <ProgressBar
         android:id="@+id/loadingSpinner"
