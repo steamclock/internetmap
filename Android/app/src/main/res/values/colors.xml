@@ -7,5 +7,6 @@
 
     <color name="orange">#FCA100</color>
     <color name="translucentBlack">#D9000000</color>
+    <color name="translucentGrey">#BF2c2a29</color>
 
 </resources>
