@@ -75,12 +75,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:visibility="visible"
+        android:visibility="gone"
         android:progressDrawable="@drawable/seekbar_progress"
         android:thumbOffset="-2dp"
         android:maxHeight="5dp"
-        android:thumb="@drawable/seek_thumb_normal_transparent"
-        android:thumbTint="@color/colorAccent"/>
+        android:thumb="@drawable/seek_thumb_normal_transparent" />
 
    <ImageView
        android:id="@+id/peerLogo"

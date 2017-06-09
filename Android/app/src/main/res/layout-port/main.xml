@@ -110,8 +110,6 @@
         android:paddingRight="@dimen/timelinePadding"
         android:progressDrawable="@drawable/seekbar_progress"
         android:thumb="@drawable/seek_thumb_normal_transparent"
-        android:thumbTint="@color/colorAccent"
-        android:background="@color/colorPrimaryDark"
         android:thumbOffset="-2dp"
         android:visibility="gone" />
 

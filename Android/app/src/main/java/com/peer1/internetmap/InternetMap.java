@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
-import android.app.Activity;
-import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.AnimationUtils;
@@ -54,7 +52,6 @@ import net.hockeyapp.android.UpdateManager;
 
 import retrofit2.Call;
 import retrofit2.Response;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class InternetMap extends BaseActivity implements SurfaceHolder.Callback {
 
@@ -71,6 +68,8 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
     private InfoPopup mInfoPopup;
     private SearchPopup mSearchPopup;
     private NodePopup mNodePopup;
+
+    private ImageView logo;
 
     private int mUserNodeIndex = -1; //cache user's node from "you are here"
     private JSONObject mTimelineHistory; //history data for timeline
@@ -101,6 +100,8 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         setContentView(R.layout.main);
         final SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceview);
         surfaceView.getHolder().addCallback(this);
+
+        logo = (ImageView) findViewById(R.id.peerLogo);
 
         //init a bunch of pointers
         mGestureDetector = new GestureDetectorCompat(this, new MyGestureListener());
@@ -141,13 +142,24 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         });
 
         //fade out logo a bit after
-        ImageView logo = (ImageView) findViewById(R.id.peerLogo);
-        AlphaAnimation anim = new AlphaAnimation(1, 0.3f);
-        anim.setDuration(1000);
-        anim.setStartTime(AnimationUtils.currentAnimationTimeMillis()+4000);
+        fadeLogo(AnimationUtils.currentAnimationTimeMillis()+4000, 0.3f, 1000);
+    }
+
+    void fadeLogo(long startTime, float fadeTo, long duration) {
+        AlphaAnimation anim = new AlphaAnimation(logo.getAlpha(), fadeTo);
+        anim.setDuration(duration);
+        anim.setStartTime(startTime);
         anim.setFillAfter(true);
         anim.setFillEnabled(true);
         logo.setAnimation(anim);
+    }
+
+    void showLogo() {
+        fadeLogo(500, 0.3f, 1000);
+    }
+
+    void hideLogo() {
+        fadeLogo(0, 0, 0);
     }
 
     void onBackendLoaded() {
@@ -547,6 +559,13 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
 
         final ImageView button = (ImageView)findViewById(R.id.timelineButton);
 
+        if (isSmallScreen()) {
+            if (mInTimelineMode) {
+                showLogo();
+            } else {
+                hideLogo();
+            }
+        }
 
         if (mInTimelineMode) {
             button.setActivated(false);
@@ -555,7 +574,6 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
             button.setActivated(true);
             dismissPopups();
             mController.resetZoomAndRotationAnimated(isSmallScreen());
-            
             SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
             if (mTimelineHistory == null) {
                 //load history data & init the timeline bounds
