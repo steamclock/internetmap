@@ -151,7 +151,7 @@
     for (int i = 0; i < [self.firstGroupOfStrings count]; i++) {
         UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(10, orangeBackgroundView.y+orangeBackgroundView.height+verticalPad+LABELS_HEIGHT*i, 280, LABELS_HEIGHT)];
         label.font = [UIFont fontWithName:FONT_NAME_LIGHT size:18];
-        label.textColor = FONT_COLOR_GRAY;
+        label.textColor = FONT_COLOR_WHITE;
         label.backgroundColor = [UIColor clearColor];
         label.text = self.firstGroupOfStrings[i];
         [self.scrollView addSubview:label];
@@ -164,7 +164,7 @@
     if ([HelperMethods deviceIsiPad]) {
         UILabel* connectionsLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, lastLabelBottom+verticalPad, 280, LABELS_HEIGHT)];
         connectionsLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:18];
-        connectionsLabel.textColor = FONT_COLOR_GRAY;
+        connectionsLabel.textColor = FONT_COLOR_WHITE;
         connectionsLabel.backgroundColor = [UIColor clearColor];
         NSString* conn = self.node.numberOfConnections == 1 ? @"Connection" : @"Connections";
         connectionsLabel.text = [NSString stringWithFormat:@"%zd %@", self.node.numberOfConnections, conn];
@@ -201,7 +201,7 @@
     
     UILabel* detailsLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, self.box1.y+self.box1.height+verticalPad/2, self.tracerouteContainerView.width-20, LABELS_HEIGHT)];
     detailsLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:18];
-    detailsLabel.textColor = FONT_COLOR_GRAY;
+    detailsLabel.textColor = FONT_COLOR_WHITE;
     detailsLabel.backgroundColor = [UIColor clearColor];
     detailsLabel.text = NSLocalizedString(@"Details of Traceroute", nil);
     [self.tracerouteContainerView addSubview:detailsLabel];

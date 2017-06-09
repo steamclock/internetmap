@@ -808,19 +808,21 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
                     if (isSmallScreen()) {
                         popupView.findViewById(R.id.leftArrow).setVisibility(View.GONE);
                     }
+
+                    popupView.findViewById(R.id.closeBtn).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dismissNodePopup();
+                        }
+                    });
                 }
+
                 mNodePopup = new NodePopup(this, popupView, mInTimelineMode, isSimulated);
                 mNodePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     public void onDismiss() {
                         mNodePopup = null;
                         mController.deselectCurrentNode();
                         mController.resetZoomAndRotationAnimated(isSmallScreen());
-                    }
-                });
-                popupView.findViewById(R.id.closeBtn).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dismissNodePopup();
                     }
                 });
             }

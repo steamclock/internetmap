@@ -107,7 +107,7 @@
         cell.textLabel.highlightedTextColor = FONT_COLOR_GRAY;
         [divider removeFromSuperview];
     }else {
-        cell.textLabel.textColor = FONT_COLOR_GRAY;
+        cell.textLabel.textColor = UI_WHITE_COLOR;
         cell.textLabel.highlightedTextColor = UI_ORANGE_COLOR;
         [cell.contentView addSubview:divider];
     }

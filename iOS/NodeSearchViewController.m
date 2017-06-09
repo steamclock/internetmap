@@ -53,7 +53,7 @@
     self.textField.backgroundColor = [UIColor clearColor];
     self.textField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    self.textField.textColor = [UIColor blackColor];
+    self.textField.textColor = UI_COLOR_DARK;
     self.textField.delegate = self;
     self.textField.font = [UIFont fontWithName:FONT_NAME_LIGHT size:20];
     self.textField.returnKeyType = UIReturnKeyGo;
@@ -146,7 +146,7 @@
         cell.selectionStyle = UITableViewCellSelectionStyleBlue;
         cell.selectedBackgroundView = [[UIView alloc] init];
         cell.backgroundColor = [UIColor clearColor];
-        
+ 
         UIView* seperator = [[UIView alloc] initWithFrame:CGRectMake(10, 43, tableView.width-10, 1)];
         seperator.backgroundColor = [UIColor grayColor];
         [cell.contentView addSubview:seperator];

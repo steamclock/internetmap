@@ -24,7 +24,7 @@ public class VisualizationPopupWindow extends PopupWindow{
             TextView textView = (TextView) super.getView(position, convertView, parent);
             if (position == selectedRow) {
                 textView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorAccent));
-                textView.setTextColor(Color.BLACK);
+                textView.setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimaryDark));
             } else {
                 textView.setBackgroundColor(Color.TRANSPARENT);
                 textView.setTextColor(Color.WHITE);

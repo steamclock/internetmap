@@ -7,14 +7,19 @@
 
 #import <Foundation/Foundation.h>
 
+#define UI_WHITE_COLOR [UIColor whiteColor]
 #define UI_ORANGE_COLOR [UIColor colorWithRed:252.0/255.0 green:161.0/255.0 blue:0 alpha:1]
 #define UI_BLUE_COLOR [UIColor colorWithRed:68.0/255.0 green:144.0/255.0 blue:206.0/255.0 alpha:1.0]
+#define UI_COLOR_DARK [UIColor colorWithRed:0.17 green:0.16 blue:0.16 alpha:1.0] // Dark grey
+#define UI_COLOR_GREY_TRANSLUCENT [UIColor colorWithRed:0.33 green:0.33 blue:0.33 alpha:0.75] // Lighter grey
+
+#define FONT_COLOR_GRAY [UIColor colorWithRed:0.17 green:0.16 blue:0.16 alpha:1.0]
+#define FONT_COLOR_WHITE [UIColor whiteColor]
 
 #define FONT_NAME @"Nexa"
 #define FONT_NAME_LIGHT @"Nexa Light"
 #define FONT_NAME_MEDIUM @"Nexa Bold"
 #define FONT_NAME_REGULAR @"Nexa Light"
-#define FONT_COLOR_GRAY [UIColor colorWithRed:235.0/255.0 green:235.0/255.0 blue:235.0/255.0 alpha:1.0]
 
 extern void SCLogRect(CGRect rect);
 
