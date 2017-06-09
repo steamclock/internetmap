@@ -3,4 +3,5 @@
     <dimen name="titlebarPadding">8dp</dimen>
     <dimen name="contentPadding">10dp</dimen>
     <dimen name="timelinePadding">24dp</dimen>
+    <dimen name="defaultPadding">16dp</dimen>
 </resources>
