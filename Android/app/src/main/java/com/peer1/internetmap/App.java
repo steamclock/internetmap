@@ -10,10 +10,13 @@ import timber.log.Timber;
  */
 
 public class App extends Application {
+    private static App instance;
+    public GlobalSettings globalSettings;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        instance = this;
 
         // Setup logging
         if (BuildConfig.DEBUG) {
@@ -21,6 +24,8 @@ public class App extends Application {
         } else {
             // TODO production logging
         }
+
+        globalSettings = new GlobalSettings(this);
     }
 
     @Override
@@ -36,5 +41,10 @@ public class App extends Application {
     @Override
     public void onLowMemory() {
         super.onLowMemory();
+    }
+
+    // Static helpers
+    public static GlobalSettings getGlobalSettings() {
+       return instance.globalSettings;
     }
 }

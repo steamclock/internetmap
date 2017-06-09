@@ -25,6 +25,7 @@ public:
     std::set<int> highlightedNodes;
     std::string lastSearchIP;
     std::string lastTimelinePoint;
+    std::string defaultYear;
     
     void hoverNode(int index);
     void unhoverNode();
@@ -40,6 +41,7 @@ public:
     void setTimelinePoint(const std::string& name, bool blend = true);
     void update(TimeInterval currentTime);
     void updateDisplay(bool blend);
+    std::string getDefaultYear(const std::string& json);
     
     std::vector<std::string> visualizationNames(void);
     void setVisualization(int visualization);
