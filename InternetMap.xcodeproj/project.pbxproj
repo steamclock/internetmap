@@ -13,6 +13,9 @@
 		1175AA0416AA091800B93031 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1175AA0316AA091800B93031 /* CoreText.framework */; };
 		1175AA3216AA117800B93031 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1175AA3116AA117800B93031 /* libxml2.dylib */; };
 		1175AA3416AA117F00B93031 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1175AA3316AA117F00B93031 /* ImageIO.framework */; };
+		4E3E42AE1EF1AE92007224FE /* peer1-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E3E42AB1EF1AE92007224FE /* peer1-logo.png */; };
+		4E3E42AF1EF1AE92007224FE /* peer1-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E3E42AC1EF1AE92007224FE /* peer1-logo@2x.png */; };
+		4E3E42B01EF1AE92007224FE /* peer1-logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E3E42AD1EF1AE92007224FE /* peer1-logo@3x.png */; };
 		4E80ECEC1EE1D72300C5542F /* 2020.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E80ECEB1EE1D72300C5542F /* 2020.txt */; };
 		4E80ECF11EE1DB7600C5542F /* 2014.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E80ECED1EE1DB7600C5542F /* 2014.txt */; };
 		4E80ECF21EE1DB7600C5542F /* 2015.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E80ECEE1EE1DB7600C5542F /* 2015.txt */; };
@@ -39,9 +42,6 @@
 		4E83361D1EDF929F0067B138 /* 2011.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8336061EDF929F0067B138 /* 2011.txt */; };
 		4E83361E1EDF929F0067B138 /* 2012.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8336071EDF929F0067B138 /* 2012.txt */; };
 		4E83361F1EDF929F0067B138 /* 2013.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E8336081EDF929F0067B138 /* 2013.txt */; };
-		4E9A00011EE8A12E00FC19E4 /* peer1-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E9AFFFE1EE8A12E00FC19E4 /* peer1-logo.png */; };
-		4E9A00021EE8A12E00FC19E4 /* peer1-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E9AFFFF1EE8A12E00FC19E4 /* peer1-logo@2x.png */; };
-		4E9A00031EE8A12E00FC19E4 /* peer1-logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E9A00001EE8A12E00FC19E4 /* peer1-logo@3x.png */; };
 		4E9A00121EE8A64700FC19E4 /* Nexa Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4E9A00101EE8A64700FC19E4 /* Nexa Bold.otf */; };
 		4E9A00131EE8A64700FC19E4 /* Nexa Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4E9A00111EE8A64700FC19E4 /* Nexa Light.otf */; };
 		4E9A001D1EE8BE5000FC19E4 /* help01.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E9A00141EE8BE5000FC19E4 /* help01.png */; };
@@ -246,6 +246,9 @@
 		1175AA0316AA091800B93031 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		1175AA3116AA117800B93031 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		1175AA3316AA117F00B93031 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		4E3E42AB1EF1AE92007224FE /* peer1-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "peer1-logo.png"; path = "iOS/Images/peer1-logo.png"; sourceTree = SOURCE_ROOT; };
+		4E3E42AC1EF1AE92007224FE /* peer1-logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "peer1-logo@2x.png"; path = "iOS/Images/peer1-logo@2x.png"; sourceTree = SOURCE_ROOT; };
+		4E3E42AD1EF1AE92007224FE /* peer1-logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "peer1-logo@3x.png"; path = "iOS/Images/peer1-logo@3x.png"; sourceTree = SOURCE_ROOT; };
 		4E80ECEB1EE1D72300C5542F /* 2020.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2020.txt; path = Common/Data/2020.txt; sourceTree = "<group>"; };
 		4E80ECED1EE1DB7600C5542F /* 2014.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2014.txt; path = Common/Data/2014.txt; sourceTree = "<group>"; };
 		4E80ECEE1EE1DB7600C5542F /* 2015.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2015.txt; path = Common/Data/2015.txt; sourceTree = "<group>"; };
@@ -272,7 +275,6 @@
 		4E8336061EDF929F0067B138 /* 2011.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2011.txt; path = Common/Data/2011.txt; sourceTree = "<group>"; };
 		4E8336071EDF929F0067B138 /* 2012.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2012.txt; path = Common/Data/2012.txt; sourceTree = "<group>"; };
 		4E8336081EDF929F0067B138 /* 2013.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2013.txt; path = Common/Data/2013.txt; sourceTree = "<group>"; };
-		4E9A00001EE8A12E00FC19E4 /* peer1-logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "peer1-logo@3x.png"; path = "../../internetmap-ios/internetmap/iOS/Images/peer1-logo@3x.png"; sourceTree = "<group>"; };
 		4E9A00101EE8A64700FC19E4 /* Nexa Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Nexa Bold.otf"; path = "Common/Fonts/Nexa/Nexa Bold.otf"; sourceTree = SOURCE_ROOT; };
 		4E9A00111EE8A64700FC19E4 /* Nexa Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Nexa Light.otf"; path = "Common/Fonts/Nexa/Nexa Light.otf"; sourceTree = SOURCE_ROOT; };
 		4E9A00141EE8BE5000FC19E4 /* help01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = help01.png; path = iOS/Images/help01.png; sourceTree = SOURCE_ROOT; };
@@ -290,8 +292,6 @@
 		4E9A00291EE8D7B200FC19E4 /* help02-ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "help02-ipad@2x.png"; path = "iOS/Images/help02-ipad@2x.png"; sourceTree = SOURCE_ROOT; };
 		4E9A002A1EE8D7B200FC19E4 /* help03-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "help03-ipad.png"; path = "iOS/Images/help03-ipad.png"; sourceTree = SOURCE_ROOT; };
 		4E9A002B1EE8D7B200FC19E4 /* help03-ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "help03-ipad@2x.png"; path = "iOS/Images/help03-ipad@2x.png"; sourceTree = SOURCE_ROOT; };
-		4E9AFFFE1EE8A12E00FC19E4 /* peer1-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "peer1-logo.png"; path = "../../internetmap-ios/internetmap/iOS/Images/peer1-logo.png"; sourceTree = "<group>"; };
-		4E9AFFFF1EE8A12E00FC19E4 /* peer1-logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "peer1-logo@2x.png"; path = "../../internetmap-ios/internetmap/iOS/Images/peer1-logo@2x.png"; sourceTree = "<group>"; };
 		4EB7E70C1EE7225C00A062A8 /* globalSettings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = globalSettings.json; path = Common/Data/globalSettings.json; sourceTree = "<group>"; };
 		7D23CB561DF73C7900D82CC2 /* LaunchScreen~iphone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "LaunchScreen~iphone.storyboard"; path = "iOS/LaunchScreen~iphone.storyboard"; sourceTree = SOURCE_ROOT; };
 		7D23CB581DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "LaunchScreen~ipad.storyboard"; path = "iOS/LaunchScreen~ipad.storyboard"; sourceTree = SOURCE_ROOT; };
@@ -1209,9 +1209,9 @@
 		D4CEA32016694E53004B8E8A /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				4E9AFFFE1EE8A12E00FC19E4 /* peer1-logo.png */,
-				4E9AFFFF1EE8A12E00FC19E4 /* peer1-logo@2x.png */,
-				4E9A00001EE8A12E00FC19E4 /* peer1-logo@3x.png */,
+				4E3E42AB1EF1AE92007224FE /* peer1-logo.png */,
+				4E3E42AC1EF1AE92007224FE /* peer1-logo@2x.png */,
+				4E3E42AD1EF1AE92007224FE /* peer1-logo@3x.png */,
 				E4BEB53A16CAE8E500F236F5 /* info_selected.png */,
 				E4BEB53B16CAE8E500F236F5 /* info_selected@2x.png */,
 				E4BEB53C16CAE8E500F236F5 /* info.png */,
@@ -1356,7 +1356,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4E9A00031EE8A12E00FC19E4 /* peer1-logo@3x.png in Resources */,
 				A686EB2216B89601009B070E /* nodeBlend.vsh in Resources */,
 				4E9A001D1EE8BE5000FC19E4 /* help01.png in Resources */,
 				A686EB1316B63290009B070E /* line.fsh in Resources */,
@@ -1368,6 +1367,7 @@
 				A686EB1716B63290009B070E /* selectedNode.fsh in Resources */,
 				A686EB0F16B63282009B070E /* ARSMaquettePro-Bold.otf in Resources */,
 				A686EB1016B63282009B070E /* ARSMaquettePro-Light.otf in Resources */,
+				4E3E42B01EF1AE92007224FE /* peer1-logo@3x.png in Resources */,
 				A686EB1116B63282009B070E /* ARSMaquettePro-Medium.otf in Resources */,
 				A686EB1216B63282009B070E /* ARSMaquettePro-Regular.otf in Resources */,
 				4E80ECF11EE1DB7600C5542F /* 2014.txt in Resources */,
@@ -1422,8 +1422,8 @@
 				4E83360C1EDF929F0067B138 /* 1994.txt in Resources */,
 				4E9A00251EE8BE5000FC19E4 /* help03@3x.png in Resources */,
 				A686EA1F16B62A9D009B070E /* travelback_selected@2x.png in Resources */,
+				4E3E42AF1EF1AE92007224FE /* peer1-logo@2x.png in Resources */,
 				A686EA2016B62A9D009B070E /* travelback.png in Resources */,
-				4E9A00021EE8A12E00FC19E4 /* peer1-logo@2x.png in Resources */,
 				4E8336141EDF929F0067B138 /* 2002.txt in Resources */,
 				4E8336101EDF929F0067B138 /* 1998.txt in Resources */,
 				4E83361B1EDF929F0067B138 /* 2009.txt in Resources */,
@@ -1456,6 +1456,7 @@
 				A6551E7116CAE31100340590 /* iphone-bg.png in Resources */,
 				7D23CB591DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard in Resources */,
 				A6551E7216CAE31100340590 /* iphone-bg@2x.png in Resources */,
+				4E3E42AE1EF1AE92007224FE /* peer1-logo.png in Resources */,
 				4E80ECF41EE1DB7600C5542F /* 2017.txt in Resources */,
 				A6551E7716CAE32100340590 /* next-button.png in Resources */,
 				4E9A00211EE8BE5000FC19E4 /* help02@2x.png in Resources */,
@@ -1498,7 +1499,6 @@
 				7D23CB571DF73C7900D82CC2 /* LaunchScreen~iphone.storyboard in Resources */,
 				4E9A00201EE8BE5000FC19E4 /* help02.png in Resources */,
 				4E9A00241EE8BE5000FC19E4 /* help03@2x.png in Resources */,
-				4E9A00011EE8A12E00FC19E4 /* peer1-logo.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
