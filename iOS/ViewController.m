@@ -574,6 +574,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             [weakSelf setVisualization:vis];
             [weakSelf.visualizationSelectionPopover dismissPopoverAnimated:YES];
             weakSelf.visualizationsButton.selected = NO;
+            
+            // Reset view to recenter target
+            [self.controller resetZoomAndRotationAnimatedForOrientation:![HelperMethods deviceIsiPad]];
         };
     }
     [self.visualizationSelectionPopover presentPopoverFromRect:self.visualizationsButton.bounds inView:self.visualizationsButton permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];

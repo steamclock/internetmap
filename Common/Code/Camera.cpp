@@ -311,21 +311,15 @@ void Camera::resetZoomAndRotationAnimated(bool isPortraitMode) {
     
     float zoomDistance = _zoom - targetZoom;
     
-    //if we're already zoomed out (or close), it's not worth it
-    bool worthZooming = (zoomDistance > 0.5);
-    if (worthZooming) {
-        //LOG("zooming from %f to %f", _zoom, targetZoom);
-        TimeInterval duration = zoomDistance / 2;
-        //zoom via setTarget so that we also reset translation.
-        Target target;
-        target.zoom = targetZoom;
-        target.maxZoom = MAX_MAX_ZOOM;
-        setTarget(target, duration);
-        rotateAnimated(targetRotation, duration);
-    } else {
-        //LOG("skipping zoom");
-        cameraResetFinishedCallback();
-    }
+    // Always perform the zoom, this will reset the center target if it has been changed elsewhere.
+    //LOG("zooming from %f to %f", _zoom, targetZoom);
+    TimeInterval duration = fabs(zoomDistance) / 2;
+    //zoom via setTarget so that we also reset translation.
+    Target target;
+    target.zoom = targetZoom;
+    target.maxZoom = MAX_MAX_ZOOM;
+    setTarget(target, duration);
+    rotateAnimated(targetRotation, duration);
 }
 
 void Camera::zoomAnimated(float zoom, TimeInterval duration) {
