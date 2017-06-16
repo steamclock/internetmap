@@ -403,8 +403,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 -(void)handlePinch:(UIPinchGestureRecognizer *)gestureRecognizer
 {
     [self.controller resetIdleTimer];
-    [self startMomentumPan:gestureRecognizer];
-    
+   
     if (!self.isHandlingLongPress) {
         if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
             [self.controller unhoverNode];
@@ -421,14 +420,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                 [self.controller startMomentumZoomWithVelocity:gestureRecognizer.velocity*0.5];
             }
         }
-    }
-}
-
-- (void)startMomentumPan:(UIPinchGestureRecognizer *)gestureRecognizer {
-    if (isnan(gestureRecognizer.velocity)) {
-        [self.controller stopMomentumRotation];
-    } else {
-        [self.controller startMomentumRotationWithVelocity:-gestureRecognizer.velocity*0.5];
     }
 }
 
@@ -705,8 +696,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     else {
         return;
     }
-    
-    [self.controller stopMomentumPan];
     
     if (self.timelineSlider.hidden == NO) {
         BOOL simulated = NO;
