@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.Iterator;
 
 import android.support.v4.content.ContextCompat;
+import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
@@ -395,7 +396,13 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
                             button.setActivated(false);
                         }
                     });
+
+                    if (isSmallScreen()) {
+                        mSearchPopup.setWidth(LayoutParams.MATCH_PARENT);
+                    }
+
                     mSearchPopup.showAsDropDown(findViewById(R.id.searchButton));
+
                     popupView.findViewById(R.id.closeBtn).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

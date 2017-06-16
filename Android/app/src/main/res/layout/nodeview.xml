@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/arrowLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
@@ -33,9 +34,10 @@
                 android:layout_weight="1"
                 android:singleLine="true"
                 android:text="&lt;title>"
+                fontPath="@string/font_bold"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/colorPrimaryDark"
-                android:textStyle="bold" />
+                />
 
             <ImageButton
                 android:id="@+id/closeBtn"

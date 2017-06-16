@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">@color/orange</color>
+    <color name="colorPrimary">@color/cyan</color>
     <color name="colorPrimaryDark">#2c2a29</color>
-    <color name="colorAccent">@color/orange</color>
+    <color name="colorAccent">@color/cyan</color>
 
     <color name="orange">#FCA100</color>
+    <color name="cyan">#00A8EC</color>
 
     <color name="lightGrey">#555555</color>
     <color name="translucentBlack">#BF555555</color>
     <color name="translucentGrey">#BF555555</color>
+
+    <color name="lightTextColor">#fff</color>
+    <color name="lightHintTextColor">#eeffffff</color>
+    <color name="darkTextColor">#000</color>
+    <color name="darkHintTextColor">#ee000000</color>
 
 </resources>

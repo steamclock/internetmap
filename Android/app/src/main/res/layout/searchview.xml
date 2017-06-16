@@ -3,45 +3,45 @@
     android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorAccent" >
+        android:background="@color/colorAccent">
 
         <EditText
             android:id="@+id/searchEdit"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/titlebarPadding"
             android:layout_weight="1"
-            android:ems="10"
+            android:background="@android:color/transparent"
             android:hint="@string/searchHint"
             android:imeOptions="actionGo"
             android:inputType="textNoSuggestions|textVisiblePassword"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/titlebarPadding"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" >
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/darkTextColor"
+            android:textColorHint="@color/darkHintTextColor"
+            android:textStyle="bold">
 
             <requestFocus />
         </EditText>
 
-        <ImageButton
+        <ImageView
             android:id="@+id/closeBtn"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/colorAccent"
-            android:src="@drawable/x_icon" />
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="5dp"
+            android:src="@drawable/x_icon"
+            android:tint="@color/darkTextColor"/>
 
     </LinearLayout>
 
     <ListView
         android:id="@+id/searchResultsView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
