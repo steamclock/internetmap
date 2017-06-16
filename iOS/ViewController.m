@@ -919,16 +919,20 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     self.tracerouteASNs = [NSMutableDictionary new];
     
-    
     //zoom out and rotate camera to default orientation on app startup
     GLKMatrix4 zRotation = GLKMatrix4Identity;
     float zoom = -3;
     if (![HelperMethods deviceIsiPad]) {
         zRotation = GLKMatrix4MakeRotation(M_PI_2, 0, 0, 1);
-        zoom = -8;
+        zoom = -6;
     }
     
     [self.controller zoomAnimated:zoom duration:3];
+    
+    // On phones, translate up view so that we can more easily see it
+    if (![HelperMethods deviceIsiPad]) {
+        [self.controller translateYAnimated:0.5f duration:3];
+    }
     
     NodeWrapper* node = [self.controller nodeAtIndex:self.controller.targetNode];
     if (node.importance > 0.006) {

@@ -36,6 +36,7 @@ class Camera {
     Matrix4 _projectionMatrix;
     
     Matrix4 _rotationMatrix;
+    
     float _rotation;
     float _zoom;
     float _maxZoom; //based on target node, because big nodes look ugly close up.
@@ -48,6 +49,12 @@ class Camera {
     float _zoomTarget;
     TimeInterval _zoomStartTime;
     TimeInterval _zoomDuration;
+    
+    float _translationY;
+    float _translationYStart;
+    float _translationYTarget;
+    TimeInterval _translationYStartTime;
+    TimeInterval _translationYDuration;
     
     TimeInterval _updateTime;
     TimeInterval _idleStartTime; // For "attract" mode
@@ -65,7 +72,8 @@ class Camera {
     Quaternion _rotationTarget;
     TimeInterval _rotationStartTime;
     TimeInterval _rotationDuration;
-        
+    
+    void handleAnimatedTranslateY(TimeInterval delta);
     void handleIdleMovement(TimeInterval delta);
     void handleMomentumPan(TimeInterval delta);
     void handleMomentumZoom(TimeInterval delta);
@@ -92,6 +100,7 @@ public:
     void rotateAnimated(Matrix4 rotation, TimeInterval duration);
     void zoomAnimated(float zoom, TimeInterval duration);
     void zoomByScale(float zoom);
+    void translateYAnimated(float translateY, TimeInterval duration);
     void resetIdleTimer(void);
     
     void update(TimeInterval currentTime);

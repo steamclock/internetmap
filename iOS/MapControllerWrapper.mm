@@ -143,6 +143,10 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
     _controller->display->camera->resetZoomAndRotationAnimated(isPortraitMode);
 }
 
+- (void)translateYAnimated:(float)translateY duration:(NSTimeInterval)duration {
+    _controller->display->camera->translateYAnimated(translateY, duration);
+}
+
 - (void)zoomAnimated:(float)zoom duration:(NSTimeInterval)duration{
     _controller->display->camera->zoomAnimated(zoom, duration);
 }
