@@ -127,7 +127,7 @@
     UIImage* xImage = [UIImage imageNamed:@"x-icon"];
     
     UIView* orangeBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.preferredContentSize.width, TOP_BACKGROUND_HEIGHT)];
-    orangeBackgroundView.backgroundColor = UI_ORANGE_COLOR;
+    orangeBackgroundView.backgroundColor = UI_PRIMARY_COLOR;
     [self.view addSubview:orangeBackgroundView];
     
     self.topLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, -2, self.preferredContentSize.width-xImage.size.width-25, TOP_BACKGROUND_HEIGHT)];

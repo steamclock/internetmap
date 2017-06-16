@@ -44,7 +44,7 @@
     self.title = NSLocalizedString(@"Search Nodes", nil);
     
     UIView* orangeBackground = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.preferredContentSize.width, 44)];
-    orangeBackground.backgroundColor = UI_ORANGE_COLOR;
+    orangeBackground.backgroundColor = UI_PRIMARY_COLOR;
     [self.view addSubview:orangeBackground];
     
     UIImage* doneImage = [UIImage imageNamed:@"x-icon"];
@@ -141,7 +141,7 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         cell.textLabel.textColor = [UIColor colorWithRed:235.0/255.0 green:235.0/255.0 blue:235.0/255.0 alpha:1.0];
-        cell.textLabel.highlightedTextColor = UI_ORANGE_COLOR;
+        cell.textLabel.highlightedTextColor = UI_PRIMARY_COLOR;
         cell.textLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:24];
         cell.selectionStyle = UITableViewCellSelectionStyleBlue;
         cell.selectedBackgroundView = [[UIView alloc] init];
@@ -167,7 +167,7 @@
                 cell.textLabel.text = NSLocalizedString(@"Your Location", nil);
                 cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"youarehere_selected.png"]];
             }
-            cell.textLabel.textColor = UI_ORANGE_COLOR;
+            cell.textLabel.textColor = UI_PRIMARY_COLOR;
             return cell;
         }
         
@@ -189,7 +189,7 @@
     
     //make it orange if it's really-first
     if (![self haveSpecialFirstItem] && (row == 0)) {
-        cell.textLabel.textColor = UI_ORANGE_COLOR;
+        cell.textLabel.textColor = UI_PRIMARY_COLOR;
     }
     
     return cell;

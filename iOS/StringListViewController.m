@@ -108,7 +108,7 @@
         [divider removeFromSuperview];
     }else {
         cell.textLabel.textColor = UI_WHITE_COLOR;
-        cell.textLabel.highlightedTextColor = UI_ORANGE_COLOR;
+        cell.textLabel.highlightedTextColor = UI_PRIMARY_COLOR;
         [cell.contentView addSubview:divider];
     }
     
@@ -126,7 +126,7 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == self.selectedRow) {
-        cell.backgroundColor = UI_ORANGE_COLOR;
+        cell.backgroundColor = UI_PRIMARY_COLOR;
     }else {
         cell.backgroundColor = [UIColor clearColor];
     }
