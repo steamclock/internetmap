@@ -107,8 +107,9 @@ void MapDisplay::draw(void)
         bindDefaultNodeUniforms(_selectedNodeProgram);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         selectedNodes->display();
-        glBlendFunc(GL_ONE, GL_ONE);
     }
+    
+    glBlendFunc(GL_ONE, GL_ONE);
     
     if(visualizationLines || highlightLines) {
         _connectionProgram->bind();
