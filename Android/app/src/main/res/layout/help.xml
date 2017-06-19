@@ -12,7 +12,7 @@
         android:layout_above="@+id/dots"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_margin="@dimen/contentPadding" />
+        android:layout_margin="@dimen/defaultPadding" />
 
     <Button
         android:id="@+id/nextButton"
@@ -21,6 +21,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:background="@drawable/traceroute_button"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
         android:text="@string/next" />
 
     <ImageView

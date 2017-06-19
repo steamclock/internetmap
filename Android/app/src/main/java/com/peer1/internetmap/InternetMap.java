@@ -83,6 +83,9 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
     public ArrayList<SearchNode> mAllSearchNodes; //cache of nodes for search
     public boolean mDoneLoading;
 
+    private SurfaceView surfaceView;
+    private View surfaceViewOverlay;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,7 +102,10 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         //no real create -> no pending callback. we'll check mDoneLoading later to compensate.
 
         setContentView(R.layout.main);
-        final SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceview);
+
+        surfaceViewOverlay = findViewById(R.id.surfaceview_overlay);
+        surfaceViewOverlay.setAlpha(1.0f);
+        surfaceView = (SurfaceView) findViewById(R.id.surfaceview);
         surfaceView.getHolder().addCallback(this);
 
         logo = (ImageView) findViewById(R.id.peerLogo);
@@ -141,9 +147,6 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
                 searchButtonPressed(v);
             }
         });
-
-        //fade out logo a bit after
-        fadeLogo(AnimationUtils.currentAnimationTimeMillis()+4000, 0.3f, 1000);
     }
 
     void fadeLogo(long startTime, float fadeTo, long duration) {
@@ -167,6 +170,10 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         //turn off loading feedback
         ProgressBar loader = (ProgressBar) findViewById(R.id.loadingSpinner);
         loader.setVisibility(View.GONE);
+        surfaceViewOverlay.setVisibility(View.GONE);
+
+        //fade out logo a bit after
+        fadeLogo(AnimationUtils.currentAnimationTimeMillis()+4000, 0.3f, 1000);
         
         //possibly show first-run slides
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);

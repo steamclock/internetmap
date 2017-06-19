@@ -11,6 +11,12 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 
+    <View
+        android:id="@+id/surfaceview_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark" />
+
     <LinearLayout
         android:id="@+id/buttonsLayout"
         android:layout_width="fill_parent"
@@ -79,7 +85,7 @@
         android:progressDrawable="@drawable/seekbar_progress"
         android:thumbOffset="-2dp"
         android:maxHeight="5dp"
-        android:thumb="@drawable/seek_thumb_normal_transparent" />
+        android:thumb="@drawable/seek_thumb_cyan" />
 
    <ImageView
        android:id="@+id/peerLogo"

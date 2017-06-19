@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainLayout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:id="@+id/mainLayout"
-    android:background="@color/colorPrimaryDark">
+    android:background="@color/colorPrimaryDark"
+    android:orientation="vertical">
 
     <SurfaceView
         android:id="@+id/surfaceview"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
+
+    <View
+        android:id="@+id/surfaceview_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark" />
 
     <LinearLayout
         android:id="@+id/buttonsLayout"
@@ -17,13 +23,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:baselineAligned="false" >
+        android:baselineAligned="false">
 
         <RelativeLayout
             android:id="@+id/searchLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" >
+            android:layout_weight="1">
 
             <ImageView
                 android:id="@+id/searchButton"
@@ -47,7 +53,7 @@
             android:id="@+id/visualizationsLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" >
+            android:layout_weight="1">
 
             <ImageView
                 android:id="@+id/visualizationsButton"
@@ -62,7 +68,7 @@
             android:id="@+id/timelineLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" >
+            android:layout_weight="1">
 
             <ImageView
                 android:id="@+id/timelineButton"
@@ -77,7 +83,7 @@
             android:id="@+id/infoLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" >
+            android:layout_weight="1">
 
             <ImageView
                 android:id="@+id/infoButton"
@@ -109,7 +115,7 @@
         android:paddingLeft="@dimen/timelinePadding"
         android:paddingRight="@dimen/timelinePadding"
         android:progressDrawable="@drawable/seekbar_progress"
-        android:thumb="@drawable/seek_thumb_normal_transparent"
+        android:thumb="@drawable/seek_thumb_cyan"
         android:thumbOffset="-2dp"
         android:visibility="gone" />
 
