@@ -99,16 +99,16 @@ void MapDisplay::draw(void)
 #endif
 #endif
     
+
+    Matrix4 mvp = camera->currentModelViewProjection();
+    
     if (selectedNodes) {
         _selectedNodeProgram->bind();
         bindDefaultNodeUniforms(_selectedNodeProgram);
-        
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        
         selectedNodes->display();
+        glBlendFunc(GL_ONE, GL_ONE);
     }
-    
-    Matrix4 mvp = camera->currentModelViewProjection();
     
     if(visualizationLines || highlightLines) {
         _connectionProgram->bind();
@@ -123,7 +123,6 @@ void MapDisplay::draw(void)
         highlightLines->display();
     }
     
-    glBlendFunc(GL_ONE, GL_ONE);
     glDepthMask(GL_FALSE); //disable z writing only
 
     if (nodes) {
