@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:background="@color/translucentBlack"
         android:padding="@dimen/contentPadding"
-        android:textColor="#fff"
+        android:textColor="@color/lightTextColor"
         android:text="&lt;content>"
         android:textAppearance="?android:attr/textAppearanceMedium" />
     
@@ -25,7 +25,7 @@
         android:paddingLeft="@dimen/titlebarPadding"
         android:text="&lt;title>"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@android:color/black"
+        android:textColor="@color/lightTextColor"
         android:textStyle="bold" />
     
     <ImageView

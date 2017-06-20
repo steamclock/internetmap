@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:text="@string/contactSalesBlurb"
+            android:textColor="@color/lightTextColor"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <EditText
@@ -27,6 +28,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/nameHint"
+            android:textColor="@color/lightTextColor"
             android:inputType="textPersonName" >
 
             <requestFocus />
@@ -38,6 +40,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/emailHint"
+            android:textColor="@color/lightTextColor"
             android:inputType="textEmailAddress" />
 
         <EditText
@@ -46,6 +49,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/phoneHint"
+            android:textColor="@color/lightTextColor"
             android:inputType="phone" />
 
         <RelativeLayout
@@ -83,6 +87,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:textColor="@color/lightTextColor"
         android:text="@string/contactSalesFooter"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 

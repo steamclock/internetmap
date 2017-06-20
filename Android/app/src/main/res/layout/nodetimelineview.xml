@@ -14,6 +14,7 @@
         android:singleLine="true"
         android:padding="@dimen/contentPadding"
         android:text="&lt;title>"
+        android:textColor="@color/lightTextColor"
         android:textAppearance="?android:attr/textAppearanceLarge" />
     
     <ImageView
