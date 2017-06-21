@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:background="@drawable/traceroute_button"
+        android:background="@drawable/shape_button_accent_color"
         android:layout_marginBottom="10dp"
         android:layout_marginRight="10dp"
         android:text="@string/next" />

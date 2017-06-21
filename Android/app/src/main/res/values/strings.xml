@@ -35,7 +35,7 @@
     <string name="submitSuccess">Submitted. Thank you.</string>
     <string name="submitFail">Could not complete the contact request. Please try again later.</string>
     <string name="submitFailEmail">Please enter a valid email address.</string>
-    <string name="next">Next ></string>
+    <string name="next">\u0020Next\u0020></string>
     <string name="finish">Finish</string>
     <string name="simulated">Simulated Data</string>
     <string name="searching">Searching...</string>

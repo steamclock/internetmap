@@ -62,7 +62,7 @@
                 android:id="@+id/submitButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/traceroute_button"
+                android:background="@drawable/shape_button_accent_color"
                 android:text="@string/submit" />
 
             <ProgressBar
