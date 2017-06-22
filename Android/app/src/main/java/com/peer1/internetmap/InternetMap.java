@@ -47,6 +47,7 @@ import com.peer1.internetmap.SearchPopup.SearchNode;
 import com.peer1.internetmap.models.ASN;
 import com.peer1.internetmap.network.common.CommonCallback;
 import com.peer1.internetmap.network.common.CommonClient;
+import com.peer1.internetmap.utils.DeviceUtils;
 
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.UpdateManager;
@@ -1022,10 +1023,10 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         }
 
         @Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
-                float distanceY) {
-            //Log.d(TAG, String.format("onScroll: x %f y %f", distanceX, distanceY));
-            mController.rotateRadiansXY(distance2radians(distanceX), distance2radians(distanceY));
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            float xDp = DeviceUtils.pxToDp(distanceX);
+            float yDp = DeviceUtils.pxToDp(distanceY);
+            mController.rotateRadiansXY(distance2radians(xDp), distance2radians(yDp));
             return true;
         }
         
