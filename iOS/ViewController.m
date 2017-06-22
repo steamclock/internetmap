@@ -473,6 +473,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(IBAction)searchButtonPressed:(id)sender {
     //TODO: find out if we can make this work in timeline mode
+    
+    
     if (self.timelineButton.selected) {
         [self leaveTimelineMode];
     }
@@ -482,21 +484,23 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if (!self.nodeSearchPopover) {
         NodeSearchViewController *searchController = [[NodeSearchViewController alloc] init];
         searchController.delegate = self;
-        
+      
         self.nodeSearchPopover = [[WEPopoverController alloc] initWithContentViewController:searchController];
         [self.nodeSearchPopover setPopoverContentSize:searchController.preferredContentSize];
         self.nodeSearchPopover.delegate = self;
-        
+       
         if (![HelperMethods deviceIsiPad]) {
             WEPopoverContainerViewProperties *prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
             prop.upArrowImageName = nil;
             self.nodeSearchPopover.containerViewProperties = prop;
         }
         searchController.allItems = [self.controller allNodes];
+         
     }
     [self.nodeSearchPopover presentPopoverFromRect:self.searchButton.bounds inView:self.searchButton permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
-    self.searchButton.highlighted = NO;
+    self.searchButton.highlighted = YES;
     self.searchButton.selected = YES;
+     
 }
 
 -(void)showFirstUse {
