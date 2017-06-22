@@ -1354,7 +1354,7 @@
 				ORGANIZATIONNAME = Peer1;
 				TargetAttributes = {
 					A6F3F55D1640F1FB0070E6AE = {
-						DevelopmentTeam = XUVW46PTJ7;
+						DevelopmentTeam = 6AH3R53PT2;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -1721,7 +1721,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = XUVW46PTJ7;
+				DEVELOPMENT_TEAM = 6AH3R53PT2;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iOS/InternetMap-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "";
@@ -1797,7 +1797,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = XUVW46PTJ7;
+				DEVELOPMENT_TEAM = 6AH3R53PT2;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iOS/InternetMap-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "";
@@ -1918,7 +1918,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = XUVW46PTJ7;
+				DEVELOPMENT_TEAM = 6AH3R53PT2;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iOS/InternetMap-Prefix.pch";
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
@@ -1937,7 +1937,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = XUVW46PTJ7;
+				DEVELOPMENT_TEAM = 6AH3R53PT2;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iOS/InternetMap-Prefix.pch";
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;

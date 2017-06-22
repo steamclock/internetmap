@@ -37,11 +37,11 @@ float DefaultVisualization::nodeZoom(NodePointer node) {
 Color DefaultVisualization::nodeColor(NodePointer node) {
     switch(node->type) {
         case AS_T1:
-            return ColorFromRGB(0x548dff);
+            return ColorFromRGB(0x00a8ec);
         case AS_T2:
-            return ColorFromRGB(0x375ca6);
+            return ColorFromRGB(0x00a8ec);
         case AS_COMP:
-            return ColorFromRGB(0x4490ce);
+            return ColorFromRGB(0x00a8ec);
         case AS_EDU:
             return ColorFromRGB(0x7200ff);
         case AS_IX:
