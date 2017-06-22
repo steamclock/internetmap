@@ -22,11 +22,12 @@ public class VisualizationPopupWindow extends PopupWindow{
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             int lightTextColor = ContextCompat.getColor(mContext, R.color.lightTextColor);
+            int darkTextColor = ContextCompat.getColor(mContext, R.color.darkTextColor);
 
             TextView textView = (TextView) super.getView(position, convertView, parent);
             if (position == selectedRow) {
                 textView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorAccent));
-                textView.setTextColor(lightTextColor);
+                textView.setTextColor(darkTextColor);
             } else {
                 textView.setBackgroundColor(Color.TRANSPARENT);
                 textView.setTextColor(lightTextColor);
