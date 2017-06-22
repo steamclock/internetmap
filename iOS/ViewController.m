@@ -500,7 +500,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.nodeSearchPopover presentPopoverFromRect:self.searchButton.bounds inView:self.searchButton permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
     self.searchButton.highlighted = YES;
     self.searchButton.selected = YES;
-     
+  
 }
 
 -(void)showFirstUse {
