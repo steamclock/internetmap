@@ -34,7 +34,7 @@
 {
     
     UIView* divider = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.preferredContentSize.width, 1)];
-    divider.backgroundColor = UI_ORANGE_COLOR;
+    divider.backgroundColor = UI_PRIMARY_COLOR;
     divider.alpha = 0.5;
     [self.view addSubview:divider];
     
@@ -46,7 +46,7 @@
     [self.view addSubview:self.label];
     
     self.yearLabelBackgroundView = [[UIView alloc] initWithFrame:CGRectZero];
-    self.yearLabelBackgroundView.backgroundColor = UI_ORANGE_COLOR;
+    self.yearLabelBackgroundView.backgroundColor = UI_PRIMARY_COLOR;
     [self.view addSubview:self.yearLabelBackgroundView];
     
     self.yearLabel = [[UILabel alloc] initWithFrame:CGRectZero];

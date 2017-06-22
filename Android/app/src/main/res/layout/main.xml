@@ -3,12 +3,19 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:id="@+id/mainLayout" >
+    android:id="@+id/mainLayout"
+    android:background="@color/colorPrimaryDark">
 
     <SurfaceView
         android:id="@+id/surfaceview"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
+
+    <View
+        android:id="@+id/surfaceview_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark" />
 
     <LinearLayout
         android:id="@+id/buttonsLayout"
@@ -30,7 +37,6 @@
                 android:layout_height="48dp"
                 android:src="@drawable/searchbutton"
                 android:tint="@drawable/icon_tint"
-                android:onClick="searchButtonPressed"
                 android:textOff=""
                 android:textOn="" />
 
@@ -51,7 +57,6 @@
             android:layout_height="48dp"
             android:src="@drawable/visualizationsbutton"
             android:tint="@drawable/icon_tint"
-            android:onClick="visualizationsButtonPressed"
             android:layout_marginRight="10dp" />
 
         <ImageView
@@ -60,7 +65,6 @@
             android:layout_height="48dp"
             android:src="@drawable/timelinebutton"
             android:tint="@drawable/icon_tint"
-            android:onClick="timelineButtonPressed"
             android:layout_marginRight="10dp" />
         
         <ImageView
@@ -68,8 +72,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/infobutton"
-            android:tint="@drawable/icon_tint"
-            android:onClick="infoButtonPressed" />
+            android:tint="@drawable/icon_tint" />
     </LinearLayout>
 
    <SeekBar
@@ -78,12 +81,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:visibility="visible"
+        android:visibility="gone"
         android:progressDrawable="@drawable/seekbar_progress"
         android:thumbOffset="-2dp"
         android:maxHeight="5dp"
-        android:thumb="@drawable/seek_thumb_normal_transparent"
-        android:thumbTint="@color/colorAccent"/>
+        android:thumb="@drawable/seek_thumb_cyan" />
 
    <ImageView
        android:id="@+id/peerLogo"

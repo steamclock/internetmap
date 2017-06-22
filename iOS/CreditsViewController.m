@@ -103,7 +103,7 @@
     doneButton.imageView.contentMode = UIViewContentModeCenter;
     [doneButton setImage:xImage forState:UIControlStateNormal];
     [doneButton addTarget:self action:@selector(close:) forControlEvents:UIControlEventTouchUpInside];
-    doneButton.backgroundColor = UI_ORANGE_COLOR;
+    doneButton.backgroundColor = UI_PRIMARY_COLOR;
     [self.view addSubview:doneButton];
 
     [super viewDidLoad];

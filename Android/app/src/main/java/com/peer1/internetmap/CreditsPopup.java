@@ -3,15 +3,13 @@ package com.peer1.internetmap;
 import java.io.IOException;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.webkit.WebView;
 
-public class CreditsPopup extends Activity{
+public class CreditsPopup extends BaseActivity {
     private static String TAG = "CreditsPopup";
 
     @SuppressLint("NewApi")

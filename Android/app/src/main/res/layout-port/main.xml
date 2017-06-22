@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainLayout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:id="@+id/mainLayout" >
+    android:background="@color/colorPrimaryDark"
+    android:orientation="vertical">
 
     <SurfaceView
         android:id="@+id/surfaceview"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
+
+    <View
+        android:id="@+id/surfaceview_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark" />
 
     <LinearLayout
         android:id="@+id/buttonsLayout"
@@ -16,13 +23,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:baselineAligned="false" >
+        android:baselineAligned="false">
 
         <RelativeLayout
             android:id="@+id/searchLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" >
+            android:layout_weight="1">
 
             <ImageView
                 android:id="@+id/searchButton"
@@ -30,8 +37,7 @@
                 android:layout_height="48dp"
                 android:layout_centerInParent="true"
                 android:src="@drawable/searchbutton"
-                android:tint="@drawable/icon_tint"
-                android:onClick="searchButtonPressed" />
+                android:tint="@drawable/icon_tint" />
 
             <ProgressBar
                 android:id="@+id/searchProgressBar"
@@ -47,7 +53,7 @@
             android:id="@+id/visualizationsLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" >
+            android:layout_weight="1">
 
             <ImageView
                 android:id="@+id/visualizationsButton"
@@ -55,15 +61,14 @@
                 android:layout_height="48dp"
                 android:layout_centerInParent="true"
                 android:src="@drawable/visualizationsbutton"
-                android:tint="@drawable/icon_tint"
-                android:onClick="visualizationsButtonPressed" />
+                android:tint="@drawable/icon_tint" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/timelineLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" >
+            android:layout_weight="1">
 
             <ImageView
                 android:id="@+id/timelineButton"
@@ -71,15 +76,14 @@
                 android:layout_height="48dp"
                 android:layout_centerInParent="true"
                 android:src="@drawable/timelinebutton"
-                android:tint="@drawable/icon_tint"
-                android:onClick="timelineButtonPressed" />
+                android:tint="@drawable/icon_tint" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/infoLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" >
+            android:layout_weight="1">
 
             <ImageView
                 android:id="@+id/infoButton"
@@ -87,10 +91,19 @@
                 android:layout_height="48dp"
                 android:layout_centerInParent="true"
                 android:src="@drawable/infobutton"
-                android:tint="@drawable/icon_tint"
-                android:onClick="infoButtonPressed" />
+                android:tint="@drawable/icon_tint" />
         </RelativeLayout>
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/peerLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/contentPadding"
+        android:layout_marginRight="@dimen/contentPadding"
+        android:src="@drawable/peer1_logo" />
 
     <SeekBar
         android:id="@+id/timelineSeekBar"
@@ -102,20 +115,9 @@
         android:paddingLeft="@dimen/timelinePadding"
         android:paddingRight="@dimen/timelinePadding"
         android:progressDrawable="@drawable/seekbar_progress"
-        android:thumb="@drawable/seek_thumb_normal_transparent"
-        android:thumbTint="@color/colorAccent"
+        android:thumb="@drawable/seek_thumb_cyan"
         android:thumbOffset="-2dp"
-        android:visibility="invisible" />
-
-    <ImageView
-        android:id="@+id/peerLogo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="@dimen/contentPadding"
-        android:layout_marginRight="@dimen/contentPadding"
-        android:src="@drawable/peer1_logo" />
+        android:visibility="gone" />
 
     <ProgressBar
         android:id="@+id/loadingSpinner"

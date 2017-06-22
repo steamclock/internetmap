@@ -41,6 +41,8 @@
 	<true/>
 	<key>UIAppFonts</key>
 	<array>
+		<string>Nexa Bold.otf</string>
+		<string>Nexa Light.otf</string>
 		<string>ARSMaquettePro-Bold.otf</string>
 		<string>ARSMaquettePro-Light.otf</string>
 		<string>ARSMaquettePro-Medium.otf</string>

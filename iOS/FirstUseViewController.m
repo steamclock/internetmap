@@ -53,10 +53,10 @@ static const int NUM_PAGES = 3;
         UIImageView* page = [[UIImageView alloc] initWithFrame:frame];
         frame.origin.x += frame.size.width;
         if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-            page.image = [UIImage imageNamed:[NSString stringWithFormat:@"screen%d.png", i+1]];
+            page.image = [UIImage imageNamed:[NSString stringWithFormat:@"help0%d.png", i+1]];
         }
         else {
-            page.image = [UIImage imageNamed:[NSString stringWithFormat:@"screen%d-ipad.png", i+1]];
+            page.image = [UIImage imageNamed:[NSString stringWithFormat:@"help0%d-ipad.png", i+1]];
         }
         [self.content addSubview:page];
     }

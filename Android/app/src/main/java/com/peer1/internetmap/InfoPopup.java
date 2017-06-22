@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,13 +16,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 
-public class InfoPopup extends PopupWindow{
+public class InfoPopup extends PopupWindow {
     private static String TAG = "InfoPopup";
     private InternetMap mContext;
 
     public InfoPopup(final InternetMap context, final MapControllerWrapper controller, View view) {
-        super(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.translucentBlack)));
+        super(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         setOutsideTouchable(true);
         setFocusable(true);
         mContext = context;
@@ -34,7 +35,7 @@ public class InfoPopup extends PopupWindow{
         values[2] = context.getString(R.string.infoLink);
         values[3] = context.getString(R.string.infoCredits);
         
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, android.R.id.text1, values);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.view_info_popup_item, android.R.id.text1, values);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

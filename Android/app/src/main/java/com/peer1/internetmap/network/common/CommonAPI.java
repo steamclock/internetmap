@@ -12,8 +12,6 @@ import retrofit2.http.Query;
 /**
  * Created by shayla on 2017-05-10.
  */
-
-
 public interface CommonAPI {
 
     /**

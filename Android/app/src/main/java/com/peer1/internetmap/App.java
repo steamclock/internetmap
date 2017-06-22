@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.res.Configuration;
 
 import timber.log.Timber;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
  * Created by shayla on 2017-05-10.
@@ -24,6 +25,11 @@ public class App extends Application {
         } else {
             // TODO production logging
         }
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                        .setDefaultFontPath(getString(R.string.font_regular))
+                        .setFontAttrId(R.attr.fontPath)
+                        .build());
 
         globalSettings = new GlobalSettings(this);
     }

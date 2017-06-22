@@ -76,8 +76,7 @@ void MapDisplay::draw(void)
     
     glEnable(GL_PROGRAM_POINT_SIZE);
 #endif
-    
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); //Visualization background color
+    glClearColor(0.17f, 0.16f, 0.16f, 1.0f); //Visualization background color
     
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
@@ -100,16 +99,17 @@ void MapDisplay::draw(void)
 #endif
 #endif
     
+
+    Matrix4 mvp = camera->currentModelViewProjection();
+    
     if (selectedNodes) {
         _selectedNodeProgram->bind();
         bindDefaultNodeUniforms(_selectedNodeProgram);
-        
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        
         selectedNodes->display();
     }
     
-    Matrix4 mvp = camera->currentModelViewProjection();
+    glBlendFunc(GL_ONE, GL_ONE);
     
     if(visualizationLines || highlightLines) {
         _connectionProgram->bind();
@@ -124,7 +124,6 @@ void MapDisplay::draw(void)
         highlightLines->display();
     }
     
-    glBlendFunc(GL_ONE, GL_ONE);
     glDepthMask(GL_FALSE); //disable z writing only
 
     if (nodes) {

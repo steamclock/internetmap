@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/translucentBlack"
+    android:padding="@dimen/defaultPadding"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -18,6 +19,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:text="@string/contactSalesBlurb"
+            android:textColor="@color/lightTextColor"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <EditText
@@ -26,6 +28,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/nameHint"
+            android:textColor="@color/lightTextColor"
             android:inputType="textPersonName" >
 
             <requestFocus />
@@ -37,6 +40,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/emailHint"
+            android:textColor="@color/lightTextColor"
             android:inputType="textEmailAddress" />
 
         <EditText
@@ -45,6 +49,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/phoneHint"
+            android:textColor="@color/lightTextColor"
             android:inputType="phone" />
 
         <RelativeLayout
@@ -57,7 +62,7 @@
                 android:id="@+id/submitButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/traceroute_button"
+                android:background="@drawable/shape_button_accent_color"
                 android:text="@string/submit" />
 
             <ProgressBar
@@ -82,6 +87,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:textColor="@color/lightTextColor"
         android:text="@string/contactSalesFooter"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 

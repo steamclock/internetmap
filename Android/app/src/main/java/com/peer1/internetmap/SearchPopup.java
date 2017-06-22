@@ -2,6 +2,7 @@ package com.peer1.internetmap;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
+import java.util.zip.Inflater;
 
 import junit.framework.Assert;
 
@@ -15,6 +16,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
@@ -106,28 +108,33 @@ public class SearchPopup extends PopupWindow{
     private class NodeAdapter extends ArrayAdapter<SearchItem> {
         private ArrayList<? extends SearchItem> mFilteredNodes;
 
+        public NodeAdapter(Context context) {
+            super(context, 0);
+            mFilteredNodes = new ArrayList<>();
+            mFilter = new NodeFilter();
+            mFilter.filter("");
+        }
+
+
         @Override
-        //highlight the first item, and give an icon to the 'your location' item.
         public View getView(int position, View convertView, ViewGroup parent) {
-            TextView textView = (TextView) super.getView(position, convertView, parent);
+
+            View result;
             boolean isFirstItem = (position == 0);
-            boolean isShowingYouAreHere = false;
+
             if (isFirstItem) {
                 Assert.assertTrue(getCount() > 0);
-                SearchItem item = getItem(0);
-                isShowingYouAreHere = item.getClass() == LocationItem.class;
-            }
-            
-            int color = isFirstItem ? ContextCompat.getColor(mContext, R.color.colorAccent) : Color.WHITE;
-            Drawable img = isShowingYouAreHere ? mContext.getResources().getDrawable(R.drawable.youarehere) : null;
-            if (img != null) {
-                img.setColorFilter(color, android.graphics.PorterDuff.Mode.MULTIPLY);
+                LayoutInflater inflater = LayoutInflater.from(getContext());
+                result = inflater.inflate(R.layout.view_your_location_item, parent, false);
+            } else {
+                LayoutInflater inflater = LayoutInflater.from(getContext());
+                TextView textView = (TextView)inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+                textView.setText(mFilteredNodes.get(position).toString());
+                textView.setTextColor(Color.WHITE);
+                result = textView;
             }
 
-            textView.setTextColor(color);
-            textView.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null);
-            
-            return textView;
+            return result;
         }
 
         public void showLoading() {
@@ -207,14 +214,7 @@ public class SearchPopup extends PopupWindow{
                 notifyDataSetChanged();
             }
         }
-        
-        public NodeAdapter(Context context, int resource, int textViewResourceId) {
-            super(context, resource, textViewResourceId);
-            mFilteredNodes = new ArrayList<SearchItem>();
-            mFilter = new NodeFilter();
-            mFilter.filter("");
-        }
-        
+
         @Override
         public Filter getFilter(){
             return mFilter;
@@ -250,8 +250,7 @@ public class SearchPopup extends PopupWindow{
         
         mAllNodes = context.mAllSearchNodes;
 
-        final NodeAdapter adapter = new NodeAdapter(context, android.R.layout.simple_list_item_1,
-                android.R.id.text1);
+        final NodeAdapter adapter = new NodeAdapter(context);
         final ListView listView = (ListView) getContentView().findViewById(R.id.searchResultsView);
         listView.setAdapter(adapter);
         final EditText input = (EditText) getContentView().findViewById(R.id.searchEdit);

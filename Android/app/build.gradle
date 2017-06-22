@@ -7,8 +7,7 @@ def externalDataMakeFile = "../../Android-NDK/Android.mk"
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
-    useLibrary 'org.apache.http.legacy'
-    sourceCompatibility = 1.8
+    //sourceCompatibility = 1.8
 
 //    signingConfigs {
 //        release {
@@ -23,10 +22,11 @@ android {
         applicationId "com.peer1.internetmap"
         minSdkVersion 19
         targetSdkVersion 25
-        compileOptions {
-            sourceCompatibility JavaVersion.VERSION_1_5
-            targetCompatibility JavaVersion.VERSION_1_5
-        }
+        // Not sure this is required, commenting out.
+//        compileOptions {
+//            sourceCompatibility JavaVersion.VERSION_1_5
+//            targetCompatibility JavaVersion.VERSION_1_5
+//        }
 
         ndk {
             moduleName "internetmaprenderer"
@@ -92,4 +92,5 @@ dependencies {
     compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
 
     compile 'com.jakewharton.timber:timber:4.5.1'
+    compile 'uk.co.chrisjenx:calligraphy:2.3.0'
 }
