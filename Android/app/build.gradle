@@ -9,19 +9,22 @@ android {
     buildToolsVersion "25.0.2"
     //sourceCompatibility = 1.8
 
-//    signingConfigs {
-//        release {
-//            storeFile file(RELEASE_KEYSTORE_PATH)
-//            storePassword RELASE_KEY_PASSWORD
-//            keyAlias RELEASE_KEY_ALIAS
-//            keyPassword RELEASE_KEYSTORE_PASSWORD
-//        }
-//    }
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            output.outputFile = new File(
+                    output.outputFile.parent,
+                    output.outputFile.name.replace(".apk", "-${variant.versionName}-${variant.versionCode}.apk"))
+        }
+    }
 
     defaultConfig {
         applicationId "com.peer1.internetmap"
         minSdkVersion 19
         targetSdkVersion 25
+
+        versionCode 8
+        versionName "2.0.0"
+
         // Not sure this is required, commenting out.
 //        compileOptions {
 //            sourceCompatibility JavaVersion.VERSION_1_5
@@ -34,15 +37,15 @@ android {
     }
 
     buildTypes {
+        debug {
+            debuggable true
+        }
+
         release {
             minifyEnabled false
+            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
-//        releaseSigned {
-//            signingConfig signingConfigs.release
-//            minifyEnabled false
-//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-//        }
     }
 
     externalNativeBuild {
