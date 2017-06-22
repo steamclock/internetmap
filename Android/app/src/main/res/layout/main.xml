@@ -85,6 +85,7 @@
         android:progressDrawable="@drawable/seekbar_progress"
         android:thumbOffset="-2dp"
         android:maxHeight="5dp"
+        android:layout_margin="10dp"
         android:thumb="@drawable/seek_thumb_cyan" />
 
    <ImageView

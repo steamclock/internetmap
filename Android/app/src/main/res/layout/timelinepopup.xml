@@ -24,9 +24,10 @@
         android:maxLines="1"
         android:paddingLeft="@dimen/titlebarPadding"
         android:text="&lt;title>"
+        android:padding="@dimen/contentPadding"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/lightTextColor"
-        android:textStyle="bold" />
+        fontPath="@string/font_bold" />
     
     <ImageView
         android:id="@+id/arrow"

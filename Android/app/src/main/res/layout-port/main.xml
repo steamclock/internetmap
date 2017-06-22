@@ -117,6 +117,7 @@
         android:progressDrawable="@drawable/seekbar_progress"
         android:thumb="@drawable/seek_thumb_cyan"
         android:thumbOffset="-2dp"
+        android:layout_margin="10dp"
         android:visibility="gone" />
 
     <ProgressBar
