@@ -24,6 +24,7 @@
 - (void)resetIdleTimer;
 - (void)update:(NSTimeInterval)now;
 - (void)draw;
+- (void)translateYAnimated:(float)translateY duration:(NSTimeInterval)duration;
 - (void)zoomAnimated:(float)zoom duration:(NSTimeInterval)duration;
 - (void)stopMomentumPan;
 - (void)resetZoomAndRotationAnimatedForOrientation:(BOOL)isPortraitMode;

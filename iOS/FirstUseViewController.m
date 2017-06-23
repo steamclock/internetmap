@@ -51,6 +51,7 @@ static const int NUM_PAGES = 3;
     frame.origin.y = 0;
     for(int i = 0; i < NUM_PAGES; i++) {
         UIImageView* page = [[UIImageView alloc] initWithFrame:frame];
+        [page setContentMode:UIViewContentModeScaleAspectFit];
         frame.origin.x += frame.size.width;
         if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
             page.image = [UIImage imageNamed:[NSString stringWithFormat:@"help0%d.png", i+1]];

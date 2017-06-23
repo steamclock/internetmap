@@ -31,6 +31,11 @@ Camera::Camera() :
     _zoomTarget(0.0f),
     _zoomStartTime(0.0f),
     _zoomDuration(0.0f),
+    _translationY(0.0f),
+    _translationYStart(0.0f),
+    _translationYTarget(0.0f),
+    _translationYStartTime(0.0f),
+    _translationYDuration(0.0f),
     _updateTime(0.0f),
     _idleStartTime(0.0f),
     _panEndTime(0.0f),
@@ -61,14 +66,17 @@ void Camera::update(TimeInterval currentTime) {
     Vector3 currentTarget = calculateMoveTarget(delta);
     handleAnimatedZoom(delta);
     handleAnimatedRotation(delta);
+    handleAnimatedTranslateY(delta);
     
     float aspect = fabsf(_displayWidth / _displayHeight);
     Matrix4 model = _rotationMatrix * Matrix4::translation(Vector3(-currentTarget.getX(), -currentTarget.getY(), -currentTarget.getZ()));
     Matrix4 view = Matrix4::translation(Vector3(0.0f, 0.0f, _zoom));
+    Matrix4 translation = Matrix4::translation(Vector3(0.0f, _translationY, 0.0f));
+
     Matrix4 modelView = view * model;
     Matrix4 projectionMatrix;
     
-   projectionMatrix = Matrix4::perspective(DegreesToRadians(65.0f), aspect, NEAR_PLANE, FAR_PLANE);
+    projectionMatrix = translation * Matrix4::perspective(DegreesToRadians(65.0f), aspect, NEAR_PLANE, FAR_PLANE);
     
     _projectionMatrix = projectionMatrix;
     _modelViewMatrix = modelView;
@@ -139,6 +147,32 @@ void Camera::handleMomentumRotation(TimeInterval delta) {
             float positionT = 1+(timeT*timeT-2.0f*timeT);
             
             rotateRadiansZ(_rotationVelocity*delta*positionT);
+        }
+    }
+}
+
+void Camera::handleAnimatedTranslateY(TimeInterval delta) {
+    // Use same easing function as zoom method, since they will usually be called together.
+    // resetZoomAndRotationAnimated reset translateY to 0.0
+    
+    if(_translationYStartTime < _updateTime) {
+        float timeT = (_updateTime - _translationYStartTime) / _translationYDuration;
+        if(timeT > 1.0f) {
+            _translationYStartTime = MAXFLOAT;
+            _translationY = _translationYTarget;
+        }
+        else {
+            float positionT;
+            
+            // Quadratic ease-in / ease-out
+            if (timeT < 0.5f)
+            {
+                positionT = timeT * timeT * 2;
+            }
+            else {
+                positionT = 1.0f - ((timeT - 1.0f) * (timeT - 1.0f) * 2.0f);
+            }
+            _translationY = _translationYStart + (_translationYTarget - _translationYStart) * positionT;
         }
     }
 }
@@ -311,21 +345,16 @@ void Camera::resetZoomAndRotationAnimated(bool isPortraitMode) {
     
     float zoomDistance = _zoom - targetZoom;
     
-    //if we're already zoomed out (or close), it's not worth it
-    bool worthZooming = (zoomDistance > 0.5);
-    if (worthZooming) {
-        //LOG("zooming from %f to %f", _zoom, targetZoom);
-        TimeInterval duration = zoomDistance / 2;
-        //zoom via setTarget so that we also reset translation.
-        Target target;
-        target.zoom = targetZoom;
-        target.maxZoom = MAX_MAX_ZOOM;
-        setTarget(target, duration);
-        rotateAnimated(targetRotation, duration);
-    } else {
-        //LOG("skipping zoom");
-        cameraResetFinishedCallback();
-    }
+    // Always perform the zoom, this will reset the center target if it has been changed elsewhere.
+    //LOG("zooming from %f to %f", _zoom, targetZoom);
+    TimeInterval duration = fabs(zoomDistance) / 2;
+    //zoom via setTarget so that we also reset translation.
+    Target target;
+    target.zoom = targetZoom;
+    target.maxZoom = MAX_MAX_ZOOM;
+    setTarget(target, duration);
+    rotateAnimated(targetRotation, duration);
+    translateYAnimated(0.0f, duration);
 }
 
 void Camera::zoomAnimated(float zoom, TimeInterval duration) {
@@ -386,3 +415,11 @@ void Camera::stopMomentumRotation(void) {
 void Camera::resetIdleTimer() {
     _idleStartTime = _updateTime;
 }
+
+void Camera::translateYAnimated(float translateY, TimeInterval duration) {
+    _translationYStart = _translationY;
+    _translationYTarget = translateY;
+    _translationYStartTime = _updateTime;
+    _translationYDuration = duration;
+}
+
