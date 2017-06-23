@@ -28,7 +28,7 @@
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </imageView>
-                <scrollView multipleTouchEnabled="YES" contentMode="bottom" misplaced="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" id="17" customClass="ExpandedScrollView">
+                <scrollView multipleTouchEnabled="YES" contentMode="scaleAspectFit" misplaced="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" id="17" customClass="ExpandedScrollView">
                     <rect key="frame" x="0.0" y="20" width="768" height="1004"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
@@ -49,8 +49,8 @@
                         <action selector="next:" destination="-1" eventType="touchUpInside" id="23"/>
                     </connections>
                 </button>
-                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" id="7">
-                    <rect key="frame" x="325" y="896" width="136" height="69"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" misplaced="YES" id="7">
+                    <rect key="frame" x="325" y="909" width="136" height="69"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                 </imageView>

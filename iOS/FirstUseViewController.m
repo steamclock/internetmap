@@ -58,10 +58,16 @@ static const int NUM_PAGES = 3;
         else {
             page.image = [UIImage imageNamed:[NSString stringWithFormat:@"help0%d-ipad.png", i+1]];
         }
+        
+        page.contentMode = UIViewContentModeScaleAspectFit;
+
         [self.content addSubview:page];
     }
     
+
     self.content.contentSize = CGSizeMake(frame.size.width * NUM_PAGES, frame.size.height);
+
+    NSLog (@"CONTENT WIDTH %f HEIGHT %f", self.content.contentSize.width, self.content.contentSize.height );
     
     // Set up everything for the firsst page
     self.page = 0;
