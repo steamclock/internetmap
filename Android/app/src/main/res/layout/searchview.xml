@@ -22,9 +22,10 @@
             android:imeOptions="actionGo"
             android:inputType="textNoSuggestions|textVisiblePassword"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/lightTextColor"
+            android:textColor="@color/darkTextColor"
             android:textColorHint="@color/darkHintTextColor"
-            android:textStyle="bold">
+            android:fontFamily="@string/font_bold"
+            android:minHeight="?android:attr/listPreferredItemHeightSmall">
 
             <requestFocus />
         </EditText>
@@ -35,7 +36,8 @@
             android:layout_height="30dp"
             android:layout_margin="5dp"
             android:src="@drawable/x_icon"
-            android:tint="@color/lightTextColor"/>
+            android:tint="@color/darkTextColor"
+            android:layout_gravity="center"/>
 
     </LinearLayout>
 

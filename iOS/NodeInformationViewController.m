@@ -13,6 +13,7 @@
 #define TOP_BACKGROUND_HEIGHT 44
 #define VERTICAL_PADDING_IPAD 20
 #define VERTICAL_PADDING_IPHONE 10
+#define VERTICAL_PADDING_IPHONE 20
 #define LABELS_HEIGHT 20
 #define TRACEROUTE_BUTTON_HEIGHT 44
 
@@ -259,6 +260,13 @@
             }
             self.tracerouteButton.alpha = 0;
         }];
+        
+        int minDesiredHeight = 250;
+        if (self.contentHeight < minDesiredHeight) {
+            self.contentHeight = minDesiredHeight;
+            float width = [HelperMethods deviceIsiPad] ? 443 : [[UIScreen mainScreen] bounds].size.width;
+            [self setPreferredContentSize:CGSizeMake(width, minDesiredHeight)];
+        }
         
         //tell delegate to perform actual traceroute
         if ([self.delegate respondsToSelector:@selector(tracerouteButtonTapped)]) {
