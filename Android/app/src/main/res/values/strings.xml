@@ -20,12 +20,12 @@
     <string name="yourLocation">Your Location</string>
     <string name="infoHelp">Help</string>
     <string name="infoSales">Hosting &amp; Cloud Services</string>
-    <string name="infoLink">Learn more at Peer1.com</string>
+    <string name="infoLink">Learn more at cogecopeer1.com</string>
     <string name="infoCredits">Credits</string>
     <string name="loading">Loading %s...</string>
     <string name="contactSalesHeader">Contact Us</string>
     <string name="contactSalesBlurb">Learn more about our hosting and cloud services</string>
-    <string name="contactSalesFooter">peer1.com | 1.866.579.9690 | Follow us @peer1</string>
+    <string name="contactSalesFooter">cogecopeer1.com | 1.866.579.9690 | Follow us @CogecoPeer1</string>
     <string name="nameHint">Name (Required)</string>
     <string name="phoneHint">Phone</string>
     <string name="emailHint">Email (Required)</string>

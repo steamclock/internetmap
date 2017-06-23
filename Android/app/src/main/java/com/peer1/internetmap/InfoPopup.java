@@ -48,7 +48,7 @@ public class InfoPopup extends PopupWindow {
                     doSales();
                     break;
                 case 2: //link
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.peer1.com/node/3325"));
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.cogecopeer1.com/services/hosting/"));
                     mContext.startActivity(browserIntent);
                     break;
                 case 3: //credits
