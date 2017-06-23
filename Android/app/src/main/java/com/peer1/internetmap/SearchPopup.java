@@ -120,9 +120,9 @@ public class SearchPopup extends PopupWindow{
         public View getView(int position, View convertView, ViewGroup parent) {
 
             View result;
-            boolean isFirstItem = (position == 0);
+            SearchItem item = mFilteredNodes.get(position);
 
-            if (isFirstItem) {
+            if (item instanceof LocationItem) {
                 Assert.assertTrue(getCount() > 0);
                 LayoutInflater inflater = LayoutInflater.from(getContext());
                 result = inflater.inflate(R.layout.view_your_location_item, parent, false);
