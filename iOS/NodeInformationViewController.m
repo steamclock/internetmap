@@ -266,7 +266,7 @@
         }
     }else {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"No Internet connection", nil) message:NSLocalizedString(@"Please connect to the internet.", nil) delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-        [alert show];
+        [alert show];               
     }
 }
 
