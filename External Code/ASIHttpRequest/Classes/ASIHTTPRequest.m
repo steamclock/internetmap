@@ -1212,11 +1212,8 @@ static NSOperationQueue *sharedQueue = nil;
             // see: http://iphonedevelopment.blogspot.com/2010/05/nsstream-tcp-and-ssl.html
             
             NSDictionary *sslProperties = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                      [NSNumber numberWithBool:YES], kCFStreamSSLAllowsExpiredCertificates,
-                                      [NSNumber numberWithBool:YES], kCFStreamSSLAllowsAnyRoot,
-                                      [NSNumber numberWithBool:NO],  kCFStreamSSLValidatesCertificateChain,
-                                      kCFNull,kCFStreamSSLPeerName,
-                                      nil];
+                                           [NSNumber numberWithBool:YES],
+                                           kCFStreamSSLValidatesCertificateChain, nil];
             
             CFReadStreamSetProperty((CFReadStreamRef)[self readStream], 
                                     kCFStreamPropertySSLSettings, 
@@ -4865,8 +4862,8 @@ static NSOperationQueue *sharedQueue = nil;
 	}
   
 	// RFC 2612 says max-age must override any Expires header
-	if (maxAge) {
-		return [[NSDate date] addTimeInterval:maxAge];
+	if (maxAge) {        
+        return [[NSDate date] dateByAddingTimeInterval:maxAge];
 	} else {
 		NSString *expires = [responseHeaders objectForKey:@"Expires"];
 		if (expires) {

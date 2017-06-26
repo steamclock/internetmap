@@ -198,7 +198,13 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
 #pragma mark - Data: Node retrieval
 
 -(NSMutableArray*)allNodes {
+    
+    NSLog (@"allNodes");
+    
     NSMutableArray* array = [NSMutableArray arrayWithCapacity:_controller->data->nodes.size()];
+    
+    NSLog (@"allNodes %zd", array.count);
+    
     for (int i = 0; i<_controller->data->nodes.size(); i++) {
         NodePointer node = _controller->data->nodes[i];
         if(node->isActive()) {
@@ -221,6 +227,11 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
         return [[NodeWrapper alloc] initWithNodePointer:node];
     else
         return nil;
+}
+
+- (BOOL) isWithinMaxNodeIndex:(int)index {
+    if (index >= _controller->data->nodes.size()) return NO;
+    return YES;
 }
 
 #pragma mark - Controller: Event handling

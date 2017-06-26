@@ -9,7 +9,7 @@
 #include "Visualization.hpp"
 
 //TODO: move these to a better place
-#define SELECTED_NODE_COLOR_HEX 0xffa300
+#define SELECTED_NODE_COLOR_HEX 0x00A8EC
 #define SELECTED_CONNECTION_COLOR_BRIGHT_HEX 0xE0E0E0
 #define SELECTED_CONNECTION_COLOR_DIM_HEX 0x383838
 

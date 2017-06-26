@@ -12,7 +12,6 @@
 
 #define TOP_BACKGROUND_HEIGHT 44
 #define VERTICAL_PADDING_IPAD 20
-#define VERTICAL_PADDING_IPHONE 10
 #define VERTICAL_PADDING_IPHONE 20
 #define LABELS_HEIGHT 20
 #define TRACEROUTE_BUTTON_HEIGHT 44
@@ -274,7 +273,7 @@
         }
     }else {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"No Internet connection", nil) message:NSLocalizedString(@"Please connect to the internet.", nil) delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-        [alert show];
+        [alert show];               
     }
 }
 
