@@ -38,6 +38,7 @@
 - (void)startMomentumZoomWithVelocity:(float)velocity;
 - (void)zoomByScale:(float)scale;
 - (NodeWrapper*)nodeByASN:(NSString*)asn;
+- (BOOL) isWithinMaxNodeIndex:(int)index;
 - (void)rotateAnimated:(GLKMatrix4)matrix duration:(NSTimeInterval)duration;
 - (NSMutableArray*)allNodes;
 

@@ -321,9 +321,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             self.isHandlingLongPress = YES;
             int i = [self.controller indexForNodeAtPoint:[gesture locationInView:self.view]];
             self.lastIntersectionDate = [NSDate date];
-            if (i != NSNotFound) {
-                
+            if (i != NSNotFound && [self.controller isWithinMaxNodeIndex:i]) {
+
                 NodeWrapper* node = [self.controller nodeAtIndex:i];
+
                 if (self.nodeTooltipViewController.node != node) {
                     self.nodeTooltipViewController = [[NodeTooltipViewController alloc] initWithNode:node];
                     
