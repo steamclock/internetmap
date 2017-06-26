@@ -22,7 +22,7 @@
 @interface NodeSearchViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
 
 @property (weak, nonatomic) id delegate;
-@property (nonatomic, copy) NSMutableArray* allItems;
+@property (nonatomic, copy) NSArray* allItems;
 @property (strong, nonatomic) UITableView* tableView;
 
 @end

@@ -19,7 +19,7 @@
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="2">
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleAspectFit" id="2">
             <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
@@ -49,8 +49,8 @@
                         <action selector="next:" destination="-1" eventType="touchUpInside" id="23"/>
                     </connections>
                 </button>
-                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" id="7">
-                    <rect key="frame" x="325" y="896" width="136" height="69"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" misplaced="YES" id="7">
+                    <rect key="frame" x="325" y="909" width="136" height="69"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                 </imageView>

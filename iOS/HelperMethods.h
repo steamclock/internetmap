@@ -20,9 +20,9 @@
 #define UI_PRIMARY_COLOR UI_BLUE_COLOR
 
 #define FONT_NAME @"Nexa"
-#define FONT_NAME_LIGHT @"Nexa Light"
-#define FONT_NAME_MEDIUM @"Nexa Bold"
-#define FONT_NAME_REGULAR @"Nexa Light"
+#define FONT_NAME_LIGHT @"NexaLight"
+#define FONT_NAME_MEDIUM @"NexaBold"
+#define FONT_NAME_REGULAR @"NexaLight"
 
 extern void SCLogRect(CGRect rect);
 
