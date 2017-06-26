@@ -337,6 +337,11 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
             LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
             View popupView = layoutInflater.inflate(R.layout.visualizationview, null);
             mVisualizationPopup = new VisualizationPopupWindow(this, mController, popupView);
+            
+            if (isSmallScreen()) {
+                mVisualizationPopup.setWidth(LayoutParams.MATCH_PARENT);
+            }
+
             mVisualizationPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 public void onDismiss() {
                     mVisualizationPopup = null;
@@ -1011,6 +1016,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         public boolean onDown(MotionEvent event) { 
             float x = event.getX();
             float y = event.getY();
+
             SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceview);
             int location[] = new int[2];
             surfaceView.getLocationOnScreen(location);
@@ -1026,6 +1032,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             float xDp = DeviceUtils.pxToDp(distanceX);
             float yDp = DeviceUtils.pxToDp(distanceY);
+
             mController.rotateRadiansXY(distance2radians(xDp), distance2radians(yDp));
             return true;
         }
