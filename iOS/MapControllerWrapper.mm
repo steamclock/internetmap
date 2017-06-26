@@ -230,7 +230,7 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
 }
 
 - (BOOL) isWithinMaxNodeIndex:(int)index {
-    if (index > _controller->data->nodes.size()) return NO;
+    if (index >= _controller->data->nodes.size()) return NO;
     return YES;
 }
 
