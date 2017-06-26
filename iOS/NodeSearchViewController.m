@@ -221,8 +221,10 @@
         row--;
     }
 
-    NodeWrapper* node = self.searchResults[row];
-    [self.delegate nodeSelected:node];
+    if (row < self.searchResults.count) {
+        NodeWrapper* node = self.searchResults[row];
+        [self.delegate nodeSelected:node];
+    }
 }
 
 
@@ -278,7 +280,8 @@
                          
                          // Only show search for host in table if it might reasonably be a host
                          // or ip address
-                         weakSelf.showHostLookup = ((localSearchText.length != 0) && hasDot) ||  (searchResults.count == 0);
+//                         weakSelf.showHostLookup = ((localSearchText.length != 0) && hasDot) ||  (searchResults.count == 0);
+                         weakSelf.showHostLookup = NO;
                          
                          weakSelf.searchResults = searchResults;
                          [self.tableView reloadData];
