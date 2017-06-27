@@ -15,6 +15,7 @@
 #define VERTICAL_PADDING_IPHONE 20
 #define LABELS_HEIGHT 20
 #define TRACEROUTE_BUTTON_HEIGHT 44
+#define TRACEROUTE_ENABLED 0
 
 #define INFO_BOX_HEIGHT 75
 
@@ -161,8 +162,15 @@
         [self.infoLabels addObject:label];
     }
     
+    float padding;
+    #if TRACEROUTE_ENABLED
+        padding = lastLabelBottom; // space for button
+    #else
+        padding = lastLabelBottom+verticalPad;
+    #endif
+    
     // connections
-    UILabel* connectionsLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, lastLabelBottom+verticalPad, 280, LABELS_HEIGHT)];
+    UILabel* connectionsLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, padding, 280, LABELS_HEIGHT)];
     connectionsLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:18];
     connectionsLabel.textColor = FONT_COLOR_WHITE;
     connectionsLabel.backgroundColor = [UIColor clearColor];
@@ -172,12 +180,8 @@
     [self.infoLabels addObject:connectionsLabel];
     
     
-    /*
-
- 
-    // hiding traceroute for now
-    // also conflicts with position of connections label
-
+    #if TRACEROUTE_ENABLED
+    // traceroute button
     if (!self.isDisplayingCurrentNode) {
         self.tracerouteButton = [UIButton buttonWithType:UIButtonTypeCustom];
         float tracerouteButtonY = self.preferredContentSize.height-TRACEROUTE_BUTTON_HEIGHT-verticalPad+10;
@@ -194,7 +198,7 @@
     self.tracerouteContainerView.hidden = YES;
     [self.scrollView addSubview:self.tracerouteContainerView];
 
-     */
+    #endif
 
     CGFloat boxWidth = (self.preferredContentSize.width-20-30-30-20)/3.0; //total width subtracted by outer and inner margins and divided by three
     
