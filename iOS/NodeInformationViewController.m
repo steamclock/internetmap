@@ -184,7 +184,7 @@
     // traceroute button
     if (!self.isDisplayingCurrentNode) {
         self.tracerouteButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        float tracerouteButtonY = self.preferredContentSize.height-TRACEROUTE_BUTTON_HEIGHT-verticalPad+10;
+        float tracerouteButtonY = self.preferredContentSize.height - TRACEROUTE_BUTTON_HEIGHT - verticalPad + 10;
         self.tracerouteButton.frame = CGRectMake(20, tracerouteButtonY, self.scrollView.bounds.size.width - 40, TRACEROUTE_BUTTON_HEIGHT);
         self.tracerouteButton.titleLabel.font = [UIFont fontWithName:FONT_NAME_REGULAR size:20];
         [self.tracerouteButton setTitle:NSLocalizedString(@"Perform Traceroute", nil) forState:UIControlStateNormal];
