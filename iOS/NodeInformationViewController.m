@@ -130,7 +130,7 @@
     orangeBackgroundView.backgroundColor = UI_PRIMARY_COLOR;
     [self.view addSubview:orangeBackgroundView];
     
-    self.topLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, -2, self.preferredContentSize.width-xImage.size.width-25, TOP_BACKGROUND_HEIGHT)];
+    self.topLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, self.preferredContentSize.width-xImage.size.width-25, TOP_BACKGROUND_HEIGHT)];
     self.topLabel.font = [UIFont fontWithName:FONT_NAME_MEDIUM size:24];
     self.topLabel.textColor = [UIColor blackColor];
     self.topLabel.backgroundColor = [UIColor clearColor];
@@ -161,6 +161,7 @@
         [self.infoLabels addObject:label];
     }
     
+<<<<<<< Updated upstream
     // connections
     UILabel* connectionsLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, lastLabelBottom+verticalPad, 280, LABELS_HEIGHT)];
     connectionsLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:18];
@@ -174,9 +175,25 @@
     
     /*
      // hide traceroute button. issue 388
+=======
+    
+    // Number of connections
+    UILabel* connectionsLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, lastLabelBottom+verticalPad, 280, LABELS_HEIGHT)];
+    connectionsLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:18];
+    connectionsLabel.textColor = FONT_COLOR_WHITE;
+    connectionsLabel.backgroundColor = [UIColor clearColor];
+    NSString* conn = self.node.numberOfConnections == 1 ? @"Connection" : @"Connections";
+    connectionsLabel.text = [NSString stringWithFormat:@"%zd %@", self.node.numberOfConnections, conn];
+    [self.scrollView addSubview:connectionsLabel];
+    [self.infoLabels addObject:connectionsLabel];
+
+    /*
+    // hiding traceroute for now
+    // also conflicts with position of connections label
+>>>>>>> Stashed changes
     if (!self.isDisplayingCurrentNode) {
         self.tracerouteButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        float tracerouteButtonY = self.preferredContentSize.height-TRACEROUTE_BUTTON_HEIGHT-verticalPad;
+        float tracerouteButtonY = self.preferredContentSize.height-TRACEROUTE_BUTTON_HEIGHT-verticalPad+10;
         self.tracerouteButton.frame = CGRectMake(20, tracerouteButtonY, self.scrollView.bounds.size.width - 40, TRACEROUTE_BUTTON_HEIGHT);
         self.tracerouteButton.titleLabel.font = [UIFont fontWithName:FONT_NAME_REGULAR size:20];
         [self.tracerouteButton setTitle:NSLocalizedString(@"Perform Traceroute", nil) forState:UIControlStateNormal];
@@ -189,8 +206,13 @@
     self.tracerouteContainerView = [[UIView alloc] initWithFrame:CGRectMake(orangeBackgroundView.x, orangeBackgroundView.y, orangeBackgroundView.width, 500)];
     self.tracerouteContainerView.hidden = YES;
     [self.scrollView addSubview:self.tracerouteContainerView];
+<<<<<<< Updated upstream
      */
     
+=======
+    */
+
+>>>>>>> Stashed changes
     CGFloat boxWidth = (self.preferredContentSize.width-20-30-30-20)/3.0; //total width subtracted by outer and inner margins and divided by three
     
     self.box1 = [[LabelNumberBoxView alloc] initWithFrame:CGRectMake(20, orangeBackgroundView.y+orangeBackgroundView.height+6, boxWidth, INFO_BOX_HEIGHT) labelText:@"IP Hops" numberText:@"0"];
