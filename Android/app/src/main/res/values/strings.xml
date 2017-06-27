@@ -39,4 +39,9 @@
     <string name="finish">Finish</string>
     <string name="simulated">Simulated Data</string>
     <string name="searching">Searching...</string>
+
+    <string name="mapOfTheInternet">Map of the Internet</string>
+    <string name="broughtToYouBy">brought to you by</string>
+    <string name="onboardingText">This is a 3D visualization of the worldwide networks that make up the internet. Each point represents a connected ISP, exchange point, university or other organization.</string>
+    <string name="explore">Explore</string>
 </resources>
