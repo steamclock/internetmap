@@ -68,8 +68,6 @@ static const int NUM_PAGES = 3;
 
     self.content.contentSize = CGSizeMake(frame.size.width * NUM_PAGES, frame.size.height);
 
-    NSLog (@"CONTENT WIDTH %f HEIGHT %f", self.content.contentSize.width, self.content.contentSize.height );
-    
     // Set up everything for the firsst page
     self.page = 0;
     [self setPageMarkerForPage:0];
