@@ -223,7 +223,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.cachedCurrentASN = nil;
     [self precacheCurrentASN];
     
-    [self.timelineButton setImage:[UIImage imageNamed:@"travelback_selected.png"] forState:UIControlStateSelected | UIControlStateHighlighted];
     
     [self performSelector:@selector(fadeOutLogo) withObject:nil afterDelay:4];
     
@@ -502,7 +501,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.nodeSearchPopover presentPopoverFromRect:self.searchButton.bounds inView:self.searchButton permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
     self.searchButton.highlighted = YES;
     self.searchButton.selected = YES;
-  
+    
 }
 
 -(void)showFirstUse {
@@ -602,12 +601,17 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(IBAction)infoButtonPressed:(id)sender {
     [self dismissNodeInfoPopover];
+    
+    self.timelineButton.selected = NO;
+    self.visualizationsButton.selected = NO;
+    self.searchButton.selected = NO;
 
     if (!self.infoPopover) {
         StringListViewController *tableforPopover = [[StringListViewController alloc] initWithStyle:UITableViewStylePlain];
         [tableforPopover setHighlightCurrentRow:NO];
         self.infoPopover = [[WEPopoverController alloc] initWithContentViewController:tableforPopover];
         self.infoPopover.delegate = self;
+        
         tableforPopover.items = @[ @"Help", @"Hosting & Cloud Services", @"Learn more at peer1.com", @"Credits" ];
         [self.infoPopover setPopoverContentSize:tableforPopover.preferredContentSize];
         if (![HelperMethods deviceIsiPad]) {
