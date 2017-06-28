@@ -11,12 +11,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 
-    <View
-        android:id="@+id/surfaceview_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorPrimaryDark" />
-
     <LinearLayout
         android:id="@+id/buttonsLayout"
         android:layout_width="fill_parent"
@@ -33,12 +27,10 @@
             
             <ImageView
                 android:id="@+id/searchButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:src="@drawable/searchbutton"
-                android:tint="@drawable/icon_tint"
-                android:textOff=""
-                android:textOn="" />
+                android:tint="@drawable/icon_tint" />
 
             <ProgressBar
                 android:id="@+id/searchProgressBar"
@@ -53,24 +45,24 @@
 
         <ImageView
             android:id="@+id/visualizationsButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:src="@drawable/visualizationsbutton"
             android:tint="@drawable/icon_tint"
             android:layout_marginRight="10dp" />
 
         <ImageView
             android:id="@+id/timelineButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:src="@drawable/timelinebutton"
             android:tint="@drawable/icon_tint"
             android:layout_marginRight="10dp" />
         
         <ImageView
             android:id="@+id/infoButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:src="@drawable/infobutton"
             android:tint="@drawable/icon_tint" />
     </LinearLayout>
@@ -98,6 +90,15 @@
        android:layout_marginTop="@dimen/contentPadding"
        android:src="@drawable/peer1_logo" />
 
+    <ImageView
+        android:id="@+id/surfaceview_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        android:visibility="visible"
+        android:src="@drawable/load_bg"/>
+
     <ProgressBar
         android:id="@+id/loadingSpinner"
         style="?android:attr/progressBarStyleLarge"
@@ -105,5 +106,10 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" />
+
+    <!-- TODO -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

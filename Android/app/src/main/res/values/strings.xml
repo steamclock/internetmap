@@ -2,7 +2,6 @@
 <resources>
     <string name="mxtoolbox_api_key">1d0e968c-47a7-4354-80dc-9cf5a590ccbf</string>
 
-
     <string name="app_name">Internet Map</string>
     <string name="youarehere">You are here</string>
     <string name="nomoredata">No additional data.</string>
@@ -44,4 +43,7 @@
     <string name="broughtToYouBy">brought to you by</string>
     <string name="onboardingText">This is a 3D visualization of the worldwide networks that make up the internet. Each point represents a connected ISP, exchange point, university or other organization.</string>
     <string name="explore">Explore</string>
+    <string name="searchTooltip">Here you can search for\ncompanies and domains</string>
+    <string name="visTooltip">You can also view the\ninternet as a network</string>
+    <string name="timelineTooltip">And browse the\nhistory of the internet</string>
 </resources>

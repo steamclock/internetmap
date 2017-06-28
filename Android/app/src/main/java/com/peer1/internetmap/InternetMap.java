@@ -1,5 +1,58 @@
 package com.peer1.internetmap;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GestureDetectorCompat;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
+import android.view.Surface;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.ProgressBar;
+import android.widget.SeekBar;
+
+import com.peer1.internetmap.SearchPopup.SearchNode;
+import com.peer1.internetmap.models.ASN;
+import com.peer1.internetmap.network.common.CommonCallback;
+import com.peer1.internetmap.network.common.CommonClient;
+import com.peer1.internetmap.utils.CustomTooltipManager;
+import com.peer1.internetmap.utils.DeviceUtils;
+import com.peer1.internetmap.utils.ViewUtils;
+import com.spyhunter99.supertooltips.ToolTip;
+import com.spyhunter99.supertooltips.ToolTipView;
+
+import junit.framework.Assert;
+
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.UpdateManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
@@ -7,50 +60,6 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-
-import android.support.v4.content.ContextCompat;
-import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.AnimationUtils;
-import android.widget.*;
-import junit.framework.Assert;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
-import android.graphics.Point;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Handler;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.view.Gravity;
-import android.view.ScaleGestureDetector;
-import android.view.GestureDetector;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.Surface;
-import android.view.SurfaceView;
-import android.view.SurfaceHolder;
-import android.view.View;
-import android.view.ViewGroup.LayoutParams;
-import android.support.v4.view.GestureDetectorCompat;
-import android.util.Log;
-
-import com.peer1.internetmap.SearchPopup.SearchNode;
-import com.peer1.internetmap.models.ASN;
-import com.peer1.internetmap.network.common.CommonCallback;
-import com.peer1.internetmap.network.common.CommonClient;
-import com.peer1.internetmap.utils.DeviceUtils;
-
-import net.hockeyapp.android.CrashManager;
-import net.hockeyapp.android.UpdateManager;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -83,9 +92,15 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
     private TimelinePopup mTimelinePopup;
     public ArrayList<SearchNode> mAllSearchNodes; //cache of nodes for search
     public boolean mDoneLoading;
-
     private SurfaceView surfaceView;
     private View surfaceViewOverlay;
+
+    private CustomTooltipManager tooltips;
+    private View tooltipDismissOverlay;
+    private ViewGroup firstTimePlaceholder;
+
+    private View searchIcon, visualizationIcon, timelineIcon, infoIcon;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,6 +119,8 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
 
         setContentView(R.layout.main);
 
+        firstTimePlaceholder = (ViewGroup)findViewById(R.id.firstTimePlaceholder);
+
         surfaceViewOverlay = findViewById(R.id.surfaceview_overlay);
         surfaceViewOverlay.setAlpha(1.0f);
         surfaceView = (SurfaceView) findViewById(R.id.surfaceview);
@@ -121,28 +138,32 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
         timelineBar.setOnSeekBarChangeListener(new TimelineListener());
 
-        findViewById(R.id.timelineButton).setOnClickListener(new View.OnClickListener() {
+        timelineIcon = findViewById(R.id.timelineButton);
+        timelineIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 timelineButtonPressed(v);
             }
         });
 
-        findViewById(R.id.visualizationsButton).setOnClickListener(new View.OnClickListener() {
+        visualizationIcon = findViewById(R.id.visualizationsButton);
+        visualizationIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 visualizationsButtonPressed(v);
             }
         });
 
-        findViewById(R.id.infoButton).setOnClickListener(new View.OnClickListener() {
+        infoIcon = findViewById(R.id.infoButton);
+        infoIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 infoButtonPressed(v);
             }
         });
 
-        findViewById(R.id.searchButton).setOnClickListener(new View.OnClickListener() {
+        searchIcon = findViewById(R.id.searchButton);
+        searchIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 searchButtonPressed(v);
@@ -171,17 +192,21 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         //turn off loading feedback
         ProgressBar loader = (ProgressBar) findViewById(R.id.loadingSpinner);
         loader.setVisibility(View.GONE);
+
         surfaceViewOverlay.setVisibility(View.GONE);
+
+        // TODO would rather have this run in parallel to the backend loading, however,
+        // there was an obscure crash that would occur if the user was 1/2 through the tooltips when
+        // the backend loaded finished.
+        //possibly show first-run slides
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        //if (prefs.getBoolean("firstrun", true)) {
+        showHelp();
+        prefs.edit().putBoolean("firstrun", false).commit();
+        //}
 
         //fade out logo a bit after
         fadeLogo(AnimationUtils.currentAnimationTimeMillis()+4000, 0.3f, 1000);
-        
-        //possibly show first-run slides
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if (prefs.getBoolean("firstrun", true)) {
-            showHelp();
-            prefs.edit().putBoolean("firstrun", false).commit();
-        }
 
         //reset all the togglebuttons that android helpfully restores for us :P
         ImageView imageButton = (ImageView) findViewById(R.id.searchButton);
@@ -203,7 +228,65 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
             }
         });
     }
-    
+
+    private int step = 0;
+    private int totalSteps = 4;
+
+    private void setupTooltips() {
+        tooltipDismissOverlay = findViewById(R.id.tooltip_dismiss_overlay);
+        tooltipDismissOverlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showNextTooltip();
+            }
+        });
+
+        tooltips = new CustomTooltipManager(this);
+        tooltips.setInteractionListener(new CustomTooltipManager.InteractionListener() {
+            @Override
+            public void onTooltipViewClicked(ToolTipView toolTipView) {
+                showNextTooltip();
+            }
+        });
+    }
+
+    private void showNextTooltip() {
+        step++;
+        tooltips.closeActiveTooltip();
+
+        if (step > totalSteps) {
+            tooltipDismissOverlay.setVisibility(View.GONE);
+            return;
+        }
+
+        switch(step) {
+            //case 1 is for showing the Explore page. Could move logic here in future.
+            case 2:
+                showTooltip(getString(R.string.searchTooltip), searchIcon);
+                break;
+            case 3:
+                showTooltip(getString(R.string.visTooltip), visualizationIcon);
+                break;
+            case 4:
+                showTooltip(getString(R.string.timelineTooltip), timelineIcon);
+                break;
+        }
+
+        tooltipDismissOverlay.setVisibility(View.VISIBLE);
+    }
+
+    private void showTooltip(String message, View onView) {
+        ToolTip toolTip = new ToolTip()
+                .withText(message)
+                .withTextColor(Color.WHITE)
+                .withShowBelow()
+                .withColor(Color.BLACK) //or whatever you want
+                .withAnimationType(ToolTip.AnimationType.FROM_MASTER_VIEW)
+                .withShadow();
+
+        tooltips.showToolTip(toolTip, onView);
+    }
+
     public void loadSearchNodes() {
         Assert.assertNull(mAllSearchNodes);
         
@@ -220,12 +303,40 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         }
         //Log.d(TAG, String.format("converted %d nodes", mAllSearchNodes.size()));
     }
-    
+
+    // Note, used to launch as a separate activity, now we inflate the view so that we can
+    // easily know when to launch tooltips
     public void showHelp() {
-        Intent intent = new Intent(this, HelpPopup.class);
-        startActivity(intent);
+        step = 0;
+        firstTimePlaceholder.removeAllViews();
+
+        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View firstTimeView = inflater.inflate(R.layout.activity_first_time, firstTimePlaceholder);
+        firstTimeView.findViewById(R.id.explore_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.setEnabled(false);
+                step++;
+
+                ViewUtils.fadeViewOut(firstTimePlaceholder, 500, new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {}
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        setupTooltips();
+                        showNextTooltip();
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {}
+                });
+            }
+        });
+
+        firstTimePlaceholder.setVisibility(View.VISIBLE);
     }
-    
+
     public void forceOrientation() {
         Configuration config = getResources().getConfiguration();
         int screenSize = config.screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
@@ -269,6 +380,9 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         Log.i(TAG, "onDestroy()");
         UpdateManager.unregister(); 
         nativeOnDestroy();
+
+        tooltips.onDestroy();
+        tooltips = null;
     }
 
     @SuppressWarnings("deprecation")
