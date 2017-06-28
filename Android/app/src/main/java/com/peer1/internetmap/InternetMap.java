@@ -64,6 +64,7 @@ import java.util.Iterator;
 
 import retrofit2.Call;
 import retrofit2.Response;
+import timber.log.Timber;
 
 public class InternetMap extends BaseActivity implements SurfaceHolder.Callback {
 
@@ -382,7 +383,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
     protected void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "onDestroy()");
-        UpdateManager.unregister(); 
+        UpdateManager.unregister();
         nativeOnDestroy();
 
         if (tooltips != null) {
@@ -492,12 +493,18 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
             LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
             View popupView = layoutInflater.inflate(R.layout.visualizationview, null);
             mInfoPopup = new InfoPopup(this, mController, popupView);
+
+            if (isSmallScreen()) {
+                mInfoPopup.setWidth(LayoutParams.MATCH_PARENT);
+            }
+
             mInfoPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 public void onDismiss() {
                     mInfoPopup = null;
                     infoIcon.setActivated(false);
                 }
             });
+
             mInfoPopup.showAsDropDown(infoIcon);
         }
     }

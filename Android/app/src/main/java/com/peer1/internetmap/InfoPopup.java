@@ -21,7 +21,7 @@ public class InfoPopup extends PopupWindow {
     private InternetMap mContext;
 
     public InfoPopup(final InternetMap context, final MapControllerWrapper controller, View view) {
-        super(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        super(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         setOutsideTouchable(true);
         setFocusable(true);
