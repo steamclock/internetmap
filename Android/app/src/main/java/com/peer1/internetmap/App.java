@@ -1,6 +1,7 @@
 package com.peer1.internetmap;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.res.Configuration;
 
 import timber.log.Timber;
@@ -12,12 +13,14 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class App extends Application {
     private static App instance;
+    private static Context appContext;
     public GlobalSettings globalSettings;
 
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
+        appContext = this;
 
         // Setup logging
         if (BuildConfig.DEBUG) {
@@ -52,5 +55,9 @@ public class App extends Application {
     // Static helpers
     public static GlobalSettings getGlobalSettings() {
        return instance.globalSettings;
+    }
+
+    public static Context getAppContext() {
+        return appContext;
     }
 }

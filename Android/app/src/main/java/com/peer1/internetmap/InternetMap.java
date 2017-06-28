@@ -41,6 +41,7 @@ import com.peer1.internetmap.network.common.CommonCallback;
 import com.peer1.internetmap.network.common.CommonClient;
 import com.peer1.internetmap.utils.CustomTooltipManager;
 import com.peer1.internetmap.utils.DeviceUtils;
+import com.peer1.internetmap.utils.SharedPreferenceUtils;
 import com.peer1.internetmap.utils.ViewUtils;
 import com.spyhunter99.supertooltips.ToolTip;
 import com.spyhunter99.supertooltips.ToolTipView;
@@ -93,7 +94,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
     public ArrayList<SearchNode> mAllSearchNodes; //cache of nodes for search
     public boolean mDoneLoading;
     private SurfaceView surfaceView;
-    private View surfaceViewOverlay;
+    private View surfaceViewOverlay, firstTimeLoadingOverlay;
 
     private CustomTooltipManager tooltips;
     private View tooltipDismissOverlay;
@@ -120,6 +121,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         setContentView(R.layout.main);
 
         firstTimePlaceholder = (ViewGroup)findViewById(R.id.firstTimePlaceholder);
+        firstTimeLoadingOverlay = findViewById(R.id.firsttime_loading_overlay);
 
         surfaceViewOverlay = findViewById(R.id.surfaceview_overlay);
         surfaceViewOverlay.setAlpha(1.0f);
@@ -169,6 +171,12 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
                 searchButtonPressed(v);
             }
         });
+
+        // Only show the firstTimeLoadingOverlay IF we are on the first run. Makes
+        // help transition more smooth.
+        firstTimeLoadingOverlay.setVisibility(SharedPreferenceUtils.getIsFirstRun()
+                ? View.VISIBLE
+                : View.GONE);
     }
 
     void fadeLogo(long startTime, float fadeTo, long duration) {
@@ -195,15 +203,14 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
 
         surfaceViewOverlay.setVisibility(View.GONE);
 
-        // TODO would rather have this run in parallel to the backend loading, however,
+        // TODO would rather have first time user experience run in parallel to the backend loading, however,
         // there was an obscure crash that would occur if the user was 1/2 through the tooltips when
-        // the backend loaded finished.
-        //possibly show first-run slides
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //if (prefs.getBoolean("firstrun", true)) {
-        showHelp();
-        prefs.edit().putBoolean("firstrun", false).commit();
-        //}
+        // the backend loaded finished. For now stick to loading help AFTER backend is loaded.
+
+        if (SharedPreferenceUtils.getIsFirstRun()) {
+            showHelp();
+            SharedPreferenceUtils.setIsFirstRun(false);
+        }
 
         //fade out logo a bit after
         fadeLogo(AnimationUtils.currentAnimationTimeMillis()+4000, 0.3f, 1000);
@@ -334,7 +341,9 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
             }
         });
 
+        // Show help, hide initial loading overlay
         firstTimePlaceholder.setVisibility(View.VISIBLE);
+        firstTimeLoadingOverlay.setVisibility(View.GONE);
     }
 
     public void forceOrientation() {

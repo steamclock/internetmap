@@ -4,15 +4,17 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 
-/**
- * Created by shayla on 2017-06-28.
- */
-
 public class ViewUtils {
-
+    /**
+     * Runs an AlphaAnimation on the given view.
+     * Note, onAnimationEnd the view visibility will be set to GONE.
+     * setFillAfter was causing issues when attempting to re-show the view in question, so instead
+     * we set the visibility to GONE after the animation is complete.
+     * @param view The view to animate
+     * @param duration Animation duration in milliseconds
+     * @param listener AnimationListener if desired; optional, can be null.
+     */
     public static void fadeViewOut(final View view, long duration, final Animation.AnimationListener listener) {
-        // setFillAfter was causing issues when attempting to re-show the view in question.
-        // Instead, we set the view visibility before and after the fade animation.
         view.setVisibility(View.VISIBLE);
         AlphaAnimation alpha = new AlphaAnimation(1.0f, 0.0f);
         alpha.setDuration(duration);

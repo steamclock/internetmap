@@ -11,6 +11,12 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 
+    <View
+        android:id="@+id/surfaceview_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark" />
+
     <LinearLayout
         android:id="@+id/buttonsLayout"
         android:layout_width="match_parent"
@@ -115,7 +121,7 @@
         android:visibility="gone" />
 
     <ImageView
-        android:id="@+id/surfaceview_overlay"
+        android:id="@+id/firsttime_loading_overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
