@@ -113,9 +113,14 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" />
 
-    <!-- TODO -->
     <View
+        android:id="@+id/tooltip_dismiss_overlay"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"/>
+
+    <RelativeLayout android:id="@+id/firstTimePlaceholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </RelativeLayout>

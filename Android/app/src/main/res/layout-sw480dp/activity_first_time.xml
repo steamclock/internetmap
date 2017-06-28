@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    tools:context="com.peer1.internetmap.FirstTimeActivity">
+    tools:context="com.peer1.internetmap.FirstTimeActivity"
+    android:gravity="center">
 
     <ImageView
         android:layout_width="match_parent"
@@ -14,10 +14,17 @@
         android:scaleType="centerCrop"
         android:src="@drawable/load_bg" />
 
-    <include
-        layout="@layout/activity_first_time_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <RelativeLayout
+        android:layout_width="480dp"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true">
+
+        <include
+            layout="@layout/activity_first_time_content"
+            android:layout_width="480dp"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
 
 </RelativeLayout>
 
