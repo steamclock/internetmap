@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
+
 
 public class VisualizationPopupWindow extends PopupWindow{
     private Context mContext;
@@ -22,15 +25,16 @@ public class VisualizationPopupWindow extends PopupWindow{
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             int lightTextColor = ContextCompat.getColor(mContext, R.color.lightTextColor);
-            int darkTextColor = ContextCompat.getColor(mContext, R.color.darkTextColor);
 
             TextView textView = (TextView) super.getView(position, convertView, parent);
             if (position == selectedRow) {
                 textView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorAccent));
-                textView.setTextColor(darkTextColor);
+                textView.setTextColor(lightTextColor);
+                CalligraphyUtils.applyFontToTextView(mContext, textView, mContext.getString(R.string.font_bold));
             } else {
                 textView.setBackgroundColor(Color.TRANSPARENT);
                 textView.setTextColor(lightTextColor);
+                CalligraphyUtils.applyFontToTextView(mContext, textView, mContext.getString(R.string.font_regular));
             }
             return textView;
         }
