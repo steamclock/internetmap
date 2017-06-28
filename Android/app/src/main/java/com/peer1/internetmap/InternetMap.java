@@ -216,15 +216,10 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         fadeLogo(AnimationUtils.currentAnimationTimeMillis()+4000, 0.3f, 1000);
 
         //reset all the togglebuttons that android helpfully restores for us :P
-        ImageView imageButton = (ImageView) findViewById(R.id.searchButton);
-        imageButton.setActivated(false);
-
-        imageButton = (ImageView) findViewById(R.id.visualizationsButton);
-        imageButton.setActivated(false);
-        imageButton = (ImageView) findViewById(R.id.timelineButton);
-        imageButton.setActivated(false);
-        imageButton = (ImageView) findViewById(R.id.infoButton);
-        imageButton.setActivated(false);
+        searchIcon.setActivated(false);
+        visualizationIcon.setActivated(false);
+        timelineIcon.setActivated(false);
+        infoIcon.setActivated(false);
         
         //start loading the search nodes
         mHandler.post(new Runnable() {
@@ -390,8 +385,10 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         UpdateManager.unregister(); 
         nativeOnDestroy();
 
-        tooltips.onDestroy();
-        tooltips = null;
+        if (tooltips != null) {
+            tooltips.onDestroy();
+            tooltips = null;
+        }
     }
 
     @SuppressWarnings("deprecation")
@@ -453,8 +450,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         dismissPopups();
 
         //make the button change sooner, and don't let them toggle the button while we're loading
-        final ImageView button = (ImageView)findViewById(R.id.visualizationsButton);
-        button.setActivated(true);
+        visualizationIcon.setActivated(true);
         
         if (mVisualizationPopup == null) {
             LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -468,10 +464,10 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
             mVisualizationPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 public void onDismiss() {
                     mVisualizationPopup = null;
-                    button.setActivated(false);
+                    visualizationIcon.setActivated(false);
                 }
             });
-            mVisualizationPopup.showAsDropDown(findViewById(R.id.visualizationsButton));
+            mVisualizationPopup.showAsDropDown(visualizationIcon);
         }
     }
     
@@ -490,8 +486,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         dismissPopups();
         
         //make the button change sooner, and don't let them toggle the button while we're loading
-        final ImageView button = (ImageView)findViewById(R.id.infoButton);
-        button.setActivated(true);
+        infoIcon.setActivated(true);
 
         if (mInfoPopup == null) {
             LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -500,10 +495,10 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
             mInfoPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 public void onDismiss() {
                     mInfoPopup = null;
-                    button.setActivated(false);
+                    infoIcon.setActivated(false);
                 }
             });
-            mInfoPopup.showAsDropDown(findViewById(R.id.infoButton));
+            mInfoPopup.showAsDropDown(infoIcon);
         }
     }
 
@@ -511,8 +506,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         dismissPopups();
 
         //make the button change sooner, and don't let them toggle the button while we're loading
-        final ImageView button = (ImageView)findViewById(R.id.searchButton);
-        button.setActivated(true);
+        searchIcon.setActivated(true);
         
         if (mSearchPopup == null) {
             //this can be slow to load, so delay it until the UI updates the button
@@ -529,7 +523,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
                     mSearchPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                         public void onDismiss() {
                             mSearchPopup = null;
-                            button.setActivated(false);
+                            searchIcon.setActivated(false);
                         }
                     });
 
@@ -537,7 +531,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
                         mSearchPopup.setWidth(LayoutParams.MATCH_PARENT);
                     }
 
-                    mSearchPopup.showAsDropDown(findViewById(R.id.searchButton));
+                    mSearchPopup.showAsDropDown(searchIcon);
 
                     popupView.findViewById(R.id.closeBtn).setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -558,9 +552,8 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         
         //TODO animate
         final ProgressBar progress = (ProgressBar) findViewById(R.id.searchProgressBar);
-        final ImageView button = (ImageView) findViewById(R.id.searchButton);
         progress.setVisibility(View.VISIBLE);
-        button.setVisibility(View.INVISIBLE);
+        searchIcon.setVisibility(View.INVISIBLE);
         
         //asn requests are unreliable sometimes, so set a backup timeout
         final Runnable backupTimer = new Runnable() {
@@ -569,7 +562,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
                 showError(getString(R.string.asnAssociationFail));
                 //stop animating
                 progress.setVisibility(View.INVISIBLE);
-                button.setVisibility(View.VISIBLE);
+                searchIcon.setVisibility(View.VISIBLE);
             }
         };
         mHandler.postDelayed(backupTimer, 10000);
@@ -592,7 +585,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
                     showError(String.format(getString(R.string.invalidHost), host));
                     //stop animating
                     progress.setVisibility(View.INVISIBLE);
-                    button.setVisibility(View.VISIBLE);
+                    searchIcon.setVisibility(View.VISIBLE);
                     mHandler.removeCallbacks(backupTimer);
                 } else {
                     Log.d(TAG, addrString);
@@ -601,7 +594,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
                         @Override
                         public void onRequestResponse(Call<ASN> call, Response<ASN> response) {
                             progress.setVisibility(View.INVISIBLE);
-                            button.setVisibility(View.VISIBLE);
+                            searchIcon.setVisibility(View.VISIBLE);
                             mHandler.removeCallbacks(backupTimer);
 
                             selectNodeByASN(response.body(), false);
@@ -610,7 +603,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
                         @Override
                         public void onRequestFailure(Call<ASN> call, Throwable t) {
                             progress.setVisibility(View.INVISIBLE);
-                            button.setVisibility(View.VISIBLE);
+                            searchIcon.setVisibility(View.VISIBLE);
                             mHandler.removeCallbacks(backupTimer);
 
                             String message = getString(R.string.asnAssociationFail);
@@ -644,9 +637,8 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
                 showError(getString(R.string.currentASNFail));
                 //stop animating
                 ProgressBar progress = (ProgressBar) findViewById(R.id.searchProgressBar);
-                ImageView button = (ImageView) findViewById(R.id.searchButton);
                 progress.setVisibility(View.INVISIBLE);
-                button.setVisibility(View.VISIBLE);
+                searchIcon.setVisibility(View.VISIBLE);
             }
         };
         mHandler.postDelayed(backupTimer, 10000);
@@ -700,8 +692,6 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
 
     public void timelineButtonPressed(View view) {
 
-        final ImageView button = (ImageView)findViewById(R.id.timelineButton);
-
         if (isSmallScreen()) {
             if (mInTimelineMode) {
                 showLogo();
@@ -711,10 +701,10 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         }
 
         if (mInTimelineMode) {
-            button.setActivated(false);
+            timelineIcon.setActivated(false);
             dismissPopups(); //leave timeline mode
         } else {
-            button.setActivated(true);
+            timelineIcon.setActivated(true);
             dismissPopups();
             mController.resetZoomAndRotationAnimated(isSmallScreen());
             SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
@@ -764,8 +754,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
             timelineBar.setVisibility(View.INVISIBLE);
             resetViewAndSetTimeline(mDefaultYearIndex);
             mInTimelineMode = false;
-            ImageView button = (ImageView)findViewById(R.id.timelineButton);
-            button.setActivated(false);
+            timelineIcon.setActivated(false);
         }
         if (mNodePopup != null) {
             mNodePopup.dismiss();
