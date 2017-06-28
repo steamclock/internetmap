@@ -178,7 +178,8 @@ for as_ in asdic.values():
 	if as_.loc:
 		print "----->", locdb[as_.loc].city
 	
-	
+oldPeer1Names = ["Peer 1 Network (USA) Inc.", "COGECODATA"]
+newCogeconame = "Cogeco Peer 1"	
 
 resultsdic = {}
 notfound = 0
@@ -188,6 +189,10 @@ for as_ in asdic.values():
 		loc = locdb[as_.loc]
 		loc.used = True
 		# print as_.asnum, loc.city
+		# Replace Peer1 with Cogeco
+		if as_.name in oldPeer1Names:
+			as_.name = newCogeconame	
+
 		resultsdic[as_.asnum] = [as_.name, loc.lat, loc.long]
 	else:
 		# print "not found!"
