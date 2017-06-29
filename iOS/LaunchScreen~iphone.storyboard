@@ -21,15 +21,29 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default.png" translatesAutoresizingMaskIntoConstraints="NO" id="cte-fq-Hd9">
-                                <rect key="frame" x="0.0" y="99" width="375" height="568"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="load_bg.png" translatesAutoresizingMaskIntoConstraints="NO" id="PD6-W0-T9h">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="load_logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="kVf-oJ-iEo">
+                                <rect key="frame" x="117" y="585" width="141" height="45"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="loading ..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="THJ-ik-5yP">
+                                <rect key="frame" x="150" y="315" width="74.5" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="cte-fq-Hd9" secondAttribute="bottom" id="UlH-Ct-N84"/>
-                            <constraint firstItem="cte-fq-Hd9" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="hdi-Op-qBf"/>
-                            <constraint firstAttribute="trailing" secondItem="cte-fq-Hd9" secondAttribute="trailing" id="rEk-S2-Jlp"/>
+                            <constraint firstItem="THJ-ik-5yP" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" constant="295" id="5o9-ek-3f9"/>
+                            <constraint firstItem="kVf-oJ-iEo" firstAttribute="top" secondItem="PD6-W0-T9h" secondAttribute="bottom" constant="-82" id="8jC-Vv-fqf"/>
+                            <constraint firstItem="kVf-oJ-iEo" firstAttribute="top" secondItem="THJ-ik-5yP" secondAttribute="bottom" constant="249" id="AbT-Nw-Uop"/>
+                            <constraint firstItem="PD6-W0-T9h" firstAttribute="centerX" secondItem="THJ-ik-5yP" secondAttribute="centerX" id="Eg2-hK-Vr6"/>
+                            <constraint firstItem="THJ-ik-5yP" firstAttribute="centerX" secondItem="kVf-oJ-iEo" secondAttribute="centerX" id="NWO-h3-QOU"/>
+                            <constraint firstItem="PD6-W0-T9h" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="OBS-Ka-GeZ"/>
+                            <constraint firstItem="PD6-W0-T9h" firstAttribute="bottom" secondItem="xb3-aO-Qok" secondAttribute="top" id="iNE-SX-A4F"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="kVf-oJ-iEo" secondAttribute="bottom" constant="37" id="xFa-jh-g0H"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -39,6 +53,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Default.png" width="320" height="568"/>
+        <image name="load_bg.png" width="375" height="667"/>
+        <image name="load_logo.png" width="141" height="45"/>
     </resources>
 </document>

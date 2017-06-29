@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FirstUseViewController : UIViewController <UIScrollViewDelegate>
+@interface FirstUseViewController : UIViewController
+
+- (IBAction)explore:(id)sender;
 
 @end

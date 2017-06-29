@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="ipad12_9" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -21,25 +21,43 @@
                         <rect key="frame" x="0.0" y="0.0" width="1366" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default-Landscape.png" translatesAutoresizingMaskIntoConstraints="NO" id="fjB-hS-oNn">
+                            <imageView userInteractionEnabled="NO" alpha="0.29999999999999999" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="load_bg.png" translatesAutoresizingMaskIntoConstraints="NO" id="I0O-0d-cYe">
                                 <rect key="frame" x="0.0" y="0.0" width="1366" height="1024"/>
                             </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="load_logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="nRX-mA-c0z">
+                                <rect key="frame" x="613" y="907" width="141" height="45"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="loading ..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qbS-nU-zKV">
+                                <rect key="frame" x="583" y="479" width="200" height="66"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="iGl-Dd-Dw9"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.17254901960784313" green="0.16470588235294117" blue="0.16078431372549018" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="fjB-hS-oNn" secondAttribute="trailing" id="7g4-Ba-tjC"/>
-                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="fjB-hS-oNn" secondAttribute="bottom" id="AFs-fg-u97"/>
-                            <constraint firstItem="fjB-hS-oNn" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="MFf-Fa-qJI"/>
-                            <constraint firstItem="fjB-hS-oNn" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" constant="-20" id="bZA-sh-9UK"/>
+                            <constraint firstItem="qbS-nU-zKV" firstAttribute="centerX" secondItem="nRX-mA-c0z" secondAttribute="centerX" id="ERt-yk-LE0"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="nRX-mA-c0z" secondAttribute="bottom" constant="72" id="HwX-rZ-jxe"/>
+                            <constraint firstItem="I0O-0d-cYe" firstAttribute="bottom" secondItem="xb3-aO-Qok" secondAttribute="top" id="Xcq-MN-2bP"/>
+                            <constraint firstItem="qbS-nU-zKV" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" constant="459" id="fOO-fw-06I"/>
+                            <constraint firstAttribute="trailing" secondItem="I0O-0d-cYe" secondAttribute="trailing" id="j6i-kL-tev"/>
+                            <constraint firstItem="I0O-0d-cYe" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="rUx-01-deR"/>
+                            <constraint firstItem="I0O-0d-cYe" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="rZn-HD-Ug2"/>
+                            <constraint firstItem="I0O-0d-cYe" firstAttribute="centerY" secondItem="qbS-nU-zKV" secondAttribute="centerY" id="rnS-sF-SEM"/>
+                            <constraint firstItem="I0O-0d-cYe" firstAttribute="centerX" secondItem="qbS-nU-zKV" secondAttribute="centerX" id="uGi-nB-DSn"/>
                         </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="53" y="375"/>
+            <point key="canvasLocation" x="52.708638360175691" y="375"/>
         </scene>
     </scenes>
     <resources>
-        <image name="Default-Landscape.png" width="1024" height="768"/>
+        <image name="load_bg.png" width="375" height="667"/>
+        <image name="load_logo.png" width="141" height="45"/>
     </resources>
 </document>
