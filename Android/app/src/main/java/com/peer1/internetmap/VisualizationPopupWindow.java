@@ -49,7 +49,7 @@ public class VisualizationPopupWindow extends PopupWindow{
 
         final ListView listView = (ListView) getContentView().findViewById(R.id.visualizationList);
         String[] values = controller.visualizationNames();
-        final VisualizationArrayAdapter adapter = new VisualizationArrayAdapter(context, android.R.layout.simple_list_item_1, android.R.id.text1, values);
+        final VisualizationArrayAdapter adapter = new VisualizationArrayAdapter(context, R.layout.view_simple_list_item, android.R.id.text1, values);
         adapter.selectedRow = context.mCurrentVisualization;
         listView.setAdapter(adapter);
 

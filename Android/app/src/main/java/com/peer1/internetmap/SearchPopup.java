@@ -128,7 +128,7 @@ public class SearchPopup extends PopupWindow{
                 result = inflater.inflate(R.layout.view_your_location_item, parent, false);
             } else {
                 LayoutInflater inflater = LayoutInflater.from(getContext());
-                TextView textView = (TextView)inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+                TextView textView = (TextView)inflater.inflate(R.layout.view_simple_list_item, parent, false);
                 textView.setText(mFilteredNodes.get(position).toString());
                 textView.setTextColor(Color.WHITE);
                 result = textView;

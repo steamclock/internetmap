@@ -17,7 +17,7 @@
         android:id="@android:id/text1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceListItemSmall"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:gravity="center_vertical"
         android:textColor="@color/colorAccent"
         android:layout_gravity="center"
