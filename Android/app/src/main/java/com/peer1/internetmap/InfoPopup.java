@@ -41,17 +41,16 @@ public class InfoPopup extends PopupWindow {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 switch (position) {
-                case 0: //help
+                case 0:
                     mContext.showHelp();
                     break;
-                case 1: //sales
+                case 1:
                     doSales();
                     break;
-                case 2: //link
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.cogecopeer1.com/services/hosting/"));
-                    mContext.startActivity(browserIntent);
+                case 2:
+                    openLearnMore();
                     break;
-                case 3: //credits
+                case 3:
                     doCredits();
                     break;
                 default:
@@ -62,9 +61,17 @@ public class InfoPopup extends PopupWindow {
         });
     }
 
+    private void openLearnMore() {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.cogecopeer1.com/services/hosting/"));
+        mContext.startActivity(browserIntent);
+    }
+
     private void doSales() {
-        Intent intent = new Intent(mContext, SalesPopup.class);
-        mContext.startActivity(intent);
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.cogecopeer1.com/contact/"));
+        mContext.startActivity(browserIntent);
+
+        //Intent intent = new Intent(mContext, SalesPopup.class);
+        //mContext.startActivity(intent);
     }
     
     private void doCredits() {
