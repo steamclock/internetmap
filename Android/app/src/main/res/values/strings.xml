@@ -17,7 +17,7 @@
     <string name="findHost">Find host \'%s\'</string>
     <string name="invalidHost">Can\'t find host \'%s\'</string>
     <string name="yourLocation">Your Location</string>
-    <string name="infoHelp">Help</string>
+    <string name="infoHelp">Introduction</string>
     <string name="infoSales">Managed Cloud Services</string>
     <string name="infoLink">Learn more at cogecopeer1.com</string>
     <string name="infoCredits">Credits</string>
