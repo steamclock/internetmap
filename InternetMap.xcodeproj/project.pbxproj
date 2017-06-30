@@ -109,6 +109,8 @@
 		84D15DDC1F05A1E100C1B3A4 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84D15DD81F05A1E100C1B3A4 /* Icon-72@2x.png */; };
 		84D15DDD1F05A1E100C1B3A4 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 84D15DD91F05A1E100C1B3A4 /* Icon.png */; };
 		84D15DDE1F05A1E100C1B3A4 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84D15DDA1F05A1E100C1B3A4 /* Icon@2x.png */; };
+		84D15DE01F05A87C00C1B3A4 /* HelpPopUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84D15DDF1F05A87C00C1B3A4 /* HelpPopUp.xib */; };
+		84D15DE31F05A98D00C1B3A4 /* HelpPopUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D15DE21F05A98D00C1B3A4 /* HelpPopUpViewController.m */; };
 		A600AAD616A664E1003B1028 /* as2attr.txt in Resources */ = {isa = PBXBuildFile; fileRef = A600AAD316A664DF003B1028 /* as2attr.txt */; };
 		A600AAD716A664E1003B1028 /* asinfo.json in Resources */ = {isa = PBXBuildFile; fileRef = A600AAD416A664E0003B1028 /* asinfo.json */; };
 		A625263316CEF3250015DF37 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = A625263216CEF3250015DF37 /* MBProgressHUD.m */; };
@@ -359,6 +361,9 @@
 		84D15DD81F05A1E100C1B3A4 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72@2x.png"; path = "iOS/Icon-72@2x.png"; sourceTree = "<group>"; };
 		84D15DD91F05A1E100C1B3A4 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = iOS/Icon.png; sourceTree = "<group>"; };
 		84D15DDA1F05A1E100C1B3A4 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "iOS/Icon@2x.png"; sourceTree = "<group>"; };
+		84D15DDF1F05A87C00C1B3A4 /* HelpPopUp.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = HelpPopUp.xib; path = iOS/HelpPopUp.xib; sourceTree = SOURCE_ROOT; };
+		84D15DE11F05A98D00C1B3A4 /* HelpPopUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HelpPopUpViewController.h; path = iOS/HelpPopUpViewController.h; sourceTree = SOURCE_ROOT; };
+		84D15DE21F05A98D00C1B3A4 /* HelpPopUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HelpPopUpViewController.m; path = iOS/HelpPopUpViewController.m; sourceTree = SOURCE_ROOT; };
 		A600AAD316A664DF003B1028 /* as2attr.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = as2attr.txt; path = Common/data/as2attr.txt; sourceTree = "<group>"; };
 		A600AAD416A664E0003B1028 /* asinfo.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = asinfo.json; path = Common/data/asinfo.json; sourceTree = "<group>"; };
 		A625263116CEF3250015DF37 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBProgressHUD.h; path = "External Code/MBProgressHUD/MBProgressHUD.h"; sourceTree = SOURCE_ROOT; };
@@ -1111,6 +1116,8 @@
 				A6551EBB16CDAC8A00340590 /* CreditsViewController.m */,
 				A6551EC016CEB88700340590 /* ExpandedScrollView.h */,
 				A6551EC116CEB88700340590 /* ExpandedScrollView.m */,
+				84D15DE11F05A98D00C1B3A4 /* HelpPopUpViewController.h */,
+				84D15DE21F05A98D00C1B3A4 /* HelpPopUpViewController.m */,
 				1127C9CF16A0BBFB00413FE9 /* Objective-C++ Wrappers */,
 				D4D17D20166EA621003A489C /* XIBs */,
 			);
@@ -1325,6 +1332,7 @@
 				A686EA4C16B62B23009B070E /* ViewController_iPhone.xib */,
 				7D23CB561DF73C7900D82CC2 /* LaunchScreen~iphone.storyboard */,
 				7D23CB581DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard */,
+				84D15DDF1F05A87C00C1B3A4 /* HelpPopUp.xib */,
 			);
 			name = XIBs;
 			sourceTree = "<group>";
@@ -1490,6 +1498,7 @@
 				A686EA2A16B62A9D009B070E /* youarehere.png in Resources */,
 				A686EA2B16B62A9D009B070E /* youarehere@2x.png in Resources */,
 				4E9A00311EE8D7B200FC19E4 /* help03-ipad@2x.png in Resources */,
+				84D15DE01F05A87C00C1B3A4 /* HelpPopUp.xib in Resources */,
 				84D15DC21F0575AD00C1B3A4 /* help_bg.png in Resources */,
 				849FC0351F0304B800B06401 /* search-selected.png in Resources */,
 				4E8336191EDF929F0067B138 /* 2007.txt in Resources */,
@@ -1625,6 +1634,7 @@
 				A686EA7716B62B61009B070E /* NodeSearchViewController.m in Sources */,
 				A686EA7816B62B61009B070E /* NodeTooltipViewController.m in Sources */,
 				A686EA7916B62B61009B070E /* TimelineInfoViewController.m in Sources */,
+				84D15DE31F05A98D00C1B3A4 /* HelpPopUpViewController.m in Sources */,
 				A686EA7A16B62B61009B070E /* UIView+Convenience.m in Sources */,
 				A686EA7B16B62B61009B070E /* ViewController.m in Sources */,
 				A686EA7C16B62B61009B070E /* StringListViewController.m in Sources */,

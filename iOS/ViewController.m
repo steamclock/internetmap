@@ -21,6 +21,7 @@
 #import "FirstUseViewController.h"
 #import "ContactFormViewController.h"
 #import "CreditsViewController.h"
+#import "HelpPopUpViewController.h"
 
 // Below import for testing BSD traceroute only
 #import "main-traceroute.h"
@@ -78,6 +79,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* searchActivityIndicator;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* visualizationsActivityIndicator;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* timelineActivityIndicator;
+@property (weak, nonatomic) IBOutlet UIView *helpPopView;
+@property (weak, nonatomic) IBOutlet UILabel *helpPopLabel;
+
 
 
 @property (strong, nonatomic) WEPopoverController* visualizationSelectionPopover;
@@ -100,6 +104,38 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 @implementation ViewController
 
+// pop over help
+
+/*
+@property(retain, nonatomic) UIPopoverPresentationController *dateTimePopover8;
+@property (strong, nonatomic) HelpPopUpViewController *helpPopUpViewController;
+
+- (IBAction)popOverProper:(id)sender
+{
+
+    self.helpPopUpViewController = [[HelpPopUpViewController alloc] initWithNibName:@"HelpPopUp" bundle:nil];
+    self.helpPopUpViewController.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    self.helpPopUpViewController.helpLabel.text = @"how you doing";
+    // Get the popover presentation controller and configure it.
+    UIPopoverPresentationController *presentationController = [self.helpPopUpViewController popoverPresentationController];
+    presentationController.permittedArrowDirections = UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight;
+    presentationController.sourceView = self.helpPopUpViewController.view;
+    presentationController.sourceRect = CGRectMake(30, 30, 280, 200);
+    [self presentViewController:self.helpPopUpViewController animated: YES completion: nil];
+ 
+}
+*/
+
+
+- (UIModalPresentationStyle) adaptivePresentationStyleForPresentationController: (UIPresentationController * ) controller {
+    return UIModalPresentationNone;
+}
+
+-(void)hideHelpPopUp
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 - (void)dealloc
 {
     if ([EAGLContext currentContext] == self.context) {
@@ -111,10 +147,13 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 #pragma mark - View Setup
 
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 
+    
+    // globe
     self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     self.preferredFramesPerSecond = 60.0f;
     [self setGlobalSettings];
@@ -223,8 +262,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.cachedCurrentASN = nil;
     [self precacheCurrentASN];
     
-    
     [self performSelector:@selector(fadeOutLogo) withObject:nil afterDelay:4];
+    
+    [self helpPopCheck];
     
 }
 
@@ -246,6 +286,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     // When coming back from one of the modals (Help, credits, etc), we want to redisplay the info for the current node
     // because we hid it when we brought up the info menu popover
     [self displayInformationPopoverForCurrentNode];
+    
 }
 
 - (void)fadeOutLogo {
@@ -999,6 +1040,38 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.controller deselectCurrentNode];
     [self.controller resetZoomAndRotationAnimatedForOrientation:![HelperMethods deviceIsiPad]];
 }
+
+#pragma mark - help pop check
+
+-(void) helpPopCheck {
+    
+    [self helpPopHide];
+    
+    if (! [[NSUserDefaults standardUserDefaults] objectForKey:@"helpPopDefaults"]) {
+        [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"helpPopDefaults"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
+    NSInteger helpPopPosition = [[NSUserDefaults standardUserDefaults] objectForKey:@"helpPopDefaults"];
+    
+    if (helpPopPosition > 3) return; // all pop help shown
+    
+    if (helpPopPosition == 0) { }
+        else if (helpPopPosition == 1) { }
+        else if (helpPopPosition == 2) { }
+        else if (helpPopPosition == 3) { }
+        
+    helpPopPosition++;
+    
+    [[NSUserDefaults standardUserDefaults] setInteger:helpPopPosition forKey:@"helpPopDefaults"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+-(void) helpPopHide {
+    self.helpPopView.hidden = YES;
+}
+
+
 
 #pragma mark - WEPopover Delegate
 
