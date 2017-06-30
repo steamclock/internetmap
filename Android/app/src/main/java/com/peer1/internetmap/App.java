@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.content.res.Configuration;
 
+import com.peer1.internetmap.utils.SharedPreferenceUtils;
+
 import timber.log.Timber;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
@@ -35,6 +37,8 @@ public class App extends Application {
                         .build());
 
         globalSettings = new GlobalSettings(this);
+
+        SharedPreferenceUtils.setShowingTooltipIndex(0);
     }
 
     @Override

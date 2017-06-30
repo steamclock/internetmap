@@ -11,15 +11,27 @@ import com.peer1.internetmap.App;
  */
 
 public class SharedPreferenceUtils {
-    private final static String FIRST_RUN = "firstrun";
+
+//    public static void setIsFirstRun(boolean isFirstRun) {
+//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getAppContext());
+//        prefs.edit().putBoolean(FIRST_RUN, isFirstRun).commit();
+//    }
+
+    private final static String SHOWING_TOOLTIP_INDEX = "showingTooltipIndex";
+    public static int getShowingTooltipIndex() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getAppContext());
+        return prefs.getInt(SHOWING_TOOLTIP_INDEX, 0);
+    }
+
+    public static void setShowingTooltipIndex(int showingIndex) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getAppContext());
+        prefs.edit().putInt(SHOWING_TOOLTIP_INDEX, showingIndex).commit();
+    }
+
+    //private final static String FIRST_RUN = "firstrun";
     public static boolean getIsFirstRun() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getAppContext());
-        return prefs.getBoolean(FIRST_RUN, true);
+        return SharedPreferenceUtils.getShowingTooltipIndex() == 0;
+        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getAppContext());
+        //return prefs.getBoolean(FIRST_RUN, true);
     }
-
-    public static void setIsFirstRun(boolean isFirstRun) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getAppContext());
-        prefs.edit().putBoolean(FIRST_RUN, isFirstRun).commit();
-    }
-
 }
