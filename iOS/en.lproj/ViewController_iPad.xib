@@ -12,6 +12,8 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ViewController">
             <connections>
                 <outlet property="buttonContainerView" destination="26" id="56"/>
+                <outlet property="helpPopLabel" destination="e7K-LK-aPM" id="Lc1-Z1-r58"/>
+                <outlet property="helpPopView" destination="1Jl-7c-kXR" id="BKM-PO-RZp"/>
                 <outlet property="infoButton" destination="17" id="71"/>
                 <outlet property="logo" destination="24" id="45"/>
                 <outlet property="playButton" destination="50" id="51"/>
@@ -121,6 +123,24 @@
                     </subviews>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                 </view>
+                <view contentMode="scaleToFill" misplaced="YES" id="1Jl-7c-kXR">
+                    <rect key="frame" x="9" y="74" width="169" height="55"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="callout.png" id="VgY-bP-f4a">
+                            <rect key="frame" x="0.0" y="0.0" width="169" height="55"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You can search for companies and domains" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="e7K-LK-aPM">
+                            <rect key="frame" x="8" y="13" width="153" height="38"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                </view>
                 <slider hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" id="28" customClass="ExpandedSlider">
                     <rect key="frame" x="39" y="720" width="947" height="29"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -149,6 +169,7 @@
         </view>
     </objects>
     <resources>
+        <image name="callout.png" width="195" height="58"/>
         <image name="info-selected.png" width="48" height="48"/>
         <image name="info.png" width="48" height="48"/>
         <image name="peer1-logo.png" width="111" height="35"/>

@@ -255,7 +255,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayInformationPopoverForCurrentNode) name:@"cameraMovementFinished" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewResetDone) name:@"cameraResetFinished" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissNodeInfoPopover) name:@"lostSelectedNode" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissNodeInfoPopoverNotForMenu:) name:@"lostSelectedNode" object:nil];
     
     [self.controller resetIdleTimer];
     
@@ -265,7 +265,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self performSelector:@selector(fadeOutLogo) withObject:nil afterDelay:4];
     
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"helpPopMenusShownDefault"];
-     
+    
+    self.helpPopView.hidden = YES;
     
 }
 
@@ -283,7 +284,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         [[NSUserDefaults standardUserDefaults] synchronize];
         [self showFirstUse];
     } else {
-        self.helpPopView.hidden = YES;
         [self helpPopCheckOrMenuSelected:nil];
     }
     
@@ -335,7 +335,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)handleTap:(UITapGestureRecognizer*)gestureRecognizer {
     [self.controller resetIdleTimer];
-    [self dismissNodeInfoPopover];
+    [self dismissNodeInfoPopoverNotForMenu:YES];
     if (![self.controller selectHoveredNode]) { //couldn't select node
         if(self.controller.targetNode != INT_MAX) {
             [self.controller deselectCurrentNode];
@@ -387,7 +387,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         }
     }else if(gesture.state == UIGestureRecognizerStateEnded) {
         [self.nodeTooltipPopover dismissPopoverAnimated:NO];
-        [self dismissNodeInfoPopover];
+        [self dismissNodeInfoPopoverNotForMenu:YES];
         [self.controller selectHoveredNode];
     }
      
@@ -496,7 +496,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 #pragma mark - Update selected/active node
 
 - (void)updateTargetForIndex:(int)index {
-    [self dismissNodeInfoPopover];
+    [self dismissNodeInfoPopoverNotForMenu:YES];
     [self nodeSearchDelegateDone];
     [self.controller updateTargetForIndex:index];
 }
@@ -523,7 +523,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         [self leaveTimelineMode];
     }
     
-    [self dismissNodeInfoPopover];
+    [self dismissNodeInfoPopoverNotForMenu:NO];
     
     if (!self.nodeSearchPopover) {
         NodeSearchViewController *searchController = [[NodeSearchViewController alloc] init];
@@ -602,7 +602,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
     
     [self helpPopCheckOrMenuSelected:_visualizationsButton];
-    [self dismissNodeInfoPopover];
+    [self dismissNodeInfoPopoverNotForMenu:NO];
 
     if (!self.visualizationSelectionPopover) {
         StringListViewController *tableforPopover = [[StringListViewController alloc] initWithStyle:UITableViewStylePlain];
@@ -644,7 +644,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(IBAction)infoButtonPressed:(id)sender {
-    [self dismissNodeInfoPopover];
+    [self dismissNodeInfoPopoverNotForMenu:NO];
+    self.helpPopView.hidden = YES;
+    
+    if (self.timelineButton.selected) {
+        [self leaveTimelineMode];
+    }
     
     self.timelineButton.selected = NO;
     self.visualizationsButton.selected = NO;
@@ -656,7 +661,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.infoPopover = [[WEPopoverController alloc] initWithContentViewController:tableforPopover];
         self.infoPopover.delegate = self;
         
-        tableforPopover.items = @[ @"Help", @"Hosting & Cloud Services", @"Learn more at peer1.com", @"Credits" ];
+        tableforPopover.items = @[ @"Help", @"Managed Cloud Services", @"Learn more at peer1.com", @"Credits" ];
         [self.infoPopover setPopoverContentSize:tableforPopover.preferredContentSize];
         if (![HelperMethods deviceIsiPad]) {
             WEPopoverContainerViewProperties *prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
@@ -790,7 +795,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.nodeInformationViewController.delegate = self;
         //NSLog(@"ASN:%@, Text Desc: %@", node.asn, node.textDescription);
         
-        [self dismissNodeInfoPopover];
+        [self dismissNodeInfoPopoverNotForMenu:NO];
         //this line is important, in case the popover for another node is already visible and traceroute could be being performed
         self.nodeInformationPopover = [[WEPopoverController alloc] initWithContentViewController:self.nodeInformationViewController];
         self.nodeInformationPopover.delegate = self;
@@ -863,7 +868,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 //deselect node and reset zoom/rotate. If you set the afterViewReset callback, it will be called when this finishes.
 -(void) resetView {
-    [self dismissNodeInfoPopover];
+    [self dismissNodeInfoPopoverNotForMenu:NO];
     [self.controller deselectCurrentNode];
     [self.controller resetZoomAndRotationAnimatedForOrientation:![HelperMethods deviceIsiPad]];
 }
@@ -932,13 +937,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 -(void)nodeSearchDelegateDone {
     [self.nodeSearchPopover dismissPopoverAnimated:YES];
     self.searchButton.selected = NO;
-    
-    [self helpPopCheckOrMenuSelected:nil];
 }
 
 #pragma mark - NodeInfo delegate
 
-- (void)dismissNodeInfoPopover {
+- (void)dismissNodeInfoPopoverNotForMenu:(BOOL)notMenu {
     [self.tracer stop];
     self.tracer = nil;
     [self.nodeInformationPopover dismissPopoverAnimated:YES];
@@ -948,7 +951,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         [self.controller clearHighlightLines];
     }
     
-    [self helpPopCheckOrMenuSelected:nil];
+    if (notMenu) [self helpPopCheckOrMenuSelected:nil];
 }
 
 #pragma mark - Node Info View Delegate
@@ -1044,17 +1047,15 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(void)doneTapped{
-    [self dismissNodeInfoPopover];
+    [self dismissNodeInfoPopoverNotForMenu:NO];
     [self.controller deselectCurrentNode];
     [self.controller resetZoomAndRotationAnimatedForOrientation:![HelperMethods deviceIsiPad]];
-    
-    [self helpPopCheckOrMenuSelected:nil];
 }
 
 #pragma mark - help pop check
 
 -(void) helpPopCheckOrMenuSelected:(UIButton*)menuButton {
-NSLog (@"helpPopCheckOrMenuSelected 0");
+
     self.helpPopView.hidden = YES;
     
     if (! [[NSUserDefaults standardUserDefaults] objectForKey:@"helpPopMenusShownDefault"]) {
@@ -1063,12 +1064,11 @@ NSLog (@"helpPopCheckOrMenuSelected 0");
     }
     
     NSInteger helpLocation;
-NSLog (@"helpPopCheckOrMenuSelected 1");
+
     NSArray *orderOfMenuButtons = @[_searchButton, _visualizationsButton, _timelineButton];
     NSMutableString *shownMenusPopsString = [[NSUserDefaults standardUserDefaults] objectForKey:@"helpPopMenusShownDefault"];
-    
+
     if (menuButton == nil) { // not user selected menu. Should we show a menu and where
-NSLog (@"helpPopCheckOrMenuSelected 2 | %@", shownMenusPopsString);
         NSRange range = [shownMenusPopsString rangeOfString:@"0"];
         if (range.location == NSNotFound) return;
         
@@ -1083,37 +1083,37 @@ NSLog (@"helpPopCheckOrMenuSelected 2 | %@", shownMenusPopsString);
         
         float buttonHeight = buttonForHelp.frame.size.height;
         
-        self.helpPopView.frame = CGRectMake(xPosition, yPosition + buttonHeight + 10, 169, 55);
+        NSInteger xPadding = 0;
+        NSInteger yPadding = 0;
+        
+        if ([HelperMethods deviceIsiPad]) {
+            xPadding = -8;
+            yPadding = -5;
+        } else {
+            xPadding = 10;
+            yPadding = 15;
+        }
+        
+        self.helpPopView.frame = CGRectMake(xPosition + xPadding, yPosition + buttonHeight + yPadding, 169, 55);
         self.helpPopLabel.text = popMenuInfo[helpLocation];
         self.helpPopView.hidden = NO;
-NSLog (@"helpPopCheckOrMenuSelected 3");
-                
-        
-    } else { // user viewing menu. dont show help menu for it
-        
-        NSInteger currentLocation = -1;
-        
+
+    } else { // user viewing menu. dont show help menu for it ever
+        NSInteger currentLocation = 0;
         for (UIButton *currentButton in orderOfMenuButtons) {
             if (currentButton == menuButton) {
                 break;
             }
             currentLocation++;
         }
-        
-        if (currentLocation == -1 || [shownMenusPopsString characterAtIndex:currentLocation] == '1') return;
+        if (currentLocation == orderOfMenuButtons.count || [shownMenusPopsString characterAtIndex:currentLocation] == '1') return;
         
         helpLocation = currentLocation;
     }
-NSLog (@"helpPopCheckOrMenuSelected 4");
-    
-if (self.helpPopView.isHidden) NSLog (@"helpPopCheckOrMenuSelected IS HIDDEN");
-else NSLog (@"helpPopCheckOrMenuSelected IS NOT HIDDEN");
     
     shownMenusPopsString = (NSMutableString *)[shownMenusPopsString stringByReplacingCharactersInRange:NSMakeRange(helpLocation, 1) withString:@"1"];
     [[NSUserDefaults standardUserDefaults] setObject:shownMenusPopsString forKey:@"helpPopMenusShownDefault"];
     [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    NSLog (@"helpPopCheckOrMenuSelected END | %@", shownMenusPopsString);
 }
 
 
