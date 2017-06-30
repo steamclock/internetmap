@@ -32,7 +32,7 @@ public class InfoPopup extends PopupWindow {
         String[] values = new String[4];
         values[0] = context.getString(R.string.infoHelp);
         values[1] = context.getString(R.string.infoSales);
-        values[2] = context.getString(R.string.infoLink);
+        values[2] = context.getString(R.string.infoOpenSource); //values[2] = context.getString(R.string.infoLink);
         values[3] = context.getString(R.string.infoCredits);
         
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.view_info_popup_item, android.R.id.text1, values);
@@ -48,7 +48,8 @@ public class InfoPopup extends PopupWindow {
                     doSales();
                     break;
                 case 2:
-                    openLearnMore();
+                    openOpenSourcePage();
+                    //openLearnMore();
                     break;
                 case 3:
                     doCredits();
@@ -61,6 +62,11 @@ public class InfoPopup extends PopupWindow {
         });
     }
 
+    private void openOpenSourcePage() {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/steamclock/internetmap"));
+        mContext.startActivity(browserIntent);
+    }
+
     private void openLearnMore() {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.cogecopeer1.com/services/hosting/"));
         mContext.startActivity(browserIntent);
@@ -69,9 +75,6 @@ public class InfoPopup extends PopupWindow {
     private void doSales() {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.cogecopeer1.com/contact/"));
         mContext.startActivity(browserIntent);
-
-        //Intent intent = new Intent(mContext, SalesPopup.class);
-        //mContext.startActivity(intent);
     }
     
     private void doCredits() {

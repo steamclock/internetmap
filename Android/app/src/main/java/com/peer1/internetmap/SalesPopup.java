@@ -9,6 +9,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+/**
+ * TODO No longer being used; direct web link used instead.
+ * Keeping until we determine this is how we want to show contact info.
+ */
 public class SalesPopup extends BaseActivity {
     private static String TAG = "SalesPopup";
 
