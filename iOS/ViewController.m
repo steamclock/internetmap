@@ -264,7 +264,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     [self performSelector:@selector(fadeOutLogo) withObject:nil afterDelay:4];
     
-    [self helpPopCheck];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"helpPopMenusShownDefault"];
+     
     
 }
 
@@ -281,12 +282,14 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         [[NSUserDefaults standardUserDefaults] setBool:TRUE forKey:@"shownFirstUse"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         [self showFirstUse];
+    } else {
+        self.helpPopView.hidden = YES;
+        [self helpPopCheckOrMenuSelected:nil];
     }
     
     // When coming back from one of the modals (Help, credits, etc), we want to redisplay the info for the current node
     // because we hid it when we brought up the info menu popover
     [self displayInformationPopoverForCurrentNode];
-    
 }
 
 - (void)fadeOutLogo {
@@ -476,7 +479,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
     
-    
     NSArray* simultaneous = @[self.panRecognizer, self.pinchRecognizer, self.rotationGestureRecognizer, self.longPressGestureRecognizer];
     if ([simultaneous containsObject:gestureRecognizer] && [simultaneous containsObject:otherGestureRecognizer]) {
         return YES;
@@ -599,6 +601,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         [self leaveTimelineMode];
     }
     
+    [self helpPopCheckOrMenuSelected:_visualizationsButton];
     [self dismissNodeInfoPopover];
 
     if (!self.visualizationSelectionPopover) {
@@ -703,6 +706,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             self.logo.hidden = YES;
         }
 
+        [self helpPopCheckOrMenuSelected:_timelineButton];
         [self updateTimelineWithPopoverDismiss:NO];
 
         // Give the timeline slider view a poke to reinitialize it with the current date
@@ -928,6 +932,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 -(void)nodeSearchDelegateDone {
     [self.nodeSearchPopover dismissPopoverAnimated:YES];
     self.searchButton.selected = NO;
+    
+    [self helpPopCheckOrMenuSelected:nil];
 }
 
 #pragma mark - NodeInfo delegate
@@ -941,6 +947,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.tracerouteASNs = nil;
         [self.controller clearHighlightLines];
     }
+    
+    [self helpPopCheckOrMenuSelected:nil];
 }
 
 #pragma mark - Node Info View Delegate
@@ -1039,38 +1047,74 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self dismissNodeInfoPopover];
     [self.controller deselectCurrentNode];
     [self.controller resetZoomAndRotationAnimatedForOrientation:![HelperMethods deviceIsiPad]];
+    
+    [self helpPopCheckOrMenuSelected:nil];
 }
 
 #pragma mark - help pop check
 
--(void) helpPopCheck {
+-(void) helpPopCheckOrMenuSelected:(UIButton*)menuButton {
+NSLog (@"helpPopCheckOrMenuSelected 0");
+    self.helpPopView.hidden = YES;
     
-    [self helpPopHide];
-    
-    if (! [[NSUserDefaults standardUserDefaults] objectForKey:@"helpPopDefaults"]) {
-        [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"helpPopDefaults"];
+    if (! [[NSUserDefaults standardUserDefaults] objectForKey:@"helpPopMenusShownDefault"]) {
+        [[NSUserDefaults standardUserDefaults] setObject:@"000" forKey:@"helpPopMenusShownDefault"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     
-    NSInteger helpPopPosition = [[NSUserDefaults standardUserDefaults] objectForKey:@"helpPopDefaults"];
+    NSInteger helpLocation;
+NSLog (@"helpPopCheckOrMenuSelected 1");
+    NSArray *orderOfMenuButtons = @[_searchButton, _visualizationsButton, _timelineButton];
+    NSMutableString *shownMenusPopsString = [[NSUserDefaults standardUserDefaults] objectForKey:@"helpPopMenusShownDefault"];
     
-    if (helpPopPosition > 3) return; // all pop help shown
-    
-    if (helpPopPosition == 0) { }
-        else if (helpPopPosition == 1) { }
-        else if (helpPopPosition == 2) { }
-        else if (helpPopPosition == 3) { }
+    if (menuButton == nil) { // not user selected menu. Should we show a menu and where
+NSLog (@"helpPopCheckOrMenuSelected 2 | %@", shownMenusPopsString);
+        NSRange range = [shownMenusPopsString rangeOfString:@"0"];
+        if (range.location == NSNotFound) return;
         
-    helpPopPosition++;
+        helpLocation = range.location;
+        
+        NSArray *popMenuInfo = @[@"You can search for companies and domains", @"You can also view the internet as a network", @"You can also browse the history of the internet"];
+        
+        UIButton *buttonForHelp = orderOfMenuButtons[helpLocation];
+        
+        float xPosition = buttonForHelp.frame.origin.x;
+        float yPosition = buttonForHelp.frame.origin.y;
+        
+        float buttonHeight = buttonForHelp.frame.size.height;
+        
+        self.helpPopView.frame = CGRectMake(xPosition, yPosition + buttonHeight + 10, 169, 55);
+        self.helpPopLabel.text = popMenuInfo[helpLocation];
+        self.helpPopView.hidden = NO;
+NSLog (@"helpPopCheckOrMenuSelected 3");
+                
+        
+    } else { // user viewing menu. dont show help menu for it
+        
+        NSInteger currentLocation = -1;
+        
+        for (UIButton *currentButton in orderOfMenuButtons) {
+            if (currentButton == menuButton) {
+                break;
+            }
+            currentLocation++;
+        }
+        
+        if (currentLocation == -1 || [shownMenusPopsString characterAtIndex:currentLocation] == '1') return;
+        
+        helpLocation = currentLocation;
+    }
+NSLog (@"helpPopCheckOrMenuSelected 4");
     
-    [[NSUserDefaults standardUserDefaults] setInteger:helpPopPosition forKey:@"helpPopDefaults"];
+if (self.helpPopView.isHidden) NSLog (@"helpPopCheckOrMenuSelected IS HIDDEN");
+else NSLog (@"helpPopCheckOrMenuSelected IS NOT HIDDEN");
+    
+    shownMenusPopsString = (NSMutableString *)[shownMenusPopsString stringByReplacingCharactersInRange:NSMakeRange(helpLocation, 1) withString:@"1"];
+    [[NSUserDefaults standardUserDefaults] setObject:shownMenusPopsString forKey:@"helpPopMenusShownDefault"];
     [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    NSLog (@"helpPopCheckOrMenuSelected END | %@", shownMenusPopsString);
 }
-
--(void) helpPopHide {
-    self.helpPopView.hidden = YES;
-}
-
 
 
 #pragma mark - WEPopover Delegate
