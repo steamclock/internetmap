@@ -110,7 +110,7 @@
 }
 
 -(void)webViewDidFinishLoad:(UIWebView *)webView {
-    [UIView animateWithDuration:1.0 animations:^{
+    [UIView animateWithDuration:0.25 animations:^{
         webView.alpha = 1.0f;
     }];
     [webView.scrollView flashScrollIndicators];

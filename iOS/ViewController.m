@@ -205,7 +205,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.timelinePopover = [[WEPopoverController alloc] initWithContentViewController:self.timelineInfoViewController];
         if ([HelperMethods deviceIsiPad]) {
             WEPopoverContainerViewProperties* prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
-            prop.downArrowImageName = @"popupArrow-timeline";
+            // prop.downArrowImageName = @"popupArrow-timeline";
+            prop.downArrowImageName = @"popoverArrowDownSimple";
             self.timelinePopover.containerViewProperties = prop;
         }else {
             WEPopoverContainerViewProperties* prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
@@ -240,10 +241,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self precacheCurrentASN];
     
     [self performSelector:@selector(fadeOutLogo) withObject:nil afterDelay:4];
-    
-    // !! JSK
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"helpPopMenusShownDefault"];
-    
+        
     // help pop up
     [self helpPopCheckSetUp];
     self.helpPopView.hidden = YES;
@@ -517,6 +515,7 @@ NSLog (@"handleTap");
         searchController.delegate = self;
       
         self.nodeSearchPopover = [[WEPopoverController alloc] initWithContentViewController:searchController];
+        
         [self.nodeSearchPopover setPopoverContentSize:searchController.preferredContentSize];
         self.nodeSearchPopover.delegate = self;
        
@@ -598,11 +597,16 @@ NSLog (@"handleTap");
         self.visualizationSelectionPopover = [[WEPopoverController alloc] initWithContentViewController:tableforPopover];
         self.visualizationSelectionPopover.delegate = self;
         tableforPopover.items = [self.controller visualizationNames];
-        [self.visualizationSelectionPopover setPopoverContentSize:tableforPopover.preferredContentSize];
+NSLog (@"visualizationsButtonPressed A");
         if (![HelperMethods deviceIsiPad]) {
             WEPopoverContainerViewProperties *prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
             prop.upArrowImageName = nil;
             self.visualizationSelectionPopover.containerViewProperties = prop;
+            [self.visualizationSelectionPopover setPopoverContentSize:tableforPopover.preferredContentSize];
+NSLog (@"visualizationsButtonPressed IPHONE");
+        } else {
+            [self.visualizationSelectionPopover setPopoverContentSize:CGSizeMake(300, 87)];
+NSLog (@"visualizationsButtonPressed IPAD");
         }
         
         __weak ViewController* weakSelf = self;
@@ -650,12 +654,17 @@ NSLog (@"handleTap");
         self.infoPopover = [[WEPopoverController alloc] initWithContentViewController:tableforPopover];
         self.infoPopover.delegate = self;
         
-        tableforPopover.items = @[ @"Help", @"Managed Cloud Services", @"Learn more at peer1.com", @"Credits" ];
-        [self.infoPopover setPopoverContentSize:tableforPopover.preferredContentSize];
+        tableforPopover.items = @[ @"Introduction", @"Managed Cloud Services", @"Learn more at peer1.com", @"Credits" ];
+        
+        
+        
         if (![HelperMethods deviceIsiPad]) {
             WEPopoverContainerViewProperties *prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
             prop.upArrowImageName = nil;
             self.infoPopover.containerViewProperties = prop;
+            [self.visualizationSelectionPopover setPopoverContentSize:tableforPopover.preferredContentSize];
+        } else {
+            [self.infoPopover setPopoverContentSize:CGSizeMake(340, 175)];
         }
         
         __weak ViewController* weakSelf = self;
@@ -1068,7 +1077,7 @@ NSLog (@"handleTap");
         NSInteger yPadding = 0;
         
         if ([HelperMethods deviceIsiPad]) {
-            xPadding = -8;
+            xPadding = -18;
             yPadding = -5;
         } else if (buttonForHelp == _timelineButton) { // iphone and right button, dont want to clip on small screens
             xPadding = -112;

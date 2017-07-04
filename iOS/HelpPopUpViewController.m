@@ -16,9 +16,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    
-    NSLog (@"HelpPopUpViewController");
 }
 
 - (void)didReceiveMemoryWarning {
