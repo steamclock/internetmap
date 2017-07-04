@@ -654,7 +654,7 @@ NSLog (@"visualizationsButtonPressed IPAD");
         self.infoPopover = [[WEPopoverController alloc] initWithContentViewController:tableforPopover];
         self.infoPopover.delegate = self;
         
-        tableforPopover.items = @[ @"Introduction", @"Managed Cloud Services", @"Learn more at peer1.com", @"Credits" ];
+        tableforPopover.items = @[ @"Introduction", @"Managed Cloud Services", @"Open Source", @"Credits" ];
         
         
         
@@ -678,7 +678,7 @@ NSLog (@"visualizationsButtonPressed IPAD");
                     [self showContactForm];
                     break;
                 case 2: //URL
-                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.steamclock.com/blog/2013/03/mapping-the-internet/"] options:@{} completionHandler:nil];
+                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://github.com/steamclock/internetmap"] options:@{} completionHandler:nil];
                     break;
                 case 3: //credits
                     [self showCredits];
