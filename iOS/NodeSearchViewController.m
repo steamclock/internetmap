@@ -55,7 +55,7 @@
     self.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     self.textField.textColor = UI_COLOR_DARK;
     self.textField.delegate = self;
-    self.textField.font = [UIFont fontWithName:FONT_NAME_LIGHT size:20];
+    self.textField.font = [UIFont fontWithName:FONT_NAME_LIGHT size:18];
     self.textField.returnKeyType = UIReturnKeyGo;
 
     // Attributed strings in iOS 6 only
@@ -142,7 +142,7 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         cell.textLabel.textColor = [UIColor colorWithRed:235.0/255.0 green:235.0/255.0 blue:235.0/255.0 alpha:1.0];
         cell.textLabel.highlightedTextColor = UI_PRIMARY_COLOR;
-        cell.textLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:24];
+        cell.textLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:19];
         cell.selectionStyle = UITableViewCellSelectionStyleBlue;
         cell.selectedBackgroundView = [[UIView alloc] init];
         cell.backgroundColor = [UIColor clearColor];

@@ -162,16 +162,23 @@
     
     // suppress forms that are gonna fail
     if((self.nameField.text.length == 0) || (self.emailField.text.length == 0)) {
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Missing required fields", nil) message:NSLocalizedString(@"Please enter both a name and email address.", nil) delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
-        return;
+        UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Missing required fields", nil) message:NSLocalizedString(@"Please enter both a name and email address.", nil)
+            preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertAction *okAA = [UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", nil) style:UIAlertActionStyleDefault
+                                                     handler:^(UIAlertAction * action) {
+                                                         [alert dismissViewControllerAnimated:NO completion:nil]; }];
+        [alert addAction:okAA];
+        [self presentViewController:alert animated:YES completion:nil];
     }
     
     void (^genericFailure)() = ^{
-        [self dismissViewControllerAnimated:YES completion:nil];
-        
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Network Error", nil) message:NSLocalizedString(@"Could not complete the contact request. Please try again later.", nil) delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
+        UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Network Error", nil) message:NSLocalizedString(@"Could not complete the contact request. Please try again later.", nil)
+                                                                 preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertAction *okAA = [UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", nil) style:UIAlertActionStyleDefault
+                                                     handler:^(UIAlertAction * action) {
+                                                         [alert dismissViewControllerAnimated:NO completion:nil]; }];
+        [alert addAction:okAA];
+        [self presentViewController:alert animated:YES completion:nil];
     };
     
     MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -196,8 +203,13 @@
     NSData *data = [NSJSONSerialization dataWithJSONObject:postData options:0 error:&error];
     
     if(error) {
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Internal Error" message:@"Could not build contact submit request." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];        return;
+        UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Internal Error", nil) message:NSLocalizedString(@"Could not build contact submit request.", nil)
+                                                                 preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertAction *okAA = [UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", nil) style:UIAlertActionStyleDefault
+                                                     handler:^(UIAlertAction * action) {
+                                                         [alert dismissViewControllerAnimated:NO completion:nil]; }];
+        [alert addAction:okAA];
+        [self presentViewController:alert animated:YES completion:nil];
     }
     
     [request appendPostData:data];
@@ -235,8 +247,12 @@
             
             if((weakRequest.responseStatusCode == 422) && responseDict) {
                 if([[responseDict valueForKey:@"field"] isEqualToString:@"email"]) {
-                    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Invalid email" message:@"Please enter a valid email address." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                    [alert show];
+                    UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Invalid email", nil) message:NSLocalizedString(@"Please enter a valid email address.", nil) preferredStyle:UIAlertControllerStyleActionSheet];
+                    UIAlertAction *okAA = [UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", nil) style:UIAlertActionStyleDefault
+                                                                 handler:^(UIAlertAction * action) {
+                                                                     [alert dismissViewControllerAnimated:NO completion:nil]; }];
+                    [alert addAction:okAA];
+                    [self presentViewController:alert animated:YES completion:nil];
                 }
                 else if([responseDict valueForKey:@"error"]) {
                     NSString* message;
@@ -248,8 +264,12 @@
                         message = [NSString stringWithFormat:@"%@", [responseDict valueForKey:@"error"] ];
                     }
                     
-                    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Submit Error" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                    [alert show];
+                    UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Submit Error", nil) message:NSLocalizedString(message, nil) preferredStyle:UIAlertControllerStyleActionSheet];
+                    UIAlertAction *okAA = [UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", nil) style:UIAlertActionStyleDefault
+                                                                 handler:^(UIAlertAction * action) {
+                                                                     [alert dismissViewControllerAnimated:NO completion:nil]; }];
+                    [alert addAction:okAA];
+                    [self presentViewController:alert animated:YES completion:nil];
                 }
                 else {
                     genericFailure();

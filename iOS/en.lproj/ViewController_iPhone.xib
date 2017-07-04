@@ -12,6 +12,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ViewController">
             <connections>
                 <outlet property="buttonContainerView" destination="5" id="42"/>
+                <outlet property="helpPopBackImage" destination="Llt-OW-UV1" id="Pc1-66-sAy"/>
                 <outlet property="helpPopLabel" destination="NIA-9A-0QU" id="wCp-Rk-MR1"/>
                 <outlet property="helpPopView" destination="96h-Us-nrP" id="wFB-Y1-hYY"/>
                 <outlet property="infoButton" destination="9" id="43"/>
@@ -146,10 +147,10 @@
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                 </imageView>
                 <view contentMode="scaleToFill" misplaced="YES" id="96h-Us-nrP">
-                    <rect key="frame" x="31" y="73" width="169" height="55"/>
+                    <rect key="frame" x="22" y="73" width="170" height="55"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="callout.png" id="Llt-OW-UV1">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="callout_left.png" id="Llt-OW-UV1">
                             <rect key="frame" x="0.0" y="0.0" width="169" height="55"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
@@ -170,7 +171,7 @@
         </view>
     </objects>
     <resources>
-        <image name="callout.png" width="195" height="58"/>
+        <image name="callout_left.png" width="170" height="54"/>
         <image name="info-selected.png" width="48" height="48"/>
         <image name="info.png" width="48" height="48"/>
         <image name="peer1-logo.png" width="111" height="35"/>

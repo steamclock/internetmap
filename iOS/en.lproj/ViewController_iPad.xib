@@ -12,6 +12,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ViewController">
             <connections>
                 <outlet property="buttonContainerView" destination="26" id="56"/>
+                <outlet property="helpPopBackImage" destination="VgY-bP-f4a" id="eit-OD-xU8"/>
                 <outlet property="helpPopLabel" destination="e7K-LK-aPM" id="Lc1-Z1-r58"/>
                 <outlet property="helpPopView" destination="1Jl-7c-kXR" id="BKM-PO-RZp"/>
                 <outlet property="infoButton" destination="17" id="71"/>
@@ -127,7 +128,7 @@
                     <rect key="frame" x="9" y="74" width="169" height="55"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="callout.png" id="VgY-bP-f4a">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="callout_left.png" id="VgY-bP-f4a">
                             <rect key="frame" x="0.0" y="0.0" width="169" height="55"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
@@ -169,7 +170,7 @@
         </view>
     </objects>
     <resources>
-        <image name="callout.png" width="195" height="58"/>
+        <image name="callout_left.png" width="195" height="54"/>
         <image name="info-selected.png" width="48" height="48"/>
         <image name="info.png" width="48" height="48"/>
         <image name="peer1-logo.png" width="111" height="35"/>
