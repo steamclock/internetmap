@@ -312,7 +312,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(void)handleTap:(UITapGestureRecognizer*)gestureRecognizer {
-NSLog (@"handleTap");
+
     [self.controller resetIdleTimer];
     [self dismissNodeInfoPopover];
     [self helpPopCheckOrMenuSelected:nil];
@@ -597,16 +597,13 @@ NSLog (@"handleTap");
         self.visualizationSelectionPopover = [[WEPopoverController alloc] initWithContentViewController:tableforPopover];
         self.visualizationSelectionPopover.delegate = self;
         tableforPopover.items = [self.controller visualizationNames];
-NSLog (@"visualizationsButtonPressed A");
         if (![HelperMethods deviceIsiPad]) {
             WEPopoverContainerViewProperties *prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
             prop.upArrowImageName = nil;
             self.visualizationSelectionPopover.containerViewProperties = prop;
             [self.visualizationSelectionPopover setPopoverContentSize:tableforPopover.preferredContentSize];
-NSLog (@"visualizationsButtonPressed IPHONE");
         } else {
             [self.visualizationSelectionPopover setPopoverContentSize:CGSizeMake(300, 87)];
-NSLog (@"visualizationsButtonPressed IPAD");
         }
         
         __weak ViewController* weakSelf = self;
