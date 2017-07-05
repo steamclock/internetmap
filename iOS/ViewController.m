@@ -55,6 +55,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (nonatomic) CGPoint lastPanPosition;
 @property (nonatomic) float lastRotation;
 
+@property (nonatomic) float accumulatedRotation;
+@property (nonatomic) float accumulatedTilt;
+@property (nonatomic) float accumulatedPan;
+
 @property (nonatomic) float lastScale;
 @property (nonatomic) int isCurrentlyFetchingASN;
 
@@ -223,6 +227,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.cachedCurrentASN = nil;
     [self precacheCurrentASN];
     
+    self.accumulatedRotation = 0;
+    self.accumulatedTilt = 0;
+    self.accumulatedPan = 0;
     
     [self performSelector:@selector(fadeOutLogo) withObject:nil afterDelay:4];
     
@@ -364,8 +371,20 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             CGPoint delta = CGPointMake(translation.x - self.lastPanPosition.x, translation.y - self.lastPanPosition.y);
             self.lastPanPosition = translation;
             
-            [self.controller rotateRadiansX:delta.x * 0.01];
-            [self.controller rotateRadiansY:delta.y * 0.01];
+            if (self.accumulatedPan > -179 && self.accumulatedPan < 50) {
+                self.accumulatedPan =  self.accumulatedPan + delta.x;
+                [self.controller rotateRadiansX:delta.x * 0.01];
+            }
+            
+            // NSLog (@"PAN DELTA Y %f", delta.y);
+            // NSLog (@"PAN DELTA2 Y %f", delta.y * 0.01);
+            // NSLog (@"PAN DELTA ACCUMULATED TILT Y %f", self.accumulatedTilt);
+            
+            if (self.accumulatedTilt > -75 && self.accumulatedTilt < 126) {
+                self.accumulatedTilt =  self.accumulatedTilt + delta.y;
+                [self.controller rotateRadiansY:delta.y * 0.01];
+            }
+            
         } else if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
             if (isnan([gestureRecognizer velocityInView:self.view].x) || isnan([gestureRecognizer velocityInView:self.view].y)) {
                 [self.controller stopMomentumPan];
@@ -373,6 +392,13 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                 CGPoint velocity = [gestureRecognizer velocityInView:self.view];
                 [self.controller startMomentumPanWithVelocity:CGPointMake(velocity.x*0.002, velocity.y*0.002)];
             }
+            
+            if (self.accumulatedTilt < -75) self.accumulatedTilt = -72;
+            else if (self.accumulatedTilt > 126) self.accumulatedTilt = 122;
+            
+            if (self.accumulatedPan < -179) self.accumulatedPan = -176;
+            else if (self.accumulatedPan > 48) self.accumulatedPan = 47;
+            
         }
     }
 }
@@ -384,16 +410,39 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             [self.controller unhoverNode];
             self.lastRotation = gestureRecognizer.rotation;
             [self.controller stopMomentumRotation];
-        }else if([gestureRecognizer state] == UIGestureRecognizerStateChanged)
+        }
+        else if([gestureRecognizer state] == UIGestureRecognizerStateChanged)
         {
             float deltaRotation = -gestureRecognizer.rotation - self.lastRotation;
-            self.lastRotation = -gestureRecognizer.rotation;
-            [self.controller rotateRadiansZ:deltaRotation];
+            
+            float currentRotateTotal = self.accumulatedRotation + self.lastRotation;
+            if (currentRotateTotal > -1.2 && currentRotateTotal < 1.5) {
+                self.lastRotation = -gestureRecognizer.rotation;
+                [self.controller rotateRadiansZ:deltaRotation];
+            }
+
         } else if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
             if (isnan(gestureRecognizer.velocity)) {
                 [self.controller stopMomentumRotation];
             } else {
-                [self.controller startMomentumRotationWithVelocity:-gestureRecognizer.velocity*0.5];
+                
+                self.accumulatedRotation = self.accumulatedRotation + self.lastRotation;
+                
+                NSLog(@"velocity %f", -gestureRecognizer.velocity*0.5);
+                
+                if (self.accumulatedRotation > 1.4) {
+                    self.accumulatedRotation = 1.4;
+                } else if (self.accumulatedRotation < -1) {
+                    self.accumulatedRotation = -1;
+                }
+                
+                
+                if (self.accumulatedRotation > -1 && self.accumulatedRotation < 1.4) {
+                    NSLog(@"velocity IN");
+                    [self.controller startMomentumRotationWithVelocity:-gestureRecognizer.velocity*0.2];
+                }
+                
+                NSLog (@"self.accumulatedRotation %f", self.accumulatedRotation);
             }
 
         }
