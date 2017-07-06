@@ -13,6 +13,9 @@
 		1175AA0416AA091800B93031 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1175AA0316AA091800B93031 /* CoreText.framework */; };
 		1175AA3216AA117800B93031 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1175AA3116AA117800B93031 /* libxml2.dylib */; };
 		1175AA3416AA117F00B93031 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1175AA3316AA117F00B93031 /* ImageIO.framework */; };
+		1ABF33A4A1E87B9BCEF92A50 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F206D222C5BA2C4D8916E78 /* AVFoundation.framework */; };
+		216CB68D4F0CE10D5F71E486 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D35DE583A2E50CC5E2BDFA99 /* AssetsLibrary.framework */; };
+		268DE1153716F526803AD278 /* BuddyBuildSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28C527A56CFB2939D5AA9DE8 /* BuddyBuildSDK.framework */; };
 		4E3E42AE1EF1AE92007224FE /* peer1-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E3E42AB1EF1AE92007224FE /* peer1-logo.png */; };
 		4E3E42AF1EF1AE92007224FE /* peer1-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E3E42AC1EF1AE92007224FE /* peer1-logo@2x.png */; };
 		4E3E42B01EF1AE92007224FE /* peer1-logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E3E42AD1EF1AE92007224FE /* peer1-logo@3x.png */; };
@@ -61,6 +64,8 @@
 		4E9A00301EE8D7B200FC19E4 /* help03-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E9A002A1EE8D7B200FC19E4 /* help03-ipad.png */; };
 		4E9A00311EE8D7B200FC19E4 /* help03-ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E9A002B1EE8D7B200FC19E4 /* help03-ipad@2x.png */; };
 		4EB7E70D1EE7225C00A062A8 /* globalSettings.json in Resources */ = {isa = PBXBuildFile; fileRef = 4EB7E70C1EE7225C00A062A8 /* globalSettings.json */; };
+		691DC08B97C843AB06E3610D /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3826AB3EDD81040E4E3F010F /* CoreTelephony.framework */; };
+		70EE1CB9D73C9A2C673B1C97 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F25B19EFA4B37821B337BD5C /* CoreVideo.framework */; };
 		7D23CB571DF73C7900D82CC2 /* LaunchScreen~iphone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D23CB561DF73C7900D82CC2 /* LaunchScreen~iphone.storyboard */; };
 		7D23CB591DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D23CB581DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard */; };
 		7D5284871DDA7A6800E42C5F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5284861DDA7A6800E42C5F /* QuartzCore.framework */; };
@@ -113,6 +118,7 @@
 		84DDB8011F0C11000059BAE7 /* callout_right.png in Resources */ = {isa = PBXBuildFile; fileRef = 84DDB7FB1F0C11000059BAE7 /* callout_right.png */; };
 		84DDB8021F0C11000059BAE7 /* callout_right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84DDB7FC1F0C11000059BAE7 /* callout_right@2x.png */; };
 		84DDB8031F0C11000059BAE7 /* callout_right@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84DDB7FD1F0C11000059BAE7 /* callout_right@3x.png */; };
+		899D03717A12F1FF46CB1027 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7287BA8F546F8A1F9C6783B0 /* CoreMedia.framework */; };
 		A600AAD616A664E1003B1028 /* as2attr.txt in Resources */ = {isa = PBXBuildFile; fileRef = A600AAD316A664DF003B1028 /* as2attr.txt */; };
 		A600AAD716A664E1003B1028 /* asinfo.json in Resources */ = {isa = PBXBuildFile; fileRef = A600AAD416A664E0003B1028 /* asinfo.json */; };
 		A625263316CEF3250015DF37 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = A625263216CEF3250015DF37 /* MBProgressHUD.m */; };
@@ -267,6 +273,9 @@
 		1175AA0316AA091800B93031 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		1175AA3116AA117800B93031 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		1175AA3316AA117F00B93031 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		28C527A56CFB2939D5AA9DE8 /* BuddyBuildSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BuddyBuildSDK.framework; path = BuddyBuildSDK.framework; sourceTree = "<group>"; };
+		2F206D222C5BA2C4D8916E78 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		3826AB3EDD81040E4E3F010F /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		4E3E42AB1EF1AE92007224FE /* peer1-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "peer1-logo.png"; path = "iOS/Images/peer1-logo.png"; sourceTree = SOURCE_ROOT; };
 		4E3E42AC1EF1AE92007224FE /* peer1-logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "peer1-logo@2x.png"; path = "iOS/Images/peer1-logo@2x.png"; sourceTree = SOURCE_ROOT; };
 		4E3E42AD1EF1AE92007224FE /* peer1-logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "peer1-logo@3x.png"; path = "iOS/Images/peer1-logo@3x.png"; sourceTree = SOURCE_ROOT; };
@@ -315,6 +324,7 @@
 		4E9A002A1EE8D7B200FC19E4 /* help03-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "help03-ipad.png"; path = "iOS/Images/help03-ipad.png"; sourceTree = SOURCE_ROOT; };
 		4E9A002B1EE8D7B200FC19E4 /* help03-ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "help03-ipad@2x.png"; path = "iOS/Images/help03-ipad@2x.png"; sourceTree = SOURCE_ROOT; };
 		4EB7E70C1EE7225C00A062A8 /* globalSettings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = globalSettings.json; path = Common/Data/globalSettings.json; sourceTree = "<group>"; };
+		7287BA8F546F8A1F9C6783B0 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		7D23CB561DF73C7900D82CC2 /* LaunchScreen~iphone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "LaunchScreen~iphone.storyboard"; path = "iOS/LaunchScreen~iphone.storyboard"; sourceTree = SOURCE_ROOT; };
 		7D23CB581DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "LaunchScreen~ipad.storyboard"; path = "iOS/LaunchScreen~ipad.storyboard"; sourceTree = SOURCE_ROOT; };
 		7D5284861DDA7A6800E42C5F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -579,6 +589,7 @@
 		A6F3F5661640F1FB0070E6AE /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		A6F3F5681640F1FB0070E6AE /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		A6F3F56A1640F1FB0070E6AE /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		D35DE583A2E50CC5E2BDFA99 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		D403BB9616C1D9C2008AA000 /* cc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cc.h; sourceTree = "<group>"; };
 		D403BB9716C1D9C2008AA000 /* icmp6.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = icmp6.h; sourceTree = "<group>"; };
 		D403BB9816C1D9C2008AA000 /* icmp_var.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = icmp_var.h; sourceTree = "<group>"; };
@@ -660,6 +671,7 @@
 		D4C1082E16B2043D00CA4A0E /* SCPacketRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCPacketRecord.m; path = "External Code/SCPinions/SCPacketUtility/SCPacketRecord.m"; sourceTree = SOURCE_ROOT; };
 		D4C1082F16B2043D00CA4A0E /* SCTracerouteUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCTracerouteUtility.h; path = "External Code/SCPinions/SCPacketUtility/SCTracerouteUtility.h"; sourceTree = SOURCE_ROOT; };
 		D4C1083016B2043D00CA4A0E /* SCTracerouteUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCTracerouteUtility.m; path = "External Code/SCPinions/SCPacketUtility/SCTracerouteUtility.m"; sourceTree = SOURCE_ROOT; };
+		F25B19EFA4B37821B337BD5C /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -690,6 +702,12 @@
 				A6F3F5671640F1FB0070E6AE /* CoreGraphics.framework in Frameworks */,
 				A6F3F5691640F1FB0070E6AE /* GLKit.framework in Frameworks */,
 				A6F3F56B1640F1FB0070E6AE /* OpenGLES.framework in Frameworks */,
+				268DE1153716F526803AD278 /* BuddyBuildSDK.framework in Frameworks */,
+				216CB68D4F0CE10D5F71E486 /* AssetsLibrary.framework in Frameworks */,
+				691DC08B97C843AB06E3610D /* CoreTelephony.framework in Frameworks */,
+				1ABF33A4A1E87B9BCEF92A50 /* AVFoundation.framework in Frameworks */,
+				899D03717A12F1FF46CB1027 /* CoreMedia.framework in Frameworks */,
+				70EE1CB9D73C9A2C673B1C97 /* CoreVideo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1073,6 +1091,12 @@
 				A6F3F5661640F1FB0070E6AE /* CoreGraphics.framework */,
 				A6F3F5681640F1FB0070E6AE /* GLKit.framework */,
 				A6F3F56A1640F1FB0070E6AE /* OpenGLES.framework */,
+				28C527A56CFB2939D5AA9DE8 /* BuddyBuildSDK.framework */,
+				D35DE583A2E50CC5E2BDFA99 /* AssetsLibrary.framework */,
+				3826AB3EDD81040E4E3F010F /* CoreTelephony.framework */,
+				2F206D222C5BA2C4D8916E78 /* AVFoundation.framework */,
+				7287BA8F546F8A1F9C6783B0 /* CoreMedia.framework */,
+				F25B19EFA4B37821B337BD5C /* CoreVideo.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1772,6 +1796,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 6AH3R53PT2;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iOS/InternetMap-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "";
@@ -1850,6 +1878,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 6AH3R53PT2;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iOS/InternetMap-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "";
@@ -1973,6 +2005,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 6AH3R53PT2;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iOS/InternetMap-Prefix.pch";
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
@@ -1994,6 +2030,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 6AH3R53PT2;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iOS/InternetMap-Prefix.pch";
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
