@@ -6,6 +6,8 @@ Using this data, along side geolocation data from the GeoLite databases availabl
 
 Cleaning up the data pipeline is a work in progress, and as such, the state of this folder may change drastically. 
 
+Note: You do NOT have to generate new data sets to build the applications; all the data required for the applications to function is already contained in the Common/Data folder.
+
 ## Environment Setup Suggestions
 
 ### Python
