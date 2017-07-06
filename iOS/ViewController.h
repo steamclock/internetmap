@@ -9,7 +9,7 @@
 #import "SCTracerouteUtility.h"
 #import "WEPopoverController.h"
 
-@interface ViewController : GLKViewController <NodeSearchDelegate, SCTracerouteUtilityDelegate, UIGestureRecognizerDelegate, WEPopoverControllerDelegate>
+@interface ViewController : GLKViewController <NodeSearchDelegate, SCTracerouteUtilityDelegate, UIGestureRecognizerDelegate, WEPopoverControllerDelegate, UIPopoverPresentationControllerDelegate>
 
 
 @end

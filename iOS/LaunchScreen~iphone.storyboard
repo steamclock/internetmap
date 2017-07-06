@@ -21,15 +21,34 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default.png" translatesAutoresizingMaskIntoConstraints="NO" id="cte-fq-Hd9">
-                                <rect key="frame" x="0.0" y="99" width="375" height="568"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="load_bg.png" translatesAutoresizingMaskIntoConstraints="NO" id="PD6-W0-T9h">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="load_logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="kVf-oJ-iEo">
+                                <rect key="frame" x="117" y="573" width="141" height="55"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="55" id="Y5r-hV-VoY"/>
+                                    <constraint firstAttribute="width" constant="141" id="ghd-Zm-aPF"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="loading ..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="THJ-ik-5yP">
+                                <rect key="frame" x="150" y="315" width="75" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="cte-fq-Hd9" secondAttribute="bottom" id="UlH-Ct-N84"/>
-                            <constraint firstItem="cte-fq-Hd9" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="hdi-Op-qBf"/>
-                            <constraint firstAttribute="trailing" secondItem="cte-fq-Hd9" secondAttribute="trailing" id="rEk-S2-Jlp"/>
+                            <constraint firstItem="THJ-ik-5yP" firstAttribute="centerX" secondItem="kVf-oJ-iEo" secondAttribute="centerX" id="Kn8-2p-ECs"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="kVf-oJ-iEo" secondAttribute="bottom" constant="39" id="WO5-KP-Nte"/>
+                            <constraint firstItem="kVf-oJ-iEo" firstAttribute="centerY" secondItem="PD6-W0-T9h" secondAttribute="centerY" priority="998" id="XjY-7G-OZI"/>
+                            <constraint firstItem="PD6-W0-T9h" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="eUb-d9-H55"/>
+                            <constraint firstItem="PD6-W0-T9h" firstAttribute="height" secondItem="Ze5-6b-2t3" secondAttribute="height" id="h5c-C2-sF0"/>
+                            <constraint firstItem="PD6-W0-T9h" firstAttribute="bottom" secondItem="xb3-aO-Qok" secondAttribute="top" id="h6l-uX-f5f"/>
+                            <constraint firstItem="PD6-W0-T9h" firstAttribute="width" secondItem="Ze5-6b-2t3" secondAttribute="width" id="lWd-4a-sSu"/>
+                            <constraint firstItem="PD6-W0-T9h" firstAttribute="centerX" secondItem="THJ-ik-5yP" secondAttribute="centerX" id="xR3-we-2aL"/>
+                            <constraint firstItem="THJ-ik-5yP" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" constant="295" id="yFs-2k-5Vb"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -39,6 +58,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Default.png" width="320" height="568"/>
+        <image name="load_bg.png" width="375" height="667"/>
+        <image name="load_logo.png" width="141" height="45"/>
     </resources>
 </document>

@@ -24,7 +24,10 @@
     if (self = [super init]) {
         NSString* json = [[NSBundle mainBundle] pathForResource:@"history" ofType:@"json"];
         self.jsonDict = [NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfFile:json] options:0 error:nil];
-        self.preferredContentSize = CGSizeMake(320, 0); //height is set in setYear:
+        
+        float width = [HelperMethods deviceIsiPad] ? 320 : [[UIScreen mainScreen] bounds].size.width;
+        
+        self.preferredContentSize = CGSizeMake(width, 0); //height is set in setYear:
     }
     
     return self;

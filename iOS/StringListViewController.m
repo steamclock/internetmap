@@ -22,7 +22,11 @@
 {
     self = [super initWithStyle:style];
     if (self) {
-        self.preferredContentSize = CGSizeMake(320, 150);
+        
+        CGRect screenRect = [[UIScreen mainScreen] bounds];
+        CGFloat screenWidth = screenRect.size.width;
+        
+        self.preferredContentSize = CGSizeMake(screenWidth, 150);
     }
     return self;
 }
@@ -39,7 +43,9 @@
     //update size
     int itemHeight = 44; //according to the internet
     NSInteger totalHeight = items.count * itemHeight;
-    self.preferredContentSize = CGSizeMake(320, totalHeight);
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGFloat screenWidth = screenRect.size.width;
+    self.preferredContentSize = CGSizeMake(screenWidth, totalHeight);
 }
 
 - (void)viewDidLoad
@@ -118,8 +124,6 @@
     
     
     cell.textLabel.text = [self.items objectAtIndex:indexPath.row];
-
-
 
     return cell;
 }
