@@ -76,17 +76,24 @@ Note: Now that we have complete control over the data pipeline we should look in
 Below are some issues encountered when initally running through the python scripts in the pipeline:
 
 #### ERROR (aspipeline): ImportError: No module named networkx
+
 SOLUTION: Install networkx (suggestion, setup custom python env)
 
 #### ERROR (aspipeline): ImportError: No module named p9base
+
 ISSUE: Not a standard or known 3rd party python lib
+
 SOLUTION: Jeff wrote this; add this helper script to the folder
 
 #### ERROR (aspipeline): generator' object has no attribute '__getitem__' ("aspipeline.py", line 479)
+
 PROBLEM: networkx lib has changed, such that the connected_components returns a generator, not a list 
+
 SOLUTION: Create sorted_components = sorted(nx.connected_components(self.graph), key=len, reverse=True) to simulate that old list
 
 #### ERROR (getasinfo): socket.error: [Errno 54] Connection reset by peer
+
 NOTE: Occurs after a period of time, numerous calls made successfully; more than likely hit a new rate limit imposed by the ipduh.com services
+
 OPTIONS: use getasinfo2.py (run in batches) to save the HTML and scrape that later.
 
