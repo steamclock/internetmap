@@ -95,10 +95,12 @@
     
     [self.view addSubview:webView];
     
+    //
+    
     //Done button
     UIImage* xImage = [UIImage imageNamed:@"x-icon"];
     UIButton* doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    CGRect doneFrame = CGRectMake(background.frame.size.width - (xImage.size.width+20), 20, xImage.size.width+20, xImage.size.height+20);
+    CGRect doneFrame = CGRectMake([[UIScreen mainScreen] bounds].size.width - (xImage.size.width+20), 0, xImage.size.width+20, xImage.size.height+20);
     doneButton.frame = doneFrame;
     doneButton.imageView.contentMode = UIViewContentModeCenter;
     [doneButton setImage:xImage forState:UIControlStateNormal];
@@ -122,6 +124,21 @@
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return [HelperMethods deviceIsiPad] ? UIInterfaceOrientationIsLandscape(interfaceOrientation) : UIInterfaceOrientationIsPortrait(interfaceOrientation);
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    // the suggested not depreciated call doesnt seem to work
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
+}
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    // the suggested not depreciated call doesnt seem  to work
+    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
 }
 
 

@@ -21,7 +21,6 @@
 #import "FirstUseViewController.h"
 #import "ContactFormViewController.h"
 #import "CreditsViewController.h"
-#import "HelpPopUpViewController.h"
 
 // Below import for testing BSD traceroute only
 #import "main-traceroute.h"

@@ -26,7 +26,7 @@
         CGRect screenRect = [[UIScreen mainScreen] bounds];
         CGFloat screenWidth = screenRect.size.width;
         
-        self.preferredContentSize = CGSizeMake(screenWidth, 150);
+        self.preferredContentSize = CGSizeMake(screenWidth, 0);
     }
     return self;
 }
@@ -64,7 +64,6 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Table view data source
@@ -88,7 +87,7 @@
     
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.textLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:24];
+        cell.textLabel.font = [UIFont fontWithName:FONT_NAME_REGULAR size:22];
         cell.selectionStyle = UITableViewCellSelectionStyleBlue;
         cell.selectedBackgroundView = [[UIView alloc] init];
     }
@@ -96,16 +95,17 @@
     UIView* divider = [cell.contentView viewWithTag:DIVIDER_TAG];
     if (!divider) {
         divider = [[UIView alloc] initWithFrame:CGRectMake(0, 43, self.tableView.width, 1)];
-        divider.backgroundColor = [UIColor darkGrayColor];
+        divider.backgroundColor = [UIColor blackColor];
         divider.tag = DIVIDER_TAG;
         [cell.contentView addSubview:divider];
     }
+    
     
     if(indexPath.row == (self.items.count - 1)) {
         divider.backgroundColor = [UIColor blackColor];
     }
     else {
-        divider.backgroundColor = [UIColor darkGrayColor];
+        divider.backgroundColor = [UIColor blackColor];
     }
     
     if (indexPath.row == self.selectedRow) {
@@ -124,16 +124,19 @@
     
     
     cell.textLabel.text = [self.items objectAtIndex:indexPath.row];
-
+    
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+   
     if (indexPath.row == self.selectedRow) {
         cell.backgroundColor = UI_PRIMARY_COLOR;
     }else {
-        cell.backgroundColor = [UIColor clearColor];
+        cell.backgroundColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:0.35];
     }
+    
 }
 
 #pragma mark - Table view delegate

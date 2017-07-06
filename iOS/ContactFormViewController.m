@@ -31,13 +31,16 @@
     return self;
 }
 
+-(IBAction)done:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 - (void) urlToLoad:(NSString *)urlString {
     
-    NSURL *nsUrl = [NSURL URLWithString:urlString];
-    NSURLRequest *request = [NSURLRequest requestWithURL:nsUrl cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
     
     [_webView loadRequest:request];
-    
 }
 
 -(void)viewDidLoad {
@@ -46,27 +49,29 @@
     self.activitySpinner.hidden = YES;
     
     [self urlToLoad:self.urlString];
-        
+}
+
+- (void)webViewDidStartLoad:(UIWebView *)webView {
+    self.activitySpinner.hidden = NO;
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
+    self.activitySpinner.hidden = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
- 
-}
-
-- (void)webViewDidStartLoad:(UIWebView *)webView {
-    self.activitySpinner.hidden = NO;
     
+    // the suggested not depreciated call doesnt seem to work
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
 }
-
-- (void)webViewDidFinishLoad:(UIWebView *)webView {
-    self.activitySpinner.hidden = YES;
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
     
-}
-
--(IBAction)done:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    // the suggested not depreciated call doesnt seem  to work
+    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
 }
 
 

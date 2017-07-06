@@ -28,7 +28,7 @@
                                 <rect key="frame" x="613" y="907" width="141" height="45"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="loading ..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qbS-nU-zKV">
-                                <rect key="frame" x="583" y="479" width="200" height="66"/>
+                                <rect key="frame" x="583" y="479" width="200" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="200" id="iGl-Dd-Dw9"/>
                                 </constraints>
@@ -46,7 +46,6 @@
                             <constraint firstAttribute="trailing" secondItem="I0O-0d-cYe" secondAttribute="trailing" id="j6i-kL-tev"/>
                             <constraint firstItem="I0O-0d-cYe" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="rUx-01-deR"/>
                             <constraint firstItem="I0O-0d-cYe" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="rZn-HD-Ug2"/>
-                            <constraint firstItem="I0O-0d-cYe" firstAttribute="centerY" secondItem="qbS-nU-zKV" secondAttribute="centerY" id="rnS-sF-SEM"/>
                             <constraint firstItem="I0O-0d-cYe" firstAttribute="centerX" secondItem="qbS-nU-zKV" secondAttribute="centerX" id="uGi-nB-DSn"/>
                         </constraints>
                     </view>
