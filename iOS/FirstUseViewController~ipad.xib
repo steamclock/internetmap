@@ -60,7 +60,7 @@
                         <constraint firstAttribute="height" constant="170" id="Y1H-2P-RhT"/>
                         <constraint firstAttribute="width" constant="422" id="uhN-qK-VI4"/>
                     </constraints>
-                    <string key="text">This is a 3D visualization of the worldwide networks that make up the internet. Each point represents a ISP, exchange point, university, or other organization.</string>
+                    <string key="text">This is a 3D visualization of the worldwide networks that make up the internet. Each point represents an ISP, exchange point, university, or other organization.</string>
                     <fontDescription key="fontDescription" type="system" pointSize="26"/>
                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
