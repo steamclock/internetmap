@@ -538,8 +538,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self presentViewController:firstUse animated:YES completion:nil];
 }
 
--(void)showContactForm {
+-(void)showContactFormWithUrl:(NSString *)urlString {
     ContactFormViewController* contact = [[ContactFormViewController alloc] initWithNibName:@"ContactFormViewController" bundle:[NSBundle mainBundle]];
+    contact.urlString = urlString;
     [self presentViewController:contact animated:YES completion:nil];
 }
 
@@ -651,10 +652,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.infoPopover = [[WEPopoverController alloc] initWithContentViewController:tableforPopover];
         self.infoPopover.delegate = self;
         
-        tableforPopover.items = @[ @"Introduction", @"Managed Cloud Services", @"Open Source", @"Credits" ];
-        
-        
-        
+        tableforPopover.items = @[ @"Introduction", @"Managed IT Services", @"Open Source", @"Credits" ];
+                        
         if (![HelperMethods deviceIsiPad]) {
             WEPopoverContainerViewProperties *prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
             prop.upArrowImageName = nil;
@@ -672,10 +671,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                     [self showFirstUse];
                     break;
                 case 1: //sales
-                    [self showContactForm];
+                    [self showContactFormWithUrl:@"https://www.cogecopeer1.com/contact/"];
                     break;
                 case 2: //URL
-                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://github.com/steamclock/internetmap"] options:@{} completionHandler:nil];
+                    [self showContactFormWithUrl:@"https://github.com/steamclock/internetmap"];
                     break;
                 case 3: //credits
                     [self showCredits];
