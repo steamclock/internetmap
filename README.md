@@ -1,8 +1,20 @@
-internetmap
+The Cogeco Peer 1 Map of the Internet
 ===========
 
-Peer1 Map of the Internet
+This is a 3D interactive map of the infrastructure of the internet.
 
+In 2013, the teams at Cogeco Peer 1 and Steamclock Software designed and developed this map for iOS and Android. It uses data from CAIDa, the Center for Applied Internet Data Analysis, which maps the key ISPs, exchange points, universities, and other organizations that run the Autonomous Systems that route traffic online.
+
+In 2017, we teamed up again to bring the apps back online with new data from CAIDA, and to release the code as an open source project for the benefit of the community. We expect to have an updated release available on the App Store and Play Store very soon.
+
+Project Structure
+=================
+
+This project has three key parts:
+
+1. The C++ core: This is the OpenGL visualization code and the model layer that is shared between projects.
+2. The iOS app: This is an Objective-C++ project that provides native UI on iPhone and iPad.
+3. The Android app: This is a Java NDK project that does the native UI on Android phones and tablets.
 
 Android Build Setup Instructions
 ================================
@@ -75,7 +87,7 @@ Other Android Gotchas & Advice
 Taking high-res screenshots
 ===========================
 
-To take a print resolution screenshot, you need to do the following:
+To take a print resolution screenshot on a Mac, you need to do the following:
 
 - Create a "InternetMap" subdirectory in you Home directory (The output path is currently hardcoded)
 
@@ -99,7 +111,7 @@ To take a print resolution screenshot, you need to do the following:
 
 Note that the print resolution version may have the larger nodes appear smaller than in the the original image from the live window. There are hardware limitations on point sprite size that will get hit on some hardware. There doesn't appear to be any way to resolve this right now.
 
-Getting the app working in the emulator
+Getting the app working in the Android emulator
 ====================================================
 
 Turns out the newest emulator actually does support openGL ES 2.0, you just have to do a bit of build magic to get it working: (Some of the following stuff is not actually required, but it increases the speed of the emulator)
@@ -123,15 +135,3 @@ A few caveats:
 
 - The emulator is really slow at startup. openGL performance isn't too bad though.
 - The emulator doesn't support multi-touch.
-
-
-Building for HockeyApp
-=========================
-
-The easiest way to upload is to just drag the apk (Android/bin/InternetMap.apk) from finder to the web app. But watch out for a few things:
-
-- Don't use Project->Build Project, it does not update the .apk. Use Run instead, that will update it. if in doubt, check the timestamp.
-- Update the version number in the manifest to make checking for updates work.
-- Hockeyapp itself cannot be installed on devices with no SD card; it's not clear whether Internetmap itself could be installed if you typed out the full download url.
-
-
