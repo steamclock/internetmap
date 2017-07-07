@@ -37,8 +37,6 @@ public class App extends Application {
                         .build());
 
         globalSettings = new GlobalSettings(this);
-
-        SharedPreferenceUtils.setShowingTooltipIndex(0);
     }
 
     @Override
