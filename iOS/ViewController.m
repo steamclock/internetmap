@@ -21,6 +21,7 @@
 #import "FirstUseViewController.h"
 #import "ContactFormViewController.h"
 #import "CreditsViewController.h"
+#import <SafariServices/SafariServices.h>
 
 // Below import for testing BSD traceroute only
 #import "main-traceroute.h"
@@ -81,8 +82,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (weak, nonatomic) IBOutlet UIView *helpPopView;
 @property (weak, nonatomic) IBOutlet UIImageView *helpPopBackImage;
 @property (weak, nonatomic) IBOutlet UILabel *helpPopLabel;
-
-
 
 @property (strong, nonatomic) WEPopoverController* visualizationSelectionPopover;
 @property (strong, nonatomic) WEPopoverController* infoPopover;
@@ -408,8 +407,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             [self.controller unhoverNode];
             self.lastRotation = gestureRecognizer.rotation;
             [self.controller stopMomentumRotation];
-        }else if([gestureRecognizer state] == UIGestureRecognizerStateChanged)
-        {
+        } else if([gestureRecognizer state] == UIGestureRecognizerStateChanged) {
             float deltaRotation = -gestureRecognizer.rotation - self.lastRotation;
             self.lastRotation = -gestureRecognizer.rotation;
             [self.controller rotateRadiansZ:deltaRotation];
@@ -662,6 +660,15 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             [self.infoPopover setPopoverContentSize:CGSizeMake(340, 175)];
         }
         
+        
+        
+        /*
+         NSURL *url = [NSURL URLWithString:@"https://www.cogecopeer1.com/contact/"];
+         SFSafariViewController *safariView = [[SFSafariViewController alloc] initWithURL:url];
+         [self presentViewController:safariView animated:YES completion:nil];
+         */
+        
+        
         __weak ViewController* weakSelf = self;
         
         tableforPopover.selectedBlock = ^(int index){
@@ -670,12 +677,32 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                     [self showFirstUse];
                     break;
                 case 1: //sales
-                    [self showContactFormWithUrl:@"https://www.cogecopeer1.com/contact/"];
+                {
+                    NSURL *url = [NSURL URLWithString:@"https://www.cogecopeer1.com/contact/"];
+                    SFSafariViewController *safariView = [[SFSafariViewController alloc] initWithURL:url];
+                    safariView.modalPresentationStyle = UIModalPresentationOverFullScreen;
+                    [weakSelf presentViewController:safariView animated:YES completion:nil];
                     break;
+                }
                 case 2: //URL
-                    [self showContactFormWithUrl:@"https://github.com/steamclock/internetmap"];
+                {
+                    NSURL *url = [NSURL URLWithString:@"https://github.com/steamclock/internetmap"];
+                    SFSafariViewController *safariView = [[SFSafariViewController alloc] initWithURL:url];
+                    safariView.modalPresentationStyle = UIModalPresentationOverFullScreen;
+                    [weakSelf presentViewController:safariView animated:YES completion:nil];
                     break;
+                }
                 case 3: //credits
+                    
+                    /*
+                     NSURL *url = [NSURL URLWithString:@"https://github.com/steamclock/internetmap"];
+                     SFSafariViewController *safariView = [[SFSafariViewController alloc] initWithURL:url];
+                     safariView.modalPresentationStyle = UIModalPresentationOverFullScreen;
+                     [weakSelf presentViewController:safariView animated:YES completion:nil];
+                     break;
+                     }
+                     */
+                    
                     [self showCredits];
                     break;
                 default: //can't happen
