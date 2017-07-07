@@ -17,6 +17,15 @@
 void DetachThreadFromVM(void);
 void loadFinishedCallback();
 
+double getNowSecs() {
+    // Note, clock() returns CPU time and cannot be relied on for generating
+    // time intervals.
+    struct timespec now;
+    clock_gettime(CLOCK_MONOTONIC, &now);
+    int64_t now_ns = (int64_t) now.tv_sec*1000000000LL + now.tv_nsec;
+    return (double)now_ns / (double)1000000000;
+}
+
 Renderer::Renderer(bool smallScreen) {
     LOG_INFO("Renderer instance created");
     pthread_mutex_init(&_mutex, 0);
@@ -26,7 +35,7 @@ Renderer::Renderer(bool smallScreen) {
     _context = EGL_NO_CONTEXT;
     _smallScreen = smallScreen;
 
-    _currentTimeSec = double(clock()) / double(CLOCKS_PER_SEC);
+    _currentTimeSec = getNowSecs();
     _initialTimeSec = _currentTimeSec;
 
     _rotateX = 0.0f;
@@ -358,7 +367,7 @@ void Renderer::endControllerModification(void) {
 }
 
 void Renderer::drawFrame() {
-    _currentTimeSec = double(clock()) / double(CLOCKS_PER_SEC);
+    _currentTimeSec = getNowSecs();
     _mapController->update(_currentTimeSec - _initialTimeSec);
     _mapController->display->draw();
 }
