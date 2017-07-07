@@ -195,6 +195,16 @@
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (indexPath.row > 0) {
+        cell.backgroundColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:0.35];
+    }
+    
+}
+
+
+
 - (void)done{
     [self.delegate nodeSearchDelegateDone];
 }

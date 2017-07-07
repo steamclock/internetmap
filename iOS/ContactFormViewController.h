@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ContactFormViewController : UIViewController <UITextFieldDelegate>
+@interface ContactFormViewController : UIViewController <UIWebViewDelegate>
+
+@property (nonatomic, retain) NSString* urlString;
 
 @end

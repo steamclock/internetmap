@@ -107,8 +107,6 @@
 		84D15DD21F05A0C200C1B3A4 /* timeline-track@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84D15DD01F05A0C200C1B3A4 /* timeline-track@2x.png */; };
 		84D15DD51F05A0D900C1B3A4 /* youarehere_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 84D15DD31F05A0D900C1B3A4 /* youarehere_selected.png */; };
 		84D15DD61F05A0D900C1B3A4 /* youarehere_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84D15DD41F05A0D900C1B3A4 /* youarehere_selected@2x.png */; };
-		84D15DE01F05A87C00C1B3A4 /* HelpPopUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84D15DDF1F05A87C00C1B3A4 /* HelpPopUp.xib */; };
-		84D15DE31F05A98D00C1B3A4 /* HelpPopUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D15DE21F05A98D00C1B3A4 /* HelpPopUpViewController.m */; };
 		84DDB7F41F06C7EE0059BAE7 /* load_bg_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 84DDB7F21F06C7EE0059BAE7 /* load_bg_ipad.png */; };
 		84DDB7F51F06C7EE0059BAE7 /* load_bg_ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84DDB7F31F06C7EE0059BAE7 /* load_bg_ipad@2x.png */; };
 		84DDB7F71F06E4E00059BAE7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84DDB7F61F06E4E00059BAE7 /* Images.xcassets */; };
@@ -366,9 +364,6 @@
 		84D15DD01F05A0C200C1B3A4 /* timeline-track@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "timeline-track@2x.png"; path = "iOS/Images/timeline-track@2x.png"; sourceTree = SOURCE_ROOT; };
 		84D15DD31F05A0D900C1B3A4 /* youarehere_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = youarehere_selected.png; path = iOS/Images/youarehere_selected.png; sourceTree = SOURCE_ROOT; };
 		84D15DD41F05A0D900C1B3A4 /* youarehere_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "youarehere_selected@2x.png"; path = "iOS/Images/youarehere_selected@2x.png"; sourceTree = SOURCE_ROOT; };
-		84D15DDF1F05A87C00C1B3A4 /* HelpPopUp.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = HelpPopUp.xib; path = iOS/HelpPopUp.xib; sourceTree = SOURCE_ROOT; };
-		84D15DE11F05A98D00C1B3A4 /* HelpPopUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HelpPopUpViewController.h; path = iOS/HelpPopUpViewController.h; sourceTree = SOURCE_ROOT; };
-		84D15DE21F05A98D00C1B3A4 /* HelpPopUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HelpPopUpViewController.m; path = iOS/HelpPopUpViewController.m; sourceTree = SOURCE_ROOT; };
 		84DDB7F21F06C7EE0059BAE7 /* load_bg_ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = load_bg_ipad.png; path = iOS/Images/load_bg_ipad.png; sourceTree = SOURCE_ROOT; };
 		84DDB7F31F06C7EE0059BAE7 /* load_bg_ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "load_bg_ipad@2x.png"; path = "iOS/Images/load_bg_ipad@2x.png"; sourceTree = SOURCE_ROOT; };
 		84DDB7F61F06E4E00059BAE7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "Internet Map/Images.xcassets"; sourceTree = "<group>"; };
@@ -1141,8 +1136,6 @@
 				A6551EBB16CDAC8A00340590 /* CreditsViewController.m */,
 				A6551EC016CEB88700340590 /* ExpandedScrollView.h */,
 				A6551EC116CEB88700340590 /* ExpandedScrollView.m */,
-				84D15DE11F05A98D00C1B3A4 /* HelpPopUpViewController.h */,
-				84D15DE21F05A98D00C1B3A4 /* HelpPopUpViewController.m */,
 				1127C9CF16A0BBFB00413FE9 /* Objective-C++ Wrappers */,
 				D4D17D20166EA621003A489C /* XIBs */,
 			);
@@ -1362,7 +1355,6 @@
 				A686EA4C16B62B23009B070E /* ViewController_iPhone.xib */,
 				7D23CB561DF73C7900D82CC2 /* LaunchScreen~iphone.storyboard */,
 				7D23CB581DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard */,
-				84D15DDF1F05A87C00C1B3A4 /* HelpPopUp.xib */,
 			);
 			name = XIBs;
 			sourceTree = "<group>";
@@ -1530,7 +1522,6 @@
 				A686EA2A16B62A9D009B070E /* youarehere.png in Resources */,
 				A686EA2B16B62A9D009B070E /* youarehere@2x.png in Resources */,
 				4E9A00311EE8D7B200FC19E4 /* help03-ipad@2x.png in Resources */,
-				84D15DE01F05A87C00C1B3A4 /* HelpPopUp.xib in Resources */,
 				84D15DC21F0575AD00C1B3A4 /* help_bg.png in Resources */,
 				849FC0351F0304B800B06401 /* search-selected.png in Resources */,
 				4E8336191EDF929F0067B138 /* 2007.txt in Resources */,
@@ -1666,7 +1657,6 @@
 				A686EA7716B62B61009B070E /* NodeSearchViewController.m in Sources */,
 				A686EA7816B62B61009B070E /* NodeTooltipViewController.m in Sources */,
 				A686EA7916B62B61009B070E /* TimelineInfoViewController.m in Sources */,
-				84D15DE31F05A98D00C1B3A4 /* HelpPopUpViewController.m in Sources */,
 				A686EA7A16B62B61009B070E /* UIView+Convenience.m in Sources */,
 				A686EA7B16B62B61009B070E /* ViewController.m in Sources */,
 				A686EA7C16B62B61009B070E /* StringListViewController.m in Sources */,
