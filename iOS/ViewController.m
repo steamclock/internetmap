@@ -535,12 +535,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self presentViewController:firstUse animated:YES completion:nil];
 }
 
--(void)showContactFormWithUrl:(NSString *)urlString {
-    ContactFormViewController* contact = [[ContactFormViewController alloc] initWithNibName:@"ContactFormViewController" bundle:[NSBundle mainBundle]];
-    contact.urlString = urlString;
-    [self presentViewController:contact animated:YES completion:nil];
-}
-
 -(void)showCredits {
     CreditsViewController* credits = [[CreditsViewController alloc] initWithNibName:nil bundle:[NSBundle mainBundle]];
     [self presentViewController:credits animated:YES completion:nil];
