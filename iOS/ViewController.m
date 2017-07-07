@@ -655,49 +655,25 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         }
         
         
-        
-        /*
-         NSURL *url = [NSURL URLWithString:@"https://www.cogecopeer1.com/contact/"];
-         SFSafariViewController *safariView = [[SFSafariViewController alloc] initWithURL:url];
-         [self presentViewController:safariView animated:YES completion:nil];
-         */
-        
-        
         __weak ViewController* weakSelf = self;
         
         tableforPopover.selectedBlock = ^(int index){
             switch (index) {
                 case 0: //help
-                    [self showFirstUse];
+                    [weakSelf showFirstUse];
                     break;
                 case 1: //sales
                 {
-                    NSURL *url = [NSURL URLWithString:@"https://www.cogecopeer1.com/contact/"];
-                    SFSafariViewController *safariView = [[SFSafariViewController alloc] initWithURL:url];
-                    safariView.modalPresentationStyle = UIModalPresentationOverFullScreen;
-                    [weakSelf presentViewController:safariView animated:YES completion:nil];
+                    [weakSelf showInSafariWithURL:@"https://www.cogecopeer1.com/contact/"];
                     break;
                 }
-                case 2: //URL
+                case 2: //url
                 {
-                    NSURL *url = [NSURL URLWithString:@"https://github.com/steamclock/internetmap"];
-                    SFSafariViewController *safariView = [[SFSafariViewController alloc] initWithURL:url];
-                    safariView.modalPresentationStyle = UIModalPresentationOverFullScreen;
-                    [weakSelf presentViewController:safariView animated:YES completion:nil];
+                    [weakSelf showInSafariWithURL:@"https://github.com/steamclock/internetmap"];
                     break;
                 }
                 case 3: //credits
-                    
-                    /*
-                     NSURL *url = [NSURL URLWithString:@"https://github.com/steamclock/internetmap"];
-                     SFSafariViewController *safariView = [[SFSafariViewController alloc] initWithURL:url];
-                     safariView.modalPresentationStyle = UIModalPresentationOverFullScreen;
-                     [weakSelf presentViewController:safariView animated:YES completion:nil];
-                     break;
-                     }
-                     */
-                    
-                    [self showCredits];
+                    [weakSelf showCredits];
                     break;
                 default: //can't happen
                     NSLog(@"Unexpected info index %zd!!", index);
@@ -712,6 +688,13 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     self.infoButton.highlighted = NO;
     self.infoButton.selected = YES;
+}
+
+- (void) showInSafariWithURL:(NSString *)urlstring {
+    NSURL *url = [NSURL URLWithString:urlstring];
+    SFSafariViewController *safariView = [[SFSafariViewController alloc] initWithURL:url];
+    safariView.modalPresentationStyle = UIModalPresentationOverFullScreen;
+    [self presentViewController:safariView animated:YES completion:nil];
 }
 
 -(IBAction)timelineButtonPressed:(id)sender {
