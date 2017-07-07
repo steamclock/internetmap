@@ -333,7 +333,11 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        showNextTooltip();
+                        if (SharedPreferenceUtils.getShowingTooltipIndex() == 0) {
+                            showNextTooltip();
+                        } else {
+                            showCurrentTooltip();
+                        }
                     }
 
                     @Override
@@ -512,9 +516,11 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
 
             mInfoPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 public void onDismiss() {
-                    mInfoPopup = null;
                     infoIcon.setActivated(false);
-                    showCurrentTooltip();
+                    if (!mInfoPopup.wasDismissedViaSelection()) {
+                        showCurrentTooltip();
+                    }
+                    mInfoPopup = null;
                 }
             });
 

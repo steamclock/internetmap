@@ -15,6 +15,11 @@ public class InfoPopup extends PopupWindow {
     private static String TAG = "InfoPopup";
     private InternetMap mContext;
 
+    private boolean dismissedViaSelection;
+    public boolean wasDismissedViaSelection() {
+        return dismissedViaSelection;
+    }
+
     public InfoPopup(final InternetMap context, final MapControllerWrapper controller, View view) {
         super(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -35,6 +40,7 @@ public class InfoPopup extends PopupWindow {
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                dismissedViaSelection = true;
                 switch (position) {
                 case 0:
                     mContext.showIntroduction();
@@ -52,7 +58,9 @@ public class InfoPopup extends PopupWindow {
                 default:
                     Log.e(TAG, "can't happen");
                 }
+
                 InfoPopup.this.dismiss();
+                dismissedViaSelection = false;
             }
         });
     }
