@@ -21,6 +21,7 @@
 #import "FirstUseViewController.h"
 #import "ContactFormViewController.h"
 #import "CreditsViewController.h"
+#import <SafariServices/SafariServices.h>
 
 // Below import for testing BSD traceroute only
 #import "main-traceroute.h"
@@ -81,8 +82,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (weak, nonatomic) IBOutlet UIView *helpPopView;
 @property (weak, nonatomic) IBOutlet UIImageView *helpPopBackImage;
 @property (weak, nonatomic) IBOutlet UILabel *helpPopLabel;
-
-
 
 @property (strong, nonatomic) WEPopoverController* visualizationSelectionPopover;
 @property (strong, nonatomic) WEPopoverController* infoPopover;
@@ -408,8 +407,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             [self.controller unhoverNode];
             self.lastRotation = gestureRecognizer.rotation;
             [self.controller stopMomentumRotation];
-        }else if([gestureRecognizer state] == UIGestureRecognizerStateChanged)
-        {
+        } else if([gestureRecognizer state] == UIGestureRecognizerStateChanged) {
             float deltaRotation = -gestureRecognizer.rotation - self.lastRotation;
             self.lastRotation = -gestureRecognizer.rotation;
             [self.controller rotateRadiansZ:deltaRotation];
@@ -537,12 +535,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self presentViewController:firstUse animated:YES completion:nil];
 }
 
--(void)showContactFormWithUrl:(NSString *)urlString {
-    ContactFormViewController* contact = [[ContactFormViewController alloc] initWithNibName:@"ContactFormViewController" bundle:[NSBundle mainBundle]];
-    contact.urlString = urlString;
-    [self presentViewController:contact animated:YES completion:nil];
-}
-
 -(void)showCredits {
     CreditsViewController* credits = [[CreditsViewController alloc] initWithNibName:nil bundle:[NSBundle mainBundle]];
     [self presentViewController:credits animated:YES completion:nil];
@@ -662,21 +654,26 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             [self.infoPopover setPopoverContentSize:CGSizeMake(340, 175)];
         }
         
+        
         __weak ViewController* weakSelf = self;
         
         tableforPopover.selectedBlock = ^(int index){
             switch (index) {
                 case 0: //help
-                    [self showFirstUse];
+                    [weakSelf showFirstUse];
                     break;
                 case 1: //sales
-                    [self showContactFormWithUrl:@"https://www.cogecopeer1.com/contact/"];
+                {
+                    [weakSelf showInSafariWithURL:@"https://www.cogecopeer1.com/contact/"];
                     break;
-                case 2: //URL
-                    [self showContactFormWithUrl:@"https://github.com/steamclock/internetmap"];
+                }
+                case 2: //url
+                {
+                    [weakSelf showInSafariWithURL:@"https://github.com/steamclock/internetmap"];
                     break;
+                }
                 case 3: //credits
-                    [self showCredits];
+                    [weakSelf showCredits];
                     break;
                 default: //can't happen
                     NSLog(@"Unexpected info index %zd!!", index);
@@ -691,6 +688,13 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     self.infoButton.highlighted = NO;
     self.infoButton.selected = YES;
+}
+
+- (void) showInSafariWithURL:(NSString *)urlstring {
+    NSURL *url = [NSURL URLWithString:urlstring];
+    SFSafariViewController *safariView = [[SFSafariViewController alloc] initWithURL:url];
+    safariView.modalPresentationStyle = UIModalPresentationOverFullScreen;
+    [self presentViewController:safariView animated:YES completion:nil];
 }
 
 -(IBAction)timelineButtonPressed:(id)sender {

@@ -28,7 +28,7 @@
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    _headlineLabel.font = [UIFont fontWithName:FONT_NAME_MEDIUM size:36.0];
+    _headlineLabel.font = [UIFont fontWithName:FONT_NAME_MEDIUM size:32.0];
     _broughtToLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:16.0];
     _blurbLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:24.0];
     _exploreButton.titleLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:24.0];

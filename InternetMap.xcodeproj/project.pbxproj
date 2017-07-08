@@ -69,6 +69,7 @@
 		7D23CB571DF73C7900D82CC2 /* LaunchScreen~iphone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D23CB561DF73C7900D82CC2 /* LaunchScreen~iphone.storyboard */; };
 		7D23CB591DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D23CB581DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard */; };
 		7D5284871DDA7A6800E42C5F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5284861DDA7A6800E42C5F /* QuartzCore.framework */; };
+		8404F1301F100413009EF08B /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8404F12F1F100413009EF08B /* SafariServices.framework */; };
 		849FC0351F0304B800B06401 /* search-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 849FC01D1F0304B800B06401 /* search-selected.png */; };
 		849FC0361F0304B800B06401 /* search-selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 849FC01E1F0304B800B06401 /* search-selected@2x.png */; };
 		849FC0371F0304B800B06401 /* search-selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 849FC01F1F0304B800B06401 /* search-selected@3x.png */; };
@@ -156,7 +157,6 @@
 		A6551E9516CAF38800340590 /* finish.png in Resources */ = {isa = PBXBuildFile; fileRef = A6551E9316CAF38800340590 /* finish.png */; };
 		A6551E9616CAF38800340590 /* finish@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A6551E9416CAF38800340590 /* finish@2x.png */; };
 		A6551E9A16CAFC7000340590 /* ContactFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6551E9816CAFC7000340590 /* ContactFormViewController.m */; };
-		A6551E9B16CAFC7000340590 /* ContactFormViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6551E9916CAFC7000340590 /* ContactFormViewController.xib */; };
 		A6551E9E16CB07EE00340590 /* contact-sales-field.png in Resources */ = {isa = PBXBuildFile; fileRef = A6551E9C16CB07EE00340590 /* contact-sales-field.png */; };
 		A6551E9F16CB07EE00340590 /* contact-sales-field@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A6551E9D16CB07EE00340590 /* contact-sales-field@2x.png */; };
 		A6551EA216CC5B8500340590 /* contact-sales-field-highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = A6551EA016CC5B8500340590 /* contact-sales-field-highlighted.png */; };
@@ -271,7 +271,7 @@
 		1175AA0316AA091800B93031 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		1175AA3116AA117800B93031 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		1175AA3316AA117F00B93031 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
-		28C527A56CFB2939D5AA9DE8 /* BuddyBuildSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BuddyBuildSDK.framework; path = BuddyBuildSDK.framework; sourceTree = "<group>"; };
+		28C527A56CFB2939D5AA9DE8 /* BuddyBuildSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BuddyBuildSDK.framework; sourceTree = "<group>"; };
 		2F206D222C5BA2C4D8916E78 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		3826AB3EDD81040E4E3F010F /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		4E3E42AB1EF1AE92007224FE /* peer1-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "peer1-logo.png"; path = "iOS/Images/peer1-logo.png"; sourceTree = SOURCE_ROOT; };
@@ -326,6 +326,7 @@
 		7D23CB561DF73C7900D82CC2 /* LaunchScreen~iphone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "LaunchScreen~iphone.storyboard"; path = "iOS/LaunchScreen~iphone.storyboard"; sourceTree = SOURCE_ROOT; };
 		7D23CB581DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "LaunchScreen~ipad.storyboard"; path = "iOS/LaunchScreen~ipad.storyboard"; sourceTree = SOURCE_ROOT; };
 		7D5284861DDA7A6800E42C5F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		8404F12F1F100413009EF08B /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		849FC01D1F0304B800B06401 /* search-selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "search-selected.png"; path = "iOS/Images/search-selected.png"; sourceTree = SOURCE_ROOT; };
 		849FC01E1F0304B800B06401 /* search-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "search-selected@2x.png"; path = "iOS/Images/search-selected@2x.png"; sourceTree = SOURCE_ROOT; };
 		849FC01F1F0304B800B06401 /* search-selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "search-selected@3x.png"; path = "iOS/Images/search-selected@3x.png"; sourceTree = SOURCE_ROOT; };
@@ -397,7 +398,6 @@
 		A6551E9416CAF38800340590 /* finish@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "finish@2x.png"; path = "iOS/Images/finish@2x.png"; sourceTree = SOURCE_ROOT; };
 		A6551E9716CAFC6F00340590 /* ContactFormViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactFormViewController.h; path = iOS/ContactFormViewController.h; sourceTree = SOURCE_ROOT; };
 		A6551E9816CAFC7000340590 /* ContactFormViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContactFormViewController.m; path = iOS/ContactFormViewController.m; sourceTree = SOURCE_ROOT; };
-		A6551E9916CAFC7000340590 /* ContactFormViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ContactFormViewController.xib; path = iOS/ContactFormViewController.xib; sourceTree = SOURCE_ROOT; };
 		A6551E9C16CB07EE00340590 /* contact-sales-field.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "contact-sales-field.png"; path = "iOS/Images/contact-sales-field.png"; sourceTree = SOURCE_ROOT; };
 		A6551E9D16CB07EE00340590 /* contact-sales-field@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "contact-sales-field@2x.png"; path = "iOS/Images/contact-sales-field@2x.png"; sourceTree = SOURCE_ROOT; };
 		A6551EA016CC5B8500340590 /* contact-sales-field-highlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "contact-sales-field-highlighted.png"; path = "iOS/Images/contact-sales-field-highlighted.png"; sourceTree = SOURCE_ROOT; };
@@ -682,6 +682,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8404F1301F100413009EF08B /* SafariServices.framework in Frameworks */,
 				7D5284871DDA7A6800E42C5F /* QuartzCore.framework in Frameworks */,
 				A6551E6316C5CCB300340590 /* libExternalCode.a in Frameworks */,
 				114DD47D167AA6850061CB36 /* MobileCoreServices.framework in Frameworks */,
@@ -1072,6 +1073,7 @@
 		A6F3F5611640F1FB0070E6AE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8404F12F1F100413009EF08B /* SafariServices.framework */,
 				7D5284861DDA7A6800E42C5F /* QuartzCore.framework */,
 				1175AA3316AA117F00B93031 /* ImageIO.framework */,
 				1175AA3116AA117800B93031 /* libxml2.dylib */,
@@ -1350,7 +1352,6 @@
 			children = (
 				A6551E6716CAC1AF00340590 /* FirstUseViewController~ipad.xib */,
 				84D15DCD1F05A0A300C1B3A4 /* FirstUseViewController~iphone.xib */,
-				A6551E9916CAFC7000340590 /* ContactFormViewController.xib */,
 				A686EA4A16B62B23009B070E /* ViewController_iPad.xib */,
 				A686EA4C16B62B23009B070E /* ViewController_iPhone.xib */,
 				7D23CB561DF73C7900D82CC2 /* LaunchScreen~iphone.storyboard */,
@@ -1575,7 +1576,6 @@
 				84DDB8021F0C11000059BAE7 /* callout_right@2x.png in Resources */,
 				849FC0961F03264F00B06401 /* view-selected@2x.png in Resources */,
 				849FC03E1F0304B800B06401 /* timeline.png in Resources */,
-				A6551E9B16CAFC7000340590 /* ContactFormViewController.xib in Resources */,
 				A6551E9E16CB07EE00340590 /* contact-sales-field.png in Resources */,
 				A6551E9F16CB07EE00340590 /* contact-sales-field@2x.png in Resources */,
 				A6551EA216CC5B8500340590 /* contact-sales-field-highlighted.png in Resources */,
