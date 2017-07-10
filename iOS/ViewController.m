@@ -374,6 +374,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)handlePan:(UIPanGestureRecognizer *)gestureRecognizer
 {
+    
     [self.controller resetIdleTimer];
     if (!self.isHandlingLongPress) {
         if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
@@ -426,6 +427,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)handlePinch:(UIPinchGestureRecognizer *)gestureRecognizer
 {
+    
     [self.controller resetIdleTimer];
 
     if (!self.isHandlingLongPress) {
@@ -634,6 +636,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(IBAction)infoButtonPressed:(id)sender {
+    
+    // [self.controller translateYAnimated:0.5f duration:3];
+    
+    [self.controller resetZoomAndRotationAnimatedForOrientation:NO];
+    
+    return;
 
     self.helpPopView.hidden = YES;
     

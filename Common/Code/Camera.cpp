@@ -298,16 +298,69 @@ Vector3 Camera::applyModelViewToPoint(Vector2 point) {
     return Vector3(vec4FromPoint.getX(), vec4FromPoint.getY(), vec4FromPoint.getZ());
 }
 
+
 void Camera::rotateRadiansX(float rotate) {
-    setRotationAndRenormalize(Matrix4::rotation(rotate, Vector3(0.0f, 1.0f, 0.0f)) * _rotationMatrix);
+    
+    setRotationAndRenormalize(_rotationMatrix * Matrix4::rotation(rotate, Vector3(1.0f, 0.0f, 0.0f)));
 }
 
 void Camera::rotateRadiansY(float rotate) {
+    
+    Matrix4 old = _rotationMatrix;
+    
     setRotationAndRenormalize(Matrix4::rotation(rotate, Vector3(1.0f, 0.0f, 0.0f)) * _rotationMatrix);
+    
+    // dot product to get angle. col X compared to Y
+    /*
+    float angle = Vectormath::Aos::dot(_rotationMatrix.getCol(0).getXYZ(), Vector3(0.0f, 1.0f, 0.0f));
+    if (angle < 0.55) {
+        _rotationMatrix = old;
+    }
+     */
+    
+    if ( anglePastLimit() ) _rotationMatrix = old;
 }
 
 void Camera::rotateRadiansZ(float rotate) {
+    
+    Matrix4 old = _rotationMatrix;
+    
     setRotationAndRenormalize(_rotationMatrix = Matrix4::rotation(rotate, Vector3(0.0f, 0.0f, 1.0f)) * _rotationMatrix);
+    
+    /*
+    float angle = Vectormath::Aos::dot(_rotationMatrix.getCol(0).getXYZ(), Vector3(0.0f, 1.0f, 0.0f));
+    if (angle < 0.55) {
+        _rotationMatrix = old;
+    }
+    */
+    
+    if ( anglePastLimit() ) _rotationMatrix = old;
+}
+
+
+void Camera::print_matrix4(const Matrix4 &mat4) {
+    std::string result = "";
+    
+    int i, j;
+    for (i = 0; i < 4; i++) {
+        result = result + std::string("|");
+        for (j=0; j < 4; j++) {
+            result = result + std::string(" ") + std::to_string(_rotationMatrix.getElem(j, i));
+        }
+        result = result + std::string("| \n");
+    }
+    
+    LOG("%s", result.c_str());
+}
+
+
+bool Camera::anglePastLimit() {
+    
+    float angle = Vectormath::Aos::dot(_rotationMatrix.getCol(0).getXYZ(), Vector3(0.0f, 1.0f, 0.0f));
+    
+    if (angle < 0.55) return true;
+    
+    return false;
 }
 
 void Camera::rotateAnimated(Matrix4 rotation, TimeInterval duration) {
@@ -332,15 +385,17 @@ void Camera::resetZoomAndRotationAnimated(bool isPortraitMode) {
     // TODO: should have better way of distributing this flag
     GlobeVisualization::setPortrait(isPortraitMode);
     
+    LOG("resetZoomAndRotationAnimated");
+    
     float targetZoom;
     Matrix4 targetRotation;
     
     if (isPortraitMode) {
-        targetZoom = -4.5;
-        targetRotation = Matrix4::rotation(M_PI_2, Vector3(0, 0, 1));
+       targetZoom = -4.5;
+       targetRotation = Matrix4::rotation(M_PI_2, Vector3(0, 0, 1));
     } else {
-        targetZoom = -3;
-        targetRotation = Matrix4::identity();
+       targetZoom = -3;
+       targetRotation = Matrix4::identity();
     }
     
     float zoomDistance = _zoom - targetZoom;

@@ -82,7 +82,9 @@ class Camera {
     void handleAnimatedZoom(TimeInterval delta);
     void handleAnimatedRotation(TimeInterval delta);
     void setRotationAndRenormalize(const Matrix4& matrix);
-    
+
+    bool anglePastLimit();
+
 public:
     Camera();
     
@@ -123,6 +125,9 @@ public:
     void stopMomentumRotation();
     
     void resetZoomAndRotationAnimated(bool isPortraitMode);
+    
+    
+    void print_matrix4(const Matrix4 &mat4);
 };
 
 #endif
