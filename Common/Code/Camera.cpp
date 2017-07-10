@@ -10,7 +10,7 @@
 static const float MIN_ZOOM = -10.0f;
 //we need a bound on the max. zoom because on small nodes the calculated max puts the target behind the camera.
 //this might be a bug in targeting...?
-static const float MAX_MAX_ZOOM = -0.06f;
+static const float MAX_MAX_ZOOM = -2.00f;
 
 // TODO: better way to register this
 void cameraMoveFinishedCallback(void);
@@ -298,7 +298,6 @@ Vector3 Camera::applyModelViewToPoint(Vector2 point) {
     return Vector3(vec4FromPoint.getX(), vec4FromPoint.getY(), vec4FromPoint.getZ());
 }
 
-
 void Camera::rotateRadiansX(float rotate) {
     
     setRotationAndRenormalize(_rotationMatrix * Matrix4::rotation(rotate, Vector3(1.0f, 0.0f, 0.0f)));
@@ -310,15 +309,7 @@ void Camera::rotateRadiansY(float rotate) {
     
     setRotationAndRenormalize(Matrix4::rotation(rotate, Vector3(1.0f, 0.0f, 0.0f)) * _rotationMatrix);
     
-    // dot product to get angle. col X compared to Y
-    /*
-    float angle = Vectormath::Aos::dot(_rotationMatrix.getCol(0).getXYZ(), Vector3(0.0f, 1.0f, 0.0f));
-    if (angle < 0.55) {
-        _rotationMatrix = old;
-    }
-     */
-    
-    if ( anglePastLimit() ) _rotationMatrix = old;
+    if (checkIfAnglePastLimit()) _rotationMatrix = old;
 }
 
 void Camera::rotateRadiansZ(float rotate) {
@@ -327,38 +318,14 @@ void Camera::rotateRadiansZ(float rotate) {
     
     setRotationAndRenormalize(_rotationMatrix = Matrix4::rotation(rotate, Vector3(0.0f, 0.0f, 1.0f)) * _rotationMatrix);
     
-    /*
-    float angle = Vectormath::Aos::dot(_rotationMatrix.getCol(0).getXYZ(), Vector3(0.0f, 1.0f, 0.0f));
-    if (angle < 0.55) {
-        _rotationMatrix = old;
-    }
-    */
-    
-    if ( anglePastLimit() ) _rotationMatrix = old;
+    if (checkIfAnglePastLimit()) _rotationMatrix = old;
 }
 
-
-void Camera::print_matrix4(const Matrix4 &mat4) {
-    std::string result = "";
-    
-    int i, j;
-    for (i = 0; i < 4; i++) {
-        result = result + std::string("|");
-        for (j=0; j < 4; j++) {
-            result = result + std::string(" ") + std::to_string(_rotationMatrix.getElem(j, i));
-        }
-        result = result + std::string("| \n");
-    }
-    
-    LOG("%s", result.c_str());
-}
-
-
-bool Camera::anglePastLimit() {
+bool Camera::checkIfAnglePastLimit() {
     
     float angle = Vectormath::Aos::dot(_rotationMatrix.getCol(0).getXYZ(), Vector3(0.0f, 1.0f, 0.0f));
     
-    if (angle < 0.55) return true;
+    if (angle < 0.55) return true; // 0.55 arbitrary value that seems to work best for tilt
     
     return false;
 }
@@ -476,5 +443,20 @@ void Camera::translateYAnimated(float translateY, TimeInterval duration) {
     _translationYTarget = translateY;
     _translationYStartTime = _updateTime;
     _translationYDuration = duration;
+}
+
+void Camera::print_matrix4(const Matrix4 &mat4) {
+    std::string result = "";
+    
+    int i, j;
+    for (i = 0; i < 4; i++) {
+        result = result + std::string("|");
+        for (j=0; j < 4; j++) {
+            result = result + std::string(" ") + std::to_string(_rotationMatrix.getElem(j, i));
+        }
+        result = result + std::string("| \n");
+    }
+    
+    LOG("%s", result.c_str());
 }
 

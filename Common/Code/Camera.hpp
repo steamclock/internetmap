@@ -83,7 +83,7 @@ class Camera {
     void handleAnimatedRotation(TimeInterval delta);
     void setRotationAndRenormalize(const Matrix4& matrix);
 
-    bool anglePastLimit();
+    bool checkIfAnglePastLimit();
 
 public:
     Camera();
