@@ -94,25 +94,24 @@ public class CommonClient {
         });
     }
 
+    // TODO Need a new service to provide this info
     public void getIPForASN(Context ctx, String asn, final SimpleCallback<String> callback) {
-
-        getApi().getIPFromASN(asn, ctx.getString(R.string.mxtoolbox_api_key)).enqueue(new CommonCallback<MxASNInfo>() {
-            @Override
-            public void onRequestResponse(Call<MxASNInfo> call, Response<MxASNInfo> response) {
-                MxASNInfo asnInfo = response.body();
-
-                if (asnInfo.information.size() > 0) {
-                    String CIDRRange = asnInfo.information.get(0).CIDRRange;
-                    String ip = CIDRRange.substring(0, CIDRRange.indexOf("/")); // "212.109.224.0/24"
-                    callback.onSuccess(ip);
-                }
-            }
-
-            @Override
-            public void onRequestFailure(Call<MxASNInfo> call, Throwable t) {
-                callback.onFailure();
-            }
-        });
-
+//        getApi().getIPFromASN(asn, ctx.getString(R.string.mxtoolbox_api_key)).enqueue(new CommonCallback<MxASNInfo>() {
+//            @Override
+//            public void onRequestResponse(Call<MxASNInfo> call, Response<MxASNInfo> response) {
+//                MxASNInfo asnInfo = response.body();
+//
+//                if (asnInfo.information.size() > 0) {
+//                    String CIDRRange = asnInfo.information.get(0).CIDRRange;
+//                    String ip = CIDRRange.substring(0, CIDRRange.indexOf("/")); // "212.109.224.0/24"
+//                    callback.onSuccess(ip);
+//                }
+//            }
+//
+//            @Override
+//            public void onRequestFailure(Call<MxASNInfo> call, Throwable t) {
+//                callback.onFailure();
+//            }
+//        });
     }
 }

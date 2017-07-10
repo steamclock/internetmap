@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="mxtoolbox_api_key">1d0e968c-47a7-4354-80dc-9cf5a590ccbf</string>
-
     <string name="app_name">Internet Map</string>
     <string name="youarehere">You are here</string>
     <string name="nomoredata">No additional data.</string>
