@@ -351,9 +351,7 @@ void Camera::zoomByScale(float zoom) {
 void Camera::resetZoomAndRotationAnimated(bool isPortraitMode) {
     // TODO: should have better way of distributing this flag
     GlobeVisualization::setPortrait(isPortraitMode);
-    
-    LOG("resetZoomAndRotationAnimated");
-    
+
     float targetZoom;
     Matrix4 targetRotation;
     
