@@ -12,17 +12,17 @@ Note: You do NOT have to generate new data sets to build the applications; all t
 
 ### Python
 
-Our datapipeline relies on running a series of python scripts to generate our data sets. Since various projects require different python versions, I recommend using a tool that will allow you to create sandboxed python environments.
+Our datapipeline relies on running a series of python scripts to generate our data sets. Since various projects require different python versions, we recommend using a tool that will allow you to create sandboxed python environments.
 
 *Using virtiualenv*
 
 1. Install virtiualenv (https://virtualenv.pypa.io/en/stable/userguide/)
-2. Create `venv` folder where you want this environment to live. I made it sibling to our data pipleline folder.
+2. Create `venv` folder where you want this environment to live. During development, we made this folder sibling to our data pipleline folder.
 3. Run `> virtualenv venv` - this will generate a default python environment inside that folder
 4. Navigate into `venv` to make sure the default folders (bin, libs etc...) have been created
 5. Activate that python environment by running `source bin/activate`. When activated your terminal should be prefaced with `(venv)`, to indicate you are running in that python environment. Woo!
 
-Once setup, you should only need to reactivate the environment each time you want to work with the project. I used *pypa* to find and install missing python libs (https://www.pypa.io/en/latest/)
+Once setup, you should only need to reactivate the environment each time you want to work with the project. We used *pypa* to find and install missing python libs (https://www.pypa.io/en/latest/)
 
 
 ## Data Pipeline Details
