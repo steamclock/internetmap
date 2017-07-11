@@ -38,6 +38,8 @@ void GlobeVisualization::setPortrait(bool b) {
 void GlobeVisualization::activate(std::vector<NodePointer> nodes) {
     srand(81531);
     
+    
+    
     for(unsigned int i = 0; i < nodes.size(); i++) {
 #if 0
         nodes[i]->visualizationActive = true;

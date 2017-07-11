@@ -168,3 +168,6 @@ void MapDisplay::startBlend(TimeInterval blend) {
     _pendingBlendTime = blend;
 }
 
+void MapDisplay::setCameraMode(int mode) {
+    camera->setMode(mode);
+}

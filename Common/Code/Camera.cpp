@@ -19,6 +19,7 @@ void cameraMoveFinishedCallback(void);
 void cameraResetFinishedCallback(void);
 
 Camera::Camera() :
+    _mode(MODE_UNKNOWN),
     _displayWidth(0.0f),
     _displayHeight(0.0f),
     _target(0.0f, 0.0f, 0.0f),
@@ -301,26 +302,38 @@ Vector3 Camera::applyModelViewToPoint(Vector2 point) {
 }
 
 void Camera::rotateRadiansX(float rotate) {
-    
-    setRotationAndRenormalize(_rotationMatrix * Matrix4::rotation(rotate, Vector3(1.0f, 0.0f, 0.0f)));
+    if (_mode == MODE_GLOBE) {
+        // Globe mode disallows tilting "left" and "right"
+        setRotationAndRenormalize(_rotationMatrix * Matrix4::rotation(rotate, Vector3(1.0f, 0.0f, 0.0f)));
+    } else {
+        // Default, free rotation
+        setRotationAndRenormalize(Matrix4::rotation(rotate, Vector3(0.0f, 1.0f, 0.0f)) * _rotationMatrix);
+    }
 }
 
 void Camera::rotateRadiansY(float rotate) {
-    
-    Matrix4 old = _rotationMatrix;
-    
-    setRotationAndRenormalize(Matrix4::rotation(rotate, Vector3(1.0f, 0.0f, 0.0f)) * _rotationMatrix);
-    
-    if (checkIfAnglePastLimit()) _rotationMatrix = old;
+    if (_mode == MODE_GLOBE) {
+        // Globe mode, we want to stop tilting "up" and "down" after a certain threshhold, so that we cannot
+        // flip the globe into a weird orientation
+        Matrix4 old = _rotationMatrix;
+        setRotationAndRenormalize(Matrix4::rotation(rotate, Vector3(1.0f, 0.0f, 0.0f)) * _rotationMatrix);
+        if (checkIfAnglePastLimit()) _rotationMatrix = old;
+    } else {
+        // Default, free rotation
+       setRotationAndRenormalize(Matrix4::rotation(rotate, Vector3(1.0f, 0.0f, 0.0f)) * _rotationMatrix);
+    }
 }
 
 void Camera::rotateRadiansZ(float rotate) {
-    
-    Matrix4 old = _rotationMatrix;
-    
-    setRotationAndRenormalize(_rotationMatrix = Matrix4::rotation(rotate, Vector3(0.0f, 0.0f, 1.0f)) * _rotationMatrix);
-    
-    if (checkIfAnglePastLimit()) _rotationMatrix = old;
+    if (_mode == MODE_GLOBE) {
+        // Globe mode, we want to disallow tilting during 2 finger rotation.
+        Matrix4 old = _rotationMatrix;
+        setRotationAndRenormalize(_rotationMatrix = Matrix4::rotation(rotate, Vector3(0.0f, 0.0f, 1.0f)) * _rotationMatrix);
+        if (checkIfAnglePastLimit()) _rotationMatrix = old;
+    } else {
+        // Default, free rotation
+        setRotationAndRenormalize(_rotationMatrix = Matrix4::rotation(rotate, Vector3(0.0f, 0.0f, 1.0f)) * _rotationMatrix);
+    }
 }
 
 bool Camera::checkIfAnglePastLimit() {
@@ -392,6 +405,10 @@ void Camera::zoomAnimated(float zoom, TimeInterval duration) {
     _zoomTarget = zoom;
     _zoomStartTime = _updateTime;
     _zoomDuration = duration;
+}
+
+void Camera::setMode(int mode) {
+    _mode = mode;
 }
 
 void Camera::setTarget(const Target& target, TimeInterval duration) {
