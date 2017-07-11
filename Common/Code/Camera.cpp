@@ -19,7 +19,9 @@ void cameraMoveFinishedCallback(void);
 void cameraResetFinishedCallback(void);
 
 Camera::Camera() :
+
     _mode(MODE_UNKNOWN),
+    _orientation(ORIENTATION_LANDSCAPE),
     _displayWidth(0.0f),
     _displayHeight(0.0f),
     _target(0.0f, 0.0f, 0.0f),
@@ -84,6 +86,10 @@ void Camera::update(TimeInterval currentTime) {
     _projectionMatrix = projectionMatrix;
     _modelViewMatrix = modelView;
     _modelViewProjectionMatrix = projectionMatrix * modelView;
+    
+    if(_orientation == ORIENTATION_PORTRAIT) {
+        _modelViewProjectionMatrix = _modelViewProjectionMatrix * Matrix4::rotation(M_PI_2, Vector3(0.0f, 0.0f, 1.0f));
+    }
 }
 
 void Camera::handleIdleMovement(TimeInterval delta) {
@@ -304,7 +310,7 @@ Vector3 Camera::applyModelViewToPoint(Vector2 point) {
 void Camera::rotateRadiansX(float rotate) {
     if (_mode == MODE_GLOBE) {
         // Globe mode disallows tilting "left" and "right"
-        setRotationAndRenormalize(_rotationMatrix * Matrix4::rotation(rotate, Vector3(1.0f, 0.0f, 0.0f)));
+        setRotationAndRenormalize(_rotationMatrix * Matrix4::rotation(rotate, Vector3(0.0f, 1.0f, 0.0f)));
     } else {
         // Default, free rotation
         setRotationAndRenormalize(Matrix4::rotation(rotate, Vector3(0.0f, 1.0f, 0.0f)) * _rotationMatrix);
@@ -320,7 +326,7 @@ void Camera::rotateRadiansY(float rotate) {
         if (checkIfAnglePastLimit()) _rotationMatrix = old;
     } else {
         // Default, free rotation
-       setRotationAndRenormalize(Matrix4::rotation(rotate, Vector3(1.0f, 0.0f, 0.0f)) * _rotationMatrix);
+        setRotationAndRenormalize(Matrix4::rotation(rotate, Vector3(1.0f, 0.0f, 0.0f)) * _rotationMatrix);
     }
 }
 
@@ -338,7 +344,7 @@ void Camera::rotateRadiansZ(float rotate) {
 
 bool Camera::checkIfAnglePastLimit() {
     
-    float angle = Vectormath::Aos::dot(_rotationMatrix.getCol(0).getXYZ(), Vector3(0.0f, 1.0f, 0.0f));
+    float angle = Vectormath::Aos::dot(_rotationMatrix.getCol(1).getXYZ(), Vector3(0.0f, 1.0f, 0.0f));
     
     if (angle < TILT_AND_PAN_RESTRICT_ANGLE) return true; // 0.55 arbitrary value that seems to work best for tilt
     
@@ -372,11 +378,13 @@ void Camera::resetZoomAndRotationAnimated(bool isPortraitMode) {
     
     if (isPortraitMode) {
        targetZoom = -4.5;
-       targetRotation = Matrix4::rotation(M_PI_2, Vector3(0, 0, 1));
+    //   targetRotation = Matrix4::rotation(M_PI_2, Vector3(0, 0, 1));
     } else {
        targetZoom = -3;
-       targetRotation = Matrix4::identity();
+    //   targetRotation = Matrix4::identity();
     }
+    
+    targetRotation = Matrix4::identity();
     
     float zoomDistance = _zoom - targetZoom;
     
@@ -409,6 +417,10 @@ void Camera::zoomAnimated(float zoom, TimeInterval duration) {
 
 void Camera::setMode(int mode) {
     _mode = mode;
+}
+
+void Camera::setOrientation(int orientation) {
+    _orientation = orientation;
 }
 
 void Camera::setTarget(const Target& target, TimeInterval duration) {

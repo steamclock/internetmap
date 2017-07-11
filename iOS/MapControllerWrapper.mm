@@ -66,9 +66,10 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
         _controller = new MapController();
 
         if(![HelperMethods deviceIsiPad]) {
+            _controller->display->camera->setOrientation(Camera::ORIENTATION_PORTRAIT);
             // On phone we want a slightly different starting camera rotation/orientation
             // so the long axis is aligned vertically
-            _controller->display->camera->rotateRadiansZ(M_PI_2);
+            //_controller->display->camera->rotateRadiansZ(M_PI_2);
             _controller->display->camera->zoomByScale(-0.5);
         }
         _controller->display->setDisplayScale([[UIScreen mainScreen] scale]);

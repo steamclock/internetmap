@@ -46,7 +46,7 @@ MapController::MapController() :
 //    _visualizations.push_back(VisualizationPointer(new TypeVisualization("T1", AS_T1)));
     
     data->visualization = _visualizations[0]; // TODO can we call setVisualization here instead?
-    display->setCameraMode(Camera::MODE_GLOBE);
+    display->camera->setMode(Camera::MODE_GLOBE);
     
     std::string globalSettingsText;
     loadTextResource(&globalSettingsText, "globalSettings", "json");
@@ -550,11 +550,11 @@ void MapController::setVisualization(int visualization) {
     
     switch (visualization) {
         case 0:
-            display->setCameraMode(Camera::MODE_GLOBE);
+            display->camera->setMode(Camera::MODE_GLOBE);
             break;
             
         default:
-            display->setCameraMode(Camera::MODE_NETWORK);
+            display->camera->setMode(Camera::MODE_NETWORK);
             break;
     }
 

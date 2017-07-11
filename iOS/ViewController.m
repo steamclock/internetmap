@@ -985,6 +985,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.tracerouteASNs = [NSMutableDictionary new];
     
     //zoom out and rotate camera to default orientation on app startup
+    // TODO Why is this using GLKMatrix4MakeRotation, and not calling the methods in MapWrapper?
     GLKMatrix4 zRotation = GLKMatrix4Identity;
     float zoom = -3;
     if (![HelperMethods deviceIsiPad]) {
