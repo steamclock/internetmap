@@ -367,6 +367,8 @@ void MapController::highlightRoute(std::vector<NodePointer> nodeList) {
 }
 
 int MapController::indexForNodeAtPoint(Vector2 pointInView) {
+    
+
     //get point in view and adjust it for viewport
     float xOld = pointInView.x;
     float xLoOld = 0;

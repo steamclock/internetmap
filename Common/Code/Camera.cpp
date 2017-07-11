@@ -10,7 +10,9 @@
 static const float MIN_ZOOM = -10.0f;
 //we need a bound on the max. zoom because on small nodes the calculated max puts the target behind the camera.
 //this might be a bug in targeting...?
-static const float MAX_MAX_ZOOM = -2.00f;
+static const float MAX_MAX_ZOOM = -0.06f;
+
+static const float TILT_AND_PAN_RESTRICT_ANGLE = 0.55;
 
 // TODO: better way to register this
 void cameraMoveFinishedCallback(void);
@@ -325,7 +327,7 @@ bool Camera::checkIfAnglePastLimit() {
     
     float angle = Vectormath::Aos::dot(_rotationMatrix.getCol(0).getXYZ(), Vector3(0.0f, 1.0f, 0.0f));
     
-    if (angle < 0.55) return true; // 0.55 arbitrary value that seems to work best for tilt
+    if (angle < TILT_AND_PAN_RESTRICT_ANGLE) return true; // 0.55 arbitrary value that seems to work best for tilt
     
     return false;
 }

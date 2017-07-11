@@ -642,12 +642,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(IBAction)infoButtonPressed:(id)sender {
     
-    // [self.controller translateYAnimated:0.5f duration:3];
+    [self.controller resetZoomAndRotationAnimatedForOrientation:YES];
     
-    [self.controller resetZoomAndRotationAnimatedForOrientation:NO];
-    
-    return;
-
     self.helpPopView.hidden = YES;
     
     if (self.timelineButton.selected) {
