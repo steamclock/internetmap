@@ -14,6 +14,14 @@
 static bool sPortrait = false;
 
 Point3 polarToCartesian(float latitude, float longitude, float radius) {
+    
+    float x = radius * cos(latitude) * cos(longitude);
+    float y = radius * sin(latitude);
+    float z = -radius * cos(latitude) * sin(longitude);
+    return Point3(x, y, z);
+}
+
+Point3 polarToCartesianCheckPortrait(float latitude, float longitude, float radius) {
     // We want to build the globe so that the default rotation axis is between the poles, and North America is
     // facing the camera. Need slightly different contruction for landscape and portrait mode (due to different
     // camera rotations)
@@ -24,10 +32,7 @@ Point3 polarToCartesian(float latitude, float longitude, float radius) {
         return Point3(x, y, z);
     }
     else {
-        float x = radius * cos(latitude) * cos(longitude);
-        float y = radius * sin(latitude);
-        float z = -radius * cos(latitude) * sin(longitude);
-        return Point3(x, y, z);
+        return polarToCartesian(latitude, longitude, radius);
     }
 }
 
@@ -98,8 +103,8 @@ void GlobeVisualization::updateLineDisplay(shared_ptr<MapDisplay> display, std::
             Color lineColorA = Color(intensity, intensity,intensity, 1.0);
             Color lineColorB = Color(intensity, intensity, intensity, 1.0);
             
-            Point3 positionA = polarToCartesian(latitude, longitude, 1.1);
-            Point3 positionB = polarToCartesian(nextLatitude, longitude, 1.1);
+            Point3 positionA = polarToCartesianCheckPortrait(latitude, longitude, 1.1);
+            Point3 positionB = polarToCartesianCheckPortrait(nextLatitude, longitude, 1.1);
             
             lines->updateLine(currentIndex, positionA, lineColorA, positionB, lineColorB);
             currentIndex++;
@@ -120,8 +125,8 @@ void GlobeVisualization::updateLineDisplay(shared_ptr<MapDisplay> display, std::
                 lineColorA = Color(highlightIntensity, highlightIntensity, highlightIntensity, 1.0f);
                 lineColorB = Color(highlightIntensity, highlightIntensity, highlightIntensity, 1.0f);
             }
-            Point3 positionA = polarToCartesian(latitude, longitude, 1.1);
-            Point3 positionB = polarToCartesian(latitude, nextLongitude, 1.1);
+            Point3 positionA = polarToCartesianCheckPortrait(latitude, longitude, 1.1);
+            Point3 positionB = polarToCartesianCheckPortrait(latitude, nextLongitude, 1.1);
             
             lines->updateLine(currentIndex, positionA, lineColorA, positionB, lineColorB);
             currentIndex++;
