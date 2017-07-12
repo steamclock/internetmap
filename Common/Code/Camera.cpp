@@ -465,18 +465,20 @@ void Camera::translateYAnimated(float translateY, TimeInterval duration) {
     _translationYDuration = duration;
 }
 
+// Note, std::to_string is not implemented in the NDK version being used for Android. For now,
+// comment this out. Put back in to test on iOS.
 void Camera::print_matrix4(const Matrix4 &mat4) {
-    std::string result = "";
-    
-    int i, j;
-    for (i = 0; i < 4; i++) {
-        result = result + std::string("|");
-        for (j=0; j < 4; j++) {
-            result = result + std::string(" ") + std::to_string(_rotationMatrix.getElem(j, i));
-        }
-        result = result + std::string("| \n");
-    }
-    
-    LOG("%s", result.c_str());
+    LOG("Code commented out due to Android issues");
+//    std::string result = "";
+//    
+//    int i, j;
+//    for (i = 0; i < 4; i++) {
+//        result = result + std::string("|");
+//        for (j=0; j < 4; j++) {
+//            result = result + std::string(" ") + std::to_string(_rotationMatrix.getElem(j, i));
+//        }
+//        result = result + std::string("| \n");
+//    }
+//    
+//    LOG("%s", result.c_str());
 }
-
