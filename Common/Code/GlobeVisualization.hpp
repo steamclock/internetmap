@@ -21,8 +21,6 @@ public:
 
     virtual std::string name(void) { return "Globe View"; }
     
-    static void setPortrait(bool);
-    
     void updateLineDisplay(shared_ptr<MapDisplay> display, std::vector<ConnectionPointer>connections);
 
 };

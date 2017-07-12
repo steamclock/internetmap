@@ -47,6 +47,8 @@ public:
     void draw(void);
     
     void startBlend(TimeInterval blend);
+//    void setCameraMode(int mode);
+//    void setCameraOrientation(int orientation);
 };
 
 #endif

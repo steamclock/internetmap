@@ -13,6 +13,12 @@
 
 bool deviceIsOld();
 
+static bool sPortrait = false;
+
+void DefaultVisualization::setPortrait(bool b) {
+    sPortrait = b;
+}
+
 void DefaultVisualization::activate(std::vector<NodePointer> nodes) {
     for(unsigned int i = 0; i < nodes.size(); i++) {
         nodes[i]->visualizationActive = true;
@@ -20,7 +26,10 @@ void DefaultVisualization::activate(std::vector<NodePointer> nodes) {
 }
 
 Point3 DefaultVisualization::nodePosition(NodePointer node) {
-    return Point3(log10f(node->importance)+2.0f, node->positionX, node->positionY);
+    // We want the long axis of the network view aligned to the long axis of the screen, so we generate the node positions differently
+    // depending on whether we are in portrait mode or not
+    return sPortrait ? Point3(node->positionX, log10f(node->importance)+2.0f, node->positionY) :
+                       Point3(log10f(node->importance)+2.0f, node->positionX, node->positionY);
 }
 
 float DefaultVisualization::nodeSize(NodePointer node) {

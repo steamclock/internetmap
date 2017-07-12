@@ -11,28 +11,11 @@
 #include "MapDisplay.hpp"
 #include <stdlib.h>
 
-static bool sPortrait = false;
-
 Point3 polarToCartesian(float latitude, float longitude, float radius) {
-    // We want to build the globe so that the default rotation axis is between the poles, and North America is
-    // facing the camera. Need slightly different contruction for landscape and portrait mode (due to different
-    // camera rotations)
-    if(sPortrait) {
-        float x = radius * sin(latitude);
-        float y = -radius * cos(latitude) * cos(longitude);
-        float z = -radius * cos(latitude) * sin(longitude);
-        return Point3(x, y, z);
-    }
-    else {
-        float x = radius * cos(latitude) * cos(longitude);
-        float y = radius * sin(latitude);
-        float z = -radius * cos(latitude) * sin(longitude);
-        return Point3(x, y, z);
-    }
-}
-
-void GlobeVisualization::setPortrait(bool b) {
-    sPortrait = b;
+    float x = radius * cos(latitude) * cos(longitude);
+    float y = radius * sin(latitude);
+    float z = -radius * cos(latitude) * sin(longitude);
+    return Point3(x, y, z);
 }
 
 void GlobeVisualization::activate(std::vector<NodePointer> nodes) {
