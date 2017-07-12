@@ -21,7 +21,6 @@ void cameraResetFinishedCallback(void);
 Camera::Camera() :
 
     _mode(MODE_UNKNOWN),
-    _orientation(ORIENTATION_LANDSCAPE),
     _displayWidth(0.0f),
     _displayHeight(0.0f),
     _target(0.0f, 0.0f, 0.0f),
@@ -86,10 +85,6 @@ void Camera::update(TimeInterval currentTime) {
     _projectionMatrix = projectionMatrix;
     _modelViewMatrix = modelView;
     _modelViewProjectionMatrix = projectionMatrix * modelView;
-    
-    if(_orientation == ORIENTATION_PORTRAIT) {
-        _modelViewProjectionMatrix = _modelViewProjectionMatrix * Matrix4::rotation(M_PI_2, Vector3(0.0f, 0.0f, 1.0f));
-    }
 }
 
 void Camera::handleIdleMovement(TimeInterval delta) {
@@ -417,10 +412,6 @@ void Camera::zoomAnimated(float zoom, TimeInterval duration) {
 
 void Camera::setMode(int mode) {
     _mode = mode;
-}
-
-void Camera::setOrientation(int orientation) {
-    _orientation = orientation;
 }
 
 void Camera::setTarget(const Target& target, TimeInterval duration) {

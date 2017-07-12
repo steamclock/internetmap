@@ -27,7 +27,6 @@ struct Target {
 class Camera {
     
     int _mode;
-    int _orientation;
     
     float _displayWidth, _displayHeight;
     //TODO maybe target should be a Target?
@@ -96,11 +95,7 @@ public:
     static const int MODE_GLOBE = 1;
     static const int MODE_NETWORK = 2;
     
-    static const int ORIENTATION_LANDSCAPE = 0;
-    static const int ORIENTATION_PORTRAIT = 1;
-
     void setMode(int mode);
-    void setOrientation(int orientation);
     void setTarget(const Target& target, TimeInterval duration = DEFAULT_MOVE_TIME);
     Vector3 target(void) { return _target; }
     void setDisplaySize(float width, float height) { _displayWidth = width; _displayHeight = height; }
