@@ -285,7 +285,6 @@ bool Renderer::initialize() {
 
     LOG("created GL context");
 
-    GlobeVisualization::setPortrait(_smallScreen);
     DefaultVisualization::setPortrait(_smallScreen);
 
     _mapController = new MapController;
