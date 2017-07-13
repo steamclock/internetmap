@@ -1,17 +1,13 @@
 package com.peer1.internetmap;
 
 import java.util.ArrayList;
-import java.util.regex.Pattern;
-import java.util.zip.Inflater;
 
 import junit.framework.Assert;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
-import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -24,38 +20,41 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.*;
 import android.widget.TextView.OnEditorActionListener;
 
+import timber.log.Timber;
 
+/**
+ * Shows list of Autonomous Systems (ASs), allows a user to search for and select a node
+ */
 public class SearchPopup extends PopupWindow{
     private static String TAG = "SearchPopup";
     private MapControllerWrapper mController;
     private NodeAdapter.NodeFilter mFilter;
-    private ArrayList<SearchNode> mAllNodes;
+    private ArrayList<ASNItem> mAllNodes;
     private Context mContext;
 
-    /** required interface for arrayadapter items */
-    public interface SearchItem {
-        public String toString();
-    }
     /**
-     * SearchNode: a lightweight wrapper for nodewrapper
-     * @author chani
-     * 
-     * This implements the required interface for ArrayAdapter use and filtering.
-     *
+     * Search Item Interface
      */
-    public static class SearchNode implements SearchItem {
+    public interface SearchItem {
+        String toString();
+    }
+
+    /**
+     * ASNItem, an existing ASN
+     */
+    public static class ASNItem implements SearchItem {
         public final NodeWrapper node;
         private final String nameLower, descLower;
         
-        SearchNode(NodeWrapper node) {
+        ASNItem(NodeWrapper node) {
             this.node = node;
             this.nameLower = this.node.asn.toLowerCase();
             this.descLower = this.node.rawTextDescription.toLowerCase();
         }
-        
-        //returns a display string for ArrayAdapter
+
+        @Override
         public String toString() {
-            //display: ASN - Description
+            // Show: ASN - Description
             return String.format("%s - %s", node.asn, node.friendlyDescription());
         }
 
@@ -63,15 +62,10 @@ public class SearchPopup extends PopupWindow{
             String lowerSearch = substring.toLowerCase();
             return this.nameLower.contains(lowerSearch) || this.descLower.contains(lowerSearch);
         }
-        
-        //return true if the node matches the search filter
-        public boolean matches(Pattern pattern) {
-            return pattern.matcher(node.asn).find() || pattern.matcher(node.rawTextDescription).find();
-        }
     }
     
     /**
-     * special 'find host' item
+     * Special 'find host' item
      */
     private class FindHostItem implements SearchItem {
         public final String host;
@@ -86,7 +80,7 @@ public class SearchPopup extends PopupWindow{
     }
     
     /**
-     * special 'your location' item
+     * Special 'your location' item
      */
     private class LocationItem implements SearchItem {
         public String toString() {
@@ -102,8 +96,6 @@ public class SearchPopup extends PopupWindow{
 
     /**
      * An arrayadapter that can use and filter SearchNodes
-     * @author chani
-     *
      */
     private class NodeAdapter extends ArrayAdapter<SearchItem> {
         private ArrayList<? extends SearchItem> mFilteredNodes;
@@ -114,7 +106,6 @@ public class SearchPopup extends PopupWindow{
             mFilter = new NodeFilter();
             mFilter.filter("");
         }
-
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
@@ -149,8 +140,6 @@ public class SearchPopup extends PopupWindow{
 
         /**
          * Filters the list of search results.
-         * @author chani
-         *
          */
         public class NodeFilter extends Filter {
             private boolean mIsFiltering = false;
@@ -171,20 +160,13 @@ public class SearchPopup extends PopupWindow{
                     nodes.add(locationItem);
                     nodes.addAll(mAllNodes);
                 } else {
-                    //filter it
-                    Log.d(TAG, "filtering...");
+                    Timber.d("filtering...");
 
-                    // Old method, using RegEx - was too slow.
-                    // Pattern pattern = Pattern.compile(Pattern.quote(constraint.toString()), Pattern.CASE_INSENSITIVE);
+                    // Note: Old method, using RegEx - was too slow.
 
                     for (int i=0; i<mAllNodes.size(); i++) {
-
-                        // Old method, using RegEx - was too slow.
-                        // if (mAllNodes.get(i).matches(pattern))
-
                         if (mAllNodes.get(i).contains(constraint.toString())) {
                             nodes.add(mAllNodes.get(i));
-
                         }
                     }
 
@@ -264,8 +246,8 @@ public class SearchPopup extends PopupWindow{
                 }
 
                 SearchItem item = adapter.getItem(position);
-                if (item instanceof SearchNode) {
-                    SearchNode snode = (SearchNode)item;
+                if (item instanceof ASNItem) {
+                    ASNItem snode = (ASNItem)item;
                     mController.updateTargetForIndex(snode.node.index);
                 } else if (item instanceof LocationItem) {
                     context.youAreHereButtonPressed();

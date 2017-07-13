@@ -4,6 +4,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+/**
+ * Shown to the user when the app is run for the first time, or if they select Help from the
+ * info menu.
+ */
 public class FirstTimeActivity extends BaseActivity {
 
     private Button exploreButton;

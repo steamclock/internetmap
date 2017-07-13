@@ -6,24 +6,35 @@ import android.view.View;
 import com.spyhunter99.supertooltips.ToolTip;
 import com.spyhunter99.supertooltips.ToolTipManager;
 import com.spyhunter99.supertooltips.ToolTipView;
-import com.spyhunter99.supertooltips.exception.ViewNotFoundRuntimeException;
 
 /**
- * Created by shayla on 2017-06-27.
+ * ToolTipManager used to show "Help" tooltips
+ * <p>
+ * Wrapper around {@linkplain com.spyhunter99.supertooltips.ToolTipManager ToolTipManager}, allowing
+ * us to add behaviour to expose if a tooltip is currently being shown or not.
  */
-
 public class CustomTooltipManager extends ToolTipManager {
 
     private boolean isShowingTooltip;
 
+    /**
+     * @return True if a ToolTip is currently being shown to the user
+     */
     public boolean isShowingTooltip() {
         return isShowingTooltip;
     }
 
-    // No longer used, but keeping around for later, allows us to get a callback when the
-    // tooltip view is clicked
+    /**
+     * Exposed ToolTipView interactions
+     * Note, not currently used, but left for future use.
+     */
     public interface InteractionListener {
         void onTooltipViewClicked(ToolTipView toolTipView);
+    }
+
+    protected InteractionListener listener;
+    public void setInteractionListener(InteractionListener listener) {
+        this.listener = listener;
     }
 
     public CustomTooltipManager(Activity act) {
@@ -34,6 +45,9 @@ public class CustomTooltipManager extends ToolTipManager {
         super(act, behavior, sameItemOpenBehavior);
     }
 
+    //=====================================================================
+    // Overridden methods
+    //=====================================================================
     @Override
     public void onToolTipViewClicked(ToolTipView toolTipView) {
         super.onToolTipViewClicked(toolTipView);
@@ -54,11 +68,4 @@ public class CustomTooltipManager extends ToolTipManager {
         super.closeActiveTooltip();
         isShowingTooltip = false;
     }
-
-    protected InteractionListener listener;
-    public void setInteractionListener(InteractionListener listener) {
-        this.listener = listener;
-    }
-
-
 }

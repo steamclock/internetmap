@@ -12,7 +12,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 
 /**
- * Timeline information popup
+ * Timeline popup; allows users to change the data sets being shown in the visualizations
  */
 public class TimelinePopup {
     private static String TAG = "TimelinePopup";

@@ -2,6 +2,8 @@ package com.peer1.internetmap;
 
 import android.content.Context;
 
+import com.peer1.internetmap.utils.AppUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,21 +13,24 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by shayla on 2017-06-02.
+ * GlobalSettings loaded from globalSettings.json (generated in the Data-Pipeline)
+ * Currently these settings do not change at run time, they are always loaded from the asset.
+ * <p>
+ * Note, do not manually update globalSettings.json, this file is generated in the Data-Pipeline
  */
-
 public class GlobalSettings {
 
+    // App should default to show this as the default year.
     private String defaultYear = "2017";
 
+    // List of years which have simulated data sets.
     private Set<String> simulatedYears = new HashSet<String>(); // Default to empty
 
     public GlobalSettings(Context context) {
 
         JSONObject settingsJson = null;
-        // Attempt to parse from data/globalSettings.json
         try {
-            settingsJson = new JSONObject(new String(Helper.readFileAsBytes(context, "data/globalSettings.json")));
+            settingsJson = new JSONObject(new String(AppUtils.readFileAsBytes(context, "data/globalSettings.json")));
         } catch (JSONException e) {
             e.printStackTrace();
             return;

@@ -9,11 +9,8 @@ import com.peer1.internetmap.utils.SharedPreferenceUtils;
 import timber.log.Timber;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
-/**
- * Created by shayla on 2017-05-10.
- */
-
 public class App extends Application {
+
     private static App instance;
     private static Context appContext;
     public GlobalSettings globalSettings;
@@ -54,7 +51,9 @@ public class App extends Application {
         super.onLowMemory();
     }
 
+    //=====================================================================
     // Static helpers
+    //=====================================================================
     public static GlobalSettings getGlobalSettings() {
        return instance.globalSettings;
     }

@@ -1,16 +1,14 @@
 package com.peer1.internetmap;
 
-import java.util.ArrayList;
-
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 /**
- * TODO: document your custom view class.
+ * Popup shown when an AS node is selected in a visualization
  */
 public class NodePopup extends PopupWindow {
     private static String TAG = "NodePopup";

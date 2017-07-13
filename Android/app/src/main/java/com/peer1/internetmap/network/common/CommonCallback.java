@@ -1,23 +1,19 @@
 package com.peer1.internetmap.network.common;
 
-import android.app.Activity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-
+/**
+ * Custom retrofit {@linkplain retrofit2.Callback Callback}
+ * @param <T>
+ * Used mostly by {@linkplain CommonClient CommonClient} to allow us to control the data passed
+ * back from our Retrofit calls
+ */
 public abstract class CommonCallback<T> implements Callback<T> {
 
     public CommonCallback() {
-        super();
-    }
-
-    public CommonCallback(Activity activity) {
-        super();
-    }
-
-    public CommonCallback(final Activity activity, final String loadingString) {
         super();
     }
 
@@ -33,23 +29,22 @@ public abstract class CommonCallback<T> implements Callback<T> {
                 break;
 
             // Unauthorized
-            case 401:
-                // Attempt to bounce back to login as we are no longer authorized
-                // TODO
-                // Not calling onRequestFailure?
-                onRequestFailure(call, new Throwable("401"));
-                break;
+            //case 401: // If we need to handle auth issue
 
-            // Errything else
             default:
-               // TODO
                 onRequestFailure(call, new Throwable(String.valueOf(code)));
                 break;
         }
     }
 
     public void onFailure(Call<T> call, Throwable t) {
-        Timber.e(String.format("Call (%s) failed: %s", call.request().url().toString(), t.getMessage()));
+        try {
+            String url = call.request().url().toString();
+            Timber.e(String.format("Call (%s) failed: %s", url, t.getMessage()));
+        } catch (Exception e) {
+            Timber.e(t);
+        }
+
         onRequestFailure(call,t);
     }
 

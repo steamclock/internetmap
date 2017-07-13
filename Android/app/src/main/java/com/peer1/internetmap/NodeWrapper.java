@@ -3,7 +3,6 @@ package com.peer1.internetmap;
 /**
  * A readonly wrapper for node display information
  * @author chani
- *
  */
 public class NodeWrapper {
     public final String asn;
