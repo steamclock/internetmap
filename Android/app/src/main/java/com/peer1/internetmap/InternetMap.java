@@ -41,9 +41,6 @@ import com.spyhunter99.supertooltips.ToolTipManager;
 
 import junit.framework.Assert;
 
-import net.hockeyapp.android.CrashManager;
-import net.hockeyapp.android.UpdateManager;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -62,7 +59,6 @@ import timber.log.Timber;
 public class InternetMap extends BaseActivity implements SurfaceHolder.Callback {
 
     private static String TAG = "InternetMap";
-    private final String APP_ID = "9a3f1d8d25e8728007a8abf2d420beb9"; //HockeyApp id
     private GestureDetectorCompat mGestureDetector;
     private ScaleGestureDetector mScaleDetector;
     private RotateGestureDetector mRotateDetector;
@@ -108,9 +104,6 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(android.view.Window.FEATURE_NO_TITLE);
-
-        //check HockeyApp for updates (comment this out for release)
-        //UpdateManager.register(this, APP_ID);
         
         //try to get into the best orientation before initializing the backend
         forceOrientation();
@@ -188,8 +181,6 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
     @Override
     protected void onResume() {
         super.onResume();
-        //check HockeyApp for crashes. comment this out for release
-        CrashManager.register(this, APP_ID);
         nativeOnResume();
         showCurrentTooltip();
     }
@@ -204,7 +195,6 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        UpdateManager.unregister();
         nativeOnDestroy();
 
         if (tooltips != null) {
