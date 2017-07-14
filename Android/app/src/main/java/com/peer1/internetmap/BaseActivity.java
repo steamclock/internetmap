@@ -6,7 +6,7 @@ import android.content.Context;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
- * Created by shayla on 2017-06-07.
+ * Extends Activity; overrides attachBaseContext which sets a default font for the entire app.
  */
 public class BaseActivity extends Activity {
     @Override

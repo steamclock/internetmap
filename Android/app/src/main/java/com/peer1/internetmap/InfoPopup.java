@@ -11,6 +11,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 
+import timber.log.Timber;
+
+/**
+ * Info menu
+ */
 public class InfoPopup extends PopupWindow {
     private static String TAG = "InfoPopup";
     private InternetMap mContext;
@@ -20,7 +25,7 @@ public class InfoPopup extends PopupWindow {
         return dismissedViaSelection;
     }
 
-    public InfoPopup(final InternetMap context, final MapControllerWrapper controller, View view) {
+    public InfoPopup(final InternetMap context, View view) {
         super(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         setOutsideTouchable(true);
@@ -32,7 +37,7 @@ public class InfoPopup extends PopupWindow {
         String[] values = new String[4];
         values[0] = context.getString(R.string.infoHelp);
         values[1] = context.getString(R.string.infoSales);
-        values[2] = context.getString(R.string.infoOpenSource); //values[2] = context.getString(R.string.infoLink);
+        values[2] = context.getString(R.string.infoOpenSource);
         values[3] = context.getString(R.string.infoCredits);
         
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.view_info_popup_item, android.R.id.text1, values);
@@ -50,13 +55,12 @@ public class InfoPopup extends PopupWindow {
                     break;
                 case 2:
                     openOpenSourcePage();
-                    //openLearnMore();
                     break;
                 case 3:
                     doCredits();
                     break;
                 default:
-                    Log.e(TAG, "can't happen");
+                    Timber.e("can't happen");
                 }
 
                 InfoPopup.this.dismiss();
@@ -67,11 +71,6 @@ public class InfoPopup extends PopupWindow {
 
     private void openOpenSourcePage() {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/steamclock/internetmap"));
-        mContext.startActivity(browserIntent);
-    }
-
-    private void openLearnMore() {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.cogecopeer1.com/services/hosting/"));
         mContext.startActivity(browserIntent);
     }
 

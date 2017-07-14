@@ -1,5 +1,8 @@
 package com.peer1.internetmap;
 
+/**
+ * Methods implemented in JNI (see jniapi.cpp)
+ */
 public class MapControllerWrapper {
     public native void rotateRadiansXY(float radX, float radY);
     public native void startMomentumPanWithVelocity(float vX, float vY);

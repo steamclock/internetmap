@@ -15,11 +15,17 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by shayla on 2017-05-10.
+ * Retrofit Client (Singleton)
+ * A central location to make requests and handle responses; responsible for setting up Retrofit
+ * instance and handling all API requests.
+ * <p>
+ * @see CommonAPI
  */
-
 public class CommonClient {
 
+    /**
+     * Singleton instance
+     */
     static private CommonClient instance;
     public static CommonClient getInstance() {
         if (instance == null) {
@@ -28,6 +34,9 @@ public class CommonClient {
         return instance;
     }
 
+    /**
+     * Retrofit interface
+     */
     private CommonAPI api;
     public CommonAPI getApi() {
         if (api == null) {
@@ -37,6 +46,14 @@ public class CommonClient {
         return api;
     }
 
+    //=====================================================================
+    // Private methods
+    //=====================================================================
+
+    /**
+     * Creates OkHttpClient and sets up Retrofit client.
+     * @return Initialized CommonAPI interface
+     */
     private CommonAPI createAPIInterface() {
         // only set the HttpClient if it is null
 
@@ -51,6 +68,10 @@ public class CommonClient {
         return retrofit.create(CommonAPI.class);
     }
 
+    /**
+     * Initializes OkHttpClient to be used by Retrofit
+     * @return
+     */
     private OkHttpClient createHttpClient() {
 
         HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
@@ -64,8 +85,13 @@ public class CommonClient {
         return builder.build();
     }
 
+    //=====================================================================
+    // Public API methods
+    //=====================================================================
     /**
-     * Calls getGlobalIP and then getASNFromIP
+     * Request the ASN for the user's current location.
+     * @param callback Callback onRequestResponse will receive the ASN based on the Global IP Address of the device
+     *                 onRequestFailure called if an error occurs during ASN determination.
      */
     public void getUserASN(final CommonCallback<ASN> callback) {
 
@@ -76,6 +102,7 @@ public class CommonClient {
                 getApi().getASNFromIP(response.body().ip).enqueue(new CommonCallback<ASN>() {
                     @Override
                     public void onRequestResponse(retrofit2.Call<ASN> call, retrofit2.Response<ASN> response) {
+                        // TODO could add caching here.
                         callback.onResponse(call, response);
                     }
 
@@ -94,8 +121,12 @@ public class CommonClient {
         });
     }
 
+    /**
+     * Do not use, not currently supported.
+     */
     // TODO Need a new service to provide this info
-    public void getIPForASN(Context ctx, String asn, final SimpleCallback<String> callback) {
+    public void getIPForASN(Context ctx, String asn, final CommonCallback<String> callback) {
+        throw new UnsupportedOperationException();
 //        getApi().getIPFromASN(asn, ctx.getString(R.string.mxtoolbox_api_key)).enqueue(new CommonCallback<MxASNInfo>() {
 //            @Override
 //            public void onRequestResponse(Call<MxASNInfo> call, Response<MxASNInfo> response) {
