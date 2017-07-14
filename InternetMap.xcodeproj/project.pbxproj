@@ -70,6 +70,9 @@
 		7D23CB591DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D23CB581DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard */; };
 		7D5284871DDA7A6800E42C5F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5284861DDA7A6800E42C5F /* QuartzCore.framework */; };
 		8404F1301F100413009EF08B /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8404F12F1F100413009EF08B /* SafariServices.framework */; };
+		8473C4C11F197C10000B18BF /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8473C4BE1F197C10000B18BF /* Security.framework */; };
+		8473C4C21F197C10000B18BF /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8473C4BF1F197C10000B18BF /* Fabric.framework */; };
+		8473C4C31F197C10000B18BF /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8473C4C01F197C10000B18BF /* Crashlytics.framework */; };
 		849FC0351F0304B800B06401 /* search-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 849FC01D1F0304B800B06401 /* search-selected.png */; };
 		849FC0361F0304B800B06401 /* search-selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 849FC01E1F0304B800B06401 /* search-selected@2x.png */; };
 		849FC0371F0304B800B06401 /* search-selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 849FC01F1F0304B800B06401 /* search-selected@3x.png */; };
@@ -327,6 +330,9 @@
 		7D23CB581DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "LaunchScreen~ipad.storyboard"; path = "iOS/LaunchScreen~ipad.storyboard"; sourceTree = SOURCE_ROOT; };
 		7D5284861DDA7A6800E42C5F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		8404F12F1F100413009EF08B /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
+		8473C4BE1F197C10000B18BF /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		8473C4BF1F197C10000B18BF /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		8473C4C01F197C10000B18BF /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		849FC01D1F0304B800B06401 /* search-selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "search-selected.png"; path = "iOS/Images/search-selected.png"; sourceTree = SOURCE_ROOT; };
 		849FC01E1F0304B800B06401 /* search-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "search-selected@2x.png"; path = "iOS/Images/search-selected@2x.png"; sourceTree = SOURCE_ROOT; };
 		849FC01F1F0304B800B06401 /* search-selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "search-selected@3x.png"; path = "iOS/Images/search-selected@3x.png"; sourceTree = SOURCE_ROOT; };
@@ -693,6 +699,7 @@
 				D468090516795D4D00A2C1CC /* CFNetwork.framework in Frameworks */,
 				D468090416795D4600A2C1CC /* SystemConfiguration.framework in Frameworks */,
 				1117E57B1676BFCD0046AA69 /* libresolv.dylib in Frameworks */,
+				8473C4C21F197C10000B18BF /* Fabric.framework in Frameworks */,
 				A6F3F5631640F1FB0070E6AE /* UIKit.framework in Frameworks */,
 				A6F3F5651640F1FB0070E6AE /* Foundation.framework in Frameworks */,
 				A6F3F5671640F1FB0070E6AE /* CoreGraphics.framework in Frameworks */,
@@ -702,6 +709,8 @@
 				216CB68D4F0CE10D5F71E486 /* AssetsLibrary.framework in Frameworks */,
 				691DC08B97C843AB06E3610D /* CoreTelephony.framework in Frameworks */,
 				1ABF33A4A1E87B9BCEF92A50 /* AVFoundation.framework in Frameworks */,
+				8473C4C31F197C10000B18BF /* Crashlytics.framework in Frameworks */,
+				8473C4C11F197C10000B18BF /* Security.framework in Frameworks */,
 				899D03717A12F1FF46CB1027 /* CoreMedia.framework in Frameworks */,
 				70EE1CB9D73C9A2C673B1C97 /* CoreVideo.framework in Frameworks */,
 			);
@@ -1076,6 +1085,9 @@
 				8404F12F1F100413009EF08B /* SafariServices.framework */,
 				7D5284861DDA7A6800E42C5F /* QuartzCore.framework */,
 				1175AA3316AA117F00B93031 /* ImageIO.framework */,
+				8473C4BE1F197C10000B18BF /* Security.framework */,
+				8473C4BF1F197C10000B18BF /* Fabric.framework */,
+				8473C4C01F197C10000B18BF /* Crashlytics.framework */,
 				1175AA3116AA117800B93031 /* libxml2.dylib */,
 				1175AA0316AA091800B93031 /* CoreText.framework */,
 				114DD47E167AA6950061CB36 /* libz.dylib */,
@@ -1387,6 +1399,7 @@
 				A6F3F55A1640F1FB0070E6AE /* Sources */,
 				A6F3F55B1640F1FB0070E6AE /* Frameworks */,
 				A6F3F55C1640F1FB0070E6AE /* Resources */,
+				8473C4BD1F197BE2000B18BF /* Run Script */,
 			);
 			buildRules = (
 			);
@@ -1407,7 +1420,7 @@
 				ORGANIZATIONNAME = Peer1;
 				TargetAttributes = {
 					A6F3F55D1640F1FB0070E6AE = {
-						DevelopmentTeam = 6AH3R53PT2;
+						DevelopmentTeam = Z7NR3NR5X8;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -1602,6 +1615,23 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		8473C4BD1F197BE2000B18BF /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Fabric.framework/run c09d52199d3485c91714d2884df0de38db71f239 703097ecafc5a4cfb712a544dd1d506375c0f32d13d33557c403d5e9a8d3f0dd";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		A6551E4216C5CBF600340590 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -1785,7 +1815,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = 6AH3R53PT2;
+				DEVELOPMENT_TEAM = Z7NR3NR5X8;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1797,7 +1827,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/iOS/InternetMap-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.steamclock.internetmap;
+				PRODUCT_BUNDLE_IDENTIFIER = com.peer1.internetmap;
 				PRODUCT_NAME = internetmap;
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				STRIP_INSTALLED_PRODUCT = YES;
@@ -1867,7 +1897,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = 6AH3R53PT2;
+				DEVELOPMENT_TEAM = Z7NR3NR5X8;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1879,7 +1909,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/iOS/InternetMap-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.steamclock.internetmap;
+				PRODUCT_BUNDLE_IDENTIFIER = com.peer1.internetmap;
 				PRODUCT_NAME = internetmap;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -1994,7 +2024,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = 6AH3R53PT2;
+				DEVELOPMENT_TEAM = Z7NR3NR5X8;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -2005,7 +2035,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/iOS/InternetMap-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.steamclock.internetmap;
+				PRODUCT_BUNDLE_IDENTIFIER = com.peer1.internetmap;
 				PRODUCT_NAME = internetmap;
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				WRAPPER_EXTENSION = app;
@@ -2019,7 +2049,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = 6AH3R53PT2;
+				DEVELOPMENT_TEAM = Z7NR3NR5X8;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -2030,7 +2060,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/iOS/InternetMap-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.steamclock.internetmap;
+				PRODUCT_BUNDLE_IDENTIFIER = com.peer1.internetmap;
 				PRODUCT_NAME = internetmap;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
