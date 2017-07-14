@@ -34,7 +34,7 @@ android {
 
     defaultConfig {
         applicationId "com.peer1.internetmap"
-        minSdkVersion 19
+        minSdkVersion 21 // Currently having issues with 19 and pthreads
         targetSdkVersion 25
 
         versionCode 8
