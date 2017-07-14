@@ -56,6 +56,8 @@ static const int TIMEOUT = 10;
         result(nil);
     }
     
+    NSLog (@"IP %@", ip);
+    
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://api.iptoasn.com/v1/as/ip/%@", ip]]];
     [request setTimeOutSeconds:TIMEOUT];
     [request setRequestMethod:@"GET"];
@@ -69,6 +71,8 @@ static const int TIMEOUT = 10;
         NSNumber* asNumber = [jsonResponse objectForKey:@"as_number"];
         NSString *asNumberStr = [asNumber stringValue];
         result(asNumberStr);
+        
+        NSLog (@"TRACE %@", asNumberStr);
     }];
     
     [request setFailedBlock:^{

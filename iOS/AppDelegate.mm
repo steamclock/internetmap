@@ -6,6 +6,9 @@
 #import "AppDelegate.h"
 #import "ViewController.h"
 #import <BuddyBuildSDK/BuddyBuildSDK.h>
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
+
 
 @implementation AppDelegate
 
@@ -13,6 +16,8 @@
 {
     [BuddyBuildSDK setup];
     
+    [Fabric with:@[[Crashlytics class]]];
+
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
     // Override point for customization after application launch.

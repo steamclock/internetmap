@@ -70,6 +70,9 @@
 		7D23CB591DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D23CB581DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard */; };
 		7D5284871DDA7A6800E42C5F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5284861DDA7A6800E42C5F /* QuartzCore.framework */; };
 		8404F1301F100413009EF08B /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8404F12F1F100413009EF08B /* SafariServices.framework */; };
+		840B4DEE1F1930BB00A87AF3 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 840B4DEB1F1930BB00A87AF3 /* Security.framework */; };
+		840B4DEF1F1930BB00A87AF3 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 840B4DEC1F1930BB00A87AF3 /* Fabric.framework */; };
+		840B4DF01F1930BB00A87AF3 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 840B4DED1F1930BB00A87AF3 /* Crashlytics.framework */; };
 		849FC0351F0304B800B06401 /* search-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 849FC01D1F0304B800B06401 /* search-selected.png */; };
 		849FC0361F0304B800B06401 /* search-selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 849FC01E1F0304B800B06401 /* search-selected@2x.png */; };
 		849FC0371F0304B800B06401 /* search-selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 849FC01F1F0304B800B06401 /* search-selected@3x.png */; };
@@ -327,6 +330,9 @@
 		7D23CB581DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "LaunchScreen~ipad.storyboard"; path = "iOS/LaunchScreen~ipad.storyboard"; sourceTree = SOURCE_ROOT; };
 		7D5284861DDA7A6800E42C5F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		8404F12F1F100413009EF08B /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
+		840B4DEB1F1930BB00A87AF3 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		840B4DEC1F1930BB00A87AF3 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		840B4DED1F1930BB00A87AF3 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		849FC01D1F0304B800B06401 /* search-selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "search-selected.png"; path = "iOS/Images/search-selected.png"; sourceTree = SOURCE_ROOT; };
 		849FC01E1F0304B800B06401 /* search-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "search-selected@2x.png"; path = "iOS/Images/search-selected@2x.png"; sourceTree = SOURCE_ROOT; };
 		849FC01F1F0304B800B06401 /* search-selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "search-selected@3x.png"; path = "iOS/Images/search-selected@3x.png"; sourceTree = SOURCE_ROOT; };
@@ -693,6 +699,7 @@
 				D468090516795D4D00A2C1CC /* CFNetwork.framework in Frameworks */,
 				D468090416795D4600A2C1CC /* SystemConfiguration.framework in Frameworks */,
 				1117E57B1676BFCD0046AA69 /* libresolv.dylib in Frameworks */,
+				840B4DEF1F1930BB00A87AF3 /* Fabric.framework in Frameworks */,
 				A6F3F5631640F1FB0070E6AE /* UIKit.framework in Frameworks */,
 				A6F3F5651640F1FB0070E6AE /* Foundation.framework in Frameworks */,
 				A6F3F5671640F1FB0070E6AE /* CoreGraphics.framework in Frameworks */,
@@ -702,6 +709,8 @@
 				216CB68D4F0CE10D5F71E486 /* AssetsLibrary.framework in Frameworks */,
 				691DC08B97C843AB06E3610D /* CoreTelephony.framework in Frameworks */,
 				1ABF33A4A1E87B9BCEF92A50 /* AVFoundation.framework in Frameworks */,
+				840B4DF01F1930BB00A87AF3 /* Crashlytics.framework in Frameworks */,
+				840B4DEE1F1930BB00A87AF3 /* Security.framework in Frameworks */,
 				899D03717A12F1FF46CB1027 /* CoreMedia.framework in Frameworks */,
 				70EE1CB9D73C9A2C673B1C97 /* CoreVideo.framework in Frameworks */,
 			);
@@ -1076,6 +1085,9 @@
 				8404F12F1F100413009EF08B /* SafariServices.framework */,
 				7D5284861DDA7A6800E42C5F /* QuartzCore.framework */,
 				1175AA3316AA117F00B93031 /* ImageIO.framework */,
+				840B4DEB1F1930BB00A87AF3 /* Security.framework */,
+				840B4DEC1F1930BB00A87AF3 /* Fabric.framework */,
+				840B4DED1F1930BB00A87AF3 /* Crashlytics.framework */,
 				1175AA3116AA117800B93031 /* libxml2.dylib */,
 				1175AA0316AA091800B93031 /* CoreText.framework */,
 				114DD47E167AA6950061CB36 /* libz.dylib */,
@@ -1387,6 +1399,7 @@
 				A6F3F55A1640F1FB0070E6AE /* Sources */,
 				A6F3F55B1640F1FB0070E6AE /* Frameworks */,
 				A6F3F55C1640F1FB0070E6AE /* Resources */,
+				840B4DEA1F19305B00A87AF3 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1601,6 +1614,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		840B4DEA1F19305B00A87AF3 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Fabric.framework/run 7d182fcd0063fa84a29f058be3c8ef2a6a94a1da a38f9599bd85eb7ce3ee5bd26e12e6ec439cdcc0b4c7d7863a4be70380c6eeef";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		A6551E4216C5CBF600340590 /* Sources */ = {
