@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 
 import com.crashlytics.android.Crashlytics;
+import com.peer1.internetmap.utils.CrashlyticsTree;
 import com.peer1.internetmap.utils.SharedPreferenceUtils;
 
 import io.fabric.sdk.android.Fabric;
@@ -26,11 +27,10 @@ public class App extends Application {
         instance = this;
         appContext = this;
 
-        // Setup logging
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         } else {
-            // TODO production logging
+            Timber.plant(new CrashlyticsTree());
         }
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()

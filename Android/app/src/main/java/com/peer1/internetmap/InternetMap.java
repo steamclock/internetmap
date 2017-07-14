@@ -3,6 +3,7 @@ package com.peer1.internetmap;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -499,7 +500,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
     }
 
     public void runTraceroute(View unused) throws JSONException, UnsupportedEncodingException{
-        Timber.e(TAG, "TODO: traceroute");
+        Timber.v(TAG, "TODO: traceroute");
         //check internet status
         boolean isConnected = haveConnectivity();
 
@@ -585,6 +586,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
     }
 
     public void visualizationsButtonPressed(View view) {
+        
         dismissPopups();
         hideCurrentTooltip();
 
@@ -860,7 +862,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
                 showError(getString(R.string.asnAssociationFail));
             }
         } catch (Exception e) {
-            Timber.e(String.format("can't parse response"));
+            Timber.e(e, String.format("selectNodeByASN failed to parse response"));
             showError(getString(R.string.asnAssociationFail));
         }
     }
