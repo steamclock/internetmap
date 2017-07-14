@@ -128,7 +128,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     // globe
     self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     self.preferredFramesPerSecond = 60.0f;
@@ -891,7 +891,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(void)selectNodeByHostLookup:(NSString*)host {
-
+    NSLog(@"selectNodeByHostLookup");
     [self.nodeSearchPopover dismissPopoverAnimated:YES];
     self.searchButton.selected = NO;
 
@@ -972,6 +972,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     UIPopoverArrowDirection dir = [HelperMethods deviceIsiPad] ? UIPopoverArrowDirectionLeft : UIPopoverArrowDirectionUp;
     [self.nodeInformationPopover repositionPopoverFromRect:[self displayRectForNodeInfoPopover] inView:self.view permittedArrowDirections:dir animated:YES];
 }
+
+- (IBAction)traceAction:(id)sender {
+    
+    [self tracerouteButtonTapped];
+}
+
 
 -(void)tracerouteButtonTapped{
     

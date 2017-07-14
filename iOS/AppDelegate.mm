@@ -6,12 +6,18 @@
 #import "AppDelegate.h"
 #import "ViewController.h"
 #import <BuddyBuildSDK/BuddyBuildSDK.h>
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
+
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [BuddyBuildSDK setup];
+    
+    [Fabric with:@[[Crashlytics class]]];
+
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
