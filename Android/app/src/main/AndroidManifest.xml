@@ -55,6 +55,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".InternetMap" />
         </activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="c09d52199d3485c91714d2884df0de38db71f239" />
     </application>
 
 </manifest>

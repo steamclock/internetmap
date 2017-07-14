@@ -4,8 +4,10 @@ import android.app.Application;
 import android.content.Context;
 import android.content.res.Configuration;
 
+import com.crashlytics.android.Crashlytics;
 import com.peer1.internetmap.utils.SharedPreferenceUtils;
 
+import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
@@ -18,6 +20,9 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        Fabric.with(this, new Crashlytics());
+
         instance = this;
         appContext = this;
 
