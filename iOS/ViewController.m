@@ -358,6 +358,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                     self.nodeTooltipPopover = [[WEPopoverController alloc] initWithContentViewController:self.nodeTooltipViewController];
                     self.nodeTooltipPopover.passthroughViews = @[self.view];
                     CGPoint center = [self.controller getCoordinatesForNodeAtIndex:i];
+                    
+                    
+                    NSLog (@"NODE SELECTED X %f", center.x);
+                    NSLog (@"NODE SELECTED Y %f", center.y);
+                    
                     [self.nodeTooltipPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];
                     [self.controller hoverNode:i];
                 }
@@ -373,6 +378,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)handlePan:(UIPanGestureRecognizer *)gestureRecognizer
 {
+    
     [self.controller resetIdleTimer];
     if (!self.isHandlingLongPress) {
         if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
@@ -424,6 +430,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)handlePinch:(UIPinchGestureRecognizer *)gestureRecognizer
 {
+    
     [self.controller resetIdleTimer];
 
     if (!self.isHandlingLongPress) {
@@ -626,7 +633,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(IBAction)infoButtonPressed:(id)sender {
-
+    
+    [self.controller resetZoomAndRotationAnimatedForOrientation:YES];
+    
     self.helpPopView.hidden = YES;
     
     if (self.timelineButton.selected) {
@@ -986,6 +995,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.tracerouteASNs = [NSMutableDictionary new];
     
     //zoom out and rotate camera to default orientation on app startup
+    // TODO Why is this using GLKMatrix4MakeRotation, and not calling the methods in MapWrapper?
     GLKMatrix4 zRotation = GLKMatrix4Identity;
     float zoom = -3;
     if (![HelperMethods deviceIsiPad]) {

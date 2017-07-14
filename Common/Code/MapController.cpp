@@ -45,7 +45,8 @@ MapController::MapController() :
 //    _visualizations.push_back(VisualizationPointer(new TypeVisualization("EDU", AS_EDU)));
 //    _visualizations.push_back(VisualizationPointer(new TypeVisualization("T1", AS_T1)));
     
-    data->visualization = _visualizations[0];
+    data->visualization = _visualizations[0]; // TODO can we call setVisualization here instead?
+    display->camera->setMode(Camera::MODE_GLOBE);
     
     std::string globalSettingsText;
     loadTextResource(&globalSettingsText, "globalSettings", "json");
@@ -367,6 +368,8 @@ void MapController::highlightRoute(std::vector<NodePointer> nodeList) {
 }
 
 int MapController::indexForNodeAtPoint(Vector2 pointInView) {
+    
+
     //get point in view and adjust it for viewport
     float xOld = pointInView.x;
     float xLoOld = 0;
@@ -543,6 +546,16 @@ std::vector<std::string> MapController::visualizationNames(void) {
 void MapController::setVisualization(int visualization) {
     if (visualization >= _visualizations.size()) {
         visualization = 0;
+    }
+    
+    switch (visualization) {
+        case 0:
+            display->camera->setMode(Camera::MODE_GLOBE);
+            break;
+            
+        default:
+            display->camera->setMode(Camera::MODE_NETWORK);
+            break;
     }
 
     data->visualization = _visualizations[visualization];

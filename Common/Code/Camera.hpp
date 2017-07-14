@@ -25,6 +25,9 @@ struct Target {
  has nice functions for targeting, animated zoom, rotation, etc.
  */
 class Camera {
+    
+    int _mode;
+    
     float _displayWidth, _displayHeight;
     //TODO maybe target should be a Target?
     Vector3 _target;
@@ -82,10 +85,17 @@ class Camera {
     void handleAnimatedZoom(TimeInterval delta);
     void handleAnimatedRotation(TimeInterval delta);
     void setRotationAndRenormalize(const Matrix4& matrix);
-    
+
+    bool checkIfAnglePastLimit();
+
 public:
     Camera();
     
+    static const int MODE_UNKNOWN = 0;
+    static const int MODE_GLOBE = 1;
+    static const int MODE_NETWORK = 2;
+    
+    void setMode(int mode);
     void setTarget(const Target& target, TimeInterval duration = DEFAULT_MOVE_TIME);
     Vector3 target(void) { return _target; }
     void setDisplaySize(float width, float height) { _displayWidth = width; _displayHeight = height; }
@@ -123,6 +133,9 @@ public:
     void stopMomentumRotation();
     
     void resetZoomAndRotationAnimated(bool isPortraitMode);
+    
+    
+    void print_matrix4(const Matrix4 &mat4);
 };
 
 #endif

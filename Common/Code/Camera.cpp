@@ -12,11 +12,15 @@ static const float MIN_ZOOM = -10.0f;
 //this might be a bug in targeting...?
 static const float MAX_MAX_ZOOM = -0.06f;
 
+static const float TILT_AND_PAN_RESTRICT_ANGLE = 0.55;
+
 // TODO: better way to register this
 void cameraMoveFinishedCallback(void);
 void cameraResetFinishedCallback(void);
 
 Camera::Camera() :
+
+    _mode(MODE_UNKNOWN),
     _displayWidth(0.0f),
     _displayHeight(0.0f),
     _target(0.0f, 0.0f, 0.0f),
@@ -299,15 +303,47 @@ Vector3 Camera::applyModelViewToPoint(Vector2 point) {
 }
 
 void Camera::rotateRadiansX(float rotate) {
-    setRotationAndRenormalize(Matrix4::rotation(rotate, Vector3(0.0f, 1.0f, 0.0f)) * _rotationMatrix);
+    if (_mode == MODE_GLOBE) {
+        // Globe mode disallows tilting "left" and "right"
+        setRotationAndRenormalize(_rotationMatrix * Matrix4::rotation(rotate, Vector3(0.0f, 1.0f, 0.0f)));
+    } else {
+        // Default, free rotation
+        setRotationAndRenormalize(Matrix4::rotation(rotate, Vector3(0.0f, 1.0f, 0.0f)) * _rotationMatrix);
+    }
 }
 
 void Camera::rotateRadiansY(float rotate) {
-    setRotationAndRenormalize(Matrix4::rotation(rotate, Vector3(1.0f, 0.0f, 0.0f)) * _rotationMatrix);
+    if (_mode == MODE_GLOBE) {
+        // Globe mode, we want to stop tilting "up" and "down" after a certain threshhold, so that we cannot
+        // flip the globe into a weird orientation
+        Matrix4 old = _rotationMatrix;
+        setRotationAndRenormalize(Matrix4::rotation(rotate, Vector3(1.0f, 0.0f, 0.0f)) * _rotationMatrix);
+        if (checkIfAnglePastLimit()) _rotationMatrix = old;
+    } else {
+        // Default, free rotation
+        setRotationAndRenormalize(Matrix4::rotation(rotate, Vector3(1.0f, 0.0f, 0.0f)) * _rotationMatrix);
+    }
 }
 
 void Camera::rotateRadiansZ(float rotate) {
-    setRotationAndRenormalize(_rotationMatrix = Matrix4::rotation(rotate, Vector3(0.0f, 0.0f, 1.0f)) * _rotationMatrix);
+    if (_mode == MODE_GLOBE) {
+        // Globe mode, we want to disallow tilting during 2 finger rotation.
+        Matrix4 old = _rotationMatrix;
+        setRotationAndRenormalize(_rotationMatrix = Matrix4::rotation(rotate, Vector3(0.0f, 0.0f, 1.0f)) * _rotationMatrix);
+        if (checkIfAnglePastLimit()) _rotationMatrix = old;
+    } else {
+        // Default, free rotation
+        setRotationAndRenormalize(_rotationMatrix = Matrix4::rotation(rotate, Vector3(0.0f, 0.0f, 1.0f)) * _rotationMatrix);
+    }
+}
+
+bool Camera::checkIfAnglePastLimit() {
+    
+    float angle = Vectormath::Aos::dot(_rotationMatrix.getCol(1).getXYZ(), Vector3(0.0f, 1.0f, 0.0f));
+    
+    if (angle < TILT_AND_PAN_RESTRICT_ANGLE) return true; // 0.55 arbitrary value that seems to work best for tilt
+    
+    return false;
 }
 
 void Camera::rotateAnimated(Matrix4 rotation, TimeInterval duration) {
@@ -331,17 +367,19 @@ void Camera::zoomByScale(float zoom) {
 void Camera::resetZoomAndRotationAnimated(bool isPortraitMode) {
     // TODO: should have better way of distributing this flag
     GlobeVisualization::setPortrait(isPortraitMode);
-    
+
     float targetZoom;
     Matrix4 targetRotation;
     
     if (isPortraitMode) {
-        targetZoom = -4.5;
-        targetRotation = Matrix4::rotation(M_PI_2, Vector3(0, 0, 1));
+       targetZoom = -4.5;
+    //   targetRotation = Matrix4::rotation(M_PI_2, Vector3(0, 0, 1));
     } else {
-        targetZoom = -3;
-        targetRotation = Matrix4::identity();
+       targetZoom = -3;
+    //   targetRotation = Matrix4::identity();
     }
+    
+    targetRotation = Matrix4::identity();
     
     float zoomDistance = _zoom - targetZoom;
     
@@ -370,6 +408,10 @@ void Camera::zoomAnimated(float zoom, TimeInterval duration) {
     _zoomTarget = zoom;
     _zoomStartTime = _updateTime;
     _zoomDuration = duration;
+}
+
+void Camera::setMode(int mode) {
+    _mode = mode;
 }
 
 void Camera::setTarget(const Target& target, TimeInterval duration) {
@@ -423,3 +465,20 @@ void Camera::translateYAnimated(float translateY, TimeInterval duration) {
     _translationYDuration = duration;
 }
 
+// Note, std::to_string is not implemented in the NDK version being used for Android. For now,
+// comment this out. Put back in to test on iOS.
+void Camera::print_matrix4(const Matrix4 &mat4) {
+    LOG("Code commented out due to Android issues");
+//    std::string result = "";
+//    
+//    int i, j;
+//    for (i = 0; i < 4; i++) {
+//        result = result + std::string("|");
+//        for (j=0; j < 4; j++) {
+//            result = result + std::string(" ") + std::to_string(_rotationMatrix.getElem(j, i));
+//        }
+//        result = result + std::string("| \n");
+//    }
+//    
+//    LOG("%s", result.c_str());
+}

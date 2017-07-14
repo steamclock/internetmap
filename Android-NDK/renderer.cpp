@@ -294,7 +294,7 @@ bool Renderer::initialize() {
 
     LOG("created GL context");
 
-    GlobeVisualization::setPortrait(_smallScreen);
+    DefaultVisualization::setPortrait(_smallScreen);
 
     _mapController = new MapController;
     _mapController->display->camera->setDisplaySize(width, height);
