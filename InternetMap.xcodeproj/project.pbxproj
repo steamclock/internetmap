@@ -15,7 +15,6 @@
 		1175AA3416AA117F00B93031 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1175AA3316AA117F00B93031 /* ImageIO.framework */; };
 		1ABF33A4A1E87B9BCEF92A50 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F206D222C5BA2C4D8916E78 /* AVFoundation.framework */; };
 		216CB68D4F0CE10D5F71E486 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D35DE583A2E50CC5E2BDFA99 /* AssetsLibrary.framework */; };
-		268DE1153716F526803AD278 /* BuddyBuildSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28C527A56CFB2939D5AA9DE8 /* BuddyBuildSDK.framework */; };
 		4E3E42AE1EF1AE92007224FE /* peer1-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E3E42AB1EF1AE92007224FE /* peer1-logo.png */; };
 		4E3E42AF1EF1AE92007224FE /* peer1-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E3E42AC1EF1AE92007224FE /* peer1-logo@2x.png */; };
 		4E3E42B01EF1AE92007224FE /* peer1-logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E3E42AD1EF1AE92007224FE /* peer1-logo@3x.png */; };
@@ -71,9 +70,10 @@
 		7D5284871DDA7A6800E42C5F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5284861DDA7A6800E42C5F /* QuartzCore.framework */; };
 		8404F1301F100413009EF08B /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8404F12F1F100413009EF08B /* SafariServices.framework */; };
 		8473C4C11F197C10000B18BF /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8473C4BE1F197C10000B18BF /* Security.framework */; };
-		8473C4C21F197C10000B18BF /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8473C4BF1F197C10000B18BF /* Fabric.framework */; };
-		8473C4C31F197C10000B18BF /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8473C4C01F197C10000B18BF /* Crashlytics.framework */; };
 		8473C4CB1F1D7772000B18BF /* buddybuild_postbuild.sh in Resources */ = {isa = PBXBuildFile; fileRef = 8473C4CA1F1D7772000B18BF /* buddybuild_postbuild.sh */; };
+		8473C4CF1F1D7F83000B18BF /* BuddyBuildSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8473C4CC1F1D7F83000B18BF /* BuddyBuildSDK.framework */; };
+		8473C4D01F1D7F83000B18BF /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8473C4CD1F1D7F83000B18BF /* Crashlytics.framework */; };
+		8473C4D11F1D7F83000B18BF /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8473C4CE1F1D7F83000B18BF /* Fabric.framework */; };
 		849FC0351F0304B800B06401 /* search-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 849FC01D1F0304B800B06401 /* search-selected.png */; };
 		849FC0361F0304B800B06401 /* search-selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 849FC01E1F0304B800B06401 /* search-selected@2x.png */; };
 		849FC0371F0304B800B06401 /* search-selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 849FC01F1F0304B800B06401 /* search-selected@3x.png */; };
@@ -275,7 +275,6 @@
 		1175AA0316AA091800B93031 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		1175AA3116AA117800B93031 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		1175AA3316AA117F00B93031 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
-		28C527A56CFB2939D5AA9DE8 /* BuddyBuildSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BuddyBuildSDK.framework; sourceTree = "<group>"; };
 		2F206D222C5BA2C4D8916E78 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		3826AB3EDD81040E4E3F010F /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		4E3E42AB1EF1AE92007224FE /* peer1-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "peer1-logo.png"; path = "iOS/Images/peer1-logo.png"; sourceTree = SOURCE_ROOT; };
@@ -332,9 +331,10 @@
 		7D5284861DDA7A6800E42C5F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		8404F12F1F100413009EF08B /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		8473C4BE1F197C10000B18BF /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		8473C4BF1F197C10000B18BF /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
-		8473C4C01F197C10000B18BF /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		8473C4CA1F1D7772000B18BF /* buddybuild_postbuild.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = buddybuild_postbuild.sh; sourceTree = SOURCE_ROOT; };
+		8473C4CC1F1D7F83000B18BF /* BuddyBuildSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BuddyBuildSDK.framework; path = iOS/BuddyBuildSDK.framework; sourceTree = "<group>"; };
+		8473C4CD1F1D7F83000B18BF /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crashlytics.framework; path = iOS/Crashlytics.framework; sourceTree = "<group>"; };
+		8473C4CE1F1D7F83000B18BF /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fabric.framework; path = iOS/Fabric.framework; sourceTree = "<group>"; };
 		849FC01D1F0304B800B06401 /* search-selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "search-selected.png"; path = "iOS/Images/search-selected.png"; sourceTree = SOURCE_ROOT; };
 		849FC01E1F0304B800B06401 /* search-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "search-selected@2x.png"; path = "iOS/Images/search-selected@2x.png"; sourceTree = SOURCE_ROOT; };
 		849FC01F1F0304B800B06401 /* search-selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "search-selected@3x.png"; path = "iOS/Images/search-selected@3x.png"; sourceTree = SOURCE_ROOT; };
@@ -692,6 +692,7 @@
 			files = (
 				8404F1301F100413009EF08B /* SafariServices.framework in Frameworks */,
 				7D5284871DDA7A6800E42C5F /* QuartzCore.framework in Frameworks */,
+				8473C4CF1F1D7F83000B18BF /* BuddyBuildSDK.framework in Frameworks */,
 				A6551E6316C5CCB300340590 /* libExternalCode.a in Frameworks */,
 				114DD47D167AA6850061CB36 /* MobileCoreServices.framework in Frameworks */,
 				1175AA3416AA117F00B93031 /* ImageIO.framework in Frameworks */,
@@ -699,19 +700,18 @@
 				1175AA0416AA091800B93031 /* CoreText.framework in Frameworks */,
 				114DD47F167AA6950061CB36 /* libz.dylib in Frameworks */,
 				D468090516795D4D00A2C1CC /* CFNetwork.framework in Frameworks */,
+				8473C4D01F1D7F83000B18BF /* Crashlytics.framework in Frameworks */,
 				D468090416795D4600A2C1CC /* SystemConfiguration.framework in Frameworks */,
 				1117E57B1676BFCD0046AA69 /* libresolv.dylib in Frameworks */,
-				8473C4C21F197C10000B18BF /* Fabric.framework in Frameworks */,
 				A6F3F5631640F1FB0070E6AE /* UIKit.framework in Frameworks */,
 				A6F3F5651640F1FB0070E6AE /* Foundation.framework in Frameworks */,
 				A6F3F5671640F1FB0070E6AE /* CoreGraphics.framework in Frameworks */,
 				A6F3F5691640F1FB0070E6AE /* GLKit.framework in Frameworks */,
 				A6F3F56B1640F1FB0070E6AE /* OpenGLES.framework in Frameworks */,
-				268DE1153716F526803AD278 /* BuddyBuildSDK.framework in Frameworks */,
 				216CB68D4F0CE10D5F71E486 /* AssetsLibrary.framework in Frameworks */,
 				691DC08B97C843AB06E3610D /* CoreTelephony.framework in Frameworks */,
 				1ABF33A4A1E87B9BCEF92A50 /* AVFoundation.framework in Frameworks */,
-				8473C4C31F197C10000B18BF /* Crashlytics.framework in Frameworks */,
+				8473C4D11F1D7F83000B18BF /* Fabric.framework in Frameworks */,
 				8473C4C11F197C10000B18BF /* Security.framework in Frameworks */,
 				899D03717A12F1FF46CB1027 /* CoreMedia.framework in Frameworks */,
 				70EE1CB9D73C9A2C673B1C97 /* CoreVideo.framework in Frameworks */,
@@ -1084,12 +1084,13 @@
 		A6F3F5611640F1FB0070E6AE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8473C4CC1F1D7F83000B18BF /* BuddyBuildSDK.framework */,
+				8473C4CD1F1D7F83000B18BF /* Crashlytics.framework */,
+				8473C4CE1F1D7F83000B18BF /* Fabric.framework */,
 				8404F12F1F100413009EF08B /* SafariServices.framework */,
 				7D5284861DDA7A6800E42C5F /* QuartzCore.framework */,
 				1175AA3316AA117F00B93031 /* ImageIO.framework */,
 				8473C4BE1F197C10000B18BF /* Security.framework */,
-				8473C4BF1F197C10000B18BF /* Fabric.framework */,
-				8473C4C01F197C10000B18BF /* Crashlytics.framework */,
 				1175AA3116AA117800B93031 /* libxml2.dylib */,
 				1175AA0316AA091800B93031 /* CoreText.framework */,
 				114DD47E167AA6950061CB36 /* libz.dylib */,
@@ -1102,7 +1103,6 @@
 				A6F3F5661640F1FB0070E6AE /* CoreGraphics.framework */,
 				A6F3F5681640F1FB0070E6AE /* GLKit.framework */,
 				A6F3F56A1640F1FB0070E6AE /* OpenGLES.framework */,
-				28C527A56CFB2939D5AA9DE8 /* BuddyBuildSDK.framework */,
 				D35DE583A2E50CC5E2BDFA99 /* AssetsLibrary.framework */,
 				3826AB3EDD81040E4E3F010F /* CoreTelephony.framework */,
 				2F206D222C5BA2C4D8916E78 /* AVFoundation.framework */,
@@ -1823,6 +1823,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/iOS",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iOS/InternetMap-Prefix.pch";
@@ -1905,6 +1906,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/iOS",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iOS/InternetMap-Prefix.pch";
@@ -2032,6 +2034,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/iOS",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iOS/InternetMap-Prefix.pch";
@@ -2057,6 +2060,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/iOS",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iOS/InternetMap-Prefix.pch";
