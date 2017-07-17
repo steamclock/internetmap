@@ -23,6 +23,7 @@
 #import "CreditsViewController.h"
 #import <SafariServices/SafariServices.h>
 
+
 // Below import for testing BSD traceroute only
 #import "main-traceroute.h"
 
@@ -507,7 +508,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(IBAction)searchButtonPressed:(id)sender {
     //TODO: find out if we can make this work in timeline mode
-    
+
     if (self.timelineButton.selected) {
         [self leaveTimelineMode];
     }
