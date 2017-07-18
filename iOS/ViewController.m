@@ -511,9 +511,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     //TODO: find out if we can make this work in timeline mode
     
     
-    
+    // !! JSK
     [[Crashlytics alloc] crash];
 
+    
+    
+    
     if (self.timelineButton.selected) {
         [self leaveTimelineMode];
     }
