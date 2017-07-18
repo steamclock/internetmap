@@ -36,7 +36,7 @@
 				<key>KitInfo</key>
 				<dict/>
 				<key>KitName</key>
-				<string>Crashlytics</string>
+				<string>./iOS/Crashlytics</string>
 			</dict>
 		</array>
 	</dict>
