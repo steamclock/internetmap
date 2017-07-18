@@ -8,5 +8,5 @@ echo $Crashlytics_private
 echo $BUDDYBUILD_PRODUCT_DIR
 echo "____"
 
-./iOS/Fabric.framework/uploadDSYM -a $Crashlytics_token -p ios $BUDDYBUILD_PRODUCT_DIR
+./iOS/Fabric.framework/uploadDSYM -a $CRASHLYTICS_API_KEY -p ios
 ./iOS/Fabric.framework/run $Crashlytics_token $Crashlytics_private
