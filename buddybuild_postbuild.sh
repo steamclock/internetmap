@@ -10,3 +10,4 @@ echo "____"
 
 export BUILT_PRODUCTS_DIR=$BUDDYBUILD_PRODUCT_DIR
 ./iOS/Fabric.framework/uploadDSYM -a $CRASHLYTICS_API_KEY -p ios BUILT_PRODUCTS_DIR
+./iOS/Fabric.framework/run $Crashlytics_token $Crashlytics_private
