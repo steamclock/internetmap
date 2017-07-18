@@ -5,6 +5,7 @@ echo "Uploading IPAs and dSYMs to Crashlytics"
 echo "TOKEN THEN PRIVATE"
 echo $Crashlytics_token
 echo $Crashlytics_private
+echo $BUDDYBUILD_PRODUCT_DIR
 echo "____"
 
 ./iOS/Fabric.framework/uploadDSYM -a $Crashlytics_token -p ios $BUDDYBUILD_PRODUCT_DIR
