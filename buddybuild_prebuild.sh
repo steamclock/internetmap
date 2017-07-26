@@ -6,9 +6,6 @@ echo "Adding Fabric key to plist"
 /usr/libexec/PlistBuddy -x -c "Merge ${BUDDYBUILD_SECURE_FILES}/info.plist" "Info.plist"
 /usr/libexec/PlistBuddy -x -c "Print :Fabric" "Info.plist"
 
-echo "Running Fabric build phase"
-$BUDDYBUILD_WORKSPACE/Pods/Fabric/run $Crashlytics_token $Crashlytics_private
-
 #/usr/libexec/PlistBuddy -c "Add :Fabric dict" "Info.plist"
 #/usr/libexec/PlistBuddy -c "Add :Fabric: String $BUDDYBUILD_BRANCH" "Info.plist"
 #/usr/libexec/PlistBuddy -c "Add Fabric String $BUDDYBUILD_BRANCH" "Info.plist"
