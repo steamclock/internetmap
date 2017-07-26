@@ -3,11 +3,8 @@ echo "Staring prebuild..."
 
 # Merge the contents of the secure plist containing Fabric secret key into Info.plist
 echo "Adding Fabric key to plist"
-
-echo /usr/libexec/PlistBuddy -x -c "Print Fabric" "${BUDDYBUILD_SECURE_FILES}/info.plist"
-
-/usr/libexec/PlistBuddy -x -c "Add ${BUDDYBUILD_SECURE_FILES}/info.plist Fabric" "Info.plist"
-echo /usr/libexec/PlistBuddy -x -c "Print Fabric" "Info.plist"
+/usr/libexec/PlistBuddy -x -c "Merge ${BUDDYBUILD_SECURE_FILES}/info.plist" "Info.plist"
+/usr/libexec/PlistBuddy -x -c "Print :Fabric" "Info.plist"
 
 echo "Running Fabric build phase"
 $BUDDYBUILD_WORKSPACE/Pods/Fabric/run $Crashlytics_token $Crashlytics_private
