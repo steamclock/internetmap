@@ -8,9 +8,13 @@ echo "Adding Fabric key to plist"
 
 echo "Running Fabric build phase"
 export BUILT_PRODUCTS_DIR=$BUDDYBUILD_PRODUCT_DIR
- ./iOS/Fabric.framework/run $Crashlytics_token
+../Pods/Fabric/Fabric.framework/run $Crashlytics_token $Crashlytics_private
+
+ #./iOS/Fabric.framework/run $Crashlytics_token $Crashlytics_private
 
 #./iOS/Crashlytics.framework/submit $Crashlytics_token $Crashlytics_private
+
+
 
 #${XCS_PRIMARY_REPO_DIR}"/MyApp/Pods/Crashlytics/submit <API> <KEY> -ipaPath "${IPA_PATH}" -emails me@test.com
 
