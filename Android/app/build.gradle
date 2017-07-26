@@ -1,19 +1,4 @@
-buildscript {
-    repositories {
-        maven { url 'https://maven.fabric.io/public' }
-    }
-
-    dependencies {
-        classpath 'io.fabric.tools:gradle:1.+'
-    }
-}
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
-
-repositories {
-    maven { url 'https://maven.fabric.io/public' }
-}
-
 
 def internalCommonDataPath = "../../Android/app/src/main/assets/data"
 def externalCommonDataPath = "../../Common/Data"
@@ -111,7 +96,4 @@ dependencies {
     compile 'com.jakewharton.timber:timber:4.5.1'
     compile 'uk.co.chrisjenx:calligraphy:2.3.0'
     compile 'com.github.spyhunter99:super-tooltip-aar:4.0.0'
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-        transitive = true;
-    }
 }
