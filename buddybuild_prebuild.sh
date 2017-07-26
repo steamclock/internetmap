@@ -6,6 +6,14 @@ echo "Adding Fabric key to plist"
 /usr/libexec/PlistBuddy -x -c "Merge ${BUDDYBUILD_SECURE_FILES}/info.plist" "Info.plist"
 /usr/libexec/PlistBuddy -x -c "Print :Fabric" "Info.plist"
 
+echo "Running Fabric build phase"
+export BUILT_PRODUCTS_DIR=$BUDDYBUILD_PRODUCT_DIR
+ ./iOS/Fabric.framework/run $Crashlytics_token
+
+#./iOS/Crashlytics.framework/submit $Crashlytics_token $Crashlytics_private
+
+#${XCS_PRIMARY_REPO_DIR}"/MyApp/Pods/Crashlytics/submit <API> <KEY> -ipaPath "${IPA_PATH}" -emails me@test.com
+
 #/usr/libexec/PlistBuddy -c "Add :Fabric dict" "Info.plist"
 #/usr/libexec/PlistBuddy -c "Add :Fabric: String $BUDDYBUILD_BRANCH" "Info.plist"
 #/usr/libexec/PlistBuddy -c "Add Fabric String $BUDDYBUILD_BRANCH" "Info.plist"
