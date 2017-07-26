@@ -2,7 +2,8 @@
 echo "Staring postbuild..."
 
 echo "Running Fabric build phase"
-$BUDDYBUILD_WORKSPACE/Pods/Fabric/run $Crashlytics_token $Crashlytics_private
+export BUILT_PRODUCTS_DIR=$BUDDYBUILD_PRODUCT_DIR
+./iOS/Fabric.framework/run $Crashlytics_token $Crashlytics_private
 
 echo "Uploading IPAs and dSYMs to Crashlytics"
 $BUDDYBUILD_WORKSPACE/Pods/Fabric/upload-symbols -a $Crashlytics_token -p ios $BUDDYBUILD_PRODUCT_DIR
