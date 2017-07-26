@@ -8,7 +8,8 @@ echo "Adding Fabric key to plist"
 
 echo "Running Fabric build phase"
 export BUILT_PRODUCTS_DIR=$BUDDYBUILD_PRODUCT_DIR
-../Pods/Fabric/Fabric.framework/run $Crashlytics_token $Crashlytics_private
+$(SRCROOT)/../iOS/Fabric.framework/run $Crashlytics_token $Crashlytics_private
+#../Pods/Fabric/Fabric.framework/run $Crashlytics_token $Crashlytics_private
 
  #./iOS/Fabric.framework/run $Crashlytics_token $Crashlytics_private
 
