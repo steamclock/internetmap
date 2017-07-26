@@ -4,11 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.content.res.Configuration;
 
-import com.crashlytics.android.Crashlytics;
-import com.peer1.internetmap.utils.CrashlyticsTree;
-import com.peer1.internetmap.utils.SharedPreferenceUtils;
-
-import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
@@ -22,15 +17,14 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Fabric.with(this, new Crashlytics());
-
         instance = this;
         appContext = this;
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         } else {
-            Timber.plant(new CrashlyticsTree());
+            // No longer using Crashlytics
+            // TODO determine run time crash reporting
         }
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
