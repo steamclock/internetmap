@@ -257,8 +257,6 @@
         }
         self.scrollView.contentSize = CGSizeMake(self.preferredContentSize.width, contentHeight);
         
-
-        
         self.tracerouteContainerView.alpha = 0;
         self.tracerouteContainerView.hidden = NO;
         self.tracerouteTimer = [NSTimer scheduledTimerWithTimeInterval:0.001 target:self selector:@selector(tracerouteTimerFired) userInfo:nil repeats:YES];
