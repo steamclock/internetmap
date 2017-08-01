@@ -17,6 +17,8 @@
 #define TRACEROUTE_BUTTON_HEIGHT 44
 #define TRACEROUTE_ENABLED 1
 
+#define TRACEROUTE_MAX_TIMEOUT_MILLISECONDS 400000 // arbitary cap off at 40 seconds, otherwise it runs forever
+
 #define INFO_BOX_HEIGHT 75
 
 @interface NodeInformationViewController ()
@@ -304,7 +306,17 @@
 }
 
 - (void)tracerouteTimerFired {
-    [self.box3 incrementNumber];
+    
+    // [self.numberLabel.text intValue]
+    
+    NSLog (@"self.box3 %@", self.box3.numberLabel.text);
+
+    if ([self.box3.numberLabel.text intValue] < TRACEROUTE_MAX_TIMEOUT) {
+        [self.box3 incrementNumber];
+    } else {
+        [self.tracerouteTimer invalidate];
+        [self tracerouteDone];
+    }
 }
 
 - (void)tracerouteDone {
