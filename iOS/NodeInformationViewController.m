@@ -73,7 +73,7 @@
         }else {
             if (![HelperMethods isStringEmptyOrNil:textDescription]) {
                 self.title = textDescription;
-            }else {
+            } else {
                 self.title = asnText;
             }
         }
@@ -244,7 +244,6 @@
     if ([self.delegate respondsToSelector:@selector(doneTapped)]) {
         [self.delegate performSelector:@selector(doneTapped)];
     }
-
 }
 
 -(IBAction)tracerouteButtonTapped:(id)sender{
@@ -283,7 +282,7 @@
         if ([self.delegate respondsToSelector:@selector(tracerouteButtonTapped)]) {
             [self.delegate performSelector:@selector(tracerouteButtonTapped)];
         }
-    }else {
+    } else {
         UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"No Internet connection", nil) message:NSLocalizedString(@"Please connect to the internet.", nil) preferredStyle:UIAlertControllerStyleActionSheet];
         UIAlertAction *okAA = [UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", nil) style:UIAlertActionStyleDefault
                                                          handler:^(UIAlertAction * action) {
