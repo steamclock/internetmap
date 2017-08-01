@@ -64,7 +64,7 @@
     // Webview for contents
     UIWebView* webView = [[UIWebView alloc] init];
     CGRect webViewFrame = background.frame;
-
+    
     webViewFrame.size.height = [CreditsViewController currentSize].height;
 
     if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
@@ -72,6 +72,8 @@
         webViewFrame.size.width -= 600;
         
         webView.scrollView.scrollEnabled = FALSE;
+    } else {
+        webViewFrame.size.width = [[UIScreen mainScreen] bounds].size.width - 20;
     }
     
     webView.frame = webViewFrame;

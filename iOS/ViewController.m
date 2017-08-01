@@ -272,6 +272,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.logo.alpha = 0.3;
     }];
 }
+
 - (void)setGlobalSettings {
     NSString* json = [[NSBundle mainBundle] pathForResource:@"globalSettings" ofType:@"json"];
     NSDictionary* settingsDict = [NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfFile:json] options:0 error:nil];
