@@ -73,10 +73,8 @@ static const int TIMEOUT = 10;
         // weird recast required for NSTaggedPointerString, which jsonResponse actually returns, or MapControllerWrapper > nodeByASN crashes
         NSString* asString = [NSString stringWithFormat:@"%@", as];
         
-NSLog (@"fetchASNForIP ASN FOR IP | IP %@ | ASN %@", ip, asString);
-        
+        // NSLog (@"fetchASNForIP ASN FOR IP | IP %@ | ASN %@", ip, asString);
         // https://internetmap-server.herokuapp.com/?req=iptoasn&ip=66.163.76.66
-        
         // https://internetmap-server.herokuapp.com/?req=iptoasn&ip=174.6.96.1
         
         if ([asString isEqualToString:@"none"]) return result(nil);
@@ -110,15 +108,16 @@ NSLog (@"fetchASNForIP ASN FOR IP | IP %@ | ASN %@", ip, asString);
         NSMutableArray* responseArray = [NSMutableArray array];
         
         NSRange range = [ipString rangeOfString:@"/"];
-        NSString *ip = [ipString substringToIndex:range.location];
         
-        if (![ASNRequest isInvalidOrPrivate:ip]) {
-            [responseArray addObject:ip];
-        } else {
-            NSLog(@"Failed to add %@, was reserved IP.", ip);
+        if (range.location != NSNotFound) {
+            ipString = [ipString substringToIndex:range.location];
         }
         
-NSLog (@"fetchIPsForASN IP for ASN | ANSN %@ | IP %@", asn, responseArray);
+        if (![ASNRequest isInvalidOrPrivate:ipString]) {
+            [responseArray addObject:ipString];
+        } else {
+            NSLog(@"Failed to add %@, was reserved IP.", ipString);
+        }
         
         response(responseArray);
 
