@@ -310,7 +310,7 @@
     
     NSLog (@"self.box3 %@", self.box3.numberLabel.text);
 
-    if ([self.box3.numberLabel.text intValue] < TRACEROUTE_MAX_TIMEOUT) {
+    if ([self.box3.numberLabel.text intValue] < TRACEROUTE_MAX_TIMEOUT_MILLISECONDS) {
         [self.box3 incrementNumber];
     } else {
         [self.tracerouteTimer invalidate];
