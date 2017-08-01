@@ -392,7 +392,7 @@ void Camera::resetZoomAndRotationAnimated(bool isPortraitMode) {
     // TODO could base rotation and translation duration off their change in value, however, for now lock it
     // to the zoom animation change (with a minimum fastestDuration to make sure those animations will run).
     TimeInterval rotationDuration = (duration < fastestDuration) ? fastestDuration : duration;
-    TimeInterval tranlationDuration = (duration < fastestDuration ) ? fastestDuration : duration;
+    TimeInterval translationDuration = (duration < fastestDuration ) ? fastestDuration : duration;
     
     //zoom via setTarget so that we also reset translation.
     Target target;
@@ -400,7 +400,7 @@ void Camera::resetZoomAndRotationAnimated(bool isPortraitMode) {
     target.maxZoom = MAX_MAX_ZOOM;
     setTarget(target, duration);
     rotateAnimated(targetRotation, rotationDuration);
-    translateYAnimated(0.0f, tranlationDuration);
+    translateYAnimated(0.0f, translationDuration);
 }
 
 void Camera::zoomAnimated(float zoom, TimeInterval duration) {
