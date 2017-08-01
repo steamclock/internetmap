@@ -542,9 +542,13 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self presentViewController:firstUse animated:YES completion:nil];
 }
 
--(void)showCredits {
+-(void)showCredits:(NSString *)informationType {
     CreditsViewController* credits = [[CreditsViewController alloc] initWithNibName:nil bundle:[NSBundle mainBundle]];
+    NSLog (@"SHOW A");
+    credits.informationType = informationType;
+    NSLog (@"SHOW B");
     [self presentViewController:credits animated:YES completion:nil];
+    NSLog (@"SHOW C");
 }
 
 -(void)selectYouAreHereNode {
@@ -652,7 +656,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.infoPopover = [[WEPopoverController alloc] initWithContentViewController:tableforPopover];
         self.infoPopover.delegate = self;
         
-        tableforPopover.items = @[ @"Introduction", @"Managed IT Services", @"Open Source", @"Credits" ];
+        tableforPopover.items = @[ @"Introduction", @"Contact Cogeco Peer 1", @"About Cogeco Peer 1", @"Open Source", @"Credits" ];
                         
         if (![HelperMethods deviceIsiPad]) {
             WEPopoverContainerViewProperties *prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
@@ -660,30 +664,34 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             self.infoPopover.containerViewProperties = prop;
             [self.visualizationSelectionPopover setPopoverContentSize:tableforPopover.preferredContentSize];
         } else {
-            [self.infoPopover setPopoverContentSize:CGSizeMake(340, 175)];
+            [self.infoPopover setPopoverContentSize:CGSizeMake(340, 220)];
         }
-        
-        
+                
         __weak ViewController* weakSelf = self;
         
         tableforPopover.selectedBlock = ^(int index){
             switch (index) {
-                case 0: //help
+                case 0: //introduction
                     [weakSelf showFirstUse];
                     break;
-                case 1: //sales
+                case 1: //contact
                 {
                     [weakSelf showInSafariWithURL:@"https://www.cogecopeer1.com/contact/"];
                     break;
                 }
-                case 2: //url
+                case 2: //about
+                    [weakSelf showCredits:@"about"];
+                    break;
+                case 3: //open source
                 {
                     [weakSelf showInSafariWithURL:@"https://github.com/steamclock/internetmap"];
                     break;
                 }
-                case 3: //credits
-                    [weakSelf showCredits];
+                case 4: //credits
+                {
+                    [weakSelf showCredits:@"credit"];
                     break;
+                }
                 default: //can't happen
                     NSLog(@"Unexpected info index %zd!!", index);
             }
