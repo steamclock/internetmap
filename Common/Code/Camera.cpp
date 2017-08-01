@@ -385,14 +385,22 @@ void Camera::resetZoomAndRotationAnimated(bool isPortraitMode) {
     
     // Always perform the zoom, this will reset the center target if it has been changed elsewhere.
     //LOG("zooming from %f to %f", _zoom, targetZoom);
+    
+    TimeInterval fastestDuration = 0.25f;
     TimeInterval duration = fabs(zoomDistance) / 2;
+    
+    // TODO could base rotation and translation duration off their change in value, however, for now lock it
+    // to the zoom animation change (with a minimum fastestDuration to make sure those animations will run).
+    TimeInterval rotationDuration = (duration < fastestDuration) ? fastestDuration : duration;
+    TimeInterval tranlationDuration = (duration < fastestDuration ) ? fastestDuration : duration;
+    
     //zoom via setTarget so that we also reset translation.
     Target target;
     target.zoom = targetZoom;
     target.maxZoom = MAX_MAX_ZOOM;
     setTarget(target, duration);
-    rotateAnimated(targetRotation, duration);
-    translateYAnimated(0.0f, duration);
+    rotateAnimated(targetRotation, rotationDuration);
+    translateYAnimated(0.0f, tranlationDuration);
 }
 
 void Camera::zoomAnimated(float zoom, TimeInterval duration) {
