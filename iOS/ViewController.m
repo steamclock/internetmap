@@ -188,7 +188,16 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.view addSubview:self.errorInfoView];
     
     
+    
     //customize timeline slider
+    if ([HelperMethods deviceIsiPad]) {
+        CGFloat xPos = ([[UIScreen mainScreen] bounds].size.width - self.timelineSlider.frame.size.width)/2;
+        CGFloat yPos = [[UIScreen mainScreen] bounds].size.height - 80;
+        CGRect timelinePosition = CGRectMake(xPos, yPos, self.timelineSlider.frame.size.width, self.timelineSlider.frame.size.height);
+        self.timelineSlider.frame = timelinePosition;
+    }
+    
+    
     float cap = 12;
     UIImage* trackImage = [[UIImage imageNamed:@"timeline-track"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, cap, 0, cap)];
     [self.timelineSlider setMinimumTrackImage:trackImage forState:UIControlStateNormal];
@@ -780,6 +789,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         
         self.nodeInformationPopover.passthroughViews = @[self.view];
         CGPoint center = [self.controller getCoordinatesForNodeAtIndex:self.controller.targetNode];
+        
         [self.nodeInformationPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];
     }
     else {
@@ -969,8 +979,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     if (![HelperMethods deviceIsiPad]) {
         displayRect = CGRectMake(160, self.controller.displaySize.height-self.nodeInformationViewController.preferredContentSize.height, 1, 1);
-    }else {
-        displayRect = CGRectMake(512.0f, 384.0f, 1, 1);
+    } else {                
+        displayRect = CGRectMake([[UIScreen mainScreen] bounds].size.width/2, [[UIScreen mainScreen] bounds].size.height/2, 1, 1);
     }
         
     return displayRect;
