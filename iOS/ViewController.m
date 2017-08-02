@@ -187,7 +187,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.errorInfoView = [[ErrorInfoView alloc] initWithFrame:CGRectMake(10, 70, 300, 40)];
     [self.view addSubview:self.errorInfoView];
     
-    
+    // logo position
+    if ([HelperMethods deviceIsiPad]) {
+        self.logo.frame = CGRectMake([[UIScreen mainScreen] bounds].size.width-self.logo.frame.size.width-10, 34, self.logo.frame.size.width, self.logo.frame.size.height);
+    }
     
     //customize timeline slider
     if ([HelperMethods deviceIsiPad]) {
