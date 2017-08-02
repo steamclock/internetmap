@@ -305,14 +305,11 @@
 }
 
 - (void)tracerouteTimerFired {
-    
-    // [self.numberLabel.text intValue]
-    
-    NSLog (@"self.box3 %@", self.box3.numberLabel.text);
 
     if ([self.box3.numberLabel.text intValue] < TRACEROUTE_MAX_TIMEOUT_MILLISECONDS) {
         [self.box3 incrementNumber];
     } else {
+        // force traceroute end after MAX_TIMEOUT, or it spins forever and never shows the traceroute IPs, even though it shows the traceroute path
         [self.tracerouteTimer invalidate];
         [self tracerouteDone];
     }

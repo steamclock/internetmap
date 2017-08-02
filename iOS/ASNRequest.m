@@ -49,8 +49,8 @@ static const int TIMEOUT = 10;
 }
 
 
-// https://internetmap-server.herokuapp.com/?req=iptoasn&ip=205.166.253.0
-// {"resultsPayload":4565}
+// EXAMPLE CALL: https://internetmap-server.herokuapp.com/?req=iptoasn&ip=205.166.253.0
+// RESULT: {"resultsPayload":4565}
 + (void)fetchASNForIP:(NSString*)ip response:(ASNStringResponseBlock)result {
     if ([ip isEqual:[NSNull null]]) {
         // Might get a null from a timed out traceroute op, not sure if it ever actually ets this far through.
@@ -73,10 +73,6 @@ static const int TIMEOUT = 10;
         // weird recast required for NSTaggedPointerString, which jsonResponse actually returns, or MapControllerWrapper > nodeByASN crashes
         NSString* asString = [NSString stringWithFormat:@"%@", as];
         
-        // NSLog (@"fetchASNForIP ASN FOR IP | IP %@ | ASN %@", ip, asString);
-        // https://internetmap-server.herokuapp.com/?req=iptoasn&ip=66.163.76.66
-        // https://internetmap-server.herokuapp.com/?req=iptoasn&ip=174.6.96.1
-        
         if ([asString isEqualToString:@"none"]) return result(nil);
         
         result(asString);
@@ -89,8 +85,8 @@ static const int TIMEOUT = 10;
     [request start];
 }
 
-// https://internetmap-server.herokuapp.com/?req=asntoips&asn=4565
-// {"resultsPayload":"205.166.253.0/24"}
+// EXAMPLE CALL: https://internetmap-server.herokuapp.com/?req=asntoips&asn=4565
+// RESULT: {"resultsPayload":"205.166.253.0/24"}
 +(void)fetchIPsForASN:(NSString*)asn response:(ASNArrayResponseBlock)response {
     
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://internetmap-server.herokuapp.com/?req=asntoips&asn=%@", asn]]];

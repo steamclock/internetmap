@@ -100,7 +100,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (strong, nonatomic) NSSet* simulatedYears;
 @property (strong, nonatomic) NSArray *popMenuInfo;
 
-@property (nonatomic) BOOL suppressReset;
+@property (nonatomic) BOOL suppressCameraReset;
 
 @end
 
@@ -753,8 +753,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)displayInformationPopoverForCurrentNode {
     
-    if (_suppressReset) {
-        _suppressReset = false;
+    if (_suppressCameraReset) {
+        _suppressCameraReset = false;
         return;
     }
     
@@ -997,31 +997,13 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     self.tracerouteASNs = [NSMutableDictionary new];
     
-    _suppressReset = YES;
+    _suppressCameraReset = YES;
     [self resetVisualization];
-    
-    //zoom out and rotate camera to default orientation on app startup
-    // TODO Why is this using GLKMatrix4MakeRotation, and not calling the methods in MapWrapper?
-//    GLKMatrix4 zRotation = GLKMatrix4Identity;
-//    float zoom = -3;
-//    if (![HelperMethods deviceIsiPad]) {
-//        zRotation = GLKMatrix4MakeRotation(M_PI_2, 0, 0, 1);
-//        zoom = -6;
-//    }
-    
-    //[self.controller zoomAnimated:zoom duration:3];
     
     // On phones, translate up view so that we can more easily see it
     if (![HelperMethods deviceIsiPad]) {
         [self.controller translateYAnimated:0.25f duration:3];
     }
-    
-//    NodeWrapper* node = [self.controller nodeAtIndex:self.controller.targetNode];
-//    if (node.importance > 0.006) {
-//        [self.controller rotateAnimated:zRotation duration:3];
-//    } else {
-//        [self.controller rotateAnimated:GLKMatrix4Multiply(GLKMatrix4MakeRotation(M_PI, 0, 1, 0), zRotation) duration:3];
-//    }
     
     if(self.controller.lastSearchIP && ![self.controller.lastSearchIP isEqualToString:@""]) {
         self.tracer = [SCTracerouteUtility tracerouteWithAddress:self.controller.lastSearchIP];
@@ -1031,10 +1013,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         NodeWrapper* node = [self.controller nodeAtIndex:self.controller.targetNode];
         if (node.asn) {
             [ASNRequest fetchIPsForASN:node.asn response:^(NSArray *ips) {
-                //We arbitrarily select any of the prefix IPs and try for a traceroute using it
-                //We do this because we have no reliable way of knowing what machines will reslond to our ICMP packets
-                //So, if we can contact even one machine within an ASN - any one at all - we know we travel through that ASN
-                //We select randomly because why the heck not? It's all a guess as to which will respond. :)
+
                 if ([ips count]) {
                     uint32_t rnd = arc4random_uniform((unsigned int)[ips count]);
                     NSString* arbitraryIP = [NSString stringWithFormat:@"%@", ips[rnd]];
