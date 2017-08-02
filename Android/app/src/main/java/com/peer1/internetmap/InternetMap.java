@@ -90,6 +90,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
     private CustomTooltipManager tooltips;
     private ViewGroup firstTimePlaceholder;
     private int totalTooltipSteps = 4; // 0=IntroPage, 1=Search, 2=View, 3=Timeline
+    private float logoFadedAlpha = 0.6f;
 
     private View searchIcon, visualizationIcon, timelineIcon, infoIcon;
 
@@ -244,6 +245,9 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
                         } else {
                             showCurrentTooltip();
                         }
+
+                        showLogo();
+                        fadeLogoAfterDelay();
                     }
 
                     @Override
@@ -357,7 +361,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         }
 
         //fade out logo a bit after
-        fadeLogo(AnimationUtils.currentAnimationTimeMillis()+4000, 0.3f, 1000);
+        fadeLogoAfterDelay();
 
         //reset all the togglebuttons that android helpfully restores for us :P
         searchIcon.setActivated(false);
@@ -1017,11 +1021,15 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
     }
 
     void showLogo() {
-        fadeLogo(500, 0.3f, 1000);
+        fadeLogo(500, logoFadedAlpha, 1000);
     }
 
     void hideLogo() {
         fadeLogo(0, 0, 0);
+    }
+
+    void fadeLogoAfterDelay() {
+        fadeLogo(AnimationUtils.currentAnimationTimeMillis()+4000, logoFadedAlpha, 1000);
     }
 
     public void dismissPopups() {
