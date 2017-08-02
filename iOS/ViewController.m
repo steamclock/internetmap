@@ -100,6 +100,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (strong, nonatomic) NSSet* simulatedYears;
 @property (strong, nonatomic) NSArray *popMenuInfo;
 
+@property (nonatomic) BOOL suppressCameraReset;
+
 @end
 
 @implementation ViewController
@@ -318,7 +320,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if (![self.controller selectHoveredNode]) { //couldn't select node
         if(self.controller.targetNode != INT_MAX) {
             [self.controller deselectCurrentNode];
-            [self.controller resetZoomAndRotationAnimatedForOrientation:![HelperMethods deviceIsiPad]];
+            [self resetVisualization];
         }
     }	
 }
@@ -614,7 +616,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             [self helpPopCheckOrMenuSelected:nil];
             
             // Reset view to recenter target
-            [self.controller resetZoomAndRotationAnimatedForOrientation:![HelperMethods deviceIsiPad]];
+            [self resetVisualization];
         };
     }
     [self.visualizationSelectionPopover presentPopoverFromRect:self.visualizationsButton.bounds inView:self.visualizationsButton permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
@@ -634,7 +636,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(IBAction)infoButtonPressed:(id)sender {
     
-    [self.controller resetZoomAndRotationAnimatedForOrientation:YES];
+    [self resetVisualization];
     
     self.helpPopView.hidden = YES;
     
@@ -750,6 +752,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(void)displayInformationPopoverForCurrentNode {
+    
+    if (_suppressCameraReset) {
+        _suppressCameraReset = false;
+        return;
+    }
+    
     NodeWrapper* node;
     
     if(self.controller.targetNode != INT_MAX) {
@@ -870,7 +878,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 -(void) resetView {
     [self dismissNodeInfoPopover];
     [self.controller deselectCurrentNode];
-    [self.controller resetZoomAndRotationAnimatedForOrientation:![HelperMethods deviceIsiPad]];
+    [self resetVisualization];
 }
 
 - (void)viewResetDone{
@@ -949,7 +957,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 #pragma mark - NodeInfo delegate
 
 - (void)dismissNodeInfoPopover {
-
+    
     [self.tracer stop];
     self.tracer = nil;
     [self.nodeInformationPopover dismissPopoverAnimated:YES];
@@ -960,6 +968,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
     
     [self helpPopCheckOrMenuSelected:nil];
+
 }
 
 #pragma mark - Node Info View Delegate
@@ -988,27 +997,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     self.tracerouteASNs = [NSMutableDictionary new];
     
-    //zoom out and rotate camera to default orientation on app startup
-    // TODO Why is this using GLKMatrix4MakeRotation, and not calling the methods in MapWrapper?
-    GLKMatrix4 zRotation = GLKMatrix4Identity;
-    float zoom = -3;
-    if (![HelperMethods deviceIsiPad]) {
-        zRotation = GLKMatrix4MakeRotation(M_PI_2, 0, 0, 1);
-        zoom = -6;
-    }
-    
-    [self.controller zoomAnimated:zoom duration:3];
+    _suppressCameraReset = YES;
+    [self resetVisualization];
     
     // On phones, translate up view so that we can more easily see it
     if (![HelperMethods deviceIsiPad]) {
-        [self.controller translateYAnimated:0.5f duration:3];
-    }
-    
-    NodeWrapper* node = [self.controller nodeAtIndex:self.controller.targetNode];
-    if (node.importance > 0.006) {
-        [self.controller rotateAnimated:zRotation duration:3];
-    } else {
-        [self.controller rotateAnimated:GLKMatrix4Multiply(GLKMatrix4MakeRotation(M_PI, 0, 1, 0), zRotation) duration:3];
+        [self.controller translateYAnimated:0.25f duration:3];
     }
     
     if(self.controller.lastSearchIP && ![self.controller.lastSearchIP isEqualToString:@""]) {
@@ -1019,10 +1013,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         NodeWrapper* node = [self.controller nodeAtIndex:self.controller.targetNode];
         if (node.asn) {
             [ASNRequest fetchIPsForASN:node.asn response:^(NSArray *ips) {
-                //We arbitrarily select any of the prefix IPs and try for a traceroute using it
-                //We do this because we have no reliable way of knowing what machines will reslond to our ICMP packets
-                //So, if we can contact even one machine within an ASN - any one at all - we know we travel through that ASN
-                //We select randomly because why the heck not? It's all a guess as to which will respond. :)
+
                 if ([ips count]) {
                     uint32_t rnd = arc4random_uniform((unsigned int)[ips count]);
                     NSString* arbitraryIP = [NSString stringWithFormat:@"%@", ips[rnd]];
@@ -1059,7 +1050,19 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
     [self dismissNodeInfoPopover];
     [self.controller deselectCurrentNode];
+    [self resetVisualization];
+    
+}
+
+-(void)resetVisualization {
+    
     [self.controller resetZoomAndRotationAnimatedForOrientation:![HelperMethods deviceIsiPad]];
+    
+    // On phones, translate up view so that we can more easily see it
+    if (![HelperMethods deviceIsiPad]) {
+        [self.controller translateYAnimated:0.0f duration:1];
+    }
+    
 }
 
 #pragma mark - help pop
