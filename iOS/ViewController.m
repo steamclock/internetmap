@@ -360,10 +360,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                     self.nodeTooltipPopover.passthroughViews = @[self.view];
                     CGPoint center = [self.controller getCoordinatesForNodeAtIndex:i];
                     
-                    
-                    NSLog (@"NODE SELECTED X %f", center.x);
-                    NSLog (@"NODE SELECTED Y %f", center.y);
-                    
                     [self.nodeTooltipPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];
                     [self.controller hoverNode:i];
                 }
@@ -545,11 +541,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)showCredits:(NSString *)informationType {
     CreditsViewController* credits = [[CreditsViewController alloc] initWithNibName:nil bundle:[NSBundle mainBundle]];
-    NSLog (@"SHOW A");
     credits.informationType = informationType;
-    NSLog (@"SHOW B");
     [self presentViewController:credits animated:YES completion:nil];
-    NSLog (@"SHOW C");
 }
 
 -(void)selectYouAreHereNode {
