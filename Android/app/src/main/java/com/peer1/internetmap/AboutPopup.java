@@ -1,7 +1,5 @@
 package com.peer1.internetmap;
 
-import java.io.IOException;
-
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -10,11 +8,13 @@ import android.webkit.WebView;
 
 import com.peer1.internetmap.utils.AppUtils;
 
+import java.io.IOException;
+
 /**
- * Credits popup, shown from info menu. Uses WebView to render data from credits.html asset.
+ * About popup, shown from info menu. Uses WebView to render data from credits.html asset.
  */
-public class CreditsPopup extends BaseActivity {
-    private static String TAG = "CreditsPopup";
+public class AboutPopup extends BaseActivity {
+    private static String TAG = "AboutPopup";
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,7 +23,7 @@ public class CreditsPopup extends BaseActivity {
 
         WebView webView = (WebView) findViewById(R.id.textView);
         try {
-            String html = new String(AppUtils.readFileAsBytes(this, "data/credits.html"));
+            String html = new String(AppUtils.readFileAsBytes(this, "data/about.html"));
             webView.loadData(html, "text/html", null);
         } catch (IOException e) {
             e.printStackTrace();
