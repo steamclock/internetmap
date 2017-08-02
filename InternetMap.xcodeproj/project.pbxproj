@@ -70,6 +70,7 @@
 		7D23CB591DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D23CB581DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard */; };
 		7D5284871DDA7A6800E42C5F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5284861DDA7A6800E42C5F /* QuartzCore.framework */; };
 		8404F1301F100413009EF08B /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8404F12F1F100413009EF08B /* SafariServices.framework */; };
+		848D48B41F313CEF00B78C59 /* about.html in Resources */ = {isa = PBXBuildFile; fileRef = 848D48B31F313CEF00B78C59 /* about.html */; };
 		849FC0351F0304B800B06401 /* search-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 849FC01D1F0304B800B06401 /* search-selected.png */; };
 		849FC0361F0304B800B06401 /* search-selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 849FC01E1F0304B800B06401 /* search-selected@2x.png */; };
 		849FC0371F0304B800B06401 /* search-selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 849FC01F1F0304B800B06401 /* search-selected@3x.png */; };
@@ -327,6 +328,7 @@
 		7D23CB581DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "LaunchScreen~ipad.storyboard"; path = "iOS/LaunchScreen~ipad.storyboard"; sourceTree = SOURCE_ROOT; };
 		7D5284861DDA7A6800E42C5F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		8404F12F1F100413009EF08B /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
+		848D48B31F313CEF00B78C59 /* about.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = about.html; path = Common/Data/about.html; sourceTree = "<group>"; };
 		849FC01D1F0304B800B06401 /* search-selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "search-selected.png"; path = "iOS/Images/search-selected.png"; sourceTree = SOURCE_ROOT; };
 		849FC01E1F0304B800B06401 /* search-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "search-selected@2x.png"; path = "iOS/Images/search-selected@2x.png"; sourceTree = SOURCE_ROOT; };
 		849FC01F1F0304B800B06401 /* search-selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "search-selected@3x.png"; path = "iOS/Images/search-selected@3x.png"; sourceTree = SOURCE_ROOT; };
@@ -873,6 +875,7 @@
 				4E80ECEF1EE1DB7600C5542F /* 2016.txt */,
 				4E80ECF01EE1DB7600C5542F /* 2017.txt */,
 				4E80ECEB1EE1D72300C5542F /* 2020.txt */,
+				848D48B31F313CEF00B78C59 /* about.html */,
 				A6551EBD16CDB22900340590 /* credits.html */,
 				A686E9B916B62915009B070E /* history.json */,
 				A600AAD316A664DF003B1028 /* as2attr.txt */,
@@ -1586,6 +1589,7 @@
 				A6551EBE16CDB22900340590 /* credits.html in Resources */,
 				4E8336151EDF929F0067B138 /* 2003.txt in Resources */,
 				849FC0591F030FD000B06401 /* info-selected.png in Resources */,
+				848D48B41F313CEF00B78C59 /* about.html in Resources */,
 				849FC03B1F0304B800B06401 /* timeline-selected.png in Resources */,
 				4E9A00131EE8A64700FC19E4 /* Nexa Light.otf in Resources */,
 				4E83360D1EDF929F0067B138 /* 1995.txt in Resources */,

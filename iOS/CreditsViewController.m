@@ -61,10 +61,10 @@
     
     self.view = background;
     
-    // Webview for credir contents
+    // Webview for contents
     UIWebView* webView = [[UIWebView alloc] init];
     CGRect webViewFrame = background.frame;
-
+    
     webViewFrame.size.height = [CreditsViewController currentSize].height;
 
     if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
@@ -72,11 +72,18 @@
         webViewFrame.size.width -= 600;
         
         webView.scrollView.scrollEnabled = FALSE;
+    } else {
+        webViewFrame.size.width = [[UIScreen mainScreen] bounds].size.width - 20;
     }
     
     webView.frame = webViewFrame;
 
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"credits" ofType:@"html"];
+    NSString *filePath;
+    if (self.informationType != nil && [self.informationType isEqualToString:@"about"])
+        filePath = [[NSBundle mainBundle] pathForResource:@"about" ofType:@"html"];
+    else
+        filePath = [[NSBundle mainBundle] pathForResource:@"credits" ofType:@"html"];
+    
     NSString *html = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error: nil];
     if (html) {
         [webView loadHTMLString:html baseURL:nil];
@@ -94,8 +101,6 @@
     webView.delegate = self;
     
     [self.view addSubview:webView];
-    
-    //
     
     //Done button
     UIImage* xImage = [UIImage imageNamed:@"x-icon"];
@@ -130,14 +135,14 @@
 {
     [super viewWillAppear:animated];
     
-    // the suggested not depreciated call doesnt seem to work
+    // the suggested not depreciated call does not seem to work
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
 }
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     
-    // the suggested not depreciated call doesnt seem  to work
+    // the suggested not depreciated call does not seem  to work
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
 }
 
