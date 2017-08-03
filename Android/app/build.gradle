@@ -32,11 +32,14 @@ android {
 //            targetCompatibility JavaVersion.VERSION_1_5
 //        }
 
+
+
+        //APP_ABI := armeabi x86
+
         externalNativeBuild {
             cmake {
-                // Available argumetns are inside ${SDK}/cmake/.../android.toolchain.cmake file
-                arguments '-DANDROID_PLATFORM=android-9',
-                        '-DANDROID_TOOLCHAIN=clang', '-DANDROID_STL=gnustl_static'
+                cppFlags "-std=c++11"
+                arguments "-DBoost_DEBUG=ON"
             }
         }
 
@@ -59,19 +62,6 @@ android {
 
     externalNativeBuild {
         cmake {
-
-//            arguments   '-DANDROID_PLATFORM=android-9',
-//                        '-DANDROID_TOOLCHAIN=clang', '-DANDROID_STL=gnustl_static'
-
-//            // Passes optional arguments to CMake.
-//            arguments "-DANDROID_ARM_NEON=TRUE", "-DANDROID_TOOLCHAIN=clang"
-//
-//            // Sets optional flags for the C compiler.
-          //  cFlags "-Wall"
-//
-//            // Sets a flag to enable format macro constants for the C++ compiler.
-//            cppFlags "-D__STDC_FORMAT_MACROS"
-
             path externalDataMakeFile
         }
     }
