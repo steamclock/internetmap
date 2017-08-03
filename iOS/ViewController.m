@@ -191,7 +191,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     // logo position
     if ([HelperMethods deviceIsiPad]) {
-        self.logo.frame = CGRectMake([[UIScreen mainScreen] bounds].size.width-self.logo.frame.size.width-10, 34, self.logo.frame.size.width, self.logo.frame.size.height);
+        self.logo.frame = CGRectMake([[UIScreen mainScreen] bounds].size.width-self.logo.frame.size.width-30, 34, self.logo.frame.size.width, self.logo.frame.size.height);
     }
     
     //customize timeline slider
@@ -257,6 +257,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     // help pop up
     [self helpPopCheckSetUp];
     self.helpPopView.hidden = YES;
+    
 }
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -279,11 +280,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     // When coming back from one of the modals (Help, credits, etc), we want to redisplay the info for the current node
     // because we hid it when we brought up the info menu popover
     [self displayInformationPopoverForCurrentNode];
+    
 }
 
 - (void)fadeOutLogo {
     [UIView animateWithDuration:1 animations:^{
-        self.logo.alpha = 0.3;
+        self.logo.alpha = 0.45;
     }];
 }
 - (void)setGlobalSettings {
@@ -312,7 +314,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 #pragma mark - Touch and GestureRecognizer handlers
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-
     [super touchesBegan:touches withEvent:event];
     UITouch* touch = [touches anyObject];
     if (touch.view == self.buttonContainerView) {
@@ -324,7 +325,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(void)handleTap:(UITapGestureRecognizer*)gestureRecognizer {
-
     [self.controller resetIdleTimer];
     [self dismissNodeInfoPopover];
     [self helpPopCheckOrMenuSelected:nil];
@@ -469,7 +469,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 #pragma mark - UIGestureRecognizerDelegate methods
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-
     if (touch.view == self.view || touch.view == self.errorInfoView || [self.errorInfoView.subviews containsObject:touch.view]) {
         return YES;
     }
@@ -602,6 +601,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if (self.timelineButton.selected) {
         [self leaveTimelineMode];
     }
+    [self updateTimelineWithPopoverDismiss:NO];
     [self helpPopCheckOrMenuSelected:_visualizationsButton];
 
     if (!self.visualizationSelectionPopover) {
@@ -650,16 +650,16 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     [self resetVisualization];
     
-    self.helpPopView.hidden = YES;
-    
     if (self.timelineButton.selected) {
         [self leaveTimelineMode];
     }
+    [self updateTimelineWithPopoverDismiss:NO];
     
     self.timelineButton.selected = NO;
     self.visualizationsButton.selected = NO;
     self.searchButton.selected = NO;
 
+    
     if (!self.infoPopover) {
         StringListViewController *tableforPopover = [[StringListViewController alloc] initWithStyle:UITableViewStylePlain];
         [tableforPopover setHighlightCurrentRow:NO];
@@ -676,7 +676,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         } else {
             [self.infoPopover setPopoverContentSize:CGSizeMake(340, 175)];
         }
-        
         
         __weak ViewController* weakSelf = self;
         
@@ -707,10 +706,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             weakSelf.infoButton.selected = NO;
         };
     }
+  
     [self.infoPopover presentPopoverFromRect:self.infoButton.bounds inView:self.infoButton permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
     
     self.infoButton.highlighted = NO;
     self.infoButton.selected = YES;
+   
 }
 
 - (void) showInSafariWithURL:(NSString *)urlstring {
@@ -721,6 +722,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(IBAction)timelineButtonPressed:(id)sender {
+    [self updateTimelineWithPopoverDismiss:NO];
     if (self.timelineSlider.hidden) {
         self.timelineSlider.hidden = NO;
         self.timelineButton.highlighted = NO;
@@ -784,7 +786,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     if (self.timelineSlider.hidden == NO) {
         BOOL simulated = NO;
-        
+
         NSString* year = self.sortedYears[(int)self.timelineSlider.value];
         if([self.simulatedYears containsObject:year]) {
             simulated = YES;
@@ -981,7 +983,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
     
     [self helpPopCheckOrMenuSelected:nil];
-
 }
 
 #pragma mark - Node Info View Delegate
@@ -1168,6 +1169,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 - (BOOL)popoverControllerShouldDismissPopover:(WEPopoverController *)popoverController{
+    NSLog (@"popoverControllerShouldDismissPopover");
     self.visualizationsButton.selected = NO;
     self.infoButton.selected = NO;
     self.searchButton.selected = NO;

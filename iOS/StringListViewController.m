@@ -89,39 +89,26 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         cell.textLabel.font = [UIFont fontWithName:FONT_NAME_REGULAR size:22];
         cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-        cell.selectedBackgroundView = [[UIView alloc] init];
+        cell.textLabel.highlightedTextColor = UI_WHITE_COLOR;
+        cell.textLabel.textColor = UI_WHITE_COLOR;
+        cell.textLabel.highlightedTextColor = UI_WHITE_COLOR;
+        
+        UIView *myBackView = [[UIView alloc] initWithFrame:cell.frame];
+        myBackView.backgroundColor = UI_PRIMARY_COLOR;
+        cell.selectedBackgroundView = myBackView;        
     }
 
     UIView* divider = [cell.contentView viewWithTag:DIVIDER_TAG];
     if (!divider) {
         divider = [[UIView alloc] initWithFrame:CGRectMake(0, 43, self.tableView.width, 1)];
-        divider.backgroundColor = [UIColor blackColor];
+        divider.backgroundColor = [UIColor lightGrayColor];
         divider.tag = DIVIDER_TAG;
         [cell.contentView addSubview:divider];
     }
     
-    
-    if(indexPath.row == (self.items.count - 1)) {
-        divider.backgroundColor = [UIColor blackColor];
-    }
-    else {
-        divider.backgroundColor = [UIColor blackColor];
-    }
-    
-    if (indexPath.row == self.selectedRow) {
-        cell.textLabel.textColor = [UIColor blackColor];
-        cell.textLabel.highlightedTextColor = FONT_COLOR_GRAY;
-        [divider removeFromSuperview];
-    }else {
-        cell.textLabel.textColor = UI_WHITE_COLOR;
-        cell.textLabel.highlightedTextColor = UI_PRIMARY_COLOR;
-        [cell.contentView addSubview:divider];
-    }
-    
-    if (indexPath.row == self.selectedRow-1) {
+    if (indexPath.row == [self.items count]-1) {
         [divider removeFromSuperview];
     }
-    
     
     cell.textLabel.text = [self.items objectAtIndex:indexPath.row];
     
