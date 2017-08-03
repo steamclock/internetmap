@@ -2,15 +2,17 @@ cmake_minimum_required(VERSION 3.4.1)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
 
-set(BOOST_ROOT .)
-set(BOOST_LIBRARYDIR .)
-set(BOOST_INCLUDEDIR .)
-set(Boost_INCLUDE_DIR .)
+set(BOOST_ROOT ../Android-Boost)
+set(BOOST_LIBRARYDIR ../Android-Boost)
+set(BOOST_INCLUDEDIR ../Android-Boost)
+set(Boost_INCLUDE_DIR ../Android-Boost)
 
 set(Boost_USE_STATIC_LIBS   ON)
 set(Boost_USE_MULTITHREADED ON)
 
 find_package(Boost)
+
+include_directories(.)
 
 include_directories(${Boost_INCLUDE_DIRS})
 
