@@ -372,11 +372,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                     self.nodeTooltipPopover = [[WEPopoverController alloc] initWithContentViewController:self.nodeTooltipViewController];
                     self.nodeTooltipPopover.passthroughViews = @[self.view];
                     CGPoint center = [self.controller getCoordinatesForNodeAtIndex:i];
-                    
-                    
-                    NSLog (@"NODE SELECTED X %f", center.x);
-                    NSLog (@"NODE SELECTED Y %f", center.y);
-                    
+  
                     [self.nodeTooltipPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];
                     [self.controller hoverNode:i];
                 }
@@ -647,19 +643,17 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(IBAction)infoButtonPressed:(id)sender {
-    
-    [self resetVisualization];
-    
+
     if (self.timelineButton.selected) {
         [self leaveTimelineMode];
     }
-    [self updateTimelineWithPopoverDismiss:NO];
+
+    self.nodeInformationPopover.view.hidden = YES;
     
     self.timelineButton.selected = NO;
     self.visualizationsButton.selected = NO;
     self.searchButton.selected = NO;
 
-    
     if (!self.infoPopover) {
         StringListViewController *tableforPopover = [[StringListViewController alloc] initWithStyle:UITableViewStylePlain];
         [tableforPopover setHighlightCurrentRow:NO];
@@ -767,6 +761,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)displayInformationPopoverForCurrentNode {
     
+
     if (_suppressCameraReset) {
         _suppressCameraReset = false;
         return;
@@ -1076,7 +1071,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if (![HelperMethods deviceIsiPad]) {
         [self.controller translateYAnimated:0.0f duration:1];
     }
-    
 }
 
 #pragma mark - help pop
@@ -1169,7 +1163,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 - (BOOL)popoverControllerShouldDismissPopover:(WEPopoverController *)popoverController{
-    NSLog (@"popoverControllerShouldDismissPopover");
+
     self.visualizationsButton.selected = NO;
     self.infoButton.selected = NO;
     self.searchButton.selected = NO;
