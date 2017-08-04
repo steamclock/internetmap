@@ -73,7 +73,10 @@ static const int TIMEOUT = 10;
         // weird recast required for NSTaggedPointerString, which jsonResponse actually returns, or MapControllerWrapper > nodeByASN crashes
         NSString* asString = [NSString stringWithFormat:@"%@", as];
         
-        if ([asString isEqualToString:@"none"]) return result(nil);
+        // returned from server
+        if ([asString isEqualToString:@"none"] || [asString rangeOfString:@"is not valid"].location != NSNotFound) {
+            return result(nil);
+        }
         
         result(asString);
     }];
