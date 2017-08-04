@@ -163,15 +163,7 @@
     _informationType = @"contact";
     [_contactButton removeFromSuperview];
     
-    [_webView.scrollView setContentOffset: CGPointMake(0, -_webView.scrollView.contentInset.top) animated:YES];
-    
-    /*
-    [self dismissViewControllerAnimated:NO completion:nil];
-    
-    if ( _delegate != nil && [_delegate respondsToSelector:@selector(showContactPage)] ) {
-        [_delegate showContactPage];
-    }
-     */
+    [_webView.scrollView setContentOffset: CGPointMake(0, -_webView.scrollView.contentInset.top) animated:YES];    
 }
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
