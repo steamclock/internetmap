@@ -670,7 +670,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                     break;
                 case 1: //contact
                 {
-                    [weakSelf showInSafariWithURL:@"https://www.cogecopeer1.com/contact/"];
+                    // [weakSelf showInSafariWithURL:@"https://www.cogecopeer1.com/contact/"];
+                    [weakSelf showCredits:@"contact"];
                     break;
                 }
                 case 2: //about

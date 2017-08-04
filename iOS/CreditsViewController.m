@@ -81,6 +81,8 @@
     NSString *filePath;
     if (self.informationType != nil && [self.informationType isEqualToString:@"about"])
         filePath = [[NSBundle mainBundle] pathForResource:@"about" ofType:@"html"];
+    else if (self.informationType != nil && [self.informationType isEqualToString:@"contact"])
+        filePath = [[NSBundle mainBundle] pathForResource:@"contact" ofType:@"html"];
     else
         filePath = [[NSBundle mainBundle] pathForResource:@"credits" ofType:@"html"];
     

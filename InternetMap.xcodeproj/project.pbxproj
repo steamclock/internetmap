@@ -118,6 +118,7 @@
 		84DDB8011F0C11000059BAE7 /* callout_right.png in Resources */ = {isa = PBXBuildFile; fileRef = 84DDB7FB1F0C11000059BAE7 /* callout_right.png */; };
 		84DDB8021F0C11000059BAE7 /* callout_right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84DDB7FC1F0C11000059BAE7 /* callout_right@2x.png */; };
 		84DDB8031F0C11000059BAE7 /* callout_right@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84DDB7FD1F0C11000059BAE7 /* callout_right@3x.png */; };
+		84E947DB1F34EBE400B20758 /* contact.html in Resources */ = {isa = PBXBuildFile; fileRef = 84E947DA1F34EBE400B20758 /* contact.html */; };
 		899D03717A12F1FF46CB1027 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7287BA8F546F8A1F9C6783B0 /* CoreMedia.framework */; };
 		A600AAD616A664E1003B1028 /* as2attr.txt in Resources */ = {isa = PBXBuildFile; fileRef = A600AAD316A664DF003B1028 /* as2attr.txt */; };
 		A600AAD716A664E1003B1028 /* asinfo.json in Resources */ = {isa = PBXBuildFile; fileRef = A600AAD416A664E0003B1028 /* asinfo.json */; };
@@ -376,6 +377,7 @@
 		84DDB7FB1F0C11000059BAE7 /* callout_right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = callout_right.png; path = iOS/Images/callout_right.png; sourceTree = SOURCE_ROOT; };
 		84DDB7FC1F0C11000059BAE7 /* callout_right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "callout_right@2x.png"; path = "iOS/Images/callout_right@2x.png"; sourceTree = SOURCE_ROOT; };
 		84DDB7FD1F0C11000059BAE7 /* callout_right@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "callout_right@3x.png"; path = "iOS/Images/callout_right@3x.png"; sourceTree = SOURCE_ROOT; };
+		84E947DA1F34EBE400B20758 /* contact.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = contact.html; path = Common/Data/contact.html; sourceTree = "<group>"; };
 		A600AAD316A664DF003B1028 /* as2attr.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = as2attr.txt; path = Common/data/as2attr.txt; sourceTree = "<group>"; };
 		A600AAD416A664E0003B1028 /* asinfo.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = asinfo.json; path = Common/data/asinfo.json; sourceTree = "<group>"; };
 		A625263116CEF3250015DF37 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBProgressHUD.h; path = "External Code/MBProgressHUD/MBProgressHUD.h"; sourceTree = SOURCE_ROOT; };
@@ -876,6 +878,7 @@
 				4E80ECF01EE1DB7600C5542F /* 2017.txt */,
 				4E80ECEB1EE1D72300C5542F /* 2020.txt */,
 				848D48B31F313CEF00B78C59 /* about.html */,
+				84E947DA1F34EBE400B20758 /* contact.html */,
 				A6551EBD16CDB22900340590 /* credits.html */,
 				A686E9B916B62915009B070E /* history.json */,
 				A600AAD316A664DF003B1028 /* as2attr.txt */,
@@ -1539,6 +1542,7 @@
 				A6551E6916CAC1AF00340590 /* FirstUseViewController~ipad.xib in Resources */,
 				A6551E6F16CAE31100340590 /* ipad-bg.png in Resources */,
 				A6551E7016CAE31100340590 /* ipad-bg@2x.png in Resources */,
+				84E947DB1F34EBE400B20758 /* contact.html in Resources */,
 				A6551E7116CAE31100340590 /* iphone-bg.png in Resources */,
 				7D23CB591DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard in Resources */,
 				A6551E7216CAE31100340590 /* iphone-bg@2x.png in Resources */,
