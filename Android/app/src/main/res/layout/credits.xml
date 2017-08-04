@@ -1,35 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/LinearLayout1"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal" >
+    android:layout_height="match_parent">
 
-    <ImageView
+    <LinearLayout
+        android:id="@+id/LinearLayout1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
-        android:src="@drawable/load_bg" />
+        android:orientation="horizontal">
 
-    <FrameLayout
-        android:layout_width="0dip"
-        android:layout_height="match_parent"
-        android:layout_weight="0.2" >
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/load_bg" />
 
-    </FrameLayout>
+        <FrameLayout
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2">
 
-    <WebView
-        android:id="@+id/textView"
-        android:layout_width="0dip"
-        android:layout_weight="0.6"
-        android:layout_height="wrap_content"/>
+        </FrameLayout>
 
-    <FrameLayout
-        android:layout_width="0dip"
-        android:layout_height="match_parent"
-        android:layout_weight="0.2" >
+        <WebView
+            android:id="@+id/textView"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.6" />
 
-    </FrameLayout>
+        <FrameLayout
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2">
 
-</LinearLayout>
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/loadingSpinner"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
+</RelativeLayout>
+

@@ -79,8 +79,8 @@ public class InfoPopup extends PopupWindow {
     }
 
     private void showContact() {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.cogecopeer1.com/contact/"));
-        mContext.startActivity(browserIntent);
+        Intent intent = new Intent(mContext, ContactPopup.class);
+        mContext.startActivity(intent);
     }
 
     private void showOpenSource() {
