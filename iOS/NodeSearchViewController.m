@@ -199,24 +199,6 @@
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    
-
-    
-    /*
-    if (indexPath.row > 0) {
-        cell.backgroundColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:0.35];
-    }
-    
-    UIView* seperator = [[UIView alloc] initWithFrame:CGRectMake(10, 43, tableView.width-10, 1)];
-    seperator.backgroundColor = [UIColor lightGrayColor];
-    [cell.contentView addSubview:seperator];
-    */
-}
-
-
-
 - (void)done{
     [self.delegate nodeSearchDelegateDone];
 }
