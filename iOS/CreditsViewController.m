@@ -69,8 +69,11 @@
     self.webView = [[UIWebView alloc] init];
     CGRect webViewFrame = background.frame;
     
-    webViewFrame.size.height = [CreditsViewController currentSize].height;
-
+    if ([_informationType isEqualToString:@"about"])
+        webViewFrame.size.height = [CreditsViewController currentSize].height-20;
+    else
+        webViewFrame.size.height = [CreditsViewController currentSize].height;
+    
     if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         // webViewFrame.origin.x += 300;
         webViewFrame.origin.x = ([[UIScreen mainScreen] bounds].size.width)/2-200;
@@ -106,7 +109,6 @@
     _webView.alpha = 0.00f;
     
     _webView.delegate = self;
-    _webView.scrollView.delegate = self;
     
     [self.view addSubview:_webView];
     
@@ -138,8 +140,7 @@
         contactFrame = CGRectMake(([UIScreen mainScreen].bounds.size.width)/2-150, [UIScreen mainScreen].bounds.size.height-40, 250, 40);
     _contactButton.frame = contactFrame;
     [_contactButton addTarget:self action:@selector(contact:) forControlEvents:UIControlEventTouchUpInside];
-    if (![HelperMethods deviceIsiPad])
-        _contactButton.hidden = YES;
+
     [self.view addSubview:_contactButton];
 }
 
@@ -173,17 +174,6 @@
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return [HelperMethods deviceIsiPad] ? UIInterfaceOrientationIsLandscape(interfaceOrientation) : UIInterfaceOrientationIsPortrait(interfaceOrientation);
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    if(scrollView.contentOffset.y >= (scrollView.contentSize.height - scrollView.frame.size.height-50)){
-        NSLog(@"BOTTOM REACHED");
-        _contactButton.hidden = NO;
-    } else {
-        NSLog(@"not bottom");
-        _contactButton.hidden = YES;
-    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
