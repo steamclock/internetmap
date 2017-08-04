@@ -130,14 +130,15 @@
     
     _contactButton = [UIButton buttonWithType:UIButtonTypeSystem];
     _contactButton.titleLabel.textColor = [UIColor whiteColor];
-    [_contactButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [_contactButton setTitleColor:UI_PRIMARY_COLOR forState:UIControlStateNormal];
     [_contactButton setTitle:NSLocalizedString(@"Contact Cogeco Peer 1", nil) forState:UIControlStateNormal];
     _contactButton.titleLabel.font = [UIFont fontWithName:FONT_NAME_MEDIUM size:18];
     CGRect contactFrame;
-    if (![HelperMethods deviceIsiPad])
-        contactFrame = CGRectMake(20, [UIScreen mainScreen].bounds.size.height-40, 250, 40);
-    else
+    if ([HelperMethods deviceIsiPad])
         contactFrame = CGRectMake(([UIScreen mainScreen].bounds.size.width)/2-150, [UIScreen mainScreen].bounds.size.height-40, 250, 40);
+    else
+        contactFrame = CGRectMake(20, [UIScreen mainScreen].bounds.size.height-40, 250, 40);
+    
     _contactButton.frame = contactFrame;
     [_contactButton addTarget:self action:@selector(contact:) forControlEvents:UIControlEventTouchUpInside];
 
