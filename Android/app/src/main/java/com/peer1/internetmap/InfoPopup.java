@@ -36,8 +36,8 @@ public class InfoPopup extends PopupWindow {
         
         String[] values = new String[5];
         values[0] = context.getString(R.string.infoHelp);
-        values[1] = context.getString(R.string.infoContactLink);
-        values[2] = context.getString(R.string.infoAboutLink);
+        values[1] = context.getString(R.string.infoAboutLink);
+        values[2] = context.getString(R.string.infoContactLink);
         values[3] = context.getString(R.string.infoOpenSource);
         values[4] = context.getString(R.string.infoCredits);
         
@@ -52,10 +52,10 @@ public class InfoPopup extends PopupWindow {
                         mContext.showIntroduction();
                         break;
                     case 1:
-                        showContact();
+                        showAbout();
                         break;
                     case 2:
-                        showAbout();
+                        showContact();
                         break;
                     case 3:
                         showOpenSource();
