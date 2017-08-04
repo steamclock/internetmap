@@ -2,7 +2,6 @@ package com.peer1.internetmap;
 
 import java.io.IOException;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.MenuItem;
@@ -29,7 +28,7 @@ public class CreditsPopup extends BaseActivity {
             e.printStackTrace();
         }
         // Some magic to make the webview transparent despite bugs
-        webView.setBackgroundColor(Color.TRANSPARENT);
+        webView.setBackgroundColor(ContextCompat.getColor(this, R.color.translucentBlack));
     }
 
     @Override

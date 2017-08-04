@@ -48,14 +48,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".InternetMap" />
         </activity>
-        <activity
-            android:name=".AboutPopup"
-            android:label="@string/infoAboutLink"
-            android:parentActivityName=".InternetMap">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".InternetMap" />
-        </activity>
         <activity android:name=".FirstTimeActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             android:parentActivityName=".InternetMap">
