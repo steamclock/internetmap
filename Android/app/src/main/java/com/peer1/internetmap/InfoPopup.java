@@ -34,11 +34,12 @@ public class InfoPopup extends PopupWindow {
 
         final ListView listView = (ListView) getContentView().findViewById(R.id.visualizationList);
         
-        String[] values = new String[4];
+        String[] values = new String[5];
         values[0] = context.getString(R.string.infoHelp);
-        values[1] = context.getString(R.string.infoSales);
-        values[2] = context.getString(R.string.infoOpenSource);
-        values[3] = context.getString(R.string.infoCredits);
+        values[1] = context.getString(R.string.infoAboutLink);
+        values[2] = context.getString(R.string.infoContactLink);
+        values[3] = context.getString(R.string.infoOpenSource);
+        values[4] = context.getString(R.string.infoCredits);
         
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.view_info_popup_item, android.R.id.text1, values);
         listView.setAdapter(adapter);
@@ -47,20 +48,23 @@ public class InfoPopup extends PopupWindow {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 dismissedViaSelection = true;
                 switch (position) {
-                case 0:
-                    mContext.showIntroduction();
-                    break;
-                case 1:
-                    doSales();
-                    break;
-                case 2:
-                    openOpenSourcePage();
-                    break;
-                case 3:
-                    doCredits();
-                    break;
-                default:
-                    Timber.e("can't happen");
+                    case 0:
+                        mContext.showIntroduction();
+                        break;
+                    case 1:
+                        showAbout();
+                        break;
+                    case 2:
+                        showContact();
+                        break;
+                    case 3:
+                        showOpenSource();
+                        break;
+                    case 4:
+                        showCredits();
+                        break;
+                    default:
+                        Timber.e("can't happen");
                 }
 
                 InfoPopup.this.dismiss();
@@ -69,17 +73,22 @@ public class InfoPopup extends PopupWindow {
         });
     }
 
-    private void openOpenSourcePage() {
+    private void showAbout() {
+        Intent intent = new Intent(mContext, AboutPopup.class);
+        mContext.startActivity(intent);
+    }
+
+    private void showContact() {
+        Intent intent = new Intent(mContext, ContactPopup.class);
+        mContext.startActivity(intent);
+    }
+
+    private void showOpenSource() {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/steamclock/internetmap"));
         mContext.startActivity(browserIntent);
     }
 
-    private void doSales() {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.cogecopeer1.com/contact/"));
-        mContext.startActivity(browserIntent);
-    }
-    
-    private void doCredits() {
+    private void showCredits() {
         Intent intent = new Intent(mContext, CreditsPopup.class);
         mContext.startActivity(intent);
     }
