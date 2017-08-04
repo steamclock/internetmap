@@ -7,8 +7,12 @@
 //
 
 #import "CreditsViewController.h"
+#import "ViewController.h"
 
 @interface CreditsViewController ()
+
+@property (nonatomic, retain) UIWebView* webView;
+@property (nonatomic, retain) UIButton* contactButton;
 
 @end
 
@@ -62,7 +66,7 @@
     self.view = background;
     
     // Webview for contents
-    UIWebView* webView = [[UIWebView alloc] init];
+    self.webView = [[UIWebView alloc] init];
     CGRect webViewFrame = background.frame;
     
     webViewFrame.size.height = [CreditsViewController currentSize].height;
@@ -71,12 +75,12 @@
         webViewFrame.origin.x += 300;
         webViewFrame.size.width -= 600;
         
-        webView.scrollView.scrollEnabled = FALSE;
+        _webView.scrollView.scrollEnabled = FALSE;
     } else {
         webViewFrame.size.width = [[UIScreen mainScreen] bounds].size.width - 20;
     }
     
-    webView.frame = webViewFrame;
+    _webView.frame = webViewFrame;
 
     NSString *filePath;
     if (self.informationType != nil && [self.informationType isEqualToString:@"about"])
@@ -88,21 +92,22 @@
     
     NSString *html = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error: nil];
     if (html) {
-        [webView loadHTMLString:html baseURL:nil];
+        [_webView loadHTMLString:html baseURL:nil];
     }
     
-    webView.backgroundColor = [UIColor clearColor];
-    webView.opaque = NO;
-    webView.scrollView.showsVerticalScrollIndicator = NO;
-    webView.scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
+    _webView.backgroundColor = [UIColor clearColor];
+    _webView.opaque = NO;
+    _webView.scrollView.showsVerticalScrollIndicator = NO;
+    _webView.scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
     
     // Start webview faded out, load happens async, and this way we can fade it in rather
     // than popping when the load finishes. Slightly less jarring that way.
-    webView.alpha = 0.00f;
+    _webView.alpha = 0.00f;
     
-    webView.delegate = self;
+    _webView.delegate = self;
+    _webView.scrollView.delegate = self;
     
-    [self.view addSubview:webView];
+    [self.view addSubview:_webView];
     
     //Done button
     UIImage* xImage = [UIImage imageNamed:@"x-icon"];
@@ -114,7 +119,8 @@
     [doneButton addTarget:self action:@selector(close:) forControlEvents:UIControlEventTouchUpInside];
     doneButton.backgroundColor = UI_PRIMARY_COLOR;
     [self.view addSubview:doneButton];
-
+    
+    
     [super viewDidLoad];
 }
 
@@ -123,14 +129,64 @@
         webView.alpha = 1.0f;
     }];
     [webView.scrollView flashScrollIndicators];
+    
+    if ([_informationType isEqualToString:@"about"])
+        [self createContactButtonForAbout];
+}
+
+-(void) createContactButtonForAbout {
+
+    _contactButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    _contactButton.titleLabel.textColor = [UIColor whiteColor];
+    [_contactButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [_contactButton setTitle:NSLocalizedString(@"Contact Cogeco Peer 1", nil) forState:UIControlStateNormal];
+    _contactButton.titleLabel.font = [UIFont fontWithName:FONT_NAME_MEDIUM size:18];
+    CGRect contactFrame = CGRectMake(20, [UIScreen mainScreen].bounds.size.height-40, 250, 40);
+    _contactButton.frame = contactFrame;
+    [_contactButton addTarget:self action:@selector(contact:) forControlEvents:UIControlEventTouchUpInside];
+    _contactButton.hidden = YES;
+    [self.view addSubview:_contactButton];
 }
 
 -(IBAction)close:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+-(IBAction)contact:(id)sender {
+    
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"contact" ofType:@"html"];
+    NSString *html = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error: nil];
+    if (html) {
+        [_webView loadHTMLString:html baseURL:nil];
+    }
+    
+    _informationType = @"contact";
+    [_contactButton removeFromSuperview];
+    
+    [_webView.scrollView setContentOffset: CGPointMake(0, -_webView.scrollView.contentInset.top) animated:YES];
+    
+    /*
+    [self dismissViewControllerAnimated:NO completion:nil];
+    
+    if ( _delegate != nil && [_delegate respondsToSelector:@selector(showContactPage)] ) {
+        [_delegate showContactPage];
+    }
+     */
+}
+
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return [HelperMethods deviceIsiPad] ? UIInterfaceOrientationIsLandscape(interfaceOrientation) : UIInterfaceOrientationIsPortrait(interfaceOrientation);
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if(scrollView.contentOffset.y >= (scrollView.contentSize.height - scrollView.frame.size.height-50)){
+        NSLog(@"BOTTOM REACHED");
+        _contactButton.hidden = NO;
+    } else {
+        NSLog(@"not bottom");
+        _contactButton.hidden = YES;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated

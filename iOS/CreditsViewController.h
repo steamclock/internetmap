@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CreditsViewController : UIViewController <UIWebViewDelegate>
+@interface CreditsViewController : UIViewController <UIWebViewDelegate, UIScrollViewDelegate>
 
 @property (nonatomic,retain) NSString* informationType;
 
