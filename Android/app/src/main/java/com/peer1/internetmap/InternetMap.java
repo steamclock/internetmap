@@ -87,7 +87,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
     private CustomTooltipManager tooltips;
     private ViewGroup firstTimePlaceholder;
     private int totalTooltipSteps = 4; // 0=IntroPage, 1=Search, 2=View, 3=Timeline
-    private float logoFadedAlpha = 0.6f;
+    private float logoFadedAlpha = 0.45f;
 
     private View searchIcon, visualizationIcon, timelineIcon, infoIcon;
 
