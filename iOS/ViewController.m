@@ -100,6 +100,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (strong, nonatomic) NSSet* simulatedYears;
 @property (strong, nonatomic) NSArray *popMenuInfo;
 
+@property (nonatomic) BOOL suppressCameraReset;
+
 @end
 
 @implementation ViewController
@@ -187,8 +189,20 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.errorInfoView = [[ErrorInfoView alloc] initWithFrame:CGRectMake(10, 70, 300, 40)];
     [self.view addSubview:self.errorInfoView];
     
+    // logo position
+    if ([HelperMethods deviceIsiPad]) {
+        self.logo.frame = CGRectMake([[UIScreen mainScreen] bounds].size.width-self.logo.frame.size.width-30, 34, self.logo.frame.size.width, self.logo.frame.size.height);
+    }
     
     //customize timeline slider
+    if ([HelperMethods deviceIsiPad]) {
+        CGFloat xPos = ([[UIScreen mainScreen] bounds].size.width - self.timelineSlider.frame.size.width)/2;
+        CGFloat yPos = [[UIScreen mainScreen] bounds].size.height - 80;
+        CGRect timelinePosition = CGRectMake(xPos, yPos, self.timelineSlider.frame.size.width, self.timelineSlider.frame.size.height);
+        self.timelineSlider.frame = timelinePosition;
+    }
+    
+    
     float cap = 12;
     UIImage* trackImage = [[UIImage imageNamed:@"timeline-track"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, cap, 0, cap)];
     [self.timelineSlider setMinimumTrackImage:trackImage forState:UIControlStateNormal];
@@ -243,6 +257,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     // help pop up
     [self helpPopCheckSetUp];
     self.helpPopView.hidden = YES;
+    
 }
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -265,11 +280,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     // When coming back from one of the modals (Help, credits, etc), we want to redisplay the info for the current node
     // because we hid it when we brought up the info menu popover
     [self displayInformationPopoverForCurrentNode];
+    
 }
 
 - (void)fadeOutLogo {
     [UIView animateWithDuration:1 animations:^{
-        self.logo.alpha = 0.3;
+        self.logo.alpha = 0.45;
     }];
 }
 
@@ -299,7 +315,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 #pragma mark - Touch and GestureRecognizer handlers
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-
     [super touchesBegan:touches withEvent:event];
     UITouch* touch = [touches anyObject];
     if (touch.view == self.buttonContainerView) {
@@ -311,7 +326,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(void)handleTap:(UITapGestureRecognizer*)gestureRecognizer {
-
     [self.controller resetIdleTimer];
     [self dismissNodeInfoPopover];
     [self helpPopCheckOrMenuSelected:nil];
@@ -319,7 +333,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if (![self.controller selectHoveredNode]) { //couldn't select node
         if(self.controller.targetNode != INT_MAX) {
             [self.controller deselectCurrentNode];
-            [self.controller resetZoomAndRotationAnimatedForOrientation:![HelperMethods deviceIsiPad]];
+            [self resetVisualization];
         }
     }	
 }
@@ -359,7 +373,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                     self.nodeTooltipPopover = [[WEPopoverController alloc] initWithContentViewController:self.nodeTooltipViewController];
                     self.nodeTooltipPopover.passthroughViews = @[self.view];
                     CGPoint center = [self.controller getCoordinatesForNodeAtIndex:i];
-                    
+
                     [self.nodeTooltipPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];
                     [self.controller hoverNode:i];
                 }
@@ -452,7 +466,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 #pragma mark - UIGestureRecognizerDelegate methods
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-
     if (touch.view == self.view || touch.view == self.errorInfoView || [self.errorInfoView.subviews containsObject:touch.view]) {
         return YES;
     }
@@ -585,6 +598,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if (self.timelineButton.selected) {
         [self leaveTimelineMode];
     }
+    [self updateTimelineWithPopoverDismiss:NO];
     [self helpPopCheckOrMenuSelected:_visualizationsButton];
 
     if (!self.visualizationSelectionPopover) {
@@ -611,7 +625,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             [self helpPopCheckOrMenuSelected:nil];
             
             // Reset view to recenter target
-            [self.controller resetZoomAndRotationAnimatedForOrientation:![HelperMethods deviceIsiPad]];
+            [self resetVisualization];
         };
     }
     [self.visualizationSelectionPopover presentPopoverFromRect:self.visualizationsButton.bounds inView:self.visualizationsButton permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
@@ -630,14 +644,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(IBAction)infoButtonPressed:(id)sender {
-    
-    [self.controller resetZoomAndRotationAnimatedForOrientation:YES];
-    
-    self.helpPopView.hidden = YES;
-    
+
     if (self.timelineButton.selected) {
         [self leaveTimelineMode];
     }
+
+    self.nodeInformationPopover.view.hidden = YES;
     
     self.timelineButton.selected = NO;
     self.visualizationsButton.selected = NO;
@@ -659,7 +671,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         } else {
             [self.infoPopover setPopoverContentSize:CGSizeMake(340, 220)];
         }
-                
+
         __weak ViewController* weakSelf = self;
         
         tableforPopover.selectedBlock = ^(int index){
@@ -694,10 +706,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             weakSelf.infoButton.selected = NO;
         };
     }
+  
     [self.infoPopover presentPopoverFromRect:self.infoButton.bounds inView:self.infoButton permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
     
     self.infoButton.highlighted = NO;
     self.infoButton.selected = YES;
+   
 }
 
 - (void) showInSafariWithURL:(NSString *)urlstring {
@@ -708,6 +722,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(IBAction)timelineButtonPressed:(id)sender {
+    [self updateTimelineWithPopoverDismiss:NO];
     if (self.timelineSlider.hidden) {
         self.timelineSlider.hidden = NO;
         self.timelineButton.highlighted = NO;
@@ -751,6 +766,13 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(void)displayInformationPopoverForCurrentNode {
+    
+
+    if (_suppressCameraReset) {
+        _suppressCameraReset = false;
+        return;
+    }
+    
     NodeWrapper* node;
     
     if(self.controller.targetNode != INT_MAX) {
@@ -765,7 +787,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     if (self.timelineSlider.hidden == NO) {
         BOOL simulated = NO;
-        
+
         NSString* year = self.sortedYears[(int)self.timelineSlider.value];
         if([self.simulatedYears containsObject:year]) {
             simulated = YES;
@@ -781,6 +803,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         
         self.nodeInformationPopover.passthroughViews = @[self.view];
         CGPoint center = [self.controller getCoordinatesForNodeAtIndex:self.controller.targetNode];
+        
         [self.nodeInformationPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];
     }
     else {
@@ -871,7 +894,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 -(void) resetView {
     [self dismissNodeInfoPopover];
     [self.controller deselectCurrentNode];
-    [self.controller resetZoomAndRotationAnimatedForOrientation:![HelperMethods deviceIsiPad]];
+    [self resetVisualization];
 }
 
 - (void)viewResetDone{
@@ -950,7 +973,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 #pragma mark - NodeInfo delegate
 
 - (void)dismissNodeInfoPopover {
-
+    
     [self.tracer stop];
     self.tracer = nil;
     [self.nodeInformationPopover dismissPopoverAnimated:YES];
@@ -970,8 +993,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     if (![HelperMethods deviceIsiPad]) {
         displayRect = CGRectMake(160, self.controller.displaySize.height-self.nodeInformationViewController.preferredContentSize.height, 1, 1);
-    }else {
-        displayRect = CGRectMake(512.0f, 384.0f, 1, 1);
+    } else {                
+        displayRect = CGRectMake([[UIScreen mainScreen] bounds].size.width/2, [[UIScreen mainScreen] bounds].size.height/2, 1, 1);
     }
         
     return displayRect;
@@ -989,27 +1012,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     self.tracerouteASNs = [NSMutableDictionary new];
     
-    //zoom out and rotate camera to default orientation on app startup
-    // TODO Why is this using GLKMatrix4MakeRotation, and not calling the methods in MapWrapper?
-    GLKMatrix4 zRotation = GLKMatrix4Identity;
-    float zoom = -3;
-    if (![HelperMethods deviceIsiPad]) {
-        zRotation = GLKMatrix4MakeRotation(M_PI_2, 0, 0, 1);
-        zoom = -6;
-    }
-    
-    [self.controller zoomAnimated:zoom duration:3];
+    _suppressCameraReset = YES;
+    [self resetVisualization];
     
     // On phones, translate up view so that we can more easily see it
     if (![HelperMethods deviceIsiPad]) {
-        [self.controller translateYAnimated:0.5f duration:3];
-    }
-    
-    NodeWrapper* node = [self.controller nodeAtIndex:self.controller.targetNode];
-    if (node.importance > 0.006) {
-        [self.controller rotateAnimated:zRotation duration:3];
-    } else {
-        [self.controller rotateAnimated:GLKMatrix4Multiply(GLKMatrix4MakeRotation(M_PI, 0, 1, 0), zRotation) duration:3];
+        [self.controller translateYAnimated:0.25f duration:3];
     }
     
     if(self.controller.lastSearchIP && ![self.controller.lastSearchIP isEqualToString:@""]) {
@@ -1020,10 +1028,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         NodeWrapper* node = [self.controller nodeAtIndex:self.controller.targetNode];
         if (node.asn) {
             [ASNRequest fetchIPsForASN:node.asn response:^(NSArray *ips) {
-                //We arbitrarily select any of the prefix IPs and try for a traceroute using it
-                //We do this because we have no reliable way of knowing what machines will reslond to our ICMP packets
-                //So, if we can contact even one machine within an ASN - any one at all - we know we travel through that ASN
-                //We select randomly because why the heck not? It's all a guess as to which will respond. :)
+
                 if ([ips count]) {
                     uint32_t rnd = arc4random_uniform((unsigned int)[ips count]);
                     NSString* arbitraryIP = [NSString stringWithFormat:@"%@", ips[rnd]];
@@ -1060,7 +1065,18 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
     [self dismissNodeInfoPopover];
     [self.controller deselectCurrentNode];
+    [self resetVisualization];
+    
+}
+
+-(void)resetVisualization {
+    
     [self.controller resetZoomAndRotationAnimatedForOrientation:![HelperMethods deviceIsiPad]];
+    
+    // On phones, translate up view so that we can more easily see it
+    if (![HelperMethods deviceIsiPad]) {
+        [self.controller translateYAnimated:0.0f duration:1];
+    }
 }
 
 #pragma mark - help pop
@@ -1153,6 +1169,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 - (BOOL)popoverControllerShouldDismissPopover:(WEPopoverController *)popoverController{
+
     self.visualizationsButton.selected = NO;
     self.infoButton.selected = NO;
     self.searchButton.selected = NO;

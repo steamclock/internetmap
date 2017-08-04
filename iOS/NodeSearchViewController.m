@@ -140,15 +140,19 @@
     
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.textLabel.textColor = [UIColor colorWithRed:235.0/255.0 green:235.0/255.0 blue:235.0/255.0 alpha:1.0];
-        cell.textLabel.highlightedTextColor = UI_PRIMARY_COLOR;
+        cell.textLabel.textColor = [UIColor whiteColor];// [UIColor colorWithRed:235.0/255.0 green:235.0/255.0 blue:235.0/255.0 alpha:1.0];
+        cell.textLabel.highlightedTextColor = [UIColor whiteColor];
         cell.textLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:19];
         cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-        cell.selectedBackgroundView = [[UIView alloc] init];
+        
+        UIView *myBackView = [[UIView alloc] initWithFrame:cell.frame];
+        myBackView.backgroundColor = UI_PRIMARY_COLOR;
+        cell.selectedBackgroundView = myBackView;
+        
         cell.backgroundColor = [UIColor clearColor];
  
         UIView* seperator = [[UIView alloc] initWithFrame:CGRectMake(10, 43, tableView.width-10, 1)];
-        seperator.backgroundColor = [UIColor grayColor];
+        seperator.backgroundColor = [UIColor lightGrayColor];
         [cell.contentView addSubview:seperator];
 
     }
@@ -194,16 +198,6 @@
     
     return cell;
 }
-
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (indexPath.row > 0) {
-        cell.backgroundColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:0.35];
-    }
-    
-}
-
-
 
 - (void)done{
     [self.delegate nodeSearchDelegateDone];

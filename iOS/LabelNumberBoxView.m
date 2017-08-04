@@ -18,7 +18,7 @@
         self.textLabel.text = labelText;
         self.textLabel.backgroundColor = [UIColor clearColor];
         self.textLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:15];
-        self.textLabel.textColor = FONT_COLOR_GRAY;
+        self.textLabel.textColor = FONT_COLOR_WHITE;
         self.textLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:self.textLabel];
         
@@ -31,7 +31,7 @@
         self.numberLabel.text = numberText;
         self.numberLabel.backgroundColor = [UIColor clearColor];
         self.numberLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:28];
-        self.numberLabel.textColor = FONT_COLOR_GRAY;
+        self.numberLabel.textColor = FONT_COLOR_WHITE;
         self.numberLabel.textAlignment = NSTextAlignmentCenter;
         self.numberLabel.adjustsFontSizeToFitWidth = YES;
         [self addSubview:self.numberLabel];

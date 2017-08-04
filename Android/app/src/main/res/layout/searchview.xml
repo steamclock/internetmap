@@ -44,6 +44,8 @@
     <ListView
         android:id="@+id/searchResultsView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:divider="@color/listViewDivider"
+        android:dividerHeight="2px"/>
 
 </LinearLayout>

@@ -15,7 +15,9 @@
 #define VERTICAL_PADDING_IPHONE 20
 #define LABELS_HEIGHT 20
 #define TRACEROUTE_BUTTON_HEIGHT 44
-#define TRACEROUTE_ENABLED 0
+#define TRACEROUTE_ENABLED 1
+
+#define TRACEROUTE_MAX_TIMEOUT_MILLISECONDS 400000 // arbitary cap off at 40 seconds, otherwise it runs forever
 
 #define INFO_BOX_HEIGHT 75
 
@@ -71,7 +73,7 @@
         }else {
             if (![HelperMethods isStringEmptyOrNil:textDescription]) {
                 self.title = textDescription;
-            }else {
+            } else {
                 self.title = asnText;
             }
         }
@@ -242,7 +244,6 @@
     if ([self.delegate respondsToSelector:@selector(doneTapped)]) {
         [self.delegate performSelector:@selector(doneTapped)];
     }
-
 }
 
 -(IBAction)tracerouteButtonTapped:(id)sender{
@@ -256,8 +257,6 @@
             self.scrollView.frame = CGRectMake(0, 0, self.scrollView.width, contentHeight);
         }
         self.scrollView.contentSize = CGSizeMake(self.preferredContentSize.width, contentHeight);
-        
-
         
         self.tracerouteContainerView.alpha = 0;
         self.tracerouteContainerView.hidden = NO;
@@ -283,7 +282,7 @@
         if ([self.delegate respondsToSelector:@selector(tracerouteButtonTapped)]) {
             [self.delegate performSelector:@selector(tracerouteButtonTapped)];
         }
-    }else {
+    } else {
         UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"No Internet connection", nil) message:NSLocalizedString(@"Please connect to the internet.", nil) preferredStyle:UIAlertControllerStyleActionSheet];
         UIAlertAction *okAA = [UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", nil) style:UIAlertActionStyleDefault
                                                          handler:^(UIAlertAction * action) {
@@ -306,7 +305,14 @@
 }
 
 - (void)tracerouteTimerFired {
-    [self.box3 incrementNumber];
+
+    if ([self.box3.numberLabel.text intValue] < TRACEROUTE_MAX_TIMEOUT_MILLISECONDS) {
+        [self.box3 incrementNumber];
+    } else {
+        // force traceroute end after MAX_TIMEOUT, or it spins forever and never shows the traceroute IPs, even though it shows the traceroute path
+        [self.tracerouteTimer invalidate];
+        [self tracerouteDone];
+    }
 }
 
 - (void)tracerouteDone {
