@@ -3,39 +3,57 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/LinearLayout1"
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/load_bg" />
 
-        <ImageView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/LinearLayout1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/load_bg" />
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
-        <FrameLayout
-            android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:layout_weight="0.2">
+            <FrameLayout
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2">
 
-        </FrameLayout>
+            </FrameLayout>
 
-        <WebView
-            android:id="@+id/textView"
-            android:layout_width="0dip"
+            <WebView
+                android:id="@+id/textView"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6" />
+
+            <FrameLayout
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2">
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/bottom_button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.6" />
-
-        <FrameLayout
-            android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:layout_weight="0.2">
-
-        </FrameLayout>
-
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_button_accent_color"
+            android:padding="10dp"
+            android:text="@string/next"
+            android:visibility="gone" />
     </LinearLayout>
 
     <ProgressBar
@@ -43,9 +61,9 @@
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true"
+        android:visibility="gone" />
 
 </RelativeLayout>
 
