@@ -1,9 +1,6 @@
 package com.peer1.internetmap;
 
 import android.content.Context;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -90,7 +87,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
     private CustomTooltipManager tooltips;
     private ViewGroup firstTimePlaceholder;
     private int totalTooltipSteps = 4; // 0=IntroPage, 1=Search, 2=View, 3=Timeline
-    private float logoFadedAlpha = 0.6f;
+    private float logoFadedAlpha = 0.45f;
 
     private View searchIcon, visualizationIcon, timelineIcon, infoIcon;
 
@@ -106,9 +103,6 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(android.view.Window.FEATURE_NO_TITLE);
-        
-        //try to get into the best orientation before initializing the backend
-        forceOrientation();
         mDoneLoading = nativeOnCreate(isSmallScreen());
         //no real create -> no pending callback. we'll check mDoneLoading later to compensate.
 
@@ -176,8 +170,6 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
     @Override
     protected void onRestart() {
         super.onRestart();
-        //force again in case the user was playing with an orientation app
-        forceOrientation();
     }
 
     @Override
@@ -1003,14 +995,6 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
     //=====================================================================
     // region Misc methods
     //=====================================================================
-    public void forceOrientation() {
-        Configuration config = getResources().getConfiguration();
-        int screenSize = config.screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
-        int orientation = (screenSize <= Configuration.SCREENLAYOUT_SIZE_NORMAL) ?
-                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT : ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-        setRequestedOrientation(orientation);
-    }
-
     void fadeLogo(long startTime, float fadeTo, long duration) {
         AlphaAnimation anim = new AlphaAnimation(logo.getAlpha(), fadeTo);
         anim.setDuration(duration);

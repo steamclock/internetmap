@@ -48,6 +48,9 @@ static const int TIMEOUT = 10;
     return FALSE;
 }
 
+
+// EXAMPLE CALL: https://internetmap-server.herokuapp.com/?req=iptoasn&ip=205.166.253.0
+// RESULT: {"resultsPayload":4565}
 + (void)fetchASNForIP:(NSString*)ip response:(ASNStringResponseBlock)result {
     if ([ip isEqual:[NSNull null]]) {
         // Might get a null from a timed out traceroute op, not sure if it ever actually ets this far through.
@@ -56,7 +59,7 @@ static const int TIMEOUT = 10;
         result(nil);
     }
     
-    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://api.iptoasn.com/v1/as/ip/%@", ip]]];
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://internetmap-server.herokuapp.com/?req=iptoasn&ip=%@", ip]]];
     [request setTimeOutSeconds:TIMEOUT];
     [request setRequestMethod:@"GET"];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
@@ -66,9 +69,16 @@ static const int TIMEOUT = 10;
     [request setCompletionBlock:^{
         NSError* error = weakRequest.error;
         NSDictionary* jsonResponse = [NSJSONSerialization JSONObjectWithData:weakRequest.responseData options:NSJSONReadingAllowFragments error:&error];
-        NSNumber* asNumber = [jsonResponse objectForKey:@"as_number"];
-        NSString *asNumberStr = [asNumber stringValue];
-        result(asNumberStr);
+        NSString* as = (NSString *)[jsonResponse objectForKey:@"resultsPayload"];
+        // weird recast required for NSTaggedPointerString, which jsonResponse actually returns, or MapControllerWrapper > nodeByASN crashes
+        NSString* asString = [NSString stringWithFormat:@"%@", as];
+        
+        // returned from server
+        if ([asString isEqualToString:@"none"] || [asString rangeOfString:@"is not valid"].location != NSNotFound) {
+            return result(nil);
+        }
+        
+        result(asString);
     }];
     
     [request setFailedBlock:^{
@@ -78,46 +88,47 @@ static const int TIMEOUT = 10;
     [request start];
 }
 
+// EXAMPLE CALL: https://internetmap-server.herokuapp.com/?req=asntoips&asn=4565
+// RESULT: {"resultsPayload":"205.166.253.0/24"}
 +(void)fetchIPsForASN:(NSString*)asn response:(ASNArrayResponseBlock)response {
     
-    NSString *mxtoolboxAPIKey = @"1d0e968c-47a7-4354-80dc-9cf5a590ccbf";
-    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://api.mxtoolbox.com/api/v1/lookup/asn/as%@?authorization=%@", asn, mxtoolboxAPIKey]]];
-  
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://internetmap-server.herokuapp.com/?req=asntoips&asn=%@", asn]]];
     [request setTimeOutSeconds:TIMEOUT];
     [request setRequestMethod:@"GET"];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
-
+    
     __weak ASIFormDataRequest* weakRequest = request;
-
+    
     [request setCompletionBlock:^{
         NSError* error = weakRequest.error;
         NSDictionary* jsonResponse = [NSJSONSerialization JSONObjectWithData:weakRequest.responseData options:NSJSONReadingAllowFragments error:&error];
-        NSArray* offTheWire = [jsonResponse objectForKey:@"Information"];
-        // We clean the array for any reserved ip spaces (sometimes 127.x.x.x shows up for loopback interfaces)
-        NSMutableArray* responseArray = [[NSMutableArray alloc] init];
+        NSString* ipString = [jsonResponse objectForKey:@"resultsPayload"];
         
-        for (NSDictionary* asnInfo in offTheWire) {
-            NSString* ipRange = [asnInfo objectForKey:@"CIDR Range"];
-            
-            NSRange range = [ipRange rangeOfString:@"/"];
-            NSString *ip = [ipRange substringToIndex:range.location];
-            
-            if (![ASNRequest isInvalidOrPrivate:ip]) {
-                [responseArray addObject:ip];
-            } else {
-                NSLog(@"Failed to add %@, was reserved IP.", ip);
-            }
+        NSMutableArray* responseArray = [NSMutableArray array];
+        
+        NSRange range = [ipString rangeOfString:@"/"];
+        
+        if (range.location != NSNotFound) {
+            ipString = [ipString substringToIndex:range.location];
         }
+        
+        if (![ASNRequest isInvalidOrPrivate:ipString]) {
+            [responseArray addObject:ipString];
+        } else {
+            NSLog(@"Failed to add %@, was reserved IP.", ipString);
+        }
+        
         response(responseArray);
+
     }];
     
     [request setFailedBlock:^{
         response(nil);
     }];
     
-    [request startAsynchronous];
-
+    [request start];    
 }
+
 
 // Get a set of IP addresses for a given host name
 // Originally pulled from here: http://www.bdunagan.com/2009/11/28/iphone-tip-no-nshost/
