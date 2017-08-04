@@ -72,7 +72,8 @@
     webViewFrame.size.height = [CreditsViewController currentSize].height;
 
     if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        webViewFrame.origin.x += 300;
+        // webViewFrame.origin.x += 300;
+        webViewFrame.origin.x = ([[UIScreen mainScreen] bounds].size.width)/2-200;
         webViewFrame.size.width -= 600;
         
         _webView.scrollView.scrollEnabled = FALSE;
@@ -120,8 +121,26 @@
     doneButton.backgroundColor = UI_PRIMARY_COLOR;
     [self.view addSubview:doneButton];
     
-    
     [super viewDidLoad];
+}
+
+-(void) createContactButtonForAbout {
+    
+    _contactButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    _contactButton.titleLabel.textColor = [UIColor whiteColor];
+    [_contactButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [_contactButton setTitle:NSLocalizedString(@"Contact Cogeco Peer 1", nil) forState:UIControlStateNormal];
+    _contactButton.titleLabel.font = [UIFont fontWithName:FONT_NAME_MEDIUM size:18];
+    CGRect contactFrame;
+    if (![HelperMethods deviceIsiPad])
+        contactFrame = CGRectMake(20, [UIScreen mainScreen].bounds.size.height-40, 250, 40);
+    else
+        contactFrame = CGRectMake(([UIScreen mainScreen].bounds.size.width)/2-150, [UIScreen mainScreen].bounds.size.height-40, 250, 40);
+    _contactButton.frame = contactFrame;
+    [_contactButton addTarget:self action:@selector(contact:) forControlEvents:UIControlEventTouchUpInside];
+    if (![HelperMethods deviceIsiPad])
+        _contactButton.hidden = YES;
+    [self.view addSubview:_contactButton];
 }
 
 -(void)webViewDidFinishLoad:(UIWebView *)webView {
@@ -132,20 +151,6 @@
     
     if ([_informationType isEqualToString:@"about"])
         [self createContactButtonForAbout];
-}
-
--(void) createContactButtonForAbout {
-
-    _contactButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    _contactButton.titleLabel.textColor = [UIColor whiteColor];
-    [_contactButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [_contactButton setTitle:NSLocalizedString(@"Contact Cogeco Peer 1", nil) forState:UIControlStateNormal];
-    _contactButton.titleLabel.font = [UIFont fontWithName:FONT_NAME_MEDIUM size:18];
-    CGRect contactFrame = CGRectMake(20, [UIScreen mainScreen].bounds.size.height-40, 250, 40);
-    _contactButton.frame = contactFrame;
-    [_contactButton addTarget:self action:@selector(contact:) forControlEvents:UIControlEventTouchUpInside];
-    _contactButton.hidden = YES;
-    [self.view addSubview:_contactButton];
 }
 
 -(IBAction)close:(id)sender {
@@ -163,7 +168,7 @@
     _informationType = @"contact";
     [_contactButton removeFromSuperview];
     
-    [_webView.scrollView setContentOffset: CGPointMake(0, -_webView.scrollView.contentInset.top) animated:YES];    
+    [_webView.scrollView setContentOffset: CGPointMake(0, -_webView.scrollView.contentInset.top) animated:YES];
 }
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
