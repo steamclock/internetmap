@@ -129,10 +129,13 @@
 -(void) createContactButtonForAbout {
     
     _contactButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    _contactButton.titleLabel.textColor = [UIColor whiteColor];
-    [_contactButton setTitleColor:UI_PRIMARY_COLOR forState:UIControlStateNormal];
+    [_contactButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    _contactButton.backgroundColor = UI_PRIMARY_COLOR;
+    _contactButton.frame.size
+    _contactButton.layer.cornerRadius = _contactButton.frame.size.height / 2;
     [_contactButton setTitle:NSLocalizedString(@"Contact Cogeco Peer 1", nil) forState:UIControlStateNormal];
     _contactButton.titleLabel.font = [UIFont fontWithName:FONT_NAME_MEDIUM size:18];
+    
     CGRect contactFrame;
     if ([HelperMethods deviceIsiPad])
         contactFrame = CGRectMake(([UIScreen mainScreen].bounds.size.width)/2-150, [UIScreen mainScreen].bounds.size.height-40, 250, 40);
