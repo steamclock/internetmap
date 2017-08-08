@@ -53,7 +53,6 @@
     return [[SCTracerouteUtility alloc] initWithAddress:address];
 }
 
-
 #pragma mark - Instance Methods
 
 - (id)initWithAddress:(NSString *)hostAddress
@@ -85,6 +84,11 @@
     self.packetUtility = nil;
 }
 
+-(void)forcedTimeout {
+    if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidTimeout:)]) {
+        [self.delegate tracerouteDidTimeout:self.hopsForCurrentIP];
+    }
+}
 
 #pragma mark - Send packets
 - (void)sendPackets:(NSData*)data{
@@ -257,8 +261,6 @@
         }
     }
 }
-
-
 
 -(NSInteger)getSequenceNumberForPacket:(NSData*)packet{
     

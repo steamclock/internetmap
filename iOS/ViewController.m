@@ -102,6 +102,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 @property (nonatomic) BOOL suppressCameraReset;
 
+
 @end
 
 @implementation ViewController
@@ -1039,7 +1040,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             [self couldntResolveIP];
         }
     }
-     
 }
 
 -(void)couldntResolveIP{
@@ -1060,7 +1060,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self dismissNodeInfoPopover];
     [self.controller deselectCurrentNode];
     [self resetVisualization];
-    
 }
 
 -(void)resetVisualization {
@@ -1072,6 +1071,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         [self.controller translateYAnimated:0.0f duration:1];
     }
 }
+
+-(void)forceTracerouteTimeout {
+    [self.tracer forcedTimeout];
+}
+
 
 #pragma mark - help pop
 

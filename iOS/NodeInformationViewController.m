@@ -9,6 +9,8 @@
 #import "NodeInformationViewController.h"
 #import "LabelNumberBoxView.h"
 #import "NodeWrapper.h"
+#import "ViewController.h"
+
 
 #define TOP_BACKGROUND_HEIGHT 44
 #define VERTICAL_PADDING_IPAD 20
@@ -17,7 +19,7 @@
 #define TRACEROUTE_BUTTON_HEIGHT 44
 #define TRACEROUTE_ENABLED 1
 
-#define TRACEROUTE_MAX_TIMEOUT_MILLISECONDS 400000 // arbitary cap off at 40 seconds, otherwise it runs forever
+#define TRACEROUTE_MAX_TIMEOUT_MILLISECONDS 40 * 1000 // arbitary cap off at 40 seconds, otherwise it can run forever
 
 #define INFO_BOX_HEIGHT 75
 
@@ -309,8 +311,13 @@
     if ([self.box3.numberLabel.text intValue] < TRACEROUTE_MAX_TIMEOUT_MILLISECONDS) {
         [self.box3 incrementNumber];
     } else {
-        // force traceroute end after MAX_TIMEOUT, or it spins forever and never shows the traceroute IPs, even though it shows the traceroute path
+        // force traceroute end after MAX_TIMEOUT, or it spins forever and never shows the traceroute IPs
         [self.tracerouteTimer invalidate];
+        
+        if ([self.delegate respondsToSelector:@selector(forceTracerouteTimeout)]) {
+            [self.delegate performSelector:@selector(forceTracerouteTimeout)];
+        }
+        
         [self tracerouteDone];
     }
 }

@@ -50,6 +50,6 @@ static const int PACKETS_PER_ITER = 1; // How many packets we send each time we 
 
 -(void)start;
 -(void)stop;
-
+-(void)forcedTimeout;
 
 @end
