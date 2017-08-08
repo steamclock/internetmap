@@ -85,7 +85,7 @@
 }
 
 -(void)forcedTimeout {
-    if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidTimeout:)]) {
+    if ([self.delegate respondsToSelector:@selector(tracerouteDidTimeout:)]) {
         [self.delegate tracerouteDidTimeout:self.hopsForCurrentIP];
     }
 }
