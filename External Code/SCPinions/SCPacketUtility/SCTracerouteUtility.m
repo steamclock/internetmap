@@ -99,7 +99,7 @@
             [self.packetUtility sendPacketWithData:nil andTTL:self.ttlCount];
         }   
     } else if (self.ttlCount > MAX_HOPS) {
-        if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidTimeout:)]) {
+        if ([self.delegate respondsToSelector:@selector(tracerouteDidTimeout:)]) {
             [self.delegate tracerouteDidTimeout:self.hopsForCurrentIP];
         }
     }
