@@ -13,6 +13,7 @@
     <color name="lightGrey">#555555</color>
     <color name="translucentBlack">#BF555555</color>
     <color name="translucentGrey">#BF555555</color>
+    <color name="listViewDivider">#BF7c7c7c</color>
 
     <color name="lightTextColor">#fff</color>
     <color name="lightHintTextColor">#eeffffff</color>

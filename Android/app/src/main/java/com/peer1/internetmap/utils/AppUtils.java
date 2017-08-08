@@ -2,7 +2,9 @@ package com.peer1.internetmap.utils;
 
 import java.io.InputStream;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
@@ -68,5 +70,13 @@ public class AppUtils {
 
     public static float pxToDp(float px) {
         return (px / Resources.getSystem().getDisplayMetrics().density);
+    }
+
+    public static void forceOrientation(Activity ctx) {
+        Configuration config = ctx.getResources().getConfiguration();
+        int screenSize = config.screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+        int orientation = (screenSize <= Configuration.SCREENLAYOUT_SIZE_NORMAL) ?
+                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT : ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+        ctx.setRequestedOrientation(orientation);
     }
 }
