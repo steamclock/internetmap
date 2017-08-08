@@ -10,4 +10,6 @@
 
 @interface CreditsViewController : UIViewController <UIWebViewDelegate>
 
+@property (nonatomic,retain) NSString* informationType;
+
 @end
