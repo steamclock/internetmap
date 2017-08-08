@@ -70,7 +70,7 @@
     CGRect webViewFrame = background.frame;
     
     if ([_informationType isEqualToString:@"about"])
-        webViewFrame.size.height = [CreditsViewController currentSize].height-20;
+        webViewFrame.size.height = [CreditsViewController currentSize].height-60;
     else
         webViewFrame.size.height = [CreditsViewController currentSize].height;
     
@@ -130,19 +130,20 @@
     
     _contactButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [_contactButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    _contactButton.backgroundColor = UI_PRIMARY_COLOR;
-    _contactButton.frame.size
-    _contactButton.layer.cornerRadius = _contactButton.frame.size.height / 2;
     [_contactButton setTitle:NSLocalizedString(@"Contact Cogeco Peer 1", nil) forState:UIControlStateNormal];
-    _contactButton.titleLabel.font = [UIFont fontWithName:FONT_NAME_MEDIUM size:18];
+    _contactButton.backgroundColor = UI_PRIMARY_COLOR;
+    _contactButton.titleLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:21];
     
-    CGRect contactFrame;
-    if ([HelperMethods deviceIsiPad])
-        contactFrame = CGRectMake(([UIScreen mainScreen].bounds.size.width)/2-150, [UIScreen mainScreen].bounds.size.height-40, 250, 40);
-    else
-        contactFrame = CGRectMake(20, [UIScreen mainScreen].bounds.size.height-40, 250, 40);
+    CGFloat contactButtonWidth = [[UIScreen mainScreen] bounds].size.width;
+    if ([[UIScreen mainScreen] bounds].size.width > 300) contactButtonWidth = 300;
+    
+    CGRect contactFrame = CGRectMake(
+                                  [[UIScreen mainScreen] bounds].size.width/2 - ((contactButtonWidth)/2),
+                                  [[UIScreen mainScreen] bounds].size.height-60,
+                                  contactButtonWidth, 45);
     
     _contactButton.frame = contactFrame;
+    _contactButton.layer.cornerRadius = _contactButton.frame.size.height / 2;
     [_contactButton addTarget:self action:@selector(contact:) forControlEvents:UIControlEventTouchUpInside];
 
     [self.view addSubview:_contactButton];
