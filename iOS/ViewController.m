@@ -288,6 +288,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.logo.alpha = 0.45;
     }];
 }
+
 - (void)setGlobalSettings {
     NSString* json = [[NSBundle mainBundle] pathForResource:@"globalSettings" ofType:@"json"];
     NSDictionary* settingsDict = [NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfFile:json] options:0 error:nil];
@@ -372,7 +373,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                     self.nodeTooltipPopover = [[WEPopoverController alloc] initWithContentViewController:self.nodeTooltipViewController];
                     self.nodeTooltipPopover.passthroughViews = @[self.view];
                     CGPoint center = [self.controller getCoordinatesForNodeAtIndex:i];
-  
+
                     [self.nodeTooltipPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];
                     [self.controller hoverNode:i];
                 }
@@ -481,7 +482,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     return NO;
 }
 
-
 - (BOOL)shouldDoIdleAnimation{
     return !UIGestureRecognizerStateIsActive(self.longPressGestureRecognizer.state) && !UIGestureRecognizerStateIsActive(self.pinchRecognizer.state) && !UIGestureRecognizerStateIsActive(self.panRecognizer.state);
 }
@@ -551,8 +551,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self presentViewController:firstUse animated:YES completion:nil];
 }
 
--(void)showCredits {
+-(void)showCredits:(NSString *)informationType {
     CreditsViewController* credits = [[CreditsViewController alloc] initWithNibName:nil bundle:[NSBundle mainBundle]];
+    credits.informationType = informationType;
     [self presentViewController:credits animated:YES completion:nil];
 }
 
@@ -660,7 +661,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.infoPopover = [[WEPopoverController alloc] initWithContentViewController:tableforPopover];
         self.infoPopover.delegate = self;
         
-        tableforPopover.items = @[ @"Introduction", @"Managed IT Services", @"Open Source", @"Credits" ];
+        tableforPopover.items = @[ @"Introduction", @"Contact Cogeco Peer 1", @"About Cogeco Peer 1", @"Open Source", @"Credits" ];
                         
         if (![HelperMethods deviceIsiPad]) {
             WEPopoverContainerViewProperties *prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
@@ -668,29 +669,34 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             self.infoPopover.containerViewProperties = prop;
             [self.visualizationSelectionPopover setPopoverContentSize:tableforPopover.preferredContentSize];
         } else {
-            [self.infoPopover setPopoverContentSize:CGSizeMake(340, 175)];
+            [self.infoPopover setPopoverContentSize:CGSizeMake(340, 220)];
         }
-        
+
         __weak ViewController* weakSelf = self;
         
         tableforPopover.selectedBlock = ^(int index){
             switch (index) {
-                case 0: //help
+                case 0: //introduction
                     [weakSelf showFirstUse];
                     break;
-                case 1: //sales
+                case 1: //contact
                 {
-                    [weakSelf showInSafariWithURL:@"https://www.cogecopeer1.com/contact/"];
+                    [weakSelf showCredits:@"contact"];
                     break;
                 }
-                case 2: //url
+                case 2: //about
+                    [weakSelf showCredits:@"about"];
+                    break;
+                case 3: //open source
                 {
                     [weakSelf showInSafariWithURL:@"https://github.com/steamclock/internetmap"];
                     break;
                 }
-                case 3: //credits
-                    [weakSelf showCredits];
+                case 4: //credits
+                {
+                    [weakSelf showCredits:@"credit"];
                     break;
+                }
                 default: //can't happen
                     NSLog(@"Unexpected info index %zd!!", index);
             }

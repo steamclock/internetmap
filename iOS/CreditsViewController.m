@@ -7,8 +7,12 @@
 //
 
 #import "CreditsViewController.h"
+#import "ViewController.h"
 
 @interface CreditsViewController ()
+
+@property (nonatomic, retain) UIWebView* webView;
+@property (nonatomic, retain) UIButton* contactButton;
 
 @end
 
@@ -61,41 +65,52 @@
     
     self.view = background;
     
-    // Webview for credir contents
-    UIWebView* webView = [[UIWebView alloc] init];
+    // Webview for contents
+    self.webView = [[UIWebView alloc] init];
     CGRect webViewFrame = background.frame;
-
-    webViewFrame.size.height = [CreditsViewController currentSize].height;
-
+    
+    if ([_informationType isEqualToString:@"about"])
+        webViewFrame.size.height = [CreditsViewController currentSize].height-60;
+    else
+        webViewFrame.size.height = [CreditsViewController currentSize].height;
+    
     if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        webViewFrame.origin.x += 300;
+        // webViewFrame.origin.x += 300;
+        webViewFrame.origin.x = ([[UIScreen mainScreen] bounds].size.width)/2-200;
         webViewFrame.size.width -= 600;
         
-        webView.scrollView.scrollEnabled = FALSE;
+        _webView.scrollView.scrollEnabled = FALSE;
+    } else {
+        webViewFrame.size.width = [[UIScreen mainScreen] bounds].size.width - 20;
     }
     
-    webView.frame = webViewFrame;
+    _webView.frame = webViewFrame;
 
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"credits" ofType:@"html"];
+    NSString *filePath;
+    if (self.informationType != nil && [self.informationType isEqualToString:@"about"])
+        filePath = [[NSBundle mainBundle] pathForResource:@"about" ofType:@"html"];
+    else if (self.informationType != nil && [self.informationType isEqualToString:@"contact"])
+        filePath = [[NSBundle mainBundle] pathForResource:@"contact" ofType:@"html"];
+    else
+        filePath = [[NSBundle mainBundle] pathForResource:@"credits" ofType:@"html"];
+    
     NSString *html = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error: nil];
     if (html) {
-        [webView loadHTMLString:html baseURL:nil];
+        [_webView loadHTMLString:html baseURL:nil];
     }
     
-    webView.backgroundColor = [UIColor clearColor];
-    webView.opaque = NO;
-    webView.scrollView.showsVerticalScrollIndicator = NO;
-    webView.scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
+    _webView.backgroundColor = [UIColor clearColor];
+    _webView.opaque = NO;
+    _webView.scrollView.showsVerticalScrollIndicator = NO;
+    _webView.scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
     
     // Start webview faded out, load happens async, and this way we can fade it in rather
     // than popping when the load finishes. Slightly less jarring that way.
-    webView.alpha = 0.00f;
+    _webView.alpha = 0.00f;
     
-    webView.delegate = self;
+    _webView.delegate = self;
     
-    [self.view addSubview:webView];
-    
-    //
+    [self.view addSubview:_webView];
     
     //Done button
     UIImage* xImage = [UIImage imageNamed:@"x-icon"];
@@ -107,8 +122,31 @@
     [doneButton addTarget:self action:@selector(close:) forControlEvents:UIControlEventTouchUpInside];
     doneButton.backgroundColor = UI_PRIMARY_COLOR;
     [self.view addSubview:doneButton];
-
+    
     [super viewDidLoad];
+}
+
+-(void) createContactButtonForAbout {
+    
+    _contactButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [_contactButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [_contactButton setTitle:NSLocalizedString(@"Contact Cogeco Peer 1", nil) forState:UIControlStateNormal];
+    _contactButton.backgroundColor = UI_PRIMARY_COLOR;
+    _contactButton.titleLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:21];
+    
+    CGFloat contactButtonWidth = [[UIScreen mainScreen] bounds].size.width;
+    if ([[UIScreen mainScreen] bounds].size.width > 300) contactButtonWidth = 300;
+    
+    CGRect contactFrame = CGRectMake(
+                                  [[UIScreen mainScreen] bounds].size.width/2 - ((contactButtonWidth)/2),
+                                  [[UIScreen mainScreen] bounds].size.height-60,
+                                  contactButtonWidth, 45);
+    
+    _contactButton.frame = contactFrame;
+    _contactButton.layer.cornerRadius = _contactButton.frame.size.height / 2;
+    [_contactButton addTarget:self action:@selector(contact:) forControlEvents:UIControlEventTouchUpInside];
+
+    [self.view addSubview:_contactButton];
 }
 
 -(void)webViewDidFinishLoad:(UIWebView *)webView {
@@ -116,10 +154,27 @@
         webView.alpha = 1.0f;
     }];
     [webView.scrollView flashScrollIndicators];
+    
+    if ([_informationType isEqualToString:@"about"])
+        [self createContactButtonForAbout];
 }
 
 -(IBAction)close:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+-(IBAction)contact:(id)sender {
+    
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"contact" ofType:@"html"];
+    NSString *html = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error: nil];
+    if (html) {
+        [_webView loadHTMLString:html baseURL:nil];
+    }
+    
+    _informationType = @"contact";
+    [_contactButton removeFromSuperview];
+    
+    [_webView.scrollView setContentOffset: CGPointMake(0, -_webView.scrollView.contentInset.top) animated:YES];
 }
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -130,14 +185,14 @@
 {
     [super viewWillAppear:animated];
     
-    // the suggested not depreciated call doesnt seem to work
+    // the suggested not depreciated call does not seem to work
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
 }
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     
-    // the suggested not depreciated call doesnt seem  to work
+    // the suggested not depreciated call does not seem  to work
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
 }
 
