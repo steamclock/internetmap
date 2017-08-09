@@ -1217,6 +1217,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     NSLog(@"%@", report);
     
     self.nodeInformationViewController.tracerouteTextView.text = [[NSString stringWithFormat:@"%@\n%@", self.nodeInformationViewController.tracerouteTextView.text, report] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
     [self.nodeInformationViewController.box1 incrementNumber];
     
     if ([hops count] <= 0) {

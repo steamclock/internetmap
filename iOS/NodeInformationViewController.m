@@ -224,20 +224,19 @@
     dividerView.backgroundColor = [UIColor grayColor];
     [self.tracerouteContainerView addSubview:dividerView];
     
-    float tracerouteTvHeight = [HelperMethods deviceIsiPad] ? 450 : 0;
+    float tracerouteTvHeight = [HelperMethods deviceIsiPad] ? 450 : 250;
     self.tracerouteTextView = [[UITextView alloc] initWithFrame:CGRectMake(5, dividerView.y+dividerView.height, self.tracerouteContainerView.width-5, tracerouteTvHeight)];
     self.tracerouteTextView.backgroundColor = [UIColor clearColor];
     self.tracerouteTextView.textColor = [UIColor whiteColor];
     self.tracerouteTextView.editable = NO;
     self.tracerouteTextView.userInteractionEnabled = YES;
-    self.tracerouteTextView.scrollEnabled = [HelperMethods deviceIsiPad];
+    self.tracerouteTextView.scrollEnabled =  YES;
     self.tracerouteTextView.font = [UIFont fontWithName:FONT_NAME_REGULAR size:12];
     [self.tracerouteContainerView addSubview:self.tracerouteTextView];
     
     if (![HelperMethods deviceIsiPad]) {
         [self.tracerouteTextView addObserver:self forKeyPath:@"text" options:NSKeyValueObservingOptionNew context:nil];
     }
-    
 }
 
 - (IBAction)doneTapped {
@@ -250,6 +249,7 @@
     
     float verticalPad = [HelperMethods deviceIsiPad] ? VERTICAL_PADDING_IPAD : VERTICAL_PADDING_IPHONE;
     float contentHeight = self.box1.height+verticalPad/2+LABELS_HEIGHT+verticalPad/2+self.tracerouteTextView.height+verticalPad;
+
     if ([HelperMethods deviceHasInternetConnection]) {
         //UI setup
         if ([HelperMethods deviceIsiPad]) {
@@ -262,6 +262,10 @@
         self.tracerouteContainerView.hidden = NO;
         self.tracerouteTimer = [NSTimer scheduledTimerWithTimeInterval:0.001 target:self selector:@selector(tracerouteTimerFired) userInfo:nil repeats:YES];
         self.topLabel.text = [NSString stringWithFormat:@"To %@", self.topLabel.text];
+        
+        if (![HelperMethods deviceIsiPad]) {
+            self.scrollView.frame = CGRectMake(0, self.scrollView.frame.origin.y, self.scrollView.frame.size.width, self.scrollView.frame.size.height+250);
+        }
         
         [UIView animateWithDuration:1 animations:^{
             self.tracerouteContainerView.alpha = 1;
