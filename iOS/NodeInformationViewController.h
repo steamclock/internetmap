@@ -6,13 +6,13 @@
 //  Copyright (c) 2012 Peer1. All rights reserved.
 //
 
-#import "ViewController.h"
-
 @class LabelNumberBoxView;
+@class NodeWrapper;
 
 @protocol NodeInformationViewControllerDelegate <NSObject>
 
-- (void)tracerouteButtonTapped;
+-(void)tracerouteButtonTapped;
+-(void)forceTracerouteTimeout;
 
 @end
 

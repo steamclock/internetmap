@@ -53,7 +53,6 @@
     return [[SCTracerouteUtility alloc] initWithAddress:address];
 }
 
-
 #pragma mark - Instance Methods
 
 - (id)initWithAddress:(NSString *)hostAddress
@@ -85,6 +84,11 @@
     self.packetUtility = nil;
 }
 
+-(void)forcedTimeout {
+    if ([self.delegate respondsToSelector:@selector(tracerouteDidTimeout:)]) {
+        [self.delegate tracerouteDidTimeout:self.hopsForCurrentIP];
+    }
+}
 
 #pragma mark - Send packets
 - (void)sendPackets:(NSData*)data{
@@ -95,7 +99,7 @@
             [self.packetUtility sendPacketWithData:nil andTTL:self.ttlCount];
         }   
     } else if (self.ttlCount > MAX_HOPS) {
-        if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(tracerouteDidTimeout:)]) {
+        if ([self.delegate respondsToSelector:@selector(tracerouteDidTimeout:)]) {
             [self.delegate tracerouteDidTimeout:self.hopsForCurrentIP];
         }
     }
@@ -258,8 +262,6 @@
     }
 }
 
-
-
 -(NSInteger)getSequenceNumberForPacket:(NSData*)packet{
     
     NSInteger sequenceNumber = 0;
@@ -293,8 +295,7 @@
 - (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didSendPacket:(NSData *)packet{
     
     //If we just don't get ANY packets back after a whole two seconds, bail on the hop
-    [self performSelector:@selector(timeExceededForPacket:) withObject:packet afterDelay:1];
-    
+    [self performSelector:@selector(timeExceededForPacket:) withObject:packet afterDelay:1];    
     
 }
 
@@ -302,7 +303,7 @@
 
     // Check what kind of packet from header
     int typeOfPacket = [self processICMPPacket:packet];
-    
+
     if (typeOfPacket == kICMPTimeExceeded) {
         [NSObject cancelPreviousPerformRequestsWithTarget:self];
         [self processErrorICMPPacket:packet arrivedAt:dateTime];
