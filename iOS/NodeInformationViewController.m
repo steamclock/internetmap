@@ -19,7 +19,7 @@
 #define TRACEROUTE_BUTTON_HEIGHT 44
 #define TRACEROUTE_ENABLED 1
 
-#define TRACEROUTE_MAX_TIMEOUT_MILLISECONDS 40 * 1000 // arbitary cap off at 40 seconds, otherwise it can run forever
+#define TRACEROUTE_MAX_TIMEOUT_MILLISECONDS 30 * 1000 // arbitary cap off at 40 seconds, otherwise it can run forever
 
 
 #define INFO_BOX_HEIGHT 75

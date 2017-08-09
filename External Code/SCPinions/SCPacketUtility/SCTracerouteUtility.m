@@ -295,8 +295,7 @@
 - (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didSendPacket:(NSData *)packet{
     
     //If we just don't get ANY packets back after a whole two seconds, bail on the hop
-    [self performSelector:@selector(timeExceededForPacket:) withObject:packet afterDelay:1];
-    
+    [self performSelector:@selector(timeExceededForPacket:) withObject:packet afterDelay:1];    
     
 }
 
@@ -304,7 +303,7 @@
 
     // Check what kind of packet from header
     int typeOfPacket = [self processICMPPacket:packet];
-    
+
     if (typeOfPacket == kICMPTimeExceeded) {
         [NSObject cancelPreviousPerformRequestsWithTarget:self];
         [self processErrorICMPPacket:packet arrivedAt:dateTime];
