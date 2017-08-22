@@ -2,7 +2,8 @@ apply plugin: 'com.android.application'
 
 def internalCommonDataPath = "../../Android/app/src/main/assets/data"
 def externalCommonDataPath = "../../Common/Data"
-def externalDataMakeFile = "../../Android-NDK/Android.mk"
+//def externalDataMakeFile = "../../Android-NDK/Android.mk"
+def externalDataMakeFile = "../../Android-NDK/CMakeLists.txt"
 
 android {
     compileSdkVersion 25
@@ -31,6 +32,17 @@ android {
 //            targetCompatibility JavaVersion.VERSION_1_5
 //        }
 
+
+
+        //APP_ABI := armeabi x86
+
+        externalNativeBuild {
+            cmake {
+                cppFlags "-std=c++11"
+                arguments "-DBoost_DEBUG=ON"
+            }
+        }
+
         ndk {
             moduleName "internetmaprenderer"
         }
@@ -49,10 +61,16 @@ android {
     }
 
     externalNativeBuild {
-        ndkBuild {
+        cmake {
             path externalDataMakeFile
         }
     }
+
+//    externalNativeBuild {
+//        ndkBuild {
+//            path externalDataMakeFile
+//        }
+//    }
 }
 
 task deleteCommonData(type: Delete) {
