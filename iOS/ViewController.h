@@ -12,4 +12,6 @@
 
 @interface ViewController : GLKViewController <NodeSearchDelegate, SCTracerouteUtilityDelegate, UIGestureRecognizerDelegate, WEPopoverControllerDelegate, UIPopoverPresentationControllerDelegate, NodeInformationViewControllerDelegate>
 
+- (void) moreAboutCogeco;
+
 @end

@@ -554,6 +554,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)showCredits:(NSString *)informationType {
     CreditsViewController* credits = [[CreditsViewController alloc] initWithNibName:nil bundle:[NSBundle mainBundle]];
+    credits.delegate = self;
     credits.informationType = informationType;
     [self presentViewController:credits animated:YES completion:nil];
 }
@@ -662,7 +663,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.infoPopover = [[WEPopoverController alloc] initWithContentViewController:tableforPopover];
         self.infoPopover.delegate = self;
         
-        tableforPopover.items = @[ @"Introduction", @"Contact Cogeco Peer 1", @"About Cogeco Peer 1", @"Open Source", @"Credits" ];
+        tableforPopover.items = @[ @"Introduction", @"About Cogeco Peer 1", @"Contact Cogeco Peer 1", @"Open Source", @"Credits" ];
                         
         if (![HelperMethods deviceIsiPad]) {
             WEPopoverContainerViewProperties *prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
@@ -678,16 +679,21 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         tableforPopover.selectedBlock = ^(int index){
             switch (index) {
                 case 0: //introduction
+                {
                     [weakSelf showFirstUse];
                     break;
-                case 1: //contact
+                }
+                case 1: //about
+                {
+                    [weakSelf showCredits:@"about"];
+                    break;
+                }
+                case 2: //contact
                 {
                     [weakSelf showCredits:@"contact"];
                     break;
                 }
-                case 2: //about
-                    [weakSelf showCredits:@"about"];
-                    break;
+
                 case 3: //open source
                 {
                     [weakSelf showInSafariWithURL:@"https://github.com/steamclock/internetmap"];
@@ -720,6 +726,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     SFSafariViewController *safariView = [[SFSafariViewController alloc] initWithURL:url];
     safariView.modalPresentationStyle = UIModalPresentationOverFullScreen;
     [self presentViewController:safariView animated:YES completion:nil];
+}
+
+- (void) moreAboutCogeco {
+    [self showInSafariWithURL:@"http://cogecopeer1.com"];
 }
 
 -(IBAction)timelineButtonPressed:(id)sender {
