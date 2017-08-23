@@ -11,5 +11,5 @@
 @interface CreditsViewController : UIViewController <UIWebViewDelegate>
 
 @property (nonatomic,retain) NSString* informationType;
-
+@property (nonatomic, assign) id delegate;
 @end

@@ -12,7 +12,7 @@
 @interface CreditsViewController ()
 
 @property (nonatomic, retain) UIWebView* webView;
-@property (nonatomic, retain) UIButton* contactButton;
+@property (nonatomic, retain) UIButton* aboutMoreButton;
 
 @end
 
@@ -128,11 +128,11 @@
 
 -(void) createContactButtonForAbout {
     
-    _contactButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [_contactButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [_contactButton setTitle:NSLocalizedString(@"Contact Cogeco Peer 1", nil) forState:UIControlStateNormal];
-    _contactButton.backgroundColor = UI_PRIMARY_COLOR;
-    _contactButton.titleLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:21];
+    _aboutMoreButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [_aboutMoreButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [_aboutMoreButton setTitle:NSLocalizedString(@"Visit cogecopeer1.com", nil) forState:UIControlStateNormal];
+    _aboutMoreButton.backgroundColor = UI_PRIMARY_COLOR;
+    _aboutMoreButton.titleLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:19];
     
     CGFloat contactButtonWidth = [[UIScreen mainScreen] bounds].size.width;
     if ([[UIScreen mainScreen] bounds].size.width > 300) contactButtonWidth = 300;
@@ -142,11 +142,11 @@
                                   [[UIScreen mainScreen] bounds].size.height-60,
                                   contactButtonWidth, 45);
     
-    _contactButton.frame = contactFrame;
-    _contactButton.layer.cornerRadius = _contactButton.frame.size.height / 2;
-    [_contactButton addTarget:self action:@selector(contact:) forControlEvents:UIControlEventTouchUpInside];
+    _aboutMoreButton.frame = contactFrame;
+    _aboutMoreButton.layer.cornerRadius = _aboutMoreButton.frame.size.height / 2;
+    [_aboutMoreButton addTarget:self action:@selector(aboutMore:) forControlEvents:UIControlEventTouchUpInside];
 
-    [self.view addSubview:_contactButton];
+    [self.view addSubview:_aboutMoreButton];
 }
 
 -(void)webViewDidFinishLoad:(UIWebView *)webView {
@@ -163,18 +163,13 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
--(IBAction)contact:(id)sender {
-    
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"contact" ofType:@"html"];
-    NSString *html = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error: nil];
-    if (html) {
-        [_webView loadHTMLString:html baseURL:nil];
+-(IBAction)aboutMore:(id)sender {
+
+    [self dismissViewControllerAnimated:NO completion:nil];
+
+    if ( (self.delegate != nil) && [self.delegate respondsToSelector:@selector(moreAboutCogeco)] ) {
+        [self.delegate moreAboutCogeco];
     }
-    
-    _informationType = @"contact";
-    [_contactButton removeFromSuperview];
-    
-    [_webView.scrollView setContentOffset: CGPointMake(0, -_webView.scrollView.contentInset.top) animated:YES];
 }
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
