@@ -130,7 +130,7 @@
     
     _aboutMoreButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [_aboutMoreButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [_aboutMoreButton setTitle:NSLocalizedString(@"More about Cogeco Peer 1", nil) forState:UIControlStateNormal];
+    [_aboutMoreButton setTitle:NSLocalizedString(@"Visit cogecopeer1.com", nil) forState:UIControlStateNormal];
     _aboutMoreButton.backgroundColor = UI_PRIMARY_COLOR;
     _aboutMoreButton.titleLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:19];
     
