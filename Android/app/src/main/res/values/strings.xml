@@ -18,6 +18,7 @@
     <string name="infoHelp">Introduction</string>
     <string name="infoContactLink">Contact Cogeco Peer 1</string>
     <string name="infoAboutLink">About Cogeco Peer 1</string>
+    <string name="infoMoreAboutLink">Visit cogecopeer1.com</string>
     <string name="infoOpenSource">Open Source</string>
     <string name="infoCredits">Credits</string>
     <string name="loading">Loading %s...</string>

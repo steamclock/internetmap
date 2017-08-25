@@ -2,6 +2,7 @@ package com.peer1.internetmap;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.MenuItem;
@@ -27,12 +28,12 @@ public class AboutPopup extends BaseActivity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         bottomButton = (Button)findViewById(R.id.bottom_button);
-        bottomButton.setText(getString(R.string.infoContactLink));
+        bottomButton.setText(getString(R.string.infoMoreAboutLink));
         bottomButton.setVisibility(View.VISIBLE);
         bottomButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showContact();
+                showCogecoUrl();
             }
         });
 
@@ -57,8 +58,16 @@ public class AboutPopup extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void showContact() {
-        Intent intent = new Intent(AboutPopup.this, ContactPopup.class);
-        startActivity(intent);
+    // Until we can fix loading feedback, we are not going to load this content in an embedded WebView
+//    private void showCogecoWebView() {
+//        Intent intent = new Intent(AboutPopup.this, WebViewPopup.class);
+//        intent.putExtra(WebViewPopup.EXTRA_LOAD_URL, "https://cogecopeer1.com");
+//        intent.putExtra(WebViewPopup.EXTRA_TITLE, getString(R.string.infoMoreAboutLink));
+//        startActivity(intent);
+//    }
+
+    private void showCogecoUrl() {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://cogecopeer1.com"));
+        startActivity(browserIntent);
     }
 }
