@@ -47,7 +47,8 @@ public:
     void setVisualization(int visualization);
     
 private:
-    
+    void highlightRouteOnGlobe(std::vector<NodePointer> nodeList);
+
     int hoveredNodeIndex;
     std::vector<VisualizationPointer> _visualizations;
 };
