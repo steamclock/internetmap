@@ -41,6 +41,8 @@ public:
     // Update the visualizationLines in the display
     // Note: unlike updateDisplay, this will replace all existing lines
     virtual void updateLineDisplay(shared_ptr<MapDisplay> display, std::vector<ConnectionPointer>connections) = 0;
+
+    virtual void updateHighlightRouteLines(shared_ptr<MapDisplay> display, std::vector<NodePointer> nodeList) = 0;
 };
 
 typedef shared_ptr<Visualization> VisualizationPointer;

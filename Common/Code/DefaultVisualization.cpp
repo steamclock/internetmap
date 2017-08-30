@@ -174,3 +174,22 @@ void DefaultVisualization::resetDisplayForSelectedNodes(shared_ptr<MapDisplay> d
     
     updateDisplayForSelectedNodes(display, nodes);
 }
+
+
+
+void DefaultVisualization::updateHighlightRouteLines(std::shared_ptr<MapDisplay> display, std::vector<NodePointer> nodeList) {
+    shared_ptr<DisplayLines> lines(new DisplayLines(static_cast<int>(nodeList.size() - 1)));
+    lines->beginUpdate();
+    Color lineColor = ColorFromRGB(0xffa300);
+
+    for(unsigned int i = 0; i < nodeList.size() - 1; i++) {
+        NodePointer a = nodeList[i];
+        NodePointer b = nodeList[i+1];
+        lines->updateLine(i, nodePosition(a), lineColor, nodePosition(b), lineColor);
+    }
+
+    lines->endUpdate();
+    lines->setWidth(5.0);
+
+    display->highlightLines = lines;
+}

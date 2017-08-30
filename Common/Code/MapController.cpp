@@ -334,23 +334,7 @@ void MapController::highlightRoute(std::vector<NodePointer> nodeList) {
         return;
     }
 
-    if(dynamic_cast<GlobeVisualization*>(data->visualization.get())) {
-        highlightRouteOnGlobe(nodeList);
-        return;
-    }
-
-    shared_ptr<DisplayLines> lines(new DisplayLines(static_cast<int>(nodeList.size() - 1)));
-    lines->beginUpdate();
-    Color lineColor = ColorFromRGB(0xffa300);
-    
-    for(unsigned int i = 0; i < nodeList.size() - 1; i++) {
-        NodePointer a = nodeList[i];
-        NodePointer b = nodeList[i+1];
-        lines->updateLine(i, data->visualization->nodePosition(a), lineColor, data->visualization->nodePosition(b), lineColor);
-    }
-    
-    lines->endUpdate();
-    lines->setWidth(5.0);
+    data->visualization->updateHighlightRouteLines(display, nodeList);
 
     shared_ptr<DisplayNodes> selectedNodes(new DisplayNodes(static_cast<int>(nodeList.size())));
     
@@ -367,64 +351,9 @@ void MapController::highlightRoute(std::vector<NodePointer> nodeList) {
     display->nodes->endUpdate();
     selectedNodes->endUpdate();
     
-    display->highlightLines = lines;
     display->selectedNodes = selectedNodes;
 }
 
-void MapController::highlightRouteOnGlobe(std::vector<NodePointer> nodeList) {
-    if(nodeList.size() <= 1) {
-        clearHighlightLines();
-        return;
-    }
-
-    int numSubdiv = 35;
-    float radius = length(Vector3(data->visualization->nodePosition(nodeList[0])));
-    float maxElevation = 0.0f;//radius * 0.25;
-
-    shared_ptr<DisplayLines> lines(new DisplayLines(static_cast<int>(nodeList.size() - 1) * numSubdiv));
-    lines->beginUpdate();
-    Color lineColor = ColorFromRGB(0xffa300);
-
-    for(unsigned int i = 0; i < nodeList.size() - 1; i++) {
-        NodePointer a = nodeList[i];
-        NodePointer b = nodeList[i+1];
-
-        Point3 start = data->visualization->nodePosition(a);
-        Point3 end = data->visualization->nodePosition(b);
-        Point3 lastSubdivPoint = start;
-        float segmentElevation = fmin(maxElevation * (length(start - end) / radius), maxElevation);
-
-        for(unsigned int j = 0; j < numSubdiv; j++) {
-            float t = float(j + 1) / float(numSubdiv);
-            Vector3 newSubdivVector = normalize(Vector3(lerp(t, start, end)));
-            float elevation = radius + (segmentElevation * (1.414f * sqrt(0.5 - fabs(t - 0.5)) ));
-            Point3 newSubdivPoint = scale(Point3(newSubdivVector), elevation);
-            lines->updateLine((i * numSubdiv) + j, lastSubdivPoint, lineColor, newSubdivPoint, lineColor);
-                                        lastSubdivPoint = newSubdivPoint;
-        }
-    }
-
-    lines->endUpdate();
-    lines->setWidth(5.0);
-
-    shared_ptr<DisplayNodes> selectedNodes(new DisplayNodes(static_cast<int>(nodeList.size())));
-
-    selectedNodes->beginUpdate();
-    display->nodes->beginUpdate();
-
-    for(unsigned int i = 0; i < nodeList.size(); i++) {
-        NodePointer node = nodeList[i];
-        display->nodes->updateNode(node->index, ColorFromRGB(SELECTED_NODE_COLOR_HEX));
-        selectedNodes->updateNode(i, data->visualization->nodePosition(node), data->visualization->nodeSize(node) * 0.8, ColorFromRGB(SELECTED_NODE_COLOR_HEX));
-        highlightedNodes.insert(node->index);
-    }
-
-    display->nodes->endUpdate();
-    selectedNodes->endUpdate();
-
-    display->highlightLines = lines;
-    display->selectedNodes = selectedNodes;
-}
 
 int MapController::indexForNodeAtPoint(Vector2 pointInView) {
     

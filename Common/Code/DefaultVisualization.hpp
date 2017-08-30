@@ -30,6 +30,8 @@ public:
     virtual void updateDisplayForSelectedNodes(shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes);
     virtual void resetDisplayForSelectedNodes(shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes);
     virtual void updateLineDisplay(shared_ptr<MapDisplay> display, std::vector<ConnectionPointer>connections);
+    virtual void updateHighlightRouteLines(shared_ptr<MapDisplay> display, std::vector<NodePointer> nodeList);
+
     
     static void setPortrait(bool);
 };

@@ -114,3 +114,36 @@ void GlobeVisualization::updateLineDisplay(shared_ptr<MapDisplay> display, std::
     display->visualizationLines = lines;
 }
 
+void GlobeVisualization::updateHighlightRouteLines(std::shared_ptr<MapDisplay> display, std::vector<NodePointer> nodeList) {
+    int numSubdiv = 35;
+    float radius = length(Vector3(nodePosition(nodeList[0])));
+    float maxElevation = 0.0f;//radius * 0.25;
+
+    shared_ptr<DisplayLines> lines(new DisplayLines(static_cast<int>(nodeList.size() - 1) * numSubdiv));
+    lines->beginUpdate();
+    Color lineColor = ColorFromRGB(0xffa300);
+
+    for(unsigned int i = 0; i < nodeList.size() - 1; i++) {
+        NodePointer a = nodeList[i];
+        NodePointer b = nodeList[i+1];
+
+        Point3 start = nodePosition(a);
+        Point3 end = nodePosition(b);
+        Point3 lastSubdivPoint = start;
+        float segmentElevation = fmin(maxElevation * (length(start - end) / radius), maxElevation);
+
+        for(unsigned int j = 0; j < numSubdiv; j++) {
+            float t = float(j + 1) / float(numSubdiv);
+            Vector3 newSubdivVector = normalize(Vector3(lerp(t, start, end)));
+            float elevation = radius + (segmentElevation * (1.414f * sqrt(0.5 - fabs(t - 0.5)) ));
+            Point3 newSubdivPoint = scale(Point3(newSubdivVector), elevation);
+            lines->updateLine((i * numSubdiv) + j, lastSubdivPoint, lineColor, newSubdivPoint, lineColor);
+            lastSubdivPoint = newSubdivPoint;
+        }
+    }
+
+    lines->endUpdate();
+    lines->setWidth(5.0);
+
+    display->highlightLines = lines;
+}
