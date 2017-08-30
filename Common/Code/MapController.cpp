@@ -282,6 +282,25 @@ void MapController::highlightConnections(NodePointer node) {
         std::sort(filteredConnections.begin(), filteredConnections.end(), importanceCompareConnections);
         std::random_shuffle(filteredConnections.begin() + NUM_IMPORTANT_CONNECTIONS, filteredConnections.end());
         filteredConnections.resize(NUM_RENDERED_CONNECTIONS);
+
+        for(int i = filteredConnections.size() - 1; i > 0; i--) {
+            for(int j = i-1; j >= 0; j--) {
+                NodePointer a = filteredConnections[i]->first;
+                if(a == node) {
+                    a = filteredConnections[i]->second;
+                }
+
+                NodePointer b = filteredConnections[j]->first;
+                if(b == node) {
+                    b = filteredConnections[j]->second;
+                }
+
+                if(length(data->visualization->nodePosition(a) - data->visualization->nodePosition(b)) < 0.005) {
+                    filteredConnections.erase(filteredConnections.begin() + i);
+                    break;
+                }
+            }
+        }
     }
 
     data->visualization->updateConnectionLines(display, node, filteredConnections);
