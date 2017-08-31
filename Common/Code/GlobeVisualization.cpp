@@ -115,7 +115,7 @@ void GlobeVisualization::updateLineDisplay(shared_ptr<MapDisplay> display) {
     display->visualizationLines = lines;
 }
 
-void GlobeVisualization::updateHighlightRouteLines(std::shared_ptr<MapDisplay> display, std::vector<NodePointer> nodeList) {
+void GlobeVisualization::updateHighlightRouteLines(shared_ptr<MapDisplay> display, std::vector<NodePointer> nodeList) {
     int numSubdiv = 35;
     float radius = length(Vector3(nodePosition(nodeList[0])));
     float maxElevation = 0.0f;//radius * 0.25;
