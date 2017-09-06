@@ -116,13 +116,13 @@ void GlobeVisualization::updateLineDisplay(shared_ptr<MapDisplay> display) {
 }
 
 void GlobeVisualization::updateHighlightRouteLines(shared_ptr<MapDisplay> display, std::vector<NodePointer> nodeList) {
-    int numSubdiv = 35;
+    int numSubdiv = 30;
     float radius = length(Vector3(nodePosition(nodeList[0])));
     float maxElevation = 0.0f;//radius * 0.25;
 
     shared_ptr<DisplayLines> lines(new DisplayLines(static_cast<int>(nodeList.size() - 1) * numSubdiv));
     lines->beginUpdate();
-    Color lineColor = ColorFromRGB(0xffa300);
+    Color lineColor = ColorFromRGB(ROUTE_COLOR);
 
     for(unsigned int i = 0; i < nodeList.size() - 1; i++) {
         NodePointer a = nodeList[i];
@@ -189,15 +189,6 @@ void GlobeVisualization::updateConnectionLines(shared_ptr<MapDisplay> display, N
             lastSubdivPoint = newSubdivPoint;
             lastSubdivColor = newSubdivColor;
         }
-
-        /*
-        // The bright side is the current node
-        if(node == a) {
-            lines->updateLine(i, outsideA, brightColor, outsideB, dimColor);
-        }
-        else {
-            lines->updateLine(i, outsideA, dimColor, outsideB, brightColor);
-        }*/
     }
 
     lines->endUpdate();
