@@ -274,46 +274,36 @@ void MapController::highlightConnections(NodePointer node) {
         }
     }
     
-    static const unsigned int NUM_IMPORTANT_CONNECTIONS = 50;
-    static const unsigned int NUM_RENDERED_CONNECTIONS = 100;
+    static const unsigned int NUM_IMPORTANT_CONNECTIONS = 40;
+    static const unsigned int NUM_RENDERED_CONNECTIONS = 60;
     
     if (filteredConnections.size() > NUM_RENDERED_CONNECTIONS) {
         // show a few of the most important ones, then a random selection from the rest
         std::sort(filteredConnections.begin(), filteredConnections.end(), importanceCompareConnections);
         std::random_shuffle(filteredConnections.begin() + NUM_IMPORTANT_CONNECTIONS, filteredConnections.end());
-    }
-    
-    int renderedConnections = std::min((unsigned int)(filteredConnections.size()), NUM_RENDERED_CONNECTIONS);
-    shared_ptr<DisplayLines> lines(new DisplayLines(renderedConnections));
-    lines->beginUpdate();
-    
-    Color brightColor = ColorFromRGB(SELECTED_CONNECTION_COLOR_BRIGHT_HEX);
-    Color dimColor = ColorFromRGB(SELECTED_CONNECTION_COLOR_DIM_HEX);
+        filteredConnections.resize(NUM_RENDERED_CONNECTIONS);
 
-    for(unsigned int i = 0; i < renderedConnections; i++) {
-        ConnectionPointer connection = filteredConnections[i];
-        NodePointer a = connection->first;
-        NodePointer b = connection->second;
-        
-        // Draw lines from outside of nodes instead of center
-        Point3 positionA = data->visualization->nodePosition(a);
-        Point3 positionB = data->visualization->nodePosition(b);
-        
-        Point3 outsideA = MapUtilities().pointOnSurfaceOfNode(data->visualization->nodeSize(a), positionA, positionB);
-        Point3 outsideB = MapUtilities().pointOnSurfaceOfNode(data->visualization->nodeSize(b), positionB, positionA);
+        for(int i = filteredConnections.size() - 1; i > 0; i--) {
+            for(int j = i-1; j >= 0; j--) {
+                NodePointer a = filteredConnections[i]->first;
+                if(a == node) {
+                    a = filteredConnections[i]->second;
+                }
 
-        // The bright side is the current node
-        if(node == a) {
-            lines->updateLine(i, outsideA, brightColor, outsideB, dimColor);
-        }
-        else {
-            lines->updateLine(i, outsideA, dimColor, outsideB, brightColor);
+                NodePointer b = filteredConnections[j]->first;
+                if(b == node) {
+                    b = filteredConnections[j]->second;
+                }
+
+                if(length(data->visualization->nodePosition(a) - data->visualization->nodePosition(b)) < 0.005) {
+                    filteredConnections.erase(filteredConnections.begin() + i);
+                    break;
+                }
+            }
         }
     }
-    
-    lines->endUpdate();
-    lines->setWidth(((filteredConnections.size() < 20) ? 2 : 1));
-    display->highlightLines = lines;
+
+    data->visualization->updateConnectionLines(display, node, filteredConnections);
 }
 
 void MapController::clearHighlightLines() {
@@ -333,20 +323,8 @@ void MapController::highlightRoute(std::vector<NodePointer> nodeList) {
         clearHighlightLines();
         return;
     }
-    
 
-    shared_ptr<DisplayLines> lines(new DisplayLines(static_cast<int>(nodeList.size() - 1)));
-    lines->beginUpdate();
-    Color lineColor = ColorFromRGB(0xffa300);
-    
-    for(unsigned int i = 0; i < nodeList.size() - 1; i++) {
-        NodePointer a = nodeList[i];
-        NodePointer b = nodeList[i+1];
-        lines->updateLine(i, data->visualization->nodePosition(a), lineColor, data->visualization->nodePosition(b), lineColor);
-    }
-    
-    lines->endUpdate();
-    lines->setWidth(5.0);
+    data->visualization->updateHighlightRouteLines(display, nodeList);
 
     shared_ptr<DisplayNodes> selectedNodes(new DisplayNodes(static_cast<int>(nodeList.size())));
     
@@ -363,9 +341,9 @@ void MapController::highlightRoute(std::vector<NodePointer> nodeList) {
     display->nodes->endUpdate();
     selectedNodes->endUpdate();
     
-    display->highlightLines = lines;
     display->selectedNodes = selectedNodes;
 }
+
 
 int MapController::indexForNodeAtPoint(Vector2 pointInView) {
     
@@ -520,12 +498,12 @@ void MapController::updateDisplay(bool blend) {
     
     if(blend) {
         data->visualization->updateDisplayForNodes(display->targetNodes, data->nodes);
-        data->visualization->updateLineDisplay(display, data->connections);
+        data->visualization->updateLineDisplay(display);
         display->startBlend(1.0f);
     }
     else {
         data->visualization->updateDisplayForNodes(display->nodes, data->nodes);
-        data->visualization->updateLineDisplay(display, data->connections);
+        data->visualization->updateLineDisplay(display);
     }
     
     if(targetNode != INT_MAX) {

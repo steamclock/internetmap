@@ -93,65 +93,12 @@ void DefaultVisualization::updateDisplayForNodes(shared_ptr<DisplayNodes> displa
     display->endUpdate();
 }
 
-void DefaultVisualization::updateLineDisplay(shared_ptr<MapDisplay> display, std::vector<ConnectionPointer>connections) {
-    // Disabling default lines entirely for now, but leaving th code in case we want to renable it (in some cases) later
+void DefaultVisualization::updateLineDisplay(shared_ptr<MapDisplay> display) {
+    // No visualization lines for default visualization
     display->visualizationLines = shared_ptr<DisplayLines>();
     return;
-    
-//    if (deviceIsOld()) {
-//        display->visualizationLines = shared_ptr<DisplayLines>();
-//        return;
-//    }
-//    
-//    std::vector<ConnectionPointer> filteredConnections;
-//    
-//    // We are only drawing lines to nodes with > 0.01 importance, filter those out
-//    for (unsigned int i = 0; i < connections.size(); i++) {
-//        ConnectionPointer connection = connections[i];
-//        if ((connection->first->importance > 0.01) && (connection->second->importance > 0.01)) {
-//            filteredConnections.push_back(connection);
-//        }
-//    }
-//    
-//    int skipLines = 10;
-//    
-//    shared_ptr<DisplayLines> lines(new DisplayLines(filteredConnections.size() / skipLines));
-//    
-//    lines->beginUpdate();
-//    
-//    int currentIndex = 0;
-//    int count = 0;
-//    for(unsigned int i = 0; i < filteredConnections.size(); i++) {
-//        ConnectionPointer connection = filteredConnections[i];
-//        count++;
-//        
-//        if((count % skipLines) != 0) {
-//            continue;
-//        }
-//        
-//        NodePointer a = connection->first;
-//        NodePointer b = connection->second;
-//        
-//        float lineImportanceA = std::max(a->importance - 0.01f, 0.0f) * 1.5f;
-//        Color lineColorA = Color(lineImportanceA, lineImportanceA, lineImportanceA, 1.0);
-//        
-//        float lineImportanceB = std::max(b->importance - 0.01f, 0.0f) * 1.5f;
-//        Color lineColorB = Color(lineImportanceB, lineImportanceB, lineImportanceB, 1.0);
-//        
-//        Point3 positionA = nodePosition(a);
-//        Point3 positionB = nodePosition(b);
-//        
-//        Point3 outsideA = MapUtilities().pointOnSurfaceOfNode(nodeSize(a), positionA, positionB);
-//        Point3 outsideB = MapUtilities().pointOnSurfaceOfNode(nodeSize(b), positionB, positionA);
-//        
-//        lines->updateLine(currentIndex, outsideA, lineColorA, outsideB, lineColorB);
-//        currentIndex++;
-//    }
-//    
-//    lines->endUpdate();;
-//    
-//    display->visualizationLines = lines;
 }
+
 
 
 void DefaultVisualization::updateDisplayForSelectedNodes(shared_ptr<MapDisplay> display, std::vector<NodePointer> nodes) {
@@ -173,4 +120,56 @@ void DefaultVisualization::resetDisplayForSelectedNodes(shared_ptr<MapDisplay> d
     display->selectedNodes = theNodes;
     
     updateDisplayForSelectedNodes(display, nodes);
+}
+
+
+
+void DefaultVisualization::updateHighlightRouteLines(shared_ptr<MapDisplay> display, std::vector<NodePointer> nodeList) {
+    shared_ptr<DisplayLines> lines(new DisplayLines(static_cast<int>(nodeList.size() - 1)));
+    lines->beginUpdate();
+    Color lineColor = ColorFromRGB(0xffa300);
+
+    for(unsigned int i = 0; i < nodeList.size() - 1; i++) {
+        NodePointer a = nodeList[i];
+        NodePointer b = nodeList[i+1];
+        lines->updateLine(i, nodePosition(a), lineColor, nodePosition(b), lineColor);
+    }
+
+    lines->endUpdate();
+    lines->setWidth(5.0);
+
+    display->highlightLines = lines;
+}
+
+void DefaultVisualization::updateConnectionLines(shared_ptr<MapDisplay> display, NodePointer node, std::vector<ConnectionPointer> connections) {
+    shared_ptr<DisplayLines> lines(new DisplayLines(connections.size()));
+    lines->beginUpdate();
+
+    Color otherColor = ColorFromRGB(SELECTED_CONNECTION_COLOR_OTHER_HEX);
+    Color selfColor = ColorFromRGB(SELECTED_CONNECTION_COLOR_SELF_HEX);
+
+    for(unsigned int i = 0; i < connections.size(); i++) {
+        ConnectionPointer connection = connections[i];
+        NodePointer a = connection->first;
+        NodePointer b = connection->second;
+
+        // Draw lines from outside of nodes instead of center
+        Point3 positionA = nodePosition(a);
+        Point3 positionB = nodePosition(b);
+
+        Point3 outsideA = MapUtilities().pointOnSurfaceOfNode(nodeSize(a), positionA, positionB);
+        Point3 outsideB = MapUtilities().pointOnSurfaceOfNode(nodeSize(b), positionB, positionA);
+
+        // The bright side is the current node
+        if(node == a) {
+            lines->updateLine(i, outsideA, selfColor, outsideB, otherColor);
+        }
+        else {
+            lines->updateLine(i, outsideA, otherColor, outsideB, selfColor);
+        }
+    }
+
+    lines->endUpdate();
+    lines->setWidth(((connections.size() < 20) ? 2 : 1));
+    display->highlightLines = lines;
 }
