@@ -4,16 +4,18 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
 # May also need CMAKE_C_FLAGS?
 
 # Boost C++ lib setup
-set(BOOST_ROOT ../Android-Boost)
-set(BOOST_LIBRARYDIR ../Android-Boost)
-set(BOOST_INCLUDEDIR ../Android-Boost)
-set(Boost_INCLUDE_DIR ../Android-Boost)
+set(BOOST_ROOT "../External-Code-Android")
+set(BOOST_LIBRARYDIR "../External-Code-Android")
+set(BOOST_INCLUDEDIR "../External-Code-Android")
+set(Boost_INCLUDE_DIR "../External-Code-Android")
 set(Boost_USE_STATIC_LIBS   ON)
 set(Boost_USE_MULTITHREADED ON)
 find_package(Boost)
 
 # Android-NDK cpp files
 include_directories(.)
+
+# Removed local netinet files as they were having include issues. Use platform dependant system libs.
 include_directories(${ANDROID_NDK}/platforms/${ANDROID_PLATFORM}/arch-${ANDROID_ABI}/usr/include)
 
 # Android-Boost header files, kept separate to remove them from 
