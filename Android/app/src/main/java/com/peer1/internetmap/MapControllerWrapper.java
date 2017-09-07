@@ -24,4 +24,6 @@ public class MapControllerWrapper {
     public native void resetZoomAndRotationAnimated(boolean isPortraitMode);
     public native void setAllowIdleAnimation(boolean allow);
     public native void unhoverNode();
+    //public native String lastSearchIP(); // Ended up on branch, need to bring back at some point.
+    public native void sendPacket();
 }

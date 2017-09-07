@@ -41,6 +41,9 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_resetZoom
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_setAllowIdleAnimation(JNIEnv* jenv, jobject obj, bool allow);
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_unhoverNode(JNIEnv* jenv, jobject obj);
 
+
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_sendPacket(JNIEnv* jenv, jobject obj);
+
 //nodewrapper
 JNIEXPORT jstring JNICALL Java_com_peer1_internetmap_NodeWrapper_nativeFriendlyDescription(JNIEnv* jenv, jobject obj, int index);
 };

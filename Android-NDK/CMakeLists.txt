@@ -14,6 +14,7 @@ find_package(Boost)
 
 # Android-NDK cpp files
 include_directories(.)
+include_directories(${ANDROID_NDK}/platforms/${ANDROID_PLATFORM}/arch-${ANDROID_ABI}/usr/include)
 
 # Android-Boost header files, kept separate to remove them from 
 # Android Studio's auto symbol generation (was taking ~20 mins to build symbols)
