@@ -300,7 +300,7 @@ JNIEXPORT jstring JNICALL Java_com_peer1_internetmap_NodeWrapper_nativeFriendlyD
 }
 
 void printIcmpHdr(char* title, icmp icmp_hdr) {
-    LOG("%s: type=0x%x, id=0x%x, sequence =  0x%x\n",
+    LOG("%s: type=0x%x, id=0x%x, sequence = 0x%x\n",
     title, icmp_hdr.icmp_type, icmp_hdr.icmp_id, icmp_hdr.icmp_seq);
 }
 
@@ -312,6 +312,7 @@ void ping_it(struct in_addr *dst)
 {
     struct icmp icmp_hdr;
     struct sockaddr_in addr;
+    struct sockaddr_in rcv_addr;
 
     int sequence = 0;
     int sock = socket(AF_INET,SOCK_DGRAM,IPPROTO_ICMP);
@@ -321,6 +322,7 @@ void ping_it(struct in_addr *dst)
     }
 
     memset(&addr, 0, sizeof addr);
+
     addr.sin_family = AF_INET;
     addr.sin_addr = *dst;
 
@@ -351,6 +353,7 @@ void ping_it(struct in_addr *dst)
 
         LOG("Sent ICMP");
 
+        //memset(&rcv_addr, 0, sizeof rcv_addr);
         memset(&read_set, 0, sizeof read_set);
         FD_SET(sock, &read_set);
 
@@ -364,11 +367,11 @@ void ping_it(struct in_addr *dst)
             break;
         }
 
-        //we don't care about the sender address in this example..
-        slen = 0;
-        rc = recvfrom(sock, data, sizeof data, 0, NULL, &slen);
+        slen = sizeof rcv_addr;
+        rc = recvfrom(sock, data, sizeof data, 0, (struct sockaddr*)&rcv_addr, &slen);
 
-        LOG("Receive length, %d bytes\n", slen);
+        char* rcv_addy = inet_ntoa(rcv_addr.sin_addr);
+        LOG("Receive length, %d bytes\n from %s", slen, rcv_addy);
 
         if (rc <= 0) {
             LOG("recvfrom");
@@ -397,6 +400,9 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_sendPacke
         LOG("Failed to create socket");
         return;
     }
+
+    // TODO use instead:
+    //inet_ntop() and inet_pton()
 
     struct in_addr testaddr;
     inet_aton("13.32.253.9", &testaddr);
