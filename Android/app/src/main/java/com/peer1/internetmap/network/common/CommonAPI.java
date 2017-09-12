@@ -21,8 +21,11 @@ public interface CommonAPI {
      * <p>
      * Using https://www.ipify.org/ to grab external IP
      * As of 2017-05-10, service was free for use without limit
+     *
+     * NOTE Current SSL issue on some devices: https://github.com/steamclock/internetmap/issues/475
+     * Use http until this issue is fixed.
      */
-    @GET("https://api.ipify.org?format=json")
+    @GET("http://api.ipify.org?format=json")
     Call<GlobalIP> getGlobalIP();
 
     /**
