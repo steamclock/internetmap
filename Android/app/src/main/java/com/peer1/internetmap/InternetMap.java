@@ -2,14 +2,12 @@ package com.peer1.internetmap;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GestureDetectorCompat;
-import android.view.Display;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -234,14 +232,11 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        if (SharedPreferenceUtils.getShowingTooltipIndex() == 0) {
-                            showNextTooltip();
-                        } else {
-                            showCurrentTooltip();
-                        }
-
+                        // "Explore" counts as tooltip with index 0.
+                        SharedPreferenceUtils.markTooltipAsShown(0);
                         showLogo();
                         fadeLogoAfterDelay();
+                        showCurrentTooltip();
                     }
 
                     @Override
@@ -253,15 +248,6 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         // Show help, hide initial loading overlay
         firstTimePlaceholder.setVisibility(View.VISIBLE);
         firstTimeLoadingOverlay.setVisibility(View.GONE);
-    }
-
-    private void showNextTooltip() {
-        int nextStep = SharedPreferenceUtils.getShowingTooltipIndex()+1;
-        if (nextStep > totalTooltipSteps) {
-            return;
-        }
-        SharedPreferenceUtils.setShowingTooltipIndex(nextStep);
-        showCurrentTooltip();
     }
 
     private void showCurrentTooltip() {
@@ -276,7 +262,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
             return;
         }
 
-        int currentStep = SharedPreferenceUtils.getShowingTooltipIndex();
+        int currentStep = SharedPreferenceUtils.getNextTooltipIndex();
 
         tooltips.closeActiveTooltip();
         switch(currentStep) {
@@ -312,11 +298,8 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         tooltips.showToolTip(toolTip, onView);
     }
 
-    private void completeCurrentTooltipStep(int associatedStepNumber) {
-        if (SharedPreferenceUtils.getShowingTooltipIndex() == associatedStepNumber) {
-            hideCurrentTooltip();
-            SharedPreferenceUtils.setShowingTooltipIndex(associatedStepNumber+1);
-        }
+    private void markTooltipAsShown(int associatedStepNumber) {
+        SharedPreferenceUtils.markTooltipAsShown(associatedStepNumber);
     }
 
     // endregion
@@ -541,7 +524,8 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
     public void searchButtonPressed(View view) {
         dismissPopups();
 
-        completeCurrentTooltipStep(1);
+        markTooltipAsShown(1);
+        hideCurrentTooltip();
 
         //make the button change sooner, and don't let them toggle the button while we're loading
         searchIcon.setActivated(true);
@@ -586,6 +570,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
     public void visualizationsButtonPressed(View view) {
         
         dismissPopups();
+        markTooltipAsShown(2);
         hideCurrentTooltip();
 
         //make the button change sooner, and don't let them toggle the button while we're loading
@@ -604,7 +589,6 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
                 public void onDismiss() {
                     mVisualizationPopup = null;
                     visualizationIcon.setActivated(false);
-                    completeCurrentTooltipStep(2);
                     showCurrentTooltip();
                 }
             });
@@ -614,7 +598,6 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
 
     public void infoButtonPressed(View view) {
         dismissPopups();
-        completeCurrentTooltipStep(3);
         hideCurrentTooltip();
 
         //make the button change sooner, and don't let them toggle the button while we're loading
@@ -645,6 +628,8 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
 
     public void timelineButtonPressed(View view) {
 
+        markTooltipAsShown(3);
+
         if (mInTimelineMode) {
             if (isSmallScreen()) {
                 showLogo();
@@ -654,7 +639,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
             timelineIcon.setActivated(false);
             dismissPopups(); //leave timeline mode
         } else {
-            completeCurrentTooltipStep(3);
+
             if (isSmallScreen()) {
                 hideLogo();
                 hideCurrentTooltip();
