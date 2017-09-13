@@ -2,12 +2,14 @@ package com.peer1.internetmap;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GestureDetectorCompat;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -450,48 +452,48 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
             }
             boolean isUserNode = (node.index == mUserNodeIndex);
             mNodePopup.setNode(node, isUserNode);
-            //update size/position
-            View mainView = findViewById(R.id.surfaceview);
-            int gravity, width;
-            //note: PopupWindow appears to ignore gravity width/height hints
-            //and most of its size setters only take absolute numbers; setWindowLayoutMode is the exception
-            //but, setWindowLayoutMode doesn't properly handle absolute numbers either, so we may have to call *both*.
-            if (mInTimelineMode) {
-                gravity = Gravity.CENTER;
-                width = mainView.getWidth();
-                if (! isSmallScreen()) {
-                    //full width looks odd on tablets
-                    width = width / 2;
-                }
-            } else if (isSmallScreen()) {
-                gravity = Gravity.BOTTOM;
-                width = LayoutParams.MATCH_PARENT;
-            } else {
-                gravity = Gravity.CENTER_VERTICAL | Gravity.RIGHT;
-                width = mainView.getWidth() / 2;
+
+            View mainView = findViewById(R.id.mainLayout);
+            View centerVerticalGuideline = findViewById(R.id.center_vertical_guideline);
+            int width = mainView.getWidth();
+
+            // If on tablet, make popup take 1/2 the screen width.
+            if (!isSmallScreen()) {
+                width = width / 2;
             }
-            mNodePopup.setWindowLayoutMode(width, LayoutParams.WRAP_CONTENT);
+
             mNodePopup.setWidth(width);
+            mNodePopup.setHeight(LayoutParams.WRAP_CONTENT);
             int height = mNodePopup.getMeasuredHeight();
             mNodePopup.setHeight(height); //work around weird bugs
 
-            //now that the height is calculated, we can calculate any offset
-            int offset;
+            // Determine popup location
+            int gravity, xOffset = 0, yOffset = 0;
+            int guidelinePos[] = new int[2];
+            centerVerticalGuideline.getLocationOnScreen(guidelinePos);
+
             if (mInTimelineMode) {
-                //move it up by half the height
-                offset = -height/2;
+                // If in timeline mode, popup will be placed above the node on both tablets and phones.
+                // Due to issues with placing the popup in the center of the screen on different devices,
+                // we use guidelines to calculate screen locations.
+                gravity = Gravity.NO_GRAVITY;
+                yOffset = guidelinePos[1] - height;
+
+                if (!isSmallScreen()) {
+                    xOffset = width/2;
+                }
+            } else if (isSmallScreen()) {
+                // Non-timeline mode on small screen - fix popup to bottom.
+                gravity = Gravity.BOTTOM;
             } else {
-                offset = 0;
-            }
-            if (gravity != Gravity.BOTTOM) {
-                //account for the top bar
-                int location[] = new int[2];
-                mainView.getLocationOnScreen(location);
-                int top = location[1];
-                offset += top / 2;
+                // Non-timeline mode on tablet - popup will show on right side of node.
+                gravity = Gravity.NO_GRAVITY;
+                width = mainView.getWidth() / 2;
+                xOffset = width;
+                yOffset = guidelinePos[1] - height/2;
             }
 
-            mNodePopup.showAtLocation(mainView, gravity, 0, offset);
+            mNodePopup.showAtLocation(mainView, gravity, xOffset, yOffset);
         }
     }
 
