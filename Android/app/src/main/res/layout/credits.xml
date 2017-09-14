@@ -54,6 +54,16 @@
             android:padding="10dp"
             android:text="@string/next"
             android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/app_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="2dp"
+            android:layout_gravity="center"
+            android:textColor="@color/lightTextColor"
+            android:visibility="gone"
+            android:textSize="10dp"/>
     </LinearLayout>
 
     <ProgressBar

@@ -6,7 +6,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebView;
+import android.widget.TextView;
 
 import com.peer1.internetmap.utils.AppUtils;
 
@@ -20,6 +22,12 @@ public class CreditsPopup extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.credits);
         getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        int versionCode = BuildConfig.VERSION_CODE;
+        String versionName = BuildConfig.VERSION_NAME;
+        TextView appVersion = (TextView)findViewById(R.id.app_version);
+        appVersion.setVisibility(View.VISIBLE);
+        appVersion.setText(String.format("%s (%d)", versionName, versionCode));
 
         WebView webView = (WebView) findViewById(R.id.textView);
         try {
