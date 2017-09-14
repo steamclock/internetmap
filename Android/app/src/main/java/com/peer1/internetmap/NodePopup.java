@@ -2,6 +2,7 @@ package com.peer1.internetmap;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -78,12 +79,12 @@ public class NodePopup extends PopupWindow {
         TextView titleView = (TextView) getContentView().findViewById(R.id.titleView);
         titleView.setText(title);
 
-        /*
+
         if (!mIsTimelineView) {
             //show traceroute for all but user's current node
             Button tracerouteBtn = (Button) getContentView().findViewById(R.id.tracerouteBtn);
             tracerouteBtn.setVisibility(isUsersNode ? android.view.View.GONE : android.view.View.VISIBLE);
-        }*/
+        }
     }
     
     /**
