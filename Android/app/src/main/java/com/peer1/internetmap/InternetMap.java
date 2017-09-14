@@ -125,6 +125,9 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         mController = new MapControllerWrapper();
         mHandler = new Handler();
 
+
+        mController.sendPacket();
+
         SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
         timelineBar.setOnSeekBarChangeListener(new TimelineListener());
 

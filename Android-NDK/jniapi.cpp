@@ -300,7 +300,7 @@ JNIEXPORT jstring JNICALL Java_com_peer1_internetmap_NodeWrapper_nativeFriendlyD
 }
 
 void printIcmpHdr(char* title, icmp icmp_hdr) {
-    LOG("%s: type=0x%x, id=0x%x, sequence = 0x%x\n",
+    LOG("%s: type=0x%x, id=0x%x, sequence = 0x%x ",
     title, icmp_hdr.icmp_type, icmp_hdr.icmp_id, icmp_hdr.icmp_seq);
 }
 
@@ -315,7 +315,7 @@ void ping_it(struct in_addr *dst)
     struct sockaddr_in rcv_addr;
 
     int sequence = 0;
-    int sock = socket(AF_INET,SOCK_DGRAM,IPPROTO_ICMP);
+    int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_ICMP);
     if (sock < 0) {
         perror("socket");
         return ;
@@ -326,17 +326,44 @@ void ping_it(struct in_addr *dst)
     addr.sin_family = AF_INET;
     addr.sin_addr = *dst;
 
+    char* snd_addy = inet_ntoa(addr.sin_addr);
+
     memset(&icmp_hdr, 0, sizeof icmp_hdr);
     icmp_hdr.icmp_type = ICMP_ECHO;
     //icmp_hdr.un.echo.id = 1234;//arbitrary id
 
-    for (;;) {
+
+    int on = IP_PMTUDISC_PROBE;
+//    if (setsockopt(sock, SOL_IP, IP_MTU_DISCOVER, &on, sizeof(on)) &&
+//        (on = IP_PMTUDISC_DO,
+//                setsockopt(sock, SOL_IP, IP_MTU_DISCOVER, &on, sizeof(on)))) {
+//        perror("IP_MTU_DISCOVER");
+//        //exit(1);
+//    }
+    on = 1;
+    if (setsockopt(sock, SOL_IP, IP_RECVERR, &on, sizeof(on))) {
+        perror("IP_RECVERR");
+        //exit(1);
+    }
+    if (setsockopt(sock, SOL_IP, IP_RECVTTL, &on, sizeof(on))) {
+        perror("IP_RECVTTL");
+        //exit(1);
+    }
+
+    for (int ttl = 2; ttl < 255; ttl++) {
+
+        setsockopt(sock, SOL_IP/*IPPROTO_IP*/, IP_TTL, (char *)&ttl, sizeof(ttl));
+        LOG("----------------------------------------------");
+        LOG("Sending to %s with ttl %d", snd_addy, ttl);
+
         unsigned char data[2048];
         int rc;
         struct timeval timeout = {3, 0}; //wait max 3 seconds for a reply
         fd_set read_set;
         socklen_t slen;
         struct icmp rcv_hdr;
+
+        // TODO 3 probes
 
         icmp_hdr.icmp_seq = sequence++;
         memcpy(data, &icmp_hdr, sizeof icmp_hdr);
@@ -353,12 +380,12 @@ void ping_it(struct in_addr *dst)
 
         LOG("Sent ICMP");
 
-        //memset(&rcv_addr, 0, sizeof rcv_addr);
         memset(&read_set, 0, sizeof read_set);
         FD_SET(sock, &read_set);
 
         //wait for a reply with a timeout
         rc = select(sock + 1, &read_set, NULL, NULL, &timeout);
+
         if (rc == 0) {
             LOG("Got no reply");
             continue;
@@ -371,13 +398,13 @@ void ping_it(struct in_addr *dst)
         rc = recvfrom(sock, data, sizeof data, 0, (struct sockaddr*)&rcv_addr, &slen);
 
         char* rcv_addy = inet_ntoa(rcv_addr.sin_addr);
-        LOG("Receive length, %d bytes\n from %s", slen, rcv_addy);
+        LOG("Receive length, %d bytes from %s", slen, rcv_addy);
 
         if (rc <= 0) {
             LOG("recvfrom");
             break;
         } else if (rc < sizeof rcv_hdr) {
-            LOG("Error, got short ICMP packet, %d bytes\n", rc);
+            LOG("Error, got short ICMP packet, %d bytes", rc);
             break;
         }
 
@@ -385,8 +412,10 @@ void ping_it(struct in_addr *dst)
         if (rcv_hdr.icmp_type == ICMP_ECHOREPLY) {
             printIcmpHdr("Receive", rcv_hdr);
         } else {
-            LOG("Got ICMP packet with type 0x%x ?!?\n", rcv_hdr.icmp_type);
+            LOG("Got ICMP packet with type 0x%x ?!?", rcv_hdr.icmp_type);
         }
+
+        //break; // Test For now always break after getting reply
     }
 }
 
@@ -405,7 +434,7 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_sendPacke
     //inet_ntop() and inet_pton()
 
     struct in_addr testaddr;
-    inet_aton("13.32.253.9", &testaddr);
+    inet_aton("172.217.3.164"/*"13.32.253.9"*/, &testaddr);
 
     ping_it(&testaddr);
 
