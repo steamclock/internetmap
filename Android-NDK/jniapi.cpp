@@ -424,11 +424,12 @@ void ping_it(struct in_addr *dst)
     }
 }
 
-
-
-
-
-
+struct tracepath_hop {
+    int ttl;
+    char* ip;
+    struct timeval sendtime;
+    struct timeval receievetime;
+};
 
 int setupSocket(struct in_addr *dst) {
     int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_ICMP);
@@ -437,6 +438,11 @@ int setupSocket(struct in_addr *dst) {
         return sock;
     }
 
+    // TODO if this is not supported, we cannot run tracepath.
+    // IP_MTU_DISCOVER: Set or receive the Path MTU Discovery setting for a socket. When enabled, Linux will perform Path MTU Discovery as defined in RFC 1191 on SOCK_STREAM sockets.
+    // For non-SOCK_STREAM sockets, IP_PMTUDISC_DO forces the don't-fragment flag to be set on all outgoing packets. It is the user's responsibility to packetize
+    // e data in MTU-sized chunks and to do the retransmits if necessary. The kernel will reject (with EMSGSIZE) datagrams that are bigger than the known path MTU.
+    // IP_PMTUDISC_WANT will fragment a datagram if needed according to the path MTU, or will set the don't-fragment flag otherwise.
     int on = IP_PMTUDISC_PROBE;
     if (setsockopt(sock, SOL_IP, IP_MTU_DISCOVER, &on, sizeof(on)) && (on = IP_PMTUDISC_DO, setsockopt(sock, SOL_IP, IP_MTU_DISCOVER, &on, sizeof(on)))) {
         LOG("IP_MTU_DISCOVER");
@@ -444,17 +450,20 @@ int setupSocket(struct in_addr *dst) {
     }
     on = 1;
 
-    /**
-     * SOL_IP (set/configure various IP packet options, IP layer behaviors, [as here] netfilter module options)
-     */
-
+    // SOL_IP: (set/configure various IP packet options, IP layer behaviors, [as here] netfilter module options)
+    // IP_RECVERR: Enable extended reliable error message passing. When enabled on a datagram socket,
+    // all generated errors will be queued in a per-socket error queue. When the user receives an error from a socket operation,
+    // the errors can be received by calling recvmsg with the MSG_ERRQUEUE flag set.
     if (setsockopt(sock, SOL_IP, IP_RECVERR, &on, sizeof(on))) {
         LOG("IP_RECVERR");
-        //exit(1);
+        // TODO if this is not supported, we cannot run tracepath.
     }
+
+    // IP_RECVTTL: When this flag is set, pass a IP_TTL control message with the time to live field of the received
+    // packet as a byte. Not supported for SOCK_STREAM sockets.
+    // TODO, not sure if required for tracepath
     if (setsockopt(sock, SOL_IP, IP_RECVTTL, &on, sizeof(on))) {
         LOG("IP_RECVTTL");
-        //exit(1);
     }
 
     return sock;
@@ -478,6 +487,11 @@ struct probehdr
     struct timeval tv;
 };
 
+// TODO define this better.
+// returns the size of the error received.
+// < 0  == no error message available
+// 0    == error found, but could not correctly read host data
+// > 0  == error found, EHOSTUNREACH returned with intermediate host info
 int receiveError(int sock, int ttl) {
     struct msghdr msg;
     struct probehdr rcvbuf;
@@ -485,6 +499,7 @@ int receiveError(int sock, int ttl) {
     struct sockaddr_in addr;
     char cbuf[512];
 
+    // The recvmsg() call uses a msghdr structure to minimize the number of directly supplied arguments.
     memset(&rcvbuf, -1, sizeof(rcvbuf));
     iov.iov_base = &rcvbuf;
     iov.iov_len = sizeof(rcvbuf);
@@ -496,20 +511,34 @@ int receiveError(int sock, int ttl) {
     msg.msg_control = cbuf;
     msg.msg_controllen = sizeof(cbuf);
 
+    // recvmsg: Returns the length of the message on successful completion. If a message is too
+    // long to fit in the supplied buffer, excess bytes may be discarded depending on the type of
+    // socket the message is received from.
     int res = recvmsg(sock, &msg, MSG_ERRQUEUE);
     if (res < 0) {
+        // EAGAIN is often raised when performing non-blocking I/O.
+        // It means "there is no data available right now, try again later".
         if (errno == EAGAIN) {
+            // If there is no error available, then we may have a valid response coming back.
             LOG("errno == EAGAIN");
-            return res; //return progress;
+            return res;
+        } else if (errno == EWOULDBLOCK) {
+            // TODO, do we need to handle this? Since we are not setting MSG_DONTWAIT
+            // we may not have to.
+            LOG("errno == EWOULDBLOCK");
+            return res;
+        } else {
+            // Else, attempt to read MSG_ERRQUEUE again
+            return receiveError(sock, ttl);
         }
     }
 
 //    if (res == sizeof(rcvbuf)) {
 //        if (rcvbuf.ttl == 0 || rcvbuf.tv.tv_sec == 0) {
-//            broken_router = 1;
+//            //broken_router = 1;
 //        } else {
-//            sndhops = rcvbuf.ttl;
-//            rettv = &rcvbuf.tv;
+//            LOG("ttl %d", rcvbuf.ttl);
+//            LOG("tv %d", rcvbuf.tv);
 //        }
 //    }
 
@@ -520,6 +549,7 @@ int receiveError(int sock, int ttl) {
 
     e = NULL;
 
+    // Parse message into sock_extended_err object.
     for (cmsg = CMSG_FIRSTHDR(&msg); cmsg; cmsg = CMSG_NXTHDR(&msg, cmsg)) {
         if (cmsg->cmsg_level == SOL_IP) {
             if (cmsg->cmsg_type == IP_RECVERR) {
@@ -527,7 +557,7 @@ int receiveError(int sock, int ttl) {
             } else if (cmsg->cmsg_type == IP_TTL) {
                 memcpy(&rethops, CMSG_DATA(cmsg), sizeof(rethops));
             } else {
-                printf("cmsg:%d\n ", cmsg->cmsg_type);
+                LOG("Could not parse sock_extended_err; Invalid cmsg_type:%d\n ", cmsg->cmsg_type);
             }
         }
     }
@@ -549,35 +579,16 @@ int receiveError(int sock, int ttl) {
         char* rcv_addy = inet_ntoa(sin->sin_addr);
         LOG("Receive from %s", rcv_addy);
 
-        if (sndhops>0)
-            LOG("%2d:  ", sndhops);
-        else
-            LOG("%2d?: ", ttl);
+//        if (sndhops>0)
+//            LOG("%2d:  ", sndhops);
+//        else
+//            LOG("%2d?: ", ttl);
     }
 
     rethops = -1;
     sndhops = -1;
 
     switch (e->ee_errno) {
-        case ETIMEDOUT:
-            LOG("ETIMEDOUT");
-            break;
-        case EMSGSIZE:
-            LOG("EMSGSIZE");
-            LOG("pmtu %d\n", e->ee_info);
-            //mtu = e->ee_info;
-            //progress = mtu;
-            break;
-        case ECONNREFUSED:
-            LOG("ECONNREFUSED");
-            LOG("reached\n");
-            //hops_to = sndhops<0 ? ttl : sndhops;
-            //hops_from = rethops;
-            return 0;
-        case EPROTO:
-            LOG("EPROTO");
-            LOG("!P\n");
-            return 0;
         case EHOSTUNREACH:
             LOG("EHOSTUNREACH");
             if (e->ee_origin == SO_EE_ORIGIN_ICMP &&
@@ -597,17 +608,38 @@ int receiveError(int sock, int ttl) {
                 }
                 break;
             }
-            return 0;
+            return res; // res should be +
         case ENETUNREACH:
             LOG("ENETUNREACH");
             return 0;
+        case ETIMEDOUT:
+            LOG("ETIMEDOUT");
+            // If timed out, then attempt to receive error again.
+            return receiveError(sock, ttl);
+            break;
+        case EMSGSIZE:
+            LOG("EMSGSIZE");
+            LOG("pmtu %d\n", e->ee_info);
+            //mtu = e->ee_info;
+            //progress = mtu;
+            break;
+        case ECONNREFUSED:
+            LOG("ECONNREFUSED");
+            LOG("reached\n");
+            //hops_to = sndhops<0 ? ttl : sndhops;
+            //hops_from = rethops;
+            break;
+        case EPROTO:
+            LOG("EPROTO");
+            LOG("!P\n");
+            break;
         case EACCES:
             LOG("EACCES");
-            return 0;
+            break;
         default:
             errno = e->ee_errno;
             LOG("NET ERROR");
-            return 0;
+            break;
     }
 
     // goto restart
@@ -647,21 +679,29 @@ bool receiveData(int sock) {
 bool sendProbe(int sock, sockaddr_in addr, int ttl) {
 
     struct icmp icmp_hdr;
+    struct probehdr probe_hdr;
+    struct timeval tv;
     int sequence = 0;
 
     LOG("-------------------------------------------");
     memset(&icmp_hdr, 0, sizeof icmp_hdr);
     icmp_hdr.icmp_type = ICMP_ECHO;
-    //icmp_hdr.un.echo.id = 1234;//arbitrary id
+    int max_attempts = 10;
+    int i = 0;
+    bool error_msg_received = false;
 
-    //for (int i=0; i < 10; i++) { // I don't understand the loop to 10 here.
+    for (i=0; i < max_attempts; i++) {
 
-        //icmp_hdr.icmp_seq = sequence++;
+        icmp_hdr.icmp_seq = i;
         unsigned char data[2048];
         memcpy(data, &icmp_hdr, sizeof icmp_hdr);
         memcpy(data + sizeof icmp_hdr, "hello", 5); //icmp payload
 
-        printIcmpHdr("Sending   ", icmp_hdr);
+        LOG("TTL: %d", ttl);
+        printIcmpHdr("Sending", icmp_hdr);
+
+
+        // sendto: On success, return the number of characters sent. On error, -1 is returned, and errno is set appropriately.
         int rc = sendto(sock, data, sizeof icmp_hdr + 5, 0, (struct sockaddr*)&addr, sizeof addr);
         if (rc <= 0) {
             LOG("Failed to send ICMP packet");
@@ -669,28 +709,36 @@ bool sendProbe(int sock, sockaddr_in addr, int ttl) {
         }
 
         int err = receiveError(sock, ttl);
-        if (err == 0) {
-            return false;
+        // if err < 0, then
+        if (err == EAGAIN) {
+            // If there is no error available, then we may have a valid response coming back.
+            // We want to send out another packet to make sure this is the case.
+            continue;
+        } else if (err == 0) {
+            // If err = 0, then we have parsed out and handled an error message.
+            // This means that we will not be getting data on the socket, so there is no
+            // need to continue.
+            LOG("Error message received, moving to next TTL");
+            error_msg_received = true;
+            break;
         }
-
-        LOG("Sent ICMP");
-
-    //}
-
-    //if (i < 10) {
-
-    int reply = waitForReply(sock);
-    if (reply == 0) {
-        LOG("waitForReply, no reply");
-        return false;
-    } else if (reply < 0) {
-        LOG("Failed waitForReply");
-        return false;
-    } else {
-        return receiveData(sock);
     }
 
-    //}
+    if (error_msg_received) {
+        return false;
+    } else {
+        // No error found, We may have data waiting for us on the socket.
+        int reply = waitForReply(sock);
+        if (reply == 0) {
+            LOG("waitForReply, no reply");
+            return false;
+        } else if (reply < 0) {
+            LOG("Failed waitForReply");
+            return false;
+        } else {
+            return receiveData(sock);
+        }
+    }
 }
 
 void tracepath(struct in_addr *dst)
@@ -725,7 +773,7 @@ void tracepath(struct in_addr *dst)
         for (int probeCount = 0; probeCount < 1; probeCount++) {
 
             if (sendProbe(sock, addr, ttl)) {
-                ttl = 10000; //break; // break;
+                ttl = maxHops; //break; // break;
             }
 
         }
