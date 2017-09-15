@@ -30,6 +30,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 add_library(internetmaprenderer SHARED
             jniapi.cpp
             renderer.cpp
+            tracepath.cpp
             ../Common/Code/OpenGL.cpp
             ../Common/Code/DisplayLines.cpp
             ../Common/Code/DisplayNodes.cpp
