@@ -1,4 +1,7 @@
 #include "tracepath.h"
+#include <stdlib.h>
+#include <vector>
+#include <string>
 #include <android/log.h>
 #include <stdio.h>
 #include <errno.h>
@@ -12,6 +15,7 @@
 #include <arpa/inet.h>
 #include <sys/select.h>
 
+
 #define HOST_COLUMN_SIZE	52
 
 void printIcmpHdr(char* title, icmp icmp_hdr) {
@@ -19,16 +23,13 @@ void printIcmpHdr(char* title, icmp icmp_hdr) {
         title, icmp_hdr.icmp_type, icmp_hdr.icmp_id, icmp_hdr.icmp_seq);
 }
 
-struct tracepath_hop {
-    bool success;
-    int ttl;
-    char* receive_addr;
-    struct timeval sendtime;
-    struct timeval receievetime;
-};
+void print_tracepath_hop_vec(tracepath_hop_vec array) {
+    for (tracepath_hop_vec::iterator it = array.begin(); it != array.end(); ++it) {
+        LOG("TTL: %d --> %s", it->ttl, it->receive_addr.c_str());
+    }
+}
 
 Tracepath::Tracepath() {
-
     return;
 }
 
@@ -37,15 +38,17 @@ Tracepath::~Tracepath() {
     return;
 }
 
-
-void Tracepath::runWithDestinationAddress(struct in_addr *dst)
+std::vector<tracepath_hop> Tracepath::runWithDestinationAddress(struct in_addr *dst)
 {
+    tracepath_hop_vec result; // TODO <-- not done with result yet.
+
     struct sockaddr_in addr;
     memset(&addr, 0, sizeof addr);
 
     addr.sin_family = AF_INET;
     addr.sin_addr = *dst;
     char* snd_addy = inet_ntoa(addr.sin_addr);
+    std::string snd_addy_str = std::string(snd_addy);
 
     LOG("----------------------------------------------");
     LOG(" Starting trace to %s", snd_addy);
@@ -53,28 +56,46 @@ void Tracepath::runWithDestinationAddress(struct in_addr *dst)
     int sock = setupSocket(dst);
     if (sock < 0) {
         LOG("Failed to build send socket");
-        return;
+        return result;
     }
 
     int maxHops = 255;
+    int maxProbes = 3;
 
     for (int ttl = 1; ttl < maxHops; ttl++) {
 
         // Set TTL on socket
         if (setsockopt(sock, SOL_IP, IP_TTL, &ttl, sizeof(ttl))) {
             LOG("Failed to set IP_TTL");
-            return;
+            return result;
         }
+
+        struct tracepath_hop probe;
+        probe.ttl = ttl;
 
         // Send up to 3 probes
-        for (int probeCount = 0; probeCount < 1; probeCount++) {
+        for (int probeCount = 0; probeCount < maxProbes; probeCount++) {
 
-            if (sendProbe(sock, addr, ttl)) {
-                ttl = maxHops; //break; // break;
+            if (sendProbe(sock, addr, ttl, probeCount, probe)) {
+                if (probe.success) {
+                    probeCount = maxProbes; // Break out of inner loop
+
+                    LOG("Pushing probe");
+                    result.push_back(probe);
+
+                    if (probe.receive_addr.compare(snd_addy_str) == 0) {
+                        // We have reached our destination
+                        // Break out of outer loop
+                        ttl = maxHops;
+                        break;
+                    }
+                }
             }
-
         }
     }
+
+    // LEFT OFF, weird pass by reference issues happening with probe hop data.
+    print_tracepath_hop_vec(result);
 
     LOG("----------------------------------------------");
     LOG(" Trace complete");
@@ -125,7 +146,7 @@ int Tracepath::waitForReply(int sock) {
     struct timeval tv;
     FD_ZERO(&fds);
     FD_SET(sock, &fds);
-    tv.tv_sec = 3;
+    tv.tv_sec = 1;
     tv.tv_usec = 0;
     return select(sock+1, &fds, NULL, NULL, &tv);
 }
@@ -138,10 +159,7 @@ struct probehdr
 
 // TODO define this better.
 // returns the size of the error received.
-// < 0  == no error message available
-// 0    == error found, but could not correctly read host data
-// > 0  == error found, EHOSTUNREACH returned with intermediate host info
-int Tracepath::receiveError(int sock, int ttl) {
+bool Tracepath::receiveError(int sock, int ttl, tracepath_hop &probe) {
     struct msghdr msg;
     struct probehdr rcvbuf;
     struct iovec  iov;
@@ -163,22 +181,19 @@ int Tracepath::receiveError(int sock, int ttl) {
     // recvmsg: Returns the length of the message on successful completion. If a message is too
     // long to fit in the supplied buffer, excess bytes may be discarded depending on the type of
     // socket the message is received from.
+
     int res = recvmsg(sock, &msg, MSG_ERRQUEUE);
     if (res < 0) {
         // EAGAIN is often raised when performing non-blocking I/O.
         // It means "there is no data available right now, try again later".
-        if (errno == EAGAIN) {
+        if (errno == EAGAIN || errno == EWOULDBLOCK) {
             // If there is no error available, then we may have a valid response coming back.
             LOG("errno == EAGAIN");
-            return res;
-        } else if (errno == EWOULDBLOCK) {
-            // TODO, do we need to handle this? Since we are not setting MSG_DONTWAIT
-            // we may not have to.
-            LOG("errno == EWOULDBLOCK");
-            return res;
+            probe.error = EAGAIN;
+            return false;
         } else {
             // Else, attempt to read MSG_ERRQUEUE again
-            return receiveError(sock, ttl);
+            return receiveError(sock, ttl, probe);
         }
     }
 
@@ -225,8 +240,13 @@ int Tracepath::receiveError(int sock, int ttl) {
         //char *idn = NULL;
         inet_ntop(AF_INET, &sin->sin_addr, abuf, sizeof(abuf));
 
-        char* rcv_addy = inet_ntoa(sin->sin_addr);
-        LOG("Receive from %s", rcv_addy);
+        // We have pulled out the error for this TTL level, count the probe
+        // as a success.
+        probe.receive_addr = std::string(abuf);
+        probe.success = true;
+        probe.error = e->ee_errno;
+
+        LOG("Receive from %s", abuf);
 
 //        if (sndhops>0)
 //            LOG("%2d:  ", sndhops);
@@ -240,31 +260,30 @@ int Tracepath::receiveError(int sock, int ttl) {
     switch (e->ee_errno) {
         case EHOSTUNREACH:
             LOG("EHOSTUNREACH");
-            if (e->ee_origin == SO_EE_ORIGIN_ICMP &&
-                e->ee_type == 11 &&
-                e->ee_code == 0) {
-                if (rethops>=0) {
-                    if (rethops<=64)
-                        rethops = 65-rethops;
-                    else if (rethops<=128)
-                        rethops = 129-rethops;
-                    else
-                        rethops = 256-rethops;
-                    if (sndhops>=0 && rethops != sndhops)
-                        LOG("asymm %2d ", rethops);
-                    else if (sndhops<0 && rethops != ttl)
-                        LOG("asymm %2d ", rethops);
-                }
-                break;
-            }
-            return res; // res should be +
+//            if (e->ee_origin == SO_EE_ORIGIN_ICMP &&
+//                e->ee_type == 11 &&
+//                e->ee_code == 0) {
+//                if (rethops>=0) {
+//                    if (rethops<=64)
+//                        rethops = 65-rethops;
+//                    else if (rethops<=128)
+//                        rethops = 129-rethops;
+//                    else
+//                        rethops = 256-rethops;
+//                    if (sndhops>=0 && rethops != sndhops)
+//                        LOG("asymm %2d ", rethops);
+//                    else if (sndhops<0 && rethops != ttl)
+//                        LOG("asymm %2d ", rethops);
+//                }
+//            }
+            break;
         case ENETUNREACH:
             LOG("ENETUNREACH");
-            return 0;
+            break;
         case ETIMEDOUT:
             LOG("ETIMEDOUT");
             // If timed out, then attempt to receive error again.
-            return receiveError(sock, ttl);
+            return receiveError(sock, ttl, probe);
             break;
         case EMSGSIZE:
             LOG("EMSGSIZE");
@@ -291,11 +310,10 @@ int Tracepath::receiveError(int sock, int ttl) {
             break;
     }
 
-    // goto restart
-    return 0;
+    return true;
 }
 
-bool Tracepath::receiveData(int sock) {
+bool Tracepath::receiveData(int sock, tracepath_hop &probe) {
     struct sockaddr_in rcv_addr;
     socklen_t slen = sizeof rcv_addr;
 
@@ -314,6 +332,9 @@ bool Tracepath::receiveData(int sock) {
         return false;
     }
 
+    probe.receive_addr = std::string(rcv_addy);
+    probe.success = true;
+
     memcpy(&rcv_hdr, data, sizeof rcv_hdr);
     if (rcv_hdr.icmp_type == ICMP_ECHOREPLY) {
         printIcmpHdr("Received", rcv_hdr);
@@ -325,7 +346,7 @@ bool Tracepath::receiveData(int sock) {
     return false;
 }
 
-bool Tracepath::sendProbe(int sock, sockaddr_in addr, int ttl) {
+bool Tracepath::sendProbe(int sock, sockaddr_in addr, int ttl, int attempt, tracepath_hop &probe) {
 
     struct icmp icmp_hdr;
     struct probehdr probe_hdr;
@@ -341,14 +362,13 @@ bool Tracepath::sendProbe(int sock, sockaddr_in addr, int ttl) {
 
     for (i=0; i < max_attempts; i++) {
 
-        icmp_hdr.icmp_seq = i;
+        icmp_hdr.icmp_seq = attempt;
         unsigned char data[2048];
         memcpy(data, &icmp_hdr, sizeof icmp_hdr);
         memcpy(data + sizeof icmp_hdr, "hello", 5); //icmp payload
 
         LOG("TTL: %d", ttl);
         printIcmpHdr("Sending", icmp_hdr);
-
 
         // sendto: On success, return the number of characters sent. On error, -1 is returned, and errno is set appropriately.
         int rc = sendto(sock, data, sizeof icmp_hdr + 5, 0, (struct sockaddr*)&addr, sizeof addr);
@@ -357,14 +377,14 @@ bool Tracepath::sendProbe(int sock, sockaddr_in addr, int ttl) {
             return false;
         }
 
-        int err = receiveError(sock, ttl);
-        // if err < 0, then
-        if (err == EAGAIN) {
+        bool foundError = receiveError(sock, ttl, probe);
+        if (!foundError) {
+            LOG("No Error message received, attempting to read incoming data");
             // If there is no error available, then we may have a valid response coming back.
-            // We want to send out another packet to make sure this is the case.
+            // TODO Do We want to send out another packet to make sure this is the case?
             continue;
-        } else if (err == 0) {
-            // If err = 0, then we have parsed out and handled an error message.
+        } else {
+            // We have parsed out and handled an error message.
             // This means that we will not be getting data on the socket, so there is no
             // need to continue.
             LOG("Error message received, moving to next TTL");
@@ -374,7 +394,9 @@ bool Tracepath::sendProbe(int sock, sockaddr_in addr, int ttl) {
     }
 
     if (error_msg_received) {
-        return false;
+        // If we received an error we should have logged the data in probe.
+        // Count as a successful probe.
+        return true;
     } else {
         // No error found, We may have data waiting for us on the socket.
         int reply = waitForReply(sock);
@@ -385,7 +407,7 @@ bool Tracepath::sendProbe(int sock, sockaddr_in addr, int ttl) {
             LOG("Failed waitForReply");
             return false;
         } else {
-            return receiveData(sock);
+            return receiveData(sock, probe);
         }
     }
 }
