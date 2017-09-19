@@ -46,4 +46,9 @@
     <string name="searchTooltip">Here you can search for\ncompanies and domains</string>
     <string name="visTooltip">You can also view the\ninternet as a network</string>
     <string name="timelineTooltip">And browse the\nhistory of the internet</string>
+
+    <string name="trace_ip_hops">IP Hops</string>
+    <string name="trace_asn_hops">ASN Hops</string>
+    <string name="trace_time">Time (ms)</string>
+    <string name="traceroute_details">Details of Traceroute</string>
 </resources>

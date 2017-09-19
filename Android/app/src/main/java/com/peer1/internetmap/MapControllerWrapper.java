@@ -5,6 +5,7 @@ package com.peer1.internetmap;
  */
 public class MapControllerWrapper {
     public native void rotateRadiansXY(float radX, float radY);
+    public native void translateYAnimated(float translateY, float seconds);
     public native void startMomentumPanWithVelocity(float vX, float vY);
     public native void handleTouchDownAtPoint(float x, float y);
     public native void zoomByScale(float scale);

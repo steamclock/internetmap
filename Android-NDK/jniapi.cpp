@@ -114,6 +114,12 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_rotateRad
     renderer->bufferedRotationY(radY);
 }
 
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_translateYAnimated(JNIEnv* jenv, jobject obj, float translateY, float seconds) {
+    MapController* controller = renderer->beginControllerModification();
+    controller->display->camera->translateYAnimated(translateY, 1);
+    renderer->endControllerModification();
+}
+
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_startMomentumPanWithVelocity(JNIEnv* jenv, jobject obj,
         float vX, float vY) {
     MapController* controller = renderer->beginControllerModification();
@@ -303,7 +309,7 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_sendPacke
     struct in_addr testaddr;
     inet_aton("172.217.3.164"/*"13.32.253.9"*/, &testaddr);
 
-    tracepath->runWithDestinationAddress(&testaddr);
+    //tracepath->runWithDestinationAddress(&testaddr);
 }
 
 void DetachThreadFromVM(void) {

@@ -14,4 +14,19 @@
         <item name="colorControlHighlight">@color/colorAccent</item>
     </style>
 
+
+    <style name="traceroute_property">
+        <item name="android:padding">5dp</item>
+    </style>
+
+    <style name="traceroute_property_header">
+        <item name="android:textSize">20dp</item>
+        <item name="android:textColor">@color/lightTextColor</item>
+    </style>
+
+    <style name="traceroute_property_value">
+        <item name="android:textSize">16dp</item>
+        <item name="android:textColor">@color/lightTextColor</item>
+    </style>
+
 </resources>
