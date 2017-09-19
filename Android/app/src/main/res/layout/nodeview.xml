@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/arrowLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/leftArrow"
@@ -11,22 +11,23 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:src="@drawable/arrow_black_left"
-        android:tint="@color/colorPrimaryDark"/>
+        android:tint="@color/colorPrimaryDark" />
 
     <LinearLayout
         android:id="@+id/LinearLayout1"
         android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorAccent" >
+            android:background="@color/colorAccent">
 
             <TextView
                 android:id="@+id/titleView"
+                fontPath="@string/font_bold"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -34,10 +35,8 @@
                 android:layout_weight="1"
                 android:singleLine="true"
                 android:text="&lt;title>"
-                fontPath="@string/font_bold"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@color/darkTextColor"
-                />
+                android:textColor="@color/darkTextColor" />
 
             <ImageButton
                 android:id="@+id/closeBtn"
@@ -46,15 +45,16 @@
                 android:layout_height="wrap_content"
                 android:background="@color/colorAccent"
                 android:src="@drawable/x_icon"
-                android:tint="@color/darkTextColor"/>
+                android:tint="@color/darkTextColor" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/contentLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@color/translucentBlack" >
+            android:background="@color/translucentBlack"
+            android:animateLayoutChanges="true"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/mainTextView"
@@ -62,8 +62,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/contentPadding"
                 android:text="&lt;content>"
-                android:textColor="@color/lightTextColor"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/lightTextColor" />
 
             <Button
                 android:id="@+id/tracerouteBtn"
@@ -77,6 +77,21 @@
                 android:visibility="gone" />
 
         </LinearLayout>
+
+
+        <ScrollView
+            android:id="@+id/traceroute_details"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:fillViewport="true"
+            android:visibility="gone"
+            android:animateLayoutChanges="true"
+            android:background="@color/translucentBlack">
+
+            <include layout="@layout/view_traceroute_details" />
+
+        </ScrollView>
+
     </LinearLayout>
 
 </LinearLayout>

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GestureDetectorCompat;
+import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
@@ -430,6 +432,19 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
                 } else {
                     isSimulated = false;
                     popupView = layoutInflater.inflate(R.layout.nodeview, null);
+
+                    // Determine height of traceview window based on the height of the device.
+                    DisplayMetrics displayMetrics = new DisplayMetrics();
+                    getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                    int heightPx = displayMetrics.heightPixels;
+                    int heightDp = heightPx / 3;
+
+                    // Set the height of the traceroute details view to be 1/3 the screen size.
+                    popupView.findViewById(R.id.traceroute_details).setLayoutParams(new LinearLayout.LayoutParams(
+                            LayoutParams.MATCH_PARENT,
+                            heightDp
+                    ));
+
                     if (isSmallScreen()) {
                         popupView.findViewById(R.id.leftArrow).setVisibility(View.GONE);
                     }
@@ -442,7 +457,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
                     });
                 }
 
-                mNodePopup = new NodePopup(this, popupView, mInTimelineMode, isSimulated);
+                mNodePopup = new NodePopup(this, mController, popupView, mInTimelineMode, isSimulated);
                 mNodePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     public void onDismiss() {
                         mNodePopup = null;
