@@ -35,6 +35,10 @@ extern "C" {
 
     // Traceroute
     JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_sendPacket(JNIEnv* jenv, jobject obj);
+    JNIEXPORT int JNICALL Java_com_peer1_internetmap_MapControllerWrapper_probeDestinationAddressWithTTL(JNIEnv* jenv, jobject obj,
+                                                                                                     jstring destinationAddr,
+                                                                                                     int ttl,
+                                                                                                     jstring result);
 
     //nodewrapper
     JNIEXPORT jstring JNICALL Java_com_peer1_internetmap_NodeWrapper_nativeFriendlyDescription(JNIEnv* jenv, jobject obj, int index);

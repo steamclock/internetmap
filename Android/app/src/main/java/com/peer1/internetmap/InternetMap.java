@@ -35,6 +35,7 @@ import com.peer1.internetmap.network.common.CommonClient;
 import com.peer1.internetmap.utils.AppUtils;
 import com.peer1.internetmap.utils.CustomTooltipManager;
 import com.peer1.internetmap.utils.SharedPreferenceUtils;
+import com.peer1.internetmap.utils.TracerouteUtil;
 import com.peer1.internetmap.utils.ViewUtils;
 import com.spyhunter99.supertooltips.ToolTip;
 import com.spyhunter99.supertooltips.ToolTipManager;
@@ -128,7 +129,10 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         mHandler = new Handler();
 
 
-        mController.sendPacket();
+        //mController.sendPacket();
+
+        TracerouteUtil tracerouteUtil = new TracerouteUtil(mController);
+        tracerouteUtil.startTrace();
 
         SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
         timelineBar.setOnSeekBarChangeListener(new TimelineListener());
