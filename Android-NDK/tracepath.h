@@ -23,6 +23,11 @@ struct tracepath_hop {
     struct timeval receievetime;
 };
 
+struct probe_result {
+    bool success = false;
+    std::string receive_addr;
+};
+
 typedef std::vector<tracepath_hop> tracepath_hop_vec;
 
 class Tracepath {
@@ -31,7 +36,7 @@ public:
     Tracepath();
     virtual ~Tracepath();
     std::vector<tracepath_hop> runWithDestinationAddress(struct in_addr *dst);
-    int probeDestinationAddressWithTTL(struct in_addr *dst, int ttl, std::string &result);
+    probe_result probeDestinationAddressWithTTL(struct in_addr *dst, int ttl);
 
 private:
     int setupSocket(struct in_addr *dst);
