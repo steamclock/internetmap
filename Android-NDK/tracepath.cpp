@@ -14,6 +14,7 @@
 #include <netinet/ip_icmp.h>
 #include <arpa/inet.h>
 #include <sys/select.h>
+#include <unistd.h>
 
 
 #define HOST_COLUMN_SIZE	52
@@ -36,6 +37,53 @@ Tracepath::Tracepath() {
 Tracepath::~Tracepath() {
     LOG_INFO("Renderer instance destroyed");
     return;
+}
+
+int Tracepath::probeDestinationAddressWithTTL(struct in_addr *dst, int ttl, std::string &result) {
+
+    struct tracepath_hop probe;
+    struct sockaddr_in addr;
+    memset(&addr, 0, sizeof addr);
+
+    addr.sin_family = AF_INET;
+    addr.sin_addr = *dst;
+    char* snd_addy = inet_ntoa(addr.sin_addr);
+    std::string snd_addy_str = std::string(snd_addy);
+
+    LOG(" Starting probeDestinationAddressWithTTL to %s with %d", snd_addy, ttl);
+
+    int sock = setupSocket(dst);
+    if (sock < 0) {
+        LOG("Failed to build send socket");
+        return -1; // TODO error result
+    }
+
+    // Set TTL on socket
+    if (setsockopt(sock, SOL_IP, IP_TTL, &ttl, sizeof(ttl))) {
+        LOG("Failed to set IP_TTL, cannot make packet request");
+        return -1;
+    }
+
+    probe.ttl = ttl;
+
+    int maxProbes = 3;
+    int seq = 0;
+
+    // Send up to 3 probes per TLL
+    for (int probeCount = 0; probeCount < maxProbes; probeCount++) {
+
+        if (sendProbe(sock, addr, ttl, seq++, probe)) {
+            if (probe.success) {
+                result = probe.receive_addr;
+                break;
+            }
+        }
+    }
+
+    // Cleanup
+    close(sock);
+
+    return probe.success;
 }
 
 std::vector<tracepath_hop> Tracepath::runWithDestinationAddress(struct in_addr *dst)
@@ -62,6 +110,8 @@ std::vector<tracepath_hop> Tracepath::runWithDestinationAddress(struct in_addr *
     int maxHops = 255;
     int maxProbes = 3;
 
+    int seq = 0;
+
     for (int ttl = 1; ttl < maxHops; ttl++) {
 
         // Set TTL on socket
@@ -73,10 +123,10 @@ std::vector<tracepath_hop> Tracepath::runWithDestinationAddress(struct in_addr *
         struct tracepath_hop probe;
         probe.ttl = ttl;
 
-        // Send up to 3 probes
+        // Send up to 3 probes per TLL
         for (int probeCount = 0; probeCount < maxProbes; probeCount++) {
 
-            if (sendProbe(sock, addr, ttl, probeCount, probe)) {
+            if (sendProbe(sock, addr, ttl, seq++, probe)) {
                 if (probe.success) {
                     probeCount = maxProbes; // Break out of inner loop
 
@@ -93,6 +143,9 @@ std::vector<tracepath_hop> Tracepath::runWithDestinationAddress(struct in_addr *
             }
         }
     }
+
+    // TODO cleanup
+    close(sock);
 
     // LEFT OFF, weird pass by reference issues happening with probe hop data.
     print_tracepath_hop_vec(result);
@@ -153,23 +206,39 @@ int Tracepath::waitForReply(int sock) {
 
 struct probehdr
 {
-    __u32 ttl;
+    int ttl;
     struct timeval tv;
 };
+
+void printCharArray(char list[]) {
+    std::string listStr (list);
+    LOG("%s", listStr.c_str());
+}
 
 // TODO define this better.
 // returns the size of the error received.
 bool Tracepath::receiveError(int sock, int ttl, tracepath_hop &probe) {
     struct msghdr msg;
-    struct probehdr rcvbuf;
+
     struct iovec  iov;
     struct sockaddr_in addr;
     char cbuf[512];
 
+    struct icmp rcv_icmp_hdr;
+    struct probehdr rcv_probe_hdr;
+    int messageSize = sizeof(rcv_icmp_hdr) + sizeof(rcv_probe_hdr);
+    char data[messageSize];
+    memset(data, 0, messageSize);
+
+    printCharArray(data);
+
+
+    //memset(&rcv_icmp_hdr, -1, sizeof(rcv_icmp_hdr));
+    //memset(&rcv_probe_hdr, -1, sizeof(rcv_probe_hdr));
+
     // The recvmsg() call uses a msghdr structure to minimize the number of directly supplied arguments.
-    memset(&rcvbuf, -1, sizeof(rcvbuf));
-    iov.iov_base = &rcvbuf;
-    iov.iov_len = sizeof(rcvbuf);
+    iov.iov_base = data;
+    iov.iov_len = sizeof(data);
     msg.msg_name = (__u8*)&addr;
     msg.msg_namelen = sizeof(addr);
     msg.msg_iov = &iov;
@@ -197,14 +266,19 @@ bool Tracepath::receiveError(int sock, int ttl, tracepath_hop &probe) {
         }
     }
 
-//    if (res == sizeof(rcvbuf)) {
-//        if (rcvbuf.ttl == 0 || rcvbuf.tv.tv_sec == 0) {
-//            //broken_router = 1;
-//        } else {
-//            LOG("ttl %d", rcvbuf.ttl);
-//            LOG("tv %d", rcvbuf.tv);
-//        }
-//    }
+    printCharArray(data);
+
+    memcpy(&rcv_icmp_hdr, data, sizeof rcv_icmp_hdr);
+    memcpy(&rcv_probe_hdr, data + sizeof rcv_icmp_hdr, sizeof rcv_probe_hdr);
+
+    if (res == sizeof(rcv_probe_hdr)) {
+        if (rcv_probe_hdr.ttl == 0 || rcv_probe_hdr.tv.tv_sec == 0) {
+            //broken_router = 1;
+        } else {
+            LOG("ttl %d", rcv_probe_hdr.ttl);
+            LOG("tv %d", rcv_probe_hdr.tv);
+        }
+    }
 
     struct cmsghdr *cmsg;
     struct sock_extended_err *e;
@@ -360,18 +434,22 @@ bool Tracepath::sendProbe(int sock, sockaddr_in addr, int ttl, int attempt, trac
     int i = 0;
     bool error_msg_received = false;
 
-    for (i=0; i < max_attempts; i++) {
+
+    probe_hdr.ttl = ttl;
+
+
+    //for (i=0; i < max_attempts; i++) {
 
         icmp_hdr.icmp_seq = attempt;
         unsigned char data[2048];
         memcpy(data, &icmp_hdr, sizeof icmp_hdr);
-        memcpy(data + sizeof icmp_hdr, "hello", 5); //icmp payload
+        memcpy(data + sizeof icmp_hdr, &probe_hdr, sizeof probe_hdr); //icmp payload
 
         LOG("TTL: %d", ttl);
         printIcmpHdr("Sending", icmp_hdr);
 
         // sendto: On success, return the number of characters sent. On error, -1 is returned, and errno is set appropriately.
-        int rc = sendto(sock, data, sizeof icmp_hdr + 5, 0, (struct sockaddr*)&addr, sizeof addr);
+        int rc = sendto(sock, data, sizeof icmp_hdr + sizeof probe_hdr, 0, (struct sockaddr*)&addr, sizeof addr);
         if (rc <= 0) {
             LOG("Failed to send ICMP packet");
             return false;
@@ -382,16 +460,16 @@ bool Tracepath::sendProbe(int sock, sockaddr_in addr, int ttl, int attempt, trac
             LOG("No Error message received, attempting to read incoming data");
             // If there is no error available, then we may have a valid response coming back.
             // TODO Do We want to send out another packet to make sure this is the case?
-            continue;
+            //continue;
         } else {
             // We have parsed out and handled an error message.
             // This means that we will not be getting data on the socket, so there is no
             // need to continue.
             LOG("Error message received, moving to next TTL");
             error_msg_received = true;
-            break;
+            //break;
         }
-    }
+    //}
 
     if (error_msg_received) {
         // If we received an error we should have logged the data in probe.

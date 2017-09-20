@@ -31,6 +31,7 @@ public:
     Tracepath();
     virtual ~Tracepath();
     std::vector<tracepath_hop> runWithDestinationAddress(struct in_addr *dst);
+    int probeDestinationAddressWithTTL(struct in_addr *dst, int ttl, std::string &result);
 
 private:
     int setupSocket(struct in_addr *dst);

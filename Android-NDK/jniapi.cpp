@@ -301,15 +301,29 @@ JNIEXPORT jstring JNICALL Java_com_peer1_internetmap_NodeWrapper_nativeFriendlyD
     return ret;
 }
 
-JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_sendPacket(JNIEnv* jenv, jobject obj) {
+JNIEXPORT int JNICALL Java_com_peer1_internetmap_MapControllerWrapper_probeDestinationAddressWithTTL(JNIEnv* jenv, jobject obj,
+                                                                                                     jstring destinationAddr,
+                                                                                                     int ttl,
+                                                                                                     jstring result) {
     if(!tracepath) {
         tracepath = new Tracepath();
     }
 
+    // Convert destination address
+    std::string c_destinationAddr = jenv->GetStringUTFChars(destinationAddr, 0);
     struct in_addr testaddr;
-    inet_aton("172.217.3.164"/*"13.32.253.9"*/, &testaddr);
+    inet_aton(c_destinationAddr.c_str(), &testaddr);
 
-    //tracepath->runWithDestinationAddress(&testaddr);
+    // Run probe
+    std::string c_result;
+    int success = tracepath->probeDestinationAddressWithTTL(&testaddr, ttl, c_result);
+
+    // Convert back to jstring
+    const char* c_result_char = c_result.c_str();
+    result = jenv->NewStringUTF(c_result_char);
+    //jenv->ReleaseStringUTFChars (result, c_result_char);
+
+    return success;
 }
 
 void DetachThreadFromVM(void) {
