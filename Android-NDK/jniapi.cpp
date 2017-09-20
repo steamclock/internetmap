@@ -61,6 +61,26 @@ jobject wrapNode(JNIEnv* jenv, NodePointer node) {
     return wrapper;
 }
 
+//helper function for wrappers returning a probe result
+jobject wrapProbe(JNIEnv* jenv, probe_result probe) {
+
+    //strings that need to be freed after
+    jstring from = jenv->NewStringUTF(probe.receive_addr.c_str());
+    bool success = probe.success;
+
+    jclass probeWrapperClass = jenv->FindClass("com/peer1/internetmap/ProbeWrapper");
+    jmethodID constructor = jenv->GetMethodID(probeWrapperClass, "<init>", "(ZLjava/lang/String;)V");
+    //note: if you change this code, triple-check that the argument order matches NodeWrapper.
+    jobject wrapper = jenv->NewObject(probeWrapperClass, constructor, success, from);
+
+    //free up the strings
+    jenv->DeleteLocalRef(from);
+    //oh, we need to free this too
+    //jenv->DeleteLocalRef(probeWrapperClass);
+
+    return wrapper;
+}
+
 JNIEXPORT jboolean JNICALL Java_com_peer1_internetmap_InternetMap_nativeOnCreate(JNIEnv* jenv, jobject obj, bool smallScreen)
 {
     LOG("OnCreate");
@@ -301,10 +321,9 @@ JNIEXPORT jstring JNICALL Java_com_peer1_internetmap_NodeWrapper_nativeFriendlyD
     return ret;
 }
 
-JNIEXPORT int JNICALL Java_com_peer1_internetmap_MapControllerWrapper_probeDestinationAddressWithTTL(JNIEnv* jenv, jobject obj,
+JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_probeDestinationAddressWithTTL(JNIEnv* jenv, jobject obj,
                                                                                                      jstring destinationAddr,
-                                                                                                     int ttl,
-                                                                                                     jstring result) {
+                                                                                                     int ttl) {
     if(!tracepath) {
         tracepath = new Tracepath();
     }
@@ -315,15 +334,10 @@ JNIEXPORT int JNICALL Java_com_peer1_internetmap_MapControllerWrapper_probeDesti
     inet_aton(c_destinationAddr.c_str(), &testaddr);
 
     // Run probe
-    std::string c_result;
-    int success = tracepath->probeDestinationAddressWithTTL(&testaddr, ttl, c_result);
+    probe_result result = tracepath->probeDestinationAddressWithTTL(&testaddr, ttl);
+    jobject wrapper = wrapProbe(jenv, result);
 
-    // Convert back to jstring
-    const char* c_result_char = c_result.c_str();
-    result = jenv->NewStringUTF(c_result_char);
-    //jenv->ReleaseStringUTFChars (result, c_result_char);
-
-    return success;
+    return wrapper;
 }
 
 void DetachThreadFromVM(void) {

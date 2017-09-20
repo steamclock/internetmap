@@ -3,6 +3,7 @@ package com.peer1.internetmap.utils;
 import android.util.Log;
 
 import com.peer1.internetmap.MapControllerWrapper;
+import com.peer1.internetmap.ProbeWrapper;
 
 import java.util.ArrayList;
 
@@ -25,20 +26,17 @@ public class TracerouteUtil {
         traceDestination = "172.217.3.164";
 
         for (int ttl = 1; ttl < maxHops; ttl++) {
-            String resultStr = null;
-            int error = mapControllerWrapper.probeDestinationAddressWithTTL(traceDestination, ttl, resultStr);
 
-            if (resultStr != null) {
-                result.add(resultStr);
-                Log.v("Trace", resultStr);
+            ProbeWrapper probeWrapper = mapControllerWrapper.probeDestinationAddressWithTTL(traceDestination, ttl);
 
-                if (resultStr.equals(traceDestination)) {
+            if (probeWrapper.fromAddress != null) {
+                Log.v("Trace HUZZAH", "WOOP " + probeWrapper.fromAddress);
+                if (probeWrapper.fromAddress.equals(traceDestination)) {
                     // SHTAP
                     break;
                 }
             }
         }
-
     }
 
 }

@@ -39,7 +39,10 @@ Tracepath::~Tracepath() {
     return;
 }
 
-int Tracepath::probeDestinationAddressWithTTL(struct in_addr *dst, int ttl, std::string &result) {
+probe_result Tracepath::probeDestinationAddressWithTTL(struct in_addr *dst, int ttl) {
+
+    probe_result result;
+    result.success = false;
 
     struct tracepath_hop probe;
     struct sockaddr_in addr;
@@ -55,13 +58,13 @@ int Tracepath::probeDestinationAddressWithTTL(struct in_addr *dst, int ttl, std:
     int sock = setupSocket(dst);
     if (sock < 0) {
         LOG("Failed to build send socket");
-        return -1; // TODO error result
+        return result; // TODO error result
     }
 
     // Set TTL on socket
     if (setsockopt(sock, SOL_IP, IP_TTL, &ttl, sizeof(ttl))) {
         LOG("Failed to set IP_TTL, cannot make packet request");
-        return -1;
+        return result;
     }
 
     probe.ttl = ttl;
@@ -74,7 +77,7 @@ int Tracepath::probeDestinationAddressWithTTL(struct in_addr *dst, int ttl, std:
 
         if (sendProbe(sock, addr, ttl, seq++, probe)) {
             if (probe.success) {
-                result = probe.receive_addr;
+                result.receive_addr = probe.receive_addr;
                 break;
             }
         }
@@ -83,7 +86,7 @@ int Tracepath::probeDestinationAddressWithTTL(struct in_addr *dst, int ttl, std:
     // Cleanup
     close(sock);
 
-    return probe.success;
+    return result;
 }
 
 std::vector<tracepath_hop> Tracepath::runWithDestinationAddress(struct in_addr *dst)
