@@ -21,8 +21,11 @@ public interface CommonAPI {
      * <p>
      * Using https://www.ipify.org/ to grab external IP
      * As of 2017-05-10, service was free for use without limit
+     *
+     * NOTE Current SSL issue on some devices: https://github.com/steamclock/internetmap/issues/475
+     * Use http until this issue is fixed.
      */
-    @GET("https://api.ipify.org?format=json")
+    @GET("http://api.ipify.org?format=json")
     Call<GlobalIP> getGlobalIP();
 
     /**
@@ -34,22 +37,14 @@ public interface CommonAPI {
      * @param ip The IP address
      * @return Call will return an ASN object which contains information about the AS.
      */
-    @GET("https://api.iptoasn.com/v1/as/ip/{ip}")
-    Call<ASN> getASNFromIP(@Path("ip") String ip);
+    @GET("https://internetmap-server.herokuapp.com/?req=iptoasn")
+    Call<ASN> getASNFromIP(@Query("ip") String ip);
 
     /**
      * Get a list of IPs controlled by a given Autonomous System (AS) number.
      * <p>
-     * https://iptoasn.com/
-     * Free IP address to ASN database
-     * Can also download DB and run local service
-     * <p>
-     * TODO Need replacement for getting a list of IPs from an ASN. mxtoolbox does not suit our needs.
-     * <p>
-     * @param asn The Autonomous System Number (ASN)
-     * @param auth Auth token for the service
-     * @return Call will return an MxASNInfo object which contains blocks of IPs controlled by the ASN.
+     * TODO switch to use https://internetmap-server.herokuapp.com/?req=asntoips&asn=4565
      */
-    @GET("https://api.mxtoolbox.com/api/v1/lookup/asn/as{asn}")
-    Call<MxASNInfo> getIPFromASN(@Path("asn") String asn, @Query("authorization") String auth);
+    //@GET("https://api.mxtoolbox.com/api/v1/lookup/asn/as{asn}")
+    //Call<MxASNInfo> getIPFromASN(@Path("asn") String asn, @Query("authorization") String auth);
 }

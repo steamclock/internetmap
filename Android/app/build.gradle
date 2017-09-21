@@ -23,8 +23,8 @@ android {
         minSdkVersion 21 // Currently having issues with 19 and pthreads
         targetSdkVersion 25
 
-        versionCode 11
-        versionName "2.0.2"
+        versionCode 16
+        versionName "2.0.5"
 
         // Not sure this is required, commenting out.
 //        compileOptions {

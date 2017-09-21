@@ -4,8 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.peer1.internetmap.FirstTimeActivity"
-    android:gravity="center">
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center"
+    tools:context="com.peer1.internetmap.FirstTimeActivity">
 
     <ImageView
         android:layout_width="match_parent"

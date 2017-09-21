@@ -236,14 +236,11 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        if (SharedPreferenceUtils.getShowingTooltipIndex() == 0) {
-                            showNextTooltip();
-                        } else {
-                            showCurrentTooltip();
-                        }
-
+                        // "Explore" counts as tooltip with index 0.
+                        SharedPreferenceUtils.markTooltipAsShown(0);
                         showLogo();
                         fadeLogoAfterDelay();
+                        showCurrentTooltip();
                     }
 
                     @Override
@@ -255,15 +252,6 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         // Show help, hide initial loading overlay
         firstTimePlaceholder.setVisibility(View.VISIBLE);
         firstTimeLoadingOverlay.setVisibility(View.GONE);
-    }
-
-    private void showNextTooltip() {
-        int nextStep = SharedPreferenceUtils.getShowingTooltipIndex()+1;
-        if (nextStep > totalTooltipSteps) {
-            return;
-        }
-        SharedPreferenceUtils.setShowingTooltipIndex(nextStep);
-        showCurrentTooltip();
     }
 
     private void showCurrentTooltip() {
@@ -278,7 +266,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
             return;
         }
 
-        int currentStep = SharedPreferenceUtils.getShowingTooltipIndex();
+        int currentStep = SharedPreferenceUtils.getNextTooltipIndex();
 
         tooltips.closeActiveTooltip();
         switch(currentStep) {
@@ -314,11 +302,8 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         tooltips.showToolTip(toolTip, onView);
     }
 
-    private void completeCurrentTooltipStep(int associatedStepNumber) {
-        if (SharedPreferenceUtils.getShowingTooltipIndex() == associatedStepNumber) {
-            hideCurrentTooltip();
-            SharedPreferenceUtils.setShowingTooltipIndex(associatedStepNumber+1);
-        }
+    private void markTooltipAsShown(int associatedStepNumber) {
+        SharedPreferenceUtils.markTooltipAsShown(associatedStepNumber);
     }
 
     // endregion
@@ -467,48 +452,48 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
             }
             boolean isUserNode = (node.index == mUserNodeIndex);
             mNodePopup.setNode(node, isUserNode);
-            //update size/position
-            View mainView = findViewById(R.id.surfaceview);
-            int gravity, width;
-            //note: PopupWindow appears to ignore gravity width/height hints
-            //and most of its size setters only take absolute numbers; setWindowLayoutMode is the exception
-            //but, setWindowLayoutMode doesn't properly handle absolute numbers either, so we may have to call *both*.
-            if (mInTimelineMode) {
-                gravity = Gravity.CENTER;
-                width = mainView.getWidth();
-                if (! isSmallScreen()) {
-                    //full width looks odd on tablets
-                    width = width / 2;
-                }
-            } else if (isSmallScreen()) {
-                gravity = Gravity.BOTTOM;
-                width = LayoutParams.MATCH_PARENT;
-            } else {
-                gravity = Gravity.CENTER_VERTICAL | Gravity.RIGHT;
-                width = mainView.getWidth() / 2;
+
+            View mainView = findViewById(R.id.mainLayout);
+            View centerVerticalGuideline = findViewById(R.id.center_vertical_guideline);
+            int width = mainView.getWidth();
+
+            // If on tablet, make popup take 1/2 the screen width.
+            if (!isSmallScreen()) {
+                width = width / 2;
             }
-            mNodePopup.setWindowLayoutMode(width, LayoutParams.WRAP_CONTENT);
+
             mNodePopup.setWidth(width);
+            mNodePopup.setHeight(LayoutParams.WRAP_CONTENT);
             int height = mNodePopup.getMeasuredHeight();
             mNodePopup.setHeight(height); //work around weird bugs
 
-            //now that the height is calculated, we can calculate any offset
-            int offset;
+            // Determine popup location
+            int gravity, xOffset = 0, yOffset = 0;
+            int guidelinePos[] = new int[2];
+            centerVerticalGuideline.getLocationOnScreen(guidelinePos);
+
             if (mInTimelineMode) {
-                //move it up by half the height
-                offset = -height/2;
+                // If in timeline mode, popup will be placed above the node on both tablets and phones.
+                // Due to issues with placing the popup in the center of the screen on different devices,
+                // we use guidelines to calculate screen locations.
+                gravity = Gravity.NO_GRAVITY;
+                yOffset = guidelinePos[1] - height;
+
+                if (!isSmallScreen()) {
+                    xOffset = width/2;
+                }
+            } else if (isSmallScreen()) {
+                // Non-timeline mode on small screen - fix popup to bottom.
+                gravity = Gravity.BOTTOM;
             } else {
-                offset = 0;
-            }
-            if (gravity != Gravity.BOTTOM) {
-                //account for the top bar
-                int location[] = new int[2];
-                mainView.getLocationOnScreen(location);
-                int top = location[1];
-                offset += top / 2;
+                // Non-timeline mode on tablet - popup will show on right side of node.
+                gravity = Gravity.NO_GRAVITY;
+                width = mainView.getWidth() / 2;
+                xOffset = width;
+                yOffset = guidelinePos[1] - height/2;
             }
 
-            mNodePopup.showAtLocation(mainView, gravity, 0, offset);
+            mNodePopup.showAtLocation(mainView, gravity, xOffset, yOffset);
         }
     }
 
@@ -520,7 +505,8 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
     public void searchButtonPressed(View view) {
         dismissPopups();
 
-        completeCurrentTooltipStep(1);
+        markTooltipAsShown(1);
+        hideCurrentTooltip();
 
         //make the button change sooner, and don't let them toggle the button while we're loading
         searchIcon.setActivated(true);
@@ -565,6 +551,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
     public void visualizationsButtonPressed(View view) {
         
         dismissPopups();
+        markTooltipAsShown(2);
         hideCurrentTooltip();
 
         //make the button change sooner, and don't let them toggle the button while we're loading
@@ -583,7 +570,6 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
                 public void onDismiss() {
                     mVisualizationPopup = null;
                     visualizationIcon.setActivated(false);
-                    completeCurrentTooltipStep(2);
                     showCurrentTooltip();
                 }
             });
@@ -593,7 +579,6 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
 
     public void infoButtonPressed(View view) {
         dismissPopups();
-        completeCurrentTooltipStep(3);
         hideCurrentTooltip();
 
         //make the button change sooner, and don't let them toggle the button while we're loading
@@ -624,6 +609,8 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
 
     public void timelineButtonPressed(View view) {
 
+        markTooltipAsShown(3);
+
         if (mInTimelineMode) {
             if (isSmallScreen()) {
                 showLogo();
@@ -633,7 +620,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
             timelineIcon.setActivated(false);
             dismissPopups(); //leave timeline mode
         } else {
-            completeCurrentTooltipStep(3);
+
             if (isSmallScreen()) {
                 hideLogo();
                 hideCurrentTooltip();
