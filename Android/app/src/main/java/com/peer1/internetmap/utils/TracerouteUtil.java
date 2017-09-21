@@ -17,6 +17,7 @@ public class TracerouteUtil {
     public interface Listener {
         void onHopFound(int ttl, String ip);
         void onTimeout(int ttl);
+        void onComplete();
     }
 
     private MapControllerWrapper mapControllerWrapper;
@@ -34,6 +35,11 @@ public class TracerouteUtil {
 
             @Override
             public void onTimeout(int ttl) {
+
+            }
+
+            @Override
+            public void onComplete() {
 
             }
         };
@@ -54,6 +60,12 @@ public class TracerouteUtil {
             if (probeWrapper.fromAddress != null) {
                 Log.v("Trace HUZZAH", "WOOP " + probeWrapper.fromAddress);
                 listener.onHopFound(ttl, probeWrapper.fromAddress);
+
+                if (probeWrapper.fromAddress.equals(traceDestination)) {
+                    listener.onComplete();
+                    break;
+                }
+
             } else {
                 listener.onTimeout(ttl);
             }

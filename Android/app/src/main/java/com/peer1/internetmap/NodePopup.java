@@ -1,14 +1,13 @@
 package com.peer1.internetmap;
 
 import android.content.Context;
+import android.support.v4.util.Pair;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -18,13 +17,9 @@ import com.peer1.internetmap.network.common.CommonClient;
 import com.peer1.internetmap.utils.AppUtils;
 import com.peer1.internetmap.utils.TracerouteUtil;
 
-import org.json.JSONException;
-
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.TreeMap;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -249,12 +244,14 @@ public class NodePopup extends PopupWindow {
 
 
     private int lastASNIndex = -1;
+    private ArrayList<Pair<Integer, String>> unprocessedHops = new ArrayList<>();
+    final ArrayList<NodeWrapper> hopNodeWrappers = new ArrayList<>();
+    private boolean isProccessingHop = false;
+
     public void runTraceroute() {
 
         asnHops = 0;
-
         startTimer();
-        //simulateListPopulation();
 
 //        boolean isConnected = haveConnectivity();
 //
@@ -262,56 +259,25 @@ public class NodePopup extends PopupWindow {
 //            return;
 //        }
 
-        final ArrayList<NodeWrapper> hopNodeWrappers = new ArrayList<>();
-
         TracerouteUtil tracerouteUtil = new TracerouteUtil(mapController);
         tracerouteUtil.setListener(new TracerouteUtil.Listener() {
             @Override
             public void onHopFound(final int ttl, final String ip) {
-
-                // Convert ip to asn.
-                CommonClient.getInstance().getApi().getASNFromIP(ip).enqueue(new CommonCallback<ASN>() {
-                    @Override
-                    public void onRequestResponse(Call<ASN> call, Response<ASN> response) {
-                        // TODO may need to call next TTL here to ensure order...
-
-                        String asn = response.body().getASNString();
-                        boolean hasHoppedASN = false;
-
-                        NodeWrapper node = mapController.nodeByAsn(asn);
-                        if (node != null) {
-                            hopNodeWrappers.add(node);
-                            hasHoppedASN = (lastASNIndex != node.index);
-
-                        } else {
-                            // TODO what to do here...? nothing?
-                        }
-
-                        // Add hop text to list
-                        addTraceHopToUI(ttl, ip, hasHoppedASN);
-
-                        // Update map
-                        displayHops(hopNodeWrappers);
-                    }
-
-                    @Override
-                    public void onRequestFailure(Call<ASN> call, Throwable t) {
-
-                        Timber.e("FAILED YO");
-//                        progress.setVisibility(View.INVISIBLE);
-//                        searchIcon.setVisibility(View.VISIBLE);
-//                        mHandler.removeCallbacks(backupTimer);
-//
-//                        String message = getString(R.string.asnAssociationFail);
-//                        showError(message);
-                        //Timber.d(message);
-                    }
-                });
+                Pair<Integer, String> hop = new Pair<>(ttl, ip);
+                unprocessedHops.add(hop);
+                processNextHop();
             }
 
             @Override
             public void onTimeout(int ttl) {
+                Pair<Integer, String> hop = new Pair<>(ttl, null);
+                unprocessedHops.add(hop);
+                processNextHop();
+            }
 
+            @Override
+            public void onComplete() {
+                stopTimer();
             }
         });
 
@@ -319,7 +285,70 @@ public class NodePopup extends PopupWindow {
         tracerouteUtil.startTrace();
     }
 
+    /**
+     * TODO come up with better way to handle hop queue...? Having to keep track via isProccessingHop
+     * is not ideal...
+     */
+    private void processNextHop() {
+
+        if (isProccessingHop) {
+            return;
+        }
+
+        if (unprocessedHops.size() == 0) {
+            return;
+        }
+
+        isProccessingHop = true;
+
+        Pair<Integer, String> nextHop = unprocessedHops.remove(0);
+        final Integer ttl = nextHop.first;
+        final String ip = nextHop.second;
+
+        // Convert ip to asn.
+        CommonClient.getInstance().getApi().getASNFromIP(ip).enqueue(new CommonCallback<ASN>() {
+            @Override
+            public void onRequestResponse(Call<ASN> call, Response<ASN> response) {
+                String asn = response.body().getASNString();
+                boolean hasHoppedASN = false;
+
+                NodeWrapper node = mapController.nodeByAsn(asn);
+                if (node != null) {
+                    hopNodeWrappers.add(node);
+                    hasHoppedASN = (lastASNIndex != node.index);
+                    lastASNIndex = node.index;
+
+                } else {
+                    // TODO what to do here...? nothing?
+                }
+
+                // Add hop text to list
+                addTraceHopToUI(ttl, ip, hasHoppedASN);
+
+                if (hasHoppedASN) {
+                    // Update map
+                    displayHops(hopNodeWrappers);
+                }
+
+                isProccessingHop = false;
+                processNextHop();
+            }
+
+            @Override
+            public void onRequestFailure(Call<ASN> call, Throwable t) {
+                // TODO what to do if failed to get ASN?
+                isProccessingHop = false;
+                processNextHop();
+                Timber.e("getASNFromIP FAILED YO");
+            }
+        });
+    }
+
     public void displayHops(ArrayList<NodeWrapper> hops) {
+
+        if (hops.size() < 2) {
+            return;
+        }
 
         // Ew, make this better, maybe pass in cleaner data.
         NodeWrapper[] mergedHops = hops.toArray(new NodeWrapper[hops.size()]);
