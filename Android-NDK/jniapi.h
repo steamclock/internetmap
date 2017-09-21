@@ -35,12 +35,12 @@ extern "C" {
 
     // Traceroute
     JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_sendPacket(JNIEnv* jenv, jobject obj);
-    JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_probeDestinationAddressWithTTL(JNIEnv* jenv, jobject obj,
-                                                                                                     jstring destinationAddr,
-                                                                                                     int ttl);
+    JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_probeDestinationAddressWithTTL(JNIEnv* jenv, jobject obj, jstring destinationAddr, int ttl);
+    JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_highlightRoute(JNIEnv* jenv, jobject obj, jobjectArray nodeArray, int length);
 
     //nodewrapper
     JNIEXPORT jstring JNICALL Java_com_peer1_internetmap_NodeWrapper_nativeFriendlyDescription(JNIEnv* jenv, jobject obj, int index);
+
 };
 
 #endif // JNIAPI_H
