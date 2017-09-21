@@ -421,7 +421,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
                     DisplayMetrics displayMetrics = new DisplayMetrics();
                     getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
                     int heightPx = displayMetrics.heightPixels;
-                    int heightDp = heightPx / 3;
+                    int heightDp = heightPx / 2;
 
                     // Set the height of the traceroute details view to be 1/3 the screen size.
                     popupView.findViewById(R.id.traceroute_details).setLayoutParams(new LinearLayout.LayoutParams(
@@ -465,7 +465,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
             mNodePopup.setWidth(width);
             mNodePopup.setHeight(LayoutParams.WRAP_CONTENT);
             int height = mNodePopup.getMeasuredHeight();
-            mNodePopup.setHeight(height); //work around weird bugs
+            mNodePopup.setWindowLayoutMode(width, LayoutParams.WRAP_CONTENT);
 
             // Determine popup location
             int gravity, xOffset = 0, yOffset = 0;

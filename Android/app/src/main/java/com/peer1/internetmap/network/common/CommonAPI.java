@@ -1,6 +1,7 @@
 package com.peer1.internetmap.network.common;
 
 import com.peer1.internetmap.models.ASN;
+import com.peer1.internetmap.models.ASNIPs;
 import com.peer1.internetmap.models.GlobalIP;
 import com.peer1.internetmap.models.MxASNInfo;
 
@@ -30,9 +31,6 @@ public interface CommonAPI {
 
     /**
      * Get the Autonomous System Number (ASN) for a given IP Address
-     * https://iptoasn.com/
-     * Free IP address to ASN database
-     * Can also download DB and run local service
      * <p>
      * @param ip The IP address
      * @return Call will return an ASN object which contains information about the AS.
@@ -42,9 +40,53 @@ public interface CommonAPI {
 
     /**
      * Get a list of IPs controlled by a given Autonomous System (AS) number.
-     * <p>
-     * TODO switch to use https://internetmap-server.herokuapp.com/?req=asntoips&asn=4565
+     * EXAMPLE CALL: https://internetmap-server.herokuapp.com/?req=asntoips&asn=4565
+     * RESULT: {"resultsPayload":"205.166.253.0/24"}
      */
-    //@GET("https://api.mxtoolbox.com/api/v1/lookup/asn/as{asn}")
-    //Call<MxASNInfo> getIPFromASN(@Path("asn") String asn, @Query("authorization") String auth);
+    @GET("https://internetmap-server.herokuapp.com/?req=asntoips")
+    Call<ASNIPs> getIPsFromASN(@Query("asn") String asn);
+
+
+
+    // EXAMPLE CALL: https://internetmap-server.herokuapp.com/?req=asntoips&asn=4565
+//// RESULT: {"resultsPayload":"205.166.253.0/24"}
+//+(void)fetchIPsForASN:(NSString*)asn response:(ASNArrayResponseBlock)response {
+//
+//        ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://internetmap-server.herokuapp.com/?req=asntoips&asn=%@", asn]]];
+//    [request setTimeOutSeconds:TIMEOUT];
+//    [request setRequestMethod:@"GET"];
+//    [request addRequestHeader:@"Content-Type" value:@"application/json"];
+//
+//        __weak ASIFormDataRequest* weakRequest = request;
+//
+//    [request setCompletionBlock:^{
+//            NSError* error = weakRequest.error;
+//            NSDictionary* jsonResponse = [NSJSONSerialization JSONObjectWithData:weakRequest.responseData options:NSJSONReadingAllowFragments error:&error];
+//            NSString* ipString = [jsonResponse objectForKey:@"resultsPayload"];
+//
+//            NSMutableArray* responseArray = [NSMutableArray array];
+//
+//            NSRange range = [ipString rangeOfString:@"/"];
+//
+//            if (range.location != NSNotFound) {
+//                ipString = [ipString substringToIndex:range.location];
+//            }
+//
+//            if (![ASNRequest isInvalidOrPrivate:ipString]) {
+//            [responseArray addObject:ipString];
+//            } else {
+//                NSLog(@"Failed to add %@, was reserved IP.", ipString);
+//            }
+//
+//            response(responseArray);
+//
+//        }];
+//
+//    [request setFailedBlock:^{
+//            response(nil);
+//        }];
+//
+//    [request start];
+//    }
+
 }
