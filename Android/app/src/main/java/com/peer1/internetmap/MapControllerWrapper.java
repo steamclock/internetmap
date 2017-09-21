@@ -1,5 +1,7 @@
 package com.peer1.internetmap;
 
+import java.util.ArrayList;
+
 /**
  * Methods implemented in JNI (see jniapi.cpp)
  */
@@ -29,4 +31,5 @@ public class MapControllerWrapper {
     //public native String lastSearchIP(); // Ended up on branch, need to bring back at some point.
     public native void sendPacket();
     public native ProbeWrapper probeDestinationAddressWithTTL(String destAddr, int ttl);
+    public native void highlightRoute(NodeWrapper[] nodes, int length);
 }

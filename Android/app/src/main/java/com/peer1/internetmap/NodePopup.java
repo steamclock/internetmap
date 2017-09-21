@@ -28,6 +28,7 @@ import java.util.TreeMap;
 
 import retrofit2.Call;
 import retrofit2.Response;
+import timber.log.Timber;
 
 /**
  * Popup shown when an AS node is selected in a visualization
@@ -246,6 +247,8 @@ public class NodePopup extends PopupWindow {
         return getContentView().getMeasuredHeight();
     }
 
+
+    private int lastASNIndex = -1;
     public void runTraceroute() {
 
         asnHops = 0;
@@ -259,14 +262,12 @@ public class NodePopup extends PopupWindow {
 //            return;
 //        }
 
-        final TreeMap<String, String> ipASNLookup = new TreeMap<>();
+        final ArrayList<NodeWrapper> hopNodeWrappers = new ArrayList<>();
 
         TracerouteUtil tracerouteUtil = new TracerouteUtil(mapController);
         tracerouteUtil.setListener(new TracerouteUtil.Listener() {
             @Override
             public void onHopFound(final int ttl, final String ip) {
-
-
 
                 // Convert ip to asn.
                 CommonClient.getInstance().getApi().getASNFromIP(ip).enqueue(new CommonCallback<ASN>() {
@@ -274,19 +275,29 @@ public class NodePopup extends PopupWindow {
                     public void onRequestResponse(Call<ASN> call, Response<ASN> response) {
                         // TODO may need to call next TTL here to ensure order...
 
-                        ipASNLookup.put(ip, response.body().getASNString());
+                        String asn = response.body().getASNString();
+                        boolean hasHoppedASN = false;
 
-                        // TODO determine if we have hopped ASNs
+                        NodeWrapper node = mapController.nodeByAsn(asn);
+                        if (node != null) {
+                            hopNodeWrappers.add(node);
+                            hasHoppedASN = (lastASNIndex != node.index);
+
+                        } else {
+                            // TODO what to do here...? nothing?
+                        }
 
                         // Add hop text to list
-                        addTraceHopToUI(ttl, ip, false);
+                        addTraceHopToUI(ttl, ip, hasHoppedASN);
 
                         // Update map
-                        displayHops(ipASNLookup);
+                        displayHops(hopNodeWrappers);
                     }
 
                     @Override
                     public void onRequestFailure(Call<ASN> call, Throwable t) {
+
+                        Timber.e("FAILED YO");
 //                        progress.setVisibility(View.INVISIBLE);
 //                        searchIcon.setVisibility(View.VISIBLE);
 //                        mHandler.removeCallbacks(backupTimer);
@@ -308,10 +319,12 @@ public class NodePopup extends PopupWindow {
         tracerouteUtil.startTrace();
     }
 
-    public void displayHops(TreeMap<String, String> hops) {
+    public void displayHops(ArrayList<NodeWrapper> hops) {
 
+        // Ew, make this better, maybe pass in cleaner data.
+        NodeWrapper[] mergedHops = hops.toArray(new NodeWrapper[hops.size()]);
 
-        // 
+        mapController.highlightRoute(mergedHops, mergedHops.length);
 
 
 

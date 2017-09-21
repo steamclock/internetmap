@@ -340,6 +340,37 @@ JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_probeD
     return wrapper;
 }
 
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_highlightRoute(JNIEnv* jenv, jobject obj, jobjectArray nodes, int length) {
+
+
+// iOS
+    // Use NodeWrapper.index to lookup NodePointer.
+//    std::vector<NodePointer> newList;
+//    for (NodeWrapper* node in nodeList) {
+//        NodePointer pointer = _controller->data->nodeAtIndex(node.index);
+//        newList.push_back(pointer);
+//    }
+//    _controller->highlightRoute(newList);
+
+    MapController* controller = renderer->beginControllerModification();
+
+    // Iterate over NodeWrapper array and use indexes to lookup NodePointer.
+    std::vector<NodePointer> nodesVector;
+    jclass nodeWrapperClass = jenv->FindClass("com/peer1/internetmap/NodeWrapper");
+
+    for (int i=0; i < length; i++) {
+        jobject obj = (jobject) jenv->GetObjectArrayElement(nodes, i);
+        jfieldID indexField = jenv->GetFieldID(nodeWrapperClass, "index", "I");
+        int index = jenv->GetIntField(obj, indexField);
+
+        NodePointer node = controller->data->nodeAtIndex(index);
+        nodesVector.push_back(node);
+    }
+
+    controller->highlightRoute(nodesVector);
+    renderer->endControllerModification();
+}
+
 void DetachThreadFromVM(void) {
     javaVM->DetachCurrentThread();
 }
