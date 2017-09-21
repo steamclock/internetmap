@@ -1,9 +1,9 @@
 package com.peer1.internetmap.utils;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.peer1.internetmap.MapControllerWrapper;
-import com.peer1.internetmap.NodeWrapper;
 import com.peer1.internetmap.ProbeWrapper;
 
 import java.util.ArrayList;
@@ -16,14 +16,19 @@ public class TracerouteUtil {
 
     public interface Listener {
         void onHopFound(int ttl, String ip);
-        void onTimeout(int ttl);
+        void onHopTimeout(int ttl);
         void onComplete();
+        void onTraceTimeout();
     }
 
     private MapControllerWrapper mapControllerWrapper;
     private ArrayList<String> result;
     private String traceDestination;
     private Listener listener;
+    private boolean stopTrace = false;
+    private final int maxconsecutiveTimeouts = 3;
+    private int consecutiveTimeouts = 0;
+
 
     public TracerouteUtil(MapControllerWrapper mapControllerWrapper) {
         this.mapControllerWrapper = mapControllerWrapper;
@@ -34,12 +39,17 @@ public class TracerouteUtil {
             }
 
             @Override
-            public void onTimeout(int ttl) {
+            public void onHopTimeout(int ttl) {
 
             }
 
             @Override
             public void onComplete() {
+
+            }
+
+            @Override
+            public void onTraceTimeout() {
 
             }
         };
@@ -49,26 +59,54 @@ public class TracerouteUtil {
         this.listener = listener;
     }
 
-    public void startTrace() {
-        int maxHops = 255;
-        traceDestination = "172.217.3.164";
+    public void startTrace(final String to) {
+        traceDestination = to; //"172.217.3.164";
 
-        for (int ttl = 1; ttl < maxHops; ttl++) {
+        AsyncTask<Void, Void, Void> tracerouteTask = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
 
-            ProbeWrapper probeWrapper = mapControllerWrapper.probeDestinationAddressWithTTL(traceDestination, ttl);
+                int maxHops = 255;
+                consecutiveTimeouts = 0;
 
-            if (probeWrapper.fromAddress != null) {
-                Log.v("Trace HUZZAH", "WOOP " + probeWrapper.fromAddress);
-                listener.onHopFound(ttl, probeWrapper.fromAddress);
+                for (int ttl = 1; ttl < maxHops; ttl++) {
 
-                if (probeWrapper.fromAddress.equals(traceDestination)) {
-                    listener.onComplete();
-                    break;
+                    if (stopTrace) {
+                        break;
+                    }
+
+                    ProbeWrapper probeWrapper = mapControllerWrapper.probeDestinationAddressWithTTL(traceDestination, ttl);
+
+                    if (probeWrapper.fromAddress == null || probeWrapper.fromAddress.isEmpty()) {
+                        consecutiveTimeouts++;
+                        listener.onHopTimeout(ttl);
+
+                        if (consecutiveTimeouts >= maxconsecutiveTimeouts) {
+                            listener.onTraceTimeout();
+                            break;
+                        }
+                    } else {
+                        Log.v("Trace HUZZAH", String.format("WOOP %d: %s", ttl, probeWrapper.fromAddress));
+                        consecutiveTimeouts = 0;
+                        listener.onHopFound(ttl, probeWrapper.fromAddress);
+
+                        if (probeWrapper.fromAddress.equals(traceDestination)) {
+                            listener.onComplete();
+                            break;
+                        }
+                    }
                 }
 
-            } else {
-                listener.onTimeout(ttl);
+                return null;
             }
-        }
+
+        };
+
+        tracerouteTask.execute();
     }
+
+    public void stopTrace() {
+        stopTrace = true;
+    }
+
 }
