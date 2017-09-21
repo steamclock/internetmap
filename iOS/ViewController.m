@@ -1418,18 +1418,18 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.nodeInformationViewController.box2.numberLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)[mergedAsnHops count]];
 }
 
-- (void)tracerouteDidFindHop:(NSString*)report withHops:(NSArray *)hops{
-    
+    - (void)tracerouteDidFindHop:(NSString*)report withHops:(NSArray *)hops{
+
     NSLog(@"%@", report);
-    
+
     self.nodeInformationViewController.tracerouteTextView.text = [[NSString stringWithFormat:@"%@\n%@", self.nodeInformationViewController.tracerouteTextView.text, report] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    
+
     [self.nodeInformationViewController.box1 incrementNumber];
-    
+
     if ([hops count] <= 0) {
         return;
     }
-    
+
     [hops enumerateObjectsUsingBlock:^(NSString* ip, NSUInteger idx, BOOL *stop) {
         if(ip && ![ip isEqual:[NSNull null]] && (self.tracerouteASNs[ip] == nil)) {
             [ASNRequest fetchASNForIP:ip response:^(NSString *asn) {
@@ -1449,7 +1449,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             }];
         }
     }];
-}
+    }
 
 - (void)tracerouteDidComplete:(NSMutableArray*)hops {
     [self.tracer stop];

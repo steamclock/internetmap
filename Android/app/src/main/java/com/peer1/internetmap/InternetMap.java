@@ -52,6 +52,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.TreeMap;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -127,12 +128,6 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         mRotateDetector = new RotateGestureDetector(this, new RotateListener());
         mController = new MapControllerWrapper();
         mHandler = new Handler();
-
-
-        //mController.sendPacket();
-
-        TracerouteUtil tracerouteUtil = new TracerouteUtil(mController);
-        tracerouteUtil.startTrace();
 
         SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
         timelineBar.setOnSeekBarChangeListener(new TimelineListener());
@@ -500,42 +495,6 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
 
             mNodePopup.showAtLocation(mainView, gravity, xOffset, yOffset);
         }
-    }
-
-    public void runTraceroute(View unused) throws JSONException, UnsupportedEncodingException{
-        Timber.v(TAG, "TODO: traceroute");
-        //check internet status
-        boolean isConnected = haveConnectivity();
-
-        if (!isConnected) {
-            return;
-        }
-        String asn = "AS15169";
-//        ASNRequest.fetchIPsForASN(asn, new ASNResponseHandler() {
-//            public void onStart() {
-//
-//            }
-//            public void onFinish() {
-//
-//            }
-//
-//            public void onSuccess(JSONObject response) {
-//                try {
-//                	//Try and get legit payload here
-//                    Log.d(TAG, String.format("payload: %s", response));
-//                } catch (Exception e) {
-//                    Log.d(TAG, String.format("Can't parse response: %s", response.toString()));
-//                    showError(getString(R.string.tracerouteStartIPFail));
-//                }
-//            }
-//
-//            public void onFailure(Throwable e, String response) {
-//                String message = getString(R.string.tracerouteStartIPFail);
-//                showError(message);
-//                Log.d(TAG, message);
-//            }
-//        });
-
     }
 
     // endregion

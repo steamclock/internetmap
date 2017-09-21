@@ -12,11 +12,22 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.peer1.internetmap.models.ASN;
+import com.peer1.internetmap.network.common.CommonCallback;
+import com.peer1.internetmap.network.common.CommonClient;
 import com.peer1.internetmap.utils.AppUtils;
+import com.peer1.internetmap.utils.TracerouteUtil;
 
+import org.json.JSONException;
+
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.TreeMap;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Popup shown when an AS node is selected in a visualization
@@ -38,6 +49,7 @@ public class NodePopup extends PopupWindow {
     //private ArrayAdapter<String> traceListAdapter;
     private ArrayList<String> traceListStrings;
     private LinearLayout traceListLayout;
+    private int asnHops;
 
     private MapControllerWrapper mapController;
     
@@ -116,6 +128,7 @@ public class NodePopup extends PopupWindow {
                 @Override
                 public void onClick(View v) {
                     showTraceview();
+                    runTraceroute();
                 }
             });
         }
@@ -143,9 +156,6 @@ public class NodePopup extends PopupWindow {
         if (isSmallScreen) {
             mapController.translateYAnimated(0.4f, 1);
         }
-
-        startTimer();
-        simulateListPopulation();
     }
 
     private int nextItem;
@@ -235,4 +245,125 @@ public class NodePopup extends PopupWindow {
         getContentView().measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         return getContentView().getMeasuredHeight();
     }
+
+    public void runTraceroute() {
+
+        asnHops = 0;
+
+        startTimer();
+        //simulateListPopulation();
+
+//        boolean isConnected = haveConnectivity();
+//
+//        if (!isConnected) {
+//            return;
+//        }
+
+        final TreeMap<String, String> ipASNLookup = new TreeMap<>();
+
+        TracerouteUtil tracerouteUtil = new TracerouteUtil(mapController);
+        tracerouteUtil.setListener(new TracerouteUtil.Listener() {
+            @Override
+            public void onHopFound(final int ttl, final String ip) {
+
+
+
+                // Convert ip to asn.
+                CommonClient.getInstance().getApi().getASNFromIP(ip).enqueue(new CommonCallback<ASN>() {
+                    @Override
+                    public void onRequestResponse(Call<ASN> call, Response<ASN> response) {
+                        // TODO may need to call next TTL here to ensure order...
+
+                        ipASNLookup.put(ip, response.body().getASNString());
+
+                        // TODO determine if we have hopped ASNs
+
+                        // Add hop text to list
+                        addTraceHopToUI(ttl, ip, false);
+
+                        // Update map
+                        displayHops(ipASNLookup);
+                    }
+
+                    @Override
+                    public void onRequestFailure(Call<ASN> call, Throwable t) {
+//                        progress.setVisibility(View.INVISIBLE);
+//                        searchIcon.setVisibility(View.VISIBLE);
+//                        mHandler.removeCallbacks(backupTimer);
+//
+//                        String message = getString(R.string.asnAssociationFail);
+//                        showError(message);
+                        //Timber.d(message);
+                    }
+                });
+            }
+
+            @Override
+            public void onTimeout(int ttl) {
+
+            }
+        });
+
+        // TODO get currentASN
+        tracerouteUtil.startTrace();
+    }
+
+    public void displayHops(TreeMap<String, String> hops) {
+
+
+        // 
+
+
+
+//        NSMutableArray* mergedAsnHops = [NSMutableArray new];
+//
+//        __block NSString* lastAsn = nil;
+//        __block NSInteger lastIndex = -1;
+//
+//        // Put our ASN at the start of the list, just in case
+//        NodeWrapper* us = [self.controller nodeByASN:self.cachedCurrentASN];
+//        if(us) {
+//        [mergedAsnHops addObject:us];
+//            lastAsn = self.cachedCurrentASN;
+//        }
+//
+//    [ips enumerateObjectsUsingBlock:^(NSString* ip, NSUInteger idx, BOOL *stop) {
+//            NSString* asn = self.tracerouteASNs[ip];
+//            if(asn && ![asn isEqual:[NSNull null]] && ![asn isEqualToString:lastAsn])  {
+//                lastAsn = asn;
+//                NodeWrapper* node = [self.controller nodeByASN:asn];
+//                if(node) {
+//                    lastIndex = node.index;
+//                [mergedAsnHops addObject:node];
+//                }
+//            }
+//        }];
+//
+//        if(destNode && (lastIndex != destNode.index)) {
+//        [mergedAsnHops addObject:destNode];
+//        }
+//
+//        if ([mergedAsnHops count] >= 2) {
+//        [self.controller highlightRoute:mergedAsnHops];
+//        }
+
+    }
+
+    private void addTraceHopToUI(int ttl, String hopText, boolean isASNHop) {
+        final LayoutInflater inflater = (LayoutInflater)ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        // Add line in list
+        TextView nextItemView = (TextView)inflater.inflate(R.layout.view_tracerout_list_item, null);
+        nextItemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        nextItemView.setText(String.format("%d. %s", ttl, hopText));
+        traceListLayout.addView(nextItemView);
+
+        // Update ASN hops
+        if (isASNHop) {
+            asnHops = asnHops+1;
+            TextView asnHopsText = (TextView)getContentView().findViewById(R.id.trace_asn_hops);
+            asnHopsText.setText(String.format("%d", asnHops));
+        }
+    }
+
 }
