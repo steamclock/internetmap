@@ -46,6 +46,8 @@ public class CommonClient {
         return api;
     }
 
+    private retrofit2.Response<ASN> cachedUserASNResponse;
+
     //=====================================================================
     // Private methods
     //=====================================================================
@@ -95,6 +97,11 @@ public class CommonClient {
      */
     public void getUserASN(final CommonCallback<ASN> callback) {
 
+        if (cachedUserASNResponse != null) {
+            callback.onResponse(null, cachedUserASNResponse);
+            return;
+        }
+
         getApi().getGlobalIP().enqueue(new CommonCallback<GlobalIP>() {
             @Override
             public void onRequestResponse(retrofit2.Call<GlobalIP> call, retrofit2.Response<GlobalIP> response) {
@@ -102,7 +109,8 @@ public class CommonClient {
                 getApi().getASNFromIP(response.body().ip).enqueue(new CommonCallback<ASN>() {
                     @Override
                     public void onRequestResponse(retrofit2.Call<ASN> call, retrofit2.Response<ASN> response) {
-                        // TODO could add caching here.
+                        // TODO save in local storage instead?
+                        cachedUserASNResponse = response;
                         callback.onResponse(call, response);
                     }
 
@@ -119,30 +127,5 @@ public class CommonClient {
                 callback.onFailure(null, t);
             }
         });
-    }
-
-    /**
-     * Do not use, not currently supported.
-     */
-    // TODO Need a new service to provide this info
-    public void getIPForASN(Context ctx, String asn, final CommonCallback<String> callback) {
-        throw new UnsupportedOperationException();
-//        getApi().getIPFromASN(asn, ctx.getString(R.string.mxtoolbox_api_key)).enqueue(new CommonCallback<MxASNInfo>() {
-//            @Override
-//            public void onRequestResponse(Call<MxASNInfo> call, Response<MxASNInfo> response) {
-//                MxASNInfo asnInfo = response.body();
-//
-//                if (asnInfo.information.size() > 0) {
-//                    String CIDRRange = asnInfo.information.get(0).CIDRRange;
-//                    String ip = CIDRRange.substring(0, CIDRRange.indexOf("/")); // "212.109.224.0/24"
-//                    callback.onSuccess(ip);
-//                }
-//            }
-//
-//            @Override
-//            public void onRequestFailure(Call<MxASNInfo> call, Throwable t) {
-//                callback.onFailure();
-//            }
-//        });
     }
 }

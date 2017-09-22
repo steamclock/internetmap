@@ -90,6 +90,10 @@ public class TracerouteUtil {
                         consecutiveTimeouts = 0;
                         listener.onHopFound(ttl, probeWrapper.fromAddress);
 
+                        // TODO When tracing to an ASN node, there is a good chance we will not actually
+                        // be able to trace to the exact IP. Should we change our "stopping" case from
+                        // being the destination IP to the hitting the destination ASN?
+                        // If Yes, then I need to move the code to determine the ASN for each hop into TracerouteUtil.
                         if (probeWrapper.fromAddress.equals(traceDestination)) {
                             listener.onComplete();
                             break;
@@ -108,5 +112,38 @@ public class TracerouteUtil {
     public void stopTrace() {
         stopTrace = true;
     }
+
+
+
+//    +(BOOL)isInvalidOrPrivate:(NSString*)ipAddress {
+//        // This checks if our IP is in a reserved address space (eg. 192.168.1.1)
+//        NSArray* components = [ipAddress componentsSeparatedByString:@"."];
+//
+//        if(components.count != 4) {
+//            return TRUE;
+//        }
+//
+//        int a = [components[0] intValue];
+//        int b = [components[1] intValue];
+//
+//        if (a == 10) {
+//            return TRUE;
+//        }
+//
+//        if((a == 172) && ((b >= 16) && (b <= 31))) {
+//            return TRUE;
+//        }
+//
+//        if((a == 192) && (b == 168)) {
+//            return TRUE;
+//        }
+//
+//        // Probably loopback, we should ignore
+//        if ([ipAddress isEqualToString:@"127.255.255.255"]) {
+//            return TRUE;
+//        }
+//
+//        return FALSE;
+//    }
 
 }
