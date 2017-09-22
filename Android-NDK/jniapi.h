@@ -32,8 +32,9 @@ extern "C" {
     JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_resetZoomAndRotationAnimated(JNIEnv* jenv, jobject obj, bool isPortraitMode);
     JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_setAllowIdleAnimation(JNIEnv* jenv, jobject obj, bool allow);
     JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_unhoverNode(JNIEnv* jenv, jobject obj);
+    JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_clearHighlightLines(JNIEnv* jenv, jobject obj);
 
-    // Traceroute
+// Traceroute
     JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_sendPacket(JNIEnv* jenv, jobject obj);
     JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_probeDestinationAddressWithTTL(JNIEnv* jenv, jobject obj, jstring destinationAddr, int ttl);
     JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_highlightRoute(JNIEnv* jenv, jobject obj, jobjectArray nodeArray, int length);

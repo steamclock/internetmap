@@ -32,4 +32,5 @@ public class MapControllerWrapper {
     public native void sendPacket();
     public native ProbeWrapper probeDestinationAddressWithTTL(String destAddr, int ttl);
     public native void highlightRoute(NodeWrapper[] nodes, int length);
+    public native void clearHighlightLines();
 }
