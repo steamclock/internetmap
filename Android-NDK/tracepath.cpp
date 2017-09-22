@@ -19,6 +19,14 @@
 
 #define HOST_COLUMN_SIZE	52
 
+double getNowMS() {
+    // Note, clock() returns CPU time and cannot be relied on for generating
+    // time intervals.
+    struct timespec res;
+    clock_gettime(CLOCK_MONOTONIC, &res);
+    return 1000.0 * res.tv_sec + (double) res.tv_nsec / 1e6;
+}
+
 void printIcmpHdr(char* title, icmp icmp_hdr) {
     LOG("%s: type=0x%x, id=0x%x, sequence = 0x%x ",
         title, icmp_hdr.icmp_type, icmp_hdr.icmp_id, icmp_hdr.icmp_seq);
@@ -71,13 +79,18 @@ probe_result Tracepath::probeDestinationAddressWithTTL(struct in_addr *dst, int 
 
     int maxProbes = 3;
     int seq = 0;
+    double startTime, endTime;
 
     // Send up to 3 probes per TLL
     for (int probeCount = 0; probeCount < maxProbes; probeCount++) {
 
+        startTime = getNowMS();
         if (sendProbe(sock, addr, ttl, seq++, probe)) {
             if (probe.success) {
+                endTime = getNowMS();
                 result.receive_addr = probe.receive_addr;
+                result.elapsedMs = endTime - startTime;
+                LOG("Elapsed time %.2f", result.elapsedMs);
                 break;
             }
         }
@@ -89,6 +102,11 @@ probe_result Tracepath::probeDestinationAddressWithTTL(struct in_addr *dst, int 
     return result;
 }
 
+/**
+ * NOT BEING USED
+ * @param dst
+ * @return
+ */
 std::vector<tracepath_hop> Tracepath::runWithDestinationAddress(struct in_addr *dst)
 {
     tracepath_hop_vec result; // TODO <-- not done with result yet.
@@ -112,7 +130,6 @@ std::vector<tracepath_hop> Tracepath::runWithDestinationAddress(struct in_addr *
 
     int maxHops = 255;
     int maxProbes = 3;
-
     int seq = 0;
 
     for (int ttl = 1; ttl < maxHops; ttl++) {

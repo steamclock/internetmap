@@ -67,11 +67,13 @@ jobject wrapProbe(JNIEnv* jenv, probe_result probe) {
     //strings that need to be freed after
     jstring from = jenv->NewStringUTF(probe.receive_addr.c_str());
     bool success = probe.success;
+    double elapsedMs = probe.elapsedMs;
+    jdouble jlapsedMs = (jdouble)elapsedMs;
 
     jclass probeWrapperClass = jenv->FindClass("com/peer1/internetmap/ProbeWrapper");
-    jmethodID constructor = jenv->GetMethodID(probeWrapperClass, "<init>", "(ZLjava/lang/String;)V");
+    jmethodID constructor = jenv->GetMethodID(probeWrapperClass, "<init>", "(ZLjava/lang/String;D)V");
     //note: if you change this code, triple-check that the argument order matches NodeWrapper.
-    jobject wrapper = jenv->NewObject(probeWrapperClass, constructor, success, from);
+    jobject wrapper = jenv->NewObject(probeWrapperClass, constructor, success, from, jlapsedMs);
 
     //free up the strings
     jenv->DeleteLocalRef(from);

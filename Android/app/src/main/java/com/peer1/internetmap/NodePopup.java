@@ -48,7 +48,7 @@ public class NodePopup extends PopupWindow {
     private LinearLayout traceListLayout;
     private int ipHops, asnHops;
     private int lastASNIndex = -1;
-    private ArrayList<Pair<Integer, String>> unprocessedHops = new ArrayList<>();
+    private ArrayList<Pair<Integer, ProbeWrapper>> unprocessedHops = new ArrayList<>();
     private ArrayList<NodeWrapper> hopNodeWrappers = new ArrayList<>();
     private boolean isProccessingHop = false;
 
@@ -271,11 +271,11 @@ public class NodePopup extends PopupWindow {
         // TODO find a better way to handle thread interaction
         tracerouteUtil.setListener(new TracerouteUtil.Listener() {
             @Override
-            public void onHopFound(final int ttl, final String ip) {
+            public void onHopFound(final int ttl, final ProbeWrapper probeWrapper) {
                 new Handler(ctx.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        Pair<Integer, String> hop = new Pair<>(ttl, ip);
+                        Pair<Integer, ProbeWrapper> hop = new Pair<>(ttl, probeWrapper);
                         unprocessedHops.add(hop);
                         processNextHop();
                     }
@@ -287,7 +287,7 @@ public class NodePopup extends PopupWindow {
                 new Handler(ctx.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        Pair<Integer, String> hop = new Pair<>(ttl, null);
+                        Pair<Integer, ProbeWrapper> hop = new Pair<>(ttl, null);
                         unprocessedHops.add(hop);
                         processNextHop();
                     }
@@ -310,7 +310,7 @@ public class NodePopup extends PopupWindow {
                     @Override
                     public void run() {
                         stopTraceTimer();
-                        Pair<Integer, String> hop = new Pair<>(null, null);
+                        Pair<Integer, ProbeWrapper> hop = new Pair<>(null, null);
                         unprocessedHops.add(hop);
                         processNextHop();
 
@@ -339,19 +339,19 @@ public class NodePopup extends PopupWindow {
 
         isProccessingHop = true;
 
-        Pair<Integer, String> nextHop = unprocessedHops.remove(0);
+        Pair<Integer, ProbeWrapper> nextHop = unprocessedHops.remove(0);
         final Integer ttl = nextHop.first;
-        final String ip = nextHop.second;
+        final ProbeWrapper hopProbe = nextHop.second;
 
-        // Add entry to result list and bump IP hop if neccessary
+        // Add entry to result list and bump IP hop if necessary
         // Note: (null, null) indicates a full tracet timeout.
-        if (ip == null) {
-            if (ttl == null) {
-                addTraceText("Traceroute complete with as many hops as we could contact.");
-            } else {
-                addTTLResult(ttl, "* * * Hop did not reply or timed out", null);
-            }
-
+        if (ttl == null) {
+            addTraceText("Traceroute complete with as many hops as we could contact.");
+            isProccessingHop = false;
+            processNextHop();
+            return;
+        } else if (hopProbe == null) {
+            addTTLResult(ttl, "* * * Hop did not reply or timed out");
             isProccessingHop = false;
             processNextHop();
             return;
@@ -360,7 +360,7 @@ public class NodePopup extends PopupWindow {
         incrementIPHop();
 
         // Check to see if we have jumped an ASN
-        CommonClient.getInstance().getApi().getASNFromIP(ip).enqueue(new CommonCallback<ASN>() {
+        CommonClient.getInstance().getApi().getASNFromIP(hopProbe.fromAddress).enqueue(new CommonCallback<ASN>() {
             @Override
             public void onRequestResponse(Call<ASN> call, Response<ASN> response) {
                 String asn = response.body().getASNString();
@@ -383,7 +383,7 @@ public class NodePopup extends PopupWindow {
                     displayHops(hopNodeWrappers);
                 }
 
-                addTTLResult(ttl, ip, asn);
+                addTTLResult(ttl, hopProbe, asn);
                 isProccessingHop = false;
                 processNextHop();
             }
@@ -460,17 +460,37 @@ public class NodePopup extends PopupWindow {
         traceListLayout.addView(nextItemView);
     }
 
-    private void addTTLResult(int ttl, String hopText, String asn) {
+    private void addTTLResult(int ttl, String text) {
         final LayoutInflater inflater = (LayoutInflater)ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        // Add line in list
         TextView nextItemView = (TextView)inflater.inflate(R.layout.view_tracerout_list_item, null);
         nextItemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        if (asn == null) {
-            nextItemView.setText(String.format("%d. %s", ttl, hopText));
-        } else {
-            nextItemView.setText(String.format("%d. %s (%s)", ttl, hopText, asn));
+
+        String result = String.format("%d. %s", ttl, text);
+        nextItemView.setText(result);
+        traceListLayout.addView(nextItemView);
+    }
+
+    private void addTTLResult(int ttl, ProbeWrapper probe, String asn) {
+        if (probe == null) {
+            // TODO handle this error case
+            return;
         }
+
+        final LayoutInflater inflater = (LayoutInflater)ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        TextView nextItemView = (TextView)inflater.inflate(R.layout.view_tracerout_list_item, null);
+        nextItemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        String result = String.format("%d. %s", ttl, probe.fromAddress);
+
+        if (asn != null) {
+            result += String.format(" (%s) ", asn);
+        }
+
+        if (probe.elapsedMs != 0) {
+            result += String.format(" (%.2f) ", probe.elapsedMs);
+        }
+
+        nextItemView.setText(result);
         traceListLayout.addView(nextItemView);
     }
 
