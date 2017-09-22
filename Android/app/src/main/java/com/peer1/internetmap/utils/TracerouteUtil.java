@@ -28,7 +28,7 @@ public class TracerouteUtil {
     private String traceDestination;
     private Listener listener;
     private boolean stopTrace = false;
-    private final int maxconsecutiveTimeouts = 3;
+    private final int maxconsecutiveTimeouts = 6;
     private int consecutiveTimeouts = 0;
 
 
