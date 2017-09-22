@@ -38,6 +38,7 @@ public class NodePopup extends PopupWindow {
     private boolean isTimelineView;
     private boolean isSimulated;
     private MapControllerWrapper mapController;
+    private NodeWrapper nodeWrapper;
 
     // Traceroute
     private TracerouteUtil tracerouteUtil;
@@ -66,6 +67,8 @@ public class NodePopup extends PopupWindow {
             tracerouteUtil.stopTrace();
             tracerouteUtil = null;
         }
+
+        nodeWrapper = null;
         super.dismiss();
     }
 
@@ -74,6 +77,15 @@ public class NodePopup extends PopupWindow {
     }
 
     public void setNode(NodeWrapper node, boolean isUsersNode) {
+
+        // If for some reason we are calling setNode on the same index, stop.
+        if (nodeWrapper != null && nodeWrapper.index == node.index) {
+            return;
+        }
+
+        nodeWrapper = node;
+        resetTracerouteUI();
+
         //set up content
         String title;
         if (isSimulated) {
@@ -125,6 +137,8 @@ public class NodePopup extends PopupWindow {
         TextView titleView = (TextView) getContentView().findViewById(R.id.titleView);
         titleView.setText(title);
 
+        // Reset traceroute view
+
 
         if (!isTimelineView) {
             //show traceroute for all but user's current node
@@ -147,6 +161,29 @@ public class NodePopup extends PopupWindow {
         //update the layout for current data
         getContentView().measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         return getContentView().getMeasuredHeight();
+    }
+
+    private void resetTracerouteUI() {
+        // Reset the traceroute UI
+        View view = getContentView();
+        TextView asnHopsText = (TextView) getContentView().findViewById(R.id.trace_asn_hops);
+        TextView ipHops = (TextView) getContentView().findViewById(R.id.trace_ip_hops);
+        traceview = view.findViewById(R.id.traceroute_details);
+        traceTimerTextView = (TextView)view.findViewById(R.id.trace_time);
+        traceListLayout = (LinearLayout)view.findViewById(R.id.trace_list_layout);
+
+        // Reset and hide traceroute details
+        traceview.setVisibility(View.GONE);
+        asnHopsText.setText("0");
+        ipHops.setText("0");
+        traceTimerTextView.setText("0");
+        traceListLayout.removeAllViews();
+
+        // Show node details
+        View nodeDetails = getContentView().findViewById(R.id.contentLayout);
+        nodeDetails.setVisibility(View.VISIBLE);
+
+        view.invalidate();
     }
 
     /**
@@ -182,6 +219,7 @@ public class NodePopup extends PopupWindow {
         mapController.clearHighlightLines();
 
         // Get the starting ASN and run trace
+        addTraceText("Determining current ASN");
         CommonClient.getInstance().getUserASN(new CommonCallback<ASN>() {
             @Override
             public void onRequestResponse(Call<ASN> call, Response<ASN> response) {
@@ -246,7 +284,9 @@ public class NodePopup extends PopupWindow {
 
         if (node.asn == null) {
             // TODO couldntResolveIP error.
+            addTraceText("Failed to resolve ASN location");
         } else {
+            addTraceText("Fetching selected ASN location");
             CommonClient.getInstance().getApi().getIPsFromASN(node.asn).enqueue(new CommonCallback<ASNIPs>() {
                 @Override
                 public void onRequestResponse(Call<ASNIPs> call, Response<ASNIPs> response) {
@@ -256,12 +296,18 @@ public class NodePopup extends PopupWindow {
                 @Override
                 public void onRequestFailure(Call<ASNIPs> call, Throwable t) {
                     // TODO couldntResolveIP error.
+                    addTraceText("Failed to resolve ASN location");
                 }
             });
         }
     }
 
     private void runTracerouteToIp(String destinationIP) {
+
+        if (destinationIP == null || destinationIP.isEmpty()) {
+            addTraceText("There was a problem determining the destination location");
+            return;
+        }
 
         addTraceText(String.format("Starting trace to %s", destinationIP));
         startTraceTimer();
@@ -484,6 +530,8 @@ public class NodePopup extends PopupWindow {
 
         if (asn != null) {
             result += String.format(" (%s) ", asn);
+        } else {
+            result += " (Unknown ASN) ";
         }
 
         if (probe.elapsedMs != 0) {

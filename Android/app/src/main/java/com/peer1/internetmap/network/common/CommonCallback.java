@@ -43,14 +43,14 @@ public abstract class CommonCallback<T> implements Callback<T> {
     public void onFailure(Call<T> call, Throwable t) {
 
         if (!App.hasConnection()) {
-            App.showNoConnectionFeedback();
-        }
-
-        try {
-            String url = call.request().url().toString();
-            Timber.e(String.format("Call (%s) failed: %s", url, t.getMessage()));
-        } catch (Exception e) {
-            Timber.e(t);
+            Timber.e("No network connection");
+        } else {
+            try {
+                String url = call.request().url().toString();
+                Timber.e(String.format("Call (%s) failed: %s", url, t.getMessage()));
+            } catch (Exception e) {
+                Timber.e(t);
+            }
         }
 
         onRequestFailure(call,t);
