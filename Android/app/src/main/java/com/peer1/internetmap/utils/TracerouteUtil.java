@@ -1,12 +1,14 @@
 package com.peer1.internetmap.utils;
 
 import android.os.AsyncTask;
+import android.os.Trace;
 import android.util.Log;
 
 import com.peer1.internetmap.MapControllerWrapper;
 import com.peer1.internetmap.ProbeWrapper;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by shayla on 2017-09-20.
@@ -15,7 +17,7 @@ import java.util.ArrayList;
 public class TracerouteUtil {
 
     public interface Listener {
-        void onHopFound(int ttl, String ip);
+        void onHopFound(int ttl, ProbeWrapper hop);
         void onHopTimeout(int ttl);
         void onComplete();
         void onTraceTimeout();
@@ -34,7 +36,7 @@ public class TracerouteUtil {
         this.mapControllerWrapper = mapControllerWrapper;
         this.listener = new Listener() {
             @Override
-            public void onHopFound(int ttl, String ip) {
+            public void onHopFound(int ttl, ProbeWrapper ip) {
 
             }
 
@@ -68,7 +70,6 @@ public class TracerouteUtil {
 
                 int maxHops = 255;
                 consecutiveTimeouts = 0;
-
                 for (int ttl = 1; ttl < maxHops; ttl++) {
 
                     if (stopTrace) {
@@ -88,7 +89,7 @@ public class TracerouteUtil {
                     } else {
                         Log.v("Trace HUZZAH", String.format("WOOP %d: %s", ttl, probeWrapper.fromAddress));
                         consecutiveTimeouts = 0;
-                        listener.onHopFound(ttl, probeWrapper.fromAddress);
+                        listener.onHopFound(ttl, probeWrapper);
 
                         // TODO When tracing to an ASN node, there is a good chance we will not actually
                         // be able to trace to the exact IP. Should we change our "stopping" case from

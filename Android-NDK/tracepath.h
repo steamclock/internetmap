@@ -26,6 +26,7 @@ struct tracepath_hop {
 struct probe_result {
     bool success = false;
     std::string receive_addr;
+    double elapsedMs;
 };
 
 typedef std::vector<tracepath_hop> tracepath_hop_vec;
