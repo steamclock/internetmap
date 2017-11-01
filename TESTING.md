@@ -1,22 +1,24 @@
 # InternetMap - General Testing Guidelines
 
-### Testing Scenarios
+### High Priority
+- **The Map** should be populated with data, zooming and panning should work as expected
+- **Traceroutes** should work, and highlight their path through the map
+- **Node selection** should work on a handful of nodes
+- **Globe and Network views** of the map should both work.
+- **Searching** domains and company names should work.
 
-#### High Priority
-- Verify if the map is populated with data
-- **Traceroute**: Verify if a traceroute can be performed
-- **Historical Data**: Make sure that changing historical data increases/decreases the nodes on the map
-- **Map Browsing**: Users should be able to zoom out/in and pan through the globe. 
-#### Medium Priority
-- Verify if all the submenus in the information menu (i icon) is loading the correct pages.
-- Node Selection and Search should work as expected
-- **Cross Device Compatibility**: Verify if the functions inside are stable in different screen sizes.
-#### Low Priority
-- Verify the integrity of user input in contact form
-- Verify the integrity of the search node form
-- Users should be able to select their location and search through the avaiable nodes
+### Medium Priority
+- **The "i" menu** should work and its subitems should all load working pages.
+- **Browsing historical data** should show the explainer populs and shrink/grow the number of nodes shown.
+- **iPhone and iPad** should both work - node selection in particular displays differently on the two device types.
+- **You Are Here* function** should work as expected
 
-#### Standard Testing Guidelines
+### Low Priority
+- **Contact form** should function
+- **First Use** intro screen and tips for calling out different functions should work
+- **Performance** should be reasonable on slowest supported device
+
+### Standard Testing Guidelines
 
 - App should generally follow platform UI best practices and guidelines
 - Layout should work correctly on the supported device sizes (iPhone SE, iPhone 6+, iPhone X)
