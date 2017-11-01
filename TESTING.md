@@ -11,7 +11,7 @@
 - **The "i" menu** should work and its subitems should all load working pages.
 - **Browsing historical data** should show the explainer populs and shrink/grow the number of nodes shown.
 - **iPhone and iPad** should both work - node selection in particular displays differently on the two device types.
-- **You Are Here* function** should work as expected
+- **You Are Here function** should work as expected
 
 ### Low Priority
 - **Contact form** should function
