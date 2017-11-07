@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -13,10 +14,6 @@
         <scene sceneID="EHf-IW-A2E">
             <objects>
                 <viewController id="01J-lp-oVM" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Llm-lL-Icb"/>
-                        <viewControllerLayoutGuide type="bottom" id="xb3-aO-Qok"/>
-                    </layoutGuides>
                     <view key="view" contentMode="center" id="Ze5-6b-2t3">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -34,16 +31,17 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="PD6-W0-T9h" firstAttribute="bottom" secondItem="xb3-aO-Qok" secondAttribute="top" id="7VV-b2-vUM"/>
-                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="kVf-oJ-iEo" secondAttribute="bottom" constant="39" id="WO5-KP-Nte"/>
+                            <constraint firstItem="PD6-W0-T9h" firstAttribute="bottom" secondItem="Ze5-6b-2t3" secondAttribute="bottom" id="7VV-b2-vUM"/>
+                            <constraint firstItem="b7o-LV-UdN" firstAttribute="bottom" secondItem="kVf-oJ-iEo" secondAttribute="bottom" constant="39" id="WO5-KP-Nte"/>
                             <constraint firstItem="PD6-W0-T9h" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="dLY-9W-29L"/>
                             <constraint firstAttribute="trailing" secondItem="PD6-W0-T9h" secondAttribute="trailing" id="ftf-Rr-QPl"/>
-                            <constraint firstItem="PD6-W0-T9h" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="gjt-Vz-hpE"/>
-                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="PD6-W0-T9h" secondAttribute="bottom" id="mPa-oR-APH"/>
+                            <constraint firstItem="PD6-W0-T9h" firstAttribute="leading" secondItem="b7o-LV-UdN" secondAttribute="leading" id="gjt-Vz-hpE"/>
+                            <constraint firstAttribute="bottom" secondItem="PD6-W0-T9h" secondAttribute="bottom" id="mPa-oR-APH"/>
                             <constraint firstItem="PD6-W0-T9h" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="uLt-8c-dlh"/>
-                            <constraint firstItem="kVf-oJ-iEo" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="wZr-pK-HCK"/>
-                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="kVf-oJ-iEo" secondAttribute="bottom" constant="39" id="xM3-wu-0Sf"/>
+                            <constraint firstItem="kVf-oJ-iEo" firstAttribute="centerX" secondItem="b7o-LV-UdN" secondAttribute="centerX" id="wZr-pK-HCK"/>
+                            <constraint firstItem="b7o-LV-UdN" firstAttribute="bottom" secondItem="kVf-oJ-iEo" secondAttribute="bottom" constant="39" id="xM3-wu-0Sf"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="b7o-LV-UdN"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>

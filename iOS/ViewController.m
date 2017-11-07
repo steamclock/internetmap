@@ -1107,28 +1107,30 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if (menuButton == nil && self.helpPopView.isHidden) { // at a non menu shown state, show menu pop up
 
         UIButton *buttonForHelp = orderOfMenuButtons[helpLocation];
-        
-        float xPosition = buttonForHelp.frame.origin.x;
-        float yPosition = buttonForHelp.frame.origin.y;
+
+        CGPoint globalCoordinates = [buttonForHelp convertPoint:buttonForHelp.origin toView:self.view];
+
+        float xPosition = globalCoordinates.x;
+        float yPosition = globalCoordinates.y;
         
         float buttonHeight = buttonForHelp.frame.size.height;
         
         NSInteger xPadding = 0;
         NSInteger yPadding = 0;
-        
+
         if ([HelperMethods deviceIsiPad]) {
             xPadding = -18;
             yPadding = -5;
         } else if (buttonForHelp == _timelineButton) { // iphone and right button, dont want to clip on small screens
             xPadding = -112;
-            yPadding = 15;
+            yPadding = -10;
             _helpPopBackImage.image = [UIImage imageNamed:@"callout_right.png"];
         } else {
             xPadding = 0;
-            yPadding = 15;
+            yPadding = 10;
             _helpPopBackImage.image = [UIImage imageNamed:@"callout_left.png"];
         }
-        
+
         self.helpPopView.frame = CGRectMake(xPosition + xPadding, yPosition + buttonHeight + yPadding, 170, 55);
         self.helpPopLabel.text = self.popMenuInfo[helpLocation];
         
