@@ -7,6 +7,9 @@
 
 #import <Foundation/Foundation.h>
 
+// Note: some of these definitions are now duplicated in Theme.swift (since it's two hard to share them given how they are set up)
+// if changes are made, will need to be changed in both places
+
 #define UI_WHITE_COLOR [UIColor whiteColor]
 #define UI_ORANGE_COLOR [UIColor colorWithRed:252.0/255.0 green:161.0/255.0 blue:0 alpha:1]
 
