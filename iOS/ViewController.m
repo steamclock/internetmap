@@ -1,4 +1,4 @@
-//
+    //
 //  ViewController.m
 //  InternetMap
 //
@@ -81,6 +81,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* visualizationsActivityIndicator;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* timelineActivityIndicator;
 @property (weak, nonatomic) IBOutlet UIView *helpPopView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *helpPopViewPosition;
 @property (weak, nonatomic) IBOutlet UIImageView *helpPopBackImage;
 @property (weak, nonatomic) IBOutlet UILabel *helpPopLabel;
 
@@ -1108,31 +1109,21 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if (menuButton == nil && self.helpPopView.isHidden) { // at a non menu shown state, show menu pop up
 
         UIButton *buttonForHelp = orderOfMenuButtons[helpLocation];
-
         CGPoint globalCoordinates = [buttonForHelp convertPoint:buttonForHelp.origin toView:self.view];
-
         float xPosition = globalCoordinates.x;
-        float yPosition = globalCoordinates.y;
-        
-        float buttonHeight = buttonForHelp.frame.size.height;
-        
         NSInteger xPadding = 0;
-        NSInteger yPadding = 0;
 
         if ([HelperMethods deviceIsiPad]) {
             xPadding = -18;
-            yPadding = -5;
         } else if (buttonForHelp == _timelineButton) { // iphone and right button, dont want to clip on small screens
             xPadding = -112;
-            yPadding = -10;
             _helpPopBackImage.image = [UIImage imageNamed:@"callout_right.png"];
         } else {
             xPadding = 0;
-            yPadding = 10;
             _helpPopBackImage.image = [UIImage imageNamed:@"callout_left.png"];
         }
 
-        self.helpPopView.frame = CGRectMake(xPosition + xPadding, yPosition + buttonHeight + yPadding, 170, 55);
+        self.helpPopViewPosition.constant = xPosition + xPadding;
         self.helpPopLabel.text = self.popMenuInfo[helpLocation];
         
         [self.helpPopView setAlpha:0.0f];

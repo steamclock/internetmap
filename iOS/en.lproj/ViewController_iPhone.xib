@@ -6,7 +6,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
-        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -16,6 +15,7 @@
                 <outlet property="helpPopBackImage" destination="Llt-OW-UV1" id="Pc1-66-sAy"/>
                 <outlet property="helpPopLabel" destination="NIA-9A-0QU" id="wCp-Rk-MR1"/>
                 <outlet property="helpPopView" destination="96h-Us-nrP" id="wFB-Y1-hYY"/>
+                <outlet property="helpPopViewPosition" destination="zYt-mx-I2D" id="Oqv-iR-E53"/>
                 <outlet property="infoButton" destination="9" id="43"/>
                 <outlet property="logo" destination="45" id="46"/>
                 <outlet property="playButton" destination="35" id="36"/>
@@ -38,11 +38,14 @@
                     <rect key="frame" x="0.0" y="44" width="375" height="55"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SZd-U3-VMf" userLabel="Spacer View">
-                            <rect key="frame" x="0.0" y="0.0" width="31" height="55"/>
+                            <rect key="frame" x="0.0" y="0.0" width="10" height="55"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="10" id="WaK-yy-p0b"/>
+                            </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="McM-Ex-2IK" userLabel="Search Button View">
-                            <rect key="frame" x="31" y="0.0" width="55" height="55"/>
+                            <rect key="frame" x="10" y="0.0" width="55" height="55"/>
                             <subviews>
                                 <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="10" userLabel="searchButton">
                                     <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
@@ -74,11 +77,11 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wqw-ML-2js" userLabel="Spacer View">
-                            <rect key="frame" x="86" y="0.0" width="31" height="55"/>
+                            <rect key="frame" x="65" y="0.0" width="45" height="55"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bgQ-cY-lTM" userLabel="Vis Button View">
-                            <rect key="frame" x="117" y="0.0" width="55" height="55"/>
+                            <rect key="frame" x="110" y="0.0" width="55" height="55"/>
                             <subviews>
                                 <button opaque="NO" contentMode="center" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8" userLabel="visualizationsButton">
                                     <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
@@ -107,11 +110,11 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C2T-3s-wsh" userLabel="Spacer View">
-                            <rect key="frame" x="172" y="0.0" width="31" height="55"/>
+                            <rect key="frame" x="165" y="0.0" width="45" height="55"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G2V-rS-MXV" userLabel="Timeline Button View">
-                            <rect key="frame" x="203" y="0.0" width="55" height="55"/>
+                            <rect key="frame" x="210" y="0.0" width="55" height="55"/>
                             <subviews>
                                 <button opaque="NO" contentMode="center" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7" userLabel="timeLineButton">
                                     <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
@@ -140,11 +143,11 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WOu-El-L7K" userLabel="Spacer View">
-                            <rect key="frame" x="258" y="0.0" width="31" height="55"/>
+                            <rect key="frame" x="265" y="0.0" width="45" height="55"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yRF-aq-8uu" userLabel="Info Button View">
-                            <rect key="frame" x="289" y="0.0" width="55" height="55"/>
+                            <rect key="frame" x="310" y="0.0" width="55" height="55"/>
                             <subviews>
                                 <button opaque="NO" contentMode="center" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9" userLabel="infoButton">
                                     <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
@@ -173,19 +176,20 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ha2-N7-8HZ" userLabel="Spacer View">
-                            <rect key="frame" x="344" y="0.0" width="31" height="55"/>
+                            <rect key="frame" x="365" y="0.0" width="10" height="55"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="10" id="ONA-St-SwR"/>
+                            </constraints>
                         </view>
                     </subviews>
                     <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstItem="WOu-El-L7K" firstAttribute="width" secondItem="SZd-U3-VMf" secondAttribute="width" id="2Bg-b8-BYc"/>
-                        <constraint firstItem="ha2-N7-8HZ" firstAttribute="width" secondItem="SZd-U3-VMf" secondAttribute="width" id="68a-sl-iY7"/>
-                        <constraint firstItem="C2T-3s-wsh" firstAttribute="width" secondItem="SZd-U3-VMf" secondAttribute="width" id="DLn-FF-quT"/>
+                        <constraint firstItem="C2T-3s-wsh" firstAttribute="width" secondItem="Wqw-ML-2js" secondAttribute="width" id="3PM-gy-h31"/>
                         <constraint firstAttribute="bottom" secondItem="Wqw-ML-2js" secondAttribute="bottom" id="Q7B-nJ-Zjx"/>
                         <constraint firstItem="bgQ-cY-lTM" firstAttribute="top" secondItem="iTd-GY-53W" secondAttribute="top" id="dC7-ml-g56"/>
                         <constraint firstAttribute="height" constant="55" id="hlV-Sm-K7U"/>
-                        <constraint firstItem="Wqw-ML-2js" firstAttribute="width" secondItem="SZd-U3-VMf" secondAttribute="width" id="uSS-nK-i0r"/>
+                        <constraint firstItem="WOu-El-L7K" firstAttribute="width" secondItem="Wqw-ML-2js" secondAttribute="width" id="wPx-Jm-fMZ"/>
                     </constraints>
                 </stackView>
                 <slider hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="21" customClass="ExpandedSlider">
@@ -212,14 +216,14 @@
                     </connections>
                 </button>
                 <imageView userInteractionEnabled="NO" contentMode="center" image="peer1-logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="45">
-                    <rect key="frame" x="254" y="742" width="111" height="36"/>
+                    <rect key="frame" x="254" y="732" width="111" height="36"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="111" id="Xd9-Si-nCq"/>
                         <constraint firstAttribute="height" constant="36" id="e7W-05-UjT"/>
                     </constraints>
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="96h-Us-nrP">
-                    <rect key="frame" x="28.666666666666671" y="99" width="170.66666666666663" height="55"/>
+                    <rect key="frame" x="0.0" y="99" width="170.66666666666666" height="55"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="callout_left.png" translatesAutoresizingMaskIntoConstraints="NO" id="Llt-OW-UV1">
                             <rect key="frame" x="0.0" y="0.0" width="169" height="55"/>
@@ -227,7 +231,7 @@
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="You can search for companies and domains" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NIA-9A-0QU">
                             <rect key="frame" x="8" y="13" width="153" height="38"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -242,28 +246,23 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstItem="96h-Us-nrP" firstAttribute="top" secondItem="iTd-GY-53W" secondAttribute="bottom" id="1uD-az-ykB"/>
                 <constraint firstItem="iTd-GY-53W" firstAttribute="leading" secondItem="F2z-hQ-yKA" secondAttribute="leading" id="9I4-sG-7Yt"/>
                 <constraint firstItem="21" firstAttribute="leading" secondItem="F2z-hQ-yKA" secondAttribute="leading" constant="32" id="EpA-Uj-Xh3"/>
                 <constraint firstItem="F2z-hQ-yKA" firstAttribute="trailing" secondItem="21" secondAttribute="trailing" constant="32" id="KZ1-fy-9vu"/>
                 <constraint firstItem="F2z-hQ-yKA" firstAttribute="bottom" secondItem="21" secondAttribute="bottom" constant="10" id="Yff-P3-Nxn"/>
-                <constraint firstItem="F2z-hQ-yKA" firstAttribute="bottom" secondItem="45" secondAttribute="bottom" id="d8r-hL-c6M"/>
-                <constraint firstItem="96h-Us-nrP" firstAttribute="top" secondItem="10" secondAttribute="bottom" id="eZS-uB-60E"/>
+                <constraint firstItem="F2z-hQ-yKA" firstAttribute="bottom" secondItem="45" secondAttribute="bottom" constant="10" id="d8r-hL-c6M"/>
                 <constraint firstItem="F2z-hQ-yKA" firstAttribute="trailing" secondItem="45" secondAttribute="trailing" constant="10" id="lZ8-KW-K4Z"/>
                 <constraint firstItem="iTd-GY-53W" firstAttribute="top" secondItem="F2z-hQ-yKA" secondAttribute="top" id="qbd-8p-12j"/>
-                <constraint firstItem="96h-Us-nrP" firstAttribute="leading" secondItem="10" secondAttribute="centerX" constant="-30" id="r2I-Ij-vZS"/>
                 <constraint firstItem="35" firstAttribute="leading" secondItem="F2z-hQ-yKA" secondAttribute="leading" constant="10" id="sDL-e6-CQ9"/>
                 <constraint firstItem="F2z-hQ-yKA" firstAttribute="bottom" secondItem="35" secondAttribute="bottom" id="yow-r9-BHr"/>
                 <constraint firstItem="F2z-hQ-yKA" firstAttribute="trailing" secondItem="iTd-GY-53W" secondAttribute="trailing" id="z39-AV-Bxn"/>
+                <constraint firstItem="96h-Us-nrP" firstAttribute="leading" secondItem="F2z-hQ-yKA" secondAttribute="leading" id="zYt-mx-I2D"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <viewLayoutGuide key="safeArea" id="F2z-hQ-yKA"/>
             <point key="canvasLocation" x="33.5" y="54"/>
         </view>
-        <stackView opaque="NO" contentMode="scaleToFill" id="n5E-Tb-cjG">
-            <rect key="frame" x="0.0" y="0.0" width="200" height="110"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-            <viewLayoutGuide key="safeArea" id="0Fu-2T-p4f"/>
-        </stackView>
     </objects>
     <resources>
         <image name="callout_left.png" width="170" height="54"/>

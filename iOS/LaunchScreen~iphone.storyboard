@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
-    <device id="retina4_7" orientation="portrait">
+    <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -15,16 +15,16 @@
             <objects>
                 <viewController id="01J-lp-oVM" sceneMemberID="viewController">
                     <view key="view" contentMode="center" id="Ze5-6b-2t3">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="252" image="load_bg.png" translatesAutoresizingMaskIntoConstraints="NO" id="PD6-W0-T9h">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="252" image="load_bg.png" translatesAutoresizingMaskIntoConstraints="NO" id="PD6-W0-T9h">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="load_logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="kVf-oJ-iEo">
-                                <rect key="frame" x="117" y="573" width="141" height="55"/>
+                                <rect key="frame" x="117" y="694" width="141" height="45"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="55" id="Y5r-hV-VoY"/>
+                                    <constraint firstAttribute="height" constant="45" id="Y5r-hV-VoY"/>
                                     <constraint firstAttribute="width" constant="141" id="ghd-Zm-aPF"/>
                                 </constraints>
                             </imageView>
