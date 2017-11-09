@@ -122,6 +122,8 @@
 		899D03717A12F1FF46CB1027 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7287BA8F546F8A1F9C6783B0 /* CoreMedia.framework */; };
 		A600AAD616A664E1003B1028 /* as2attr.txt in Resources */ = {isa = PBXBuildFile; fileRef = A600AAD316A664DF003B1028 /* as2attr.txt */; };
 		A600AAD716A664E1003B1028 /* asinfo.json in Resources */ = {isa = PBXBuildFile; fileRef = A600AAD416A664E0003B1028 /* asinfo.json */; };
+		A60616371FB3CB9600F1AEB4 /* CreditsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60616361FB3CB9600F1AEB4 /* CreditsViewController.swift */; };
+		A60F457C1FB3CFE7001E9D25 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60F457B1FB3CFE7001E9D25 /* Theme.swift */; };
 		A625263316CEF3250015DF37 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = A625263216CEF3250015DF37 /* MBProgressHUD.m */; };
 		A6551E4716C5CBF600340590 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5641640F1FB0070E6AE /* Foundation.framework */; };
 		A6551E5316C5CC8100340590 /* main-traceroute.c in Sources */ = {isa = PBXBuildFile; fileRef = D403BBD916C1DF2F008AA000 /* main-traceroute.c */; };
@@ -163,7 +165,6 @@
 		A6551E9F16CB07EE00340590 /* contact-sales-field@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A6551E9D16CB07EE00340590 /* contact-sales-field@2x.png */; };
 		A6551EA216CC5B8500340590 /* contact-sales-field-highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = A6551EA016CC5B8500340590 /* contact-sales-field-highlighted.png */; };
 		A6551EA316CC5B8500340590 /* contact-sales-field-highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A6551EA116CC5B8500340590 /* contact-sales-field-highlighted@2x.png */; };
-		A6551EBC16CDAC8B00340590 /* CreditsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6551EBB16CDAC8A00340590 /* CreditsViewController.m */; };
 		A6551EBE16CDB22900340590 /* credits.html in Resources */ = {isa = PBXBuildFile; fileRef = A6551EBD16CDB22900340590 /* credits.html */; };
 		A6551EC216CEB88700340590 /* ExpandedScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6551EC116CEB88700340590 /* ExpandedScrollView.m */; };
 		A686E9BA16B62915009B070E /* history.json in Resources */ = {isa = PBXBuildFile; fileRef = A686E9B916B62915009B070E /* history.json */; };
@@ -380,6 +381,9 @@
 		84E947DA1F34EBE400B20758 /* contact.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = contact.html; path = Common/Data/contact.html; sourceTree = "<group>"; };
 		A600AAD316A664DF003B1028 /* as2attr.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = as2attr.txt; path = Common/data/as2attr.txt; sourceTree = "<group>"; };
 		A600AAD416A664E0003B1028 /* asinfo.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = asinfo.json; path = Common/data/asinfo.json; sourceTree = "<group>"; };
+		A60616361FB3CB9600F1AEB4 /* CreditsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CreditsViewController.swift; path = iOS/CreditsViewController.swift; sourceTree = SOURCE_ROOT; };
+		A60616381FB3CBEB00F1AEB4 /* InternetMap-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "InternetMap-Bridging-Header.h"; path = "iOS/InternetMap-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
+		A60F457B1FB3CFE7001E9D25 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = SOURCE_ROOT; };
 		A625263116CEF3250015DF37 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBProgressHUD.h; path = "External Code/MBProgressHUD/MBProgressHUD.h"; sourceTree = SOURCE_ROOT; };
 		A625263216CEF3250015DF37 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBProgressHUD.m; path = "External Code/MBProgressHUD/MBProgressHUD.m"; sourceTree = SOURCE_ROOT; };
 		A6551E4616C5CBF600340590 /* libExternalCode.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libExternalCode.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -406,8 +410,6 @@
 		A6551E9D16CB07EE00340590 /* contact-sales-field@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "contact-sales-field@2x.png"; path = "iOS/Images/contact-sales-field@2x.png"; sourceTree = SOURCE_ROOT; };
 		A6551EA016CC5B8500340590 /* contact-sales-field-highlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "contact-sales-field-highlighted.png"; path = "iOS/Images/contact-sales-field-highlighted.png"; sourceTree = SOURCE_ROOT; };
 		A6551EA116CC5B8500340590 /* contact-sales-field-highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "contact-sales-field-highlighted@2x.png"; path = "iOS/Images/contact-sales-field-highlighted@2x.png"; sourceTree = SOURCE_ROOT; };
-		A6551EBA16CDAC8A00340590 /* CreditsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CreditsViewController.h; path = iOS/CreditsViewController.h; sourceTree = SOURCE_ROOT; };
-		A6551EBB16CDAC8A00340590 /* CreditsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CreditsViewController.m; path = iOS/CreditsViewController.m; sourceTree = SOURCE_ROOT; };
 		A6551EBD16CDB22900340590 /* credits.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = credits.html; path = Common/Data/credits.html; sourceTree = "<group>"; };
 		A6551EC016CEB88700340590 /* ExpandedScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExpandedScrollView.h; path = iOS/ExpandedScrollView.h; sourceTree = SOURCE_ROOT; };
 		A6551EC116CEB88700340590 /* ExpandedScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ExpandedScrollView.m; path = iOS/ExpandedScrollView.m; sourceTree = SOURCE_ROOT; };
@@ -1140,10 +1142,10 @@
 				A6551E9816CAFC7000340590 /* ContactFormViewController.m */,
 				A6551E6516CAC1AE00340590 /* FirstUseViewController.h */,
 				A6551E6616CAC1AF00340590 /* FirstUseViewController.m */,
-				A6551EBA16CDAC8A00340590 /* CreditsViewController.h */,
-				A6551EBB16CDAC8A00340590 /* CreditsViewController.m */,
 				A6551EC016CEB88700340590 /* ExpandedScrollView.h */,
 				A6551EC116CEB88700340590 /* ExpandedScrollView.m */,
+				A60F457B1FB3CFE7001E9D25 /* Theme.swift */,
+				A60616361FB3CB9600F1AEB4 /* CreditsViewController.swift */,
 				1127C9CF16A0BBFB00413FE9 /* Objective-C++ Wrappers */,
 				D4D17D20166EA621003A489C /* XIBs */,
 			);
@@ -1158,6 +1160,7 @@
 				A686E9CB16B62986009B070E /* InternetMap-Info.plist */,
 				A686E9CC16B62986009B070E /* InternetMap-Prefix.pch */,
 				A686E9CD16B6299D009B070E /* InfoPlist.strings */,
+				A60616381FB3CBEB00F1AEB4 /* InternetMap-Bridging-Header.h */,
 			);
 			name = "Supporting Files";
 			path = InternetMap;
@@ -1414,6 +1417,7 @@
 				TargetAttributes = {
 					A6F3F55D1640F1FB0070E6AE = {
 						DevelopmentTeam = Z7NR3NR5X8;
+						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -1655,6 +1659,7 @@
 				A686EAFF16B62DBD009B070E /* VertexBuffer.cpp in Sources */,
 				D4C1083116B2043D00CA4A0E /* SCIcmpPacketUtility.m in Sources */,
 				D4C1083216B2043D00CA4A0E /* SCPacketRecord.m in Sources */,
+				A60616371FB3CB9600F1AEB4 /* CreditsViewController.swift in Sources */,
 				D4C1083316B2043D00CA4A0E /* SCTracerouteUtility.m in Sources */,
 				A686E9CA16B62970009B070E /* main.m in Sources */,
 				A686EA7116B62B61009B070E /* ASNRequest.m in Sources */,
@@ -1668,6 +1673,7 @@
 				A686EA7A16B62B61009B070E /* UIView+Convenience.m in Sources */,
 				A686EA7B16B62B61009B070E /* ViewController.m in Sources */,
 				A686EA7C16B62B61009B070E /* StringListViewController.m in Sources */,
+				A60F457C1FB3CFE7001E9D25 /* Theme.swift in Sources */,
 				A686EA7D16B62B61009B070E /* AppDelegate.mm in Sources */,
 				A686EA7E16B62B61009B070E /* ConnectionWrapper.mm in Sources */,
 				A686EA7F16B62B61009B070E /* MapControllerWrapper.mm in Sources */,
@@ -1678,7 +1684,6 @@
 				A6E1D5D416BAEFEA00D8B26F /* GlobeVisualization.cpp in Sources */,
 				A6551E6816CAC1AF00340590 /* FirstUseViewController.m in Sources */,
 				A6551E9A16CAFC7000340590 /* ContactFormViewController.m in Sources */,
-				A6551EBC16CDAC8B00340590 /* CreditsViewController.m in Sources */,
 				A6551EC216CEB88700340590 /* ExpandedScrollView.m in Sources */,
 				A625263316CEF3250015DF37 /* MBProgressHUD.m in Sources */,
 			);
@@ -1792,6 +1797,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = Z7NR3NR5X8;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1804,11 +1810,14 @@
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/iOS/InternetMap-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.peer1.internetmap;
 				PRODUCT_NAME = internetmap;
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				STRIP_INSTALLED_PRODUCT = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "iOS/InternetMap-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				WRAPPER_EXTENSION = app;
 			};
 			name = AppStore;
@@ -1873,6 +1882,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = Z7NR3NR5X8;
@@ -1886,12 +1896,15 @@
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/iOS/InternetMap-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.peer1.internetmap;
 				PRODUCT_NAME = internetmap;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "iOS/InternetMap-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Testflight;
@@ -2001,6 +2014,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = Z7NR3NR5X8;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2012,10 +2026,14 @@
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/iOS/InternetMap-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.peer1.internetmap;
 				PRODUCT_NAME = internetmap;
 				RUN_CLANG_STATIC_ANALYZER = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "iOS/InternetMap-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2025,6 +2043,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = Z7NR3NR5X8;
@@ -2037,12 +2056,15 @@
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/iOS/InternetMap-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.peer1.internetmap;
 				PRODUCT_NAME = internetmap;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "iOS/InternetMap-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Optimized;
