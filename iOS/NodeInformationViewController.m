@@ -347,7 +347,7 @@
 -(void)showErrorAlert:(NSString*)title withMessage:(NSString*)message {
     UIAlertController * alert = [UIAlertController alertControllerWithTitle:title
                                                                     message:message
-                                                             preferredStyle:HelperMethods.deviceIsiPad ? UIAlertControllerStyleAlert : UIAlertControllerStyleActionSheet];
+                                                             preferredStyle:UIAlertControllerStyleAlert];
 
     UIAlertAction *okAA = [UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", nil) style:UIAlertActionStyleDefault
                                                  handler:^(UIAlertAction * action) {
