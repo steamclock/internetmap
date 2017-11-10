@@ -39,6 +39,8 @@
 
 @property (nonatomic, assign) float contentHeight;
 
+@property (nonatomic, assign) CGFloat safeAreaPadding;
+
 @end
 
 @implementation NodeInformationViewController
@@ -49,7 +51,7 @@
     }
 }
 
-- (id)initWithNode:(NodeWrapper*)node isCurrentNode:(BOOL)isCurrent
+- (id)initWithNode:(NodeWrapper*)node isCurrentNode:(BOOL)isCurrent parent:(UIView*)parent
 {
     self = [super init];
     if (self) {
@@ -111,6 +113,10 @@
         }
         
         height += verticalPad; //bottom margin
+
+        self.safeAreaPadding = parent.safeAreaInsets.bottom;
+        height += self.safeAreaPadding;
+
         self.contentHeight = height;
 
         float width = [HelperMethods deviceIsiPad] ? 443 : [[UIScreen mainScreen] bounds].size.width;
@@ -189,7 +195,7 @@
     // traceroute button
     if (!self.isDisplayingCurrentNode) {
         self.tracerouteButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        float tracerouteButtonY = self.preferredContentSize.height - TRACEROUTE_BUTTON_HEIGHT - verticalPad + 10;
+        float tracerouteButtonY = self.preferredContentSize.height - TRACEROUTE_BUTTON_HEIGHT - verticalPad - self.safeAreaPadding + 10;
         self.tracerouteButton.frame = CGRectMake(20, tracerouteButtonY, self.scrollView.bounds.size.width - 40, TRACEROUTE_BUTTON_HEIGHT);
         self.tracerouteButton.titleLabel.font = [UIFont fontWithName:FONT_NAME_REGULAR size:20];
         [self.tracerouteButton setTitle:NSLocalizedString(@"Perform Traceroute", nil) forState:UIControlStateNormal];
