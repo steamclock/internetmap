@@ -19,7 +19,7 @@
 @interface NodeInformationViewController : UIViewController
 
 
-- (id)initWithNode:(NodeWrapper*)node isCurrentNode:(BOOL)isCurrent;
+- (id)initWithNode:(NodeWrapper*)node isCurrentNode:(BOOL)isCurrent parent:(UIView*)parent;
 - (void)tracerouteDone;
 
 @property (strong, nonatomic) UILabel* topLabel;
