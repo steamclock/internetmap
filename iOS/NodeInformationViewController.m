@@ -114,7 +114,12 @@
         
         height += verticalPad; //bottom margin
 
-        self.safeAreaPadding = parent.safeAreaInsets.bottom;
+        if (@available(iOS 11.0, *)) {
+            self.safeAreaPadding = parent.safeAreaInsets.bottom;
+        } else {
+            self.safeAreaPadding = 0;
+        }
+
         height += self.safeAreaPadding;
 
         self.contentHeight = height;
