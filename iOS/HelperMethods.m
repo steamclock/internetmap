@@ -23,10 +23,6 @@ void SCLogRect(CGRect rect) {
     return [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad;
 }
 
-+ (BOOL)deviceIsRetina {
-    return [[UIScreen mainScreen] scale] == 2.00;
-}
-
 + (NSString *) platform{
     size_t size;
     sysctlbyname("hw.machine", NULL, &size, NULL, 0);
