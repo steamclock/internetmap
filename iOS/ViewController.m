@@ -832,7 +832,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         NodeWrapper* node = [self.controller nodeAtIndex:self.controller.targetNode];
         
         //careful, the local assignment first is necessary, because the property is a weak reference
-        NodeInformationViewController* controller = [[NodeInformationViewController alloc] initWithNode:node isCurrentNode:isSelectingCurrentNode];
+        NodeInformationViewController* controller = [[NodeInformationViewController alloc] initWithNode:node isCurrentNode:isSelectingCurrentNode parent: self.view];
         self.nodeInformationViewController = controller;
         self.nodeInformationViewController.delegate = self;
 
