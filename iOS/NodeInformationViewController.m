@@ -301,12 +301,7 @@
             [self.delegate performSelector:@selector(tracerouteButtonTapped)];
         }
     } else {
-        UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"No Internet connection", nil) message:NSLocalizedString(@"Please connect to the internet.", nil) preferredStyle:UIAlertControllerStyleActionSheet];
-        UIAlertAction *okAA = [UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", nil) style:UIAlertActionStyleDefault
-                                                         handler:^(UIAlertAction * action) {
-                                                             [alert dismissViewControllerAnimated:NO completion:nil]; }];
-        [alert addAction:okAA];
-        [self presentViewController:alert animated:YES completion:nil];
+        [self showErrorAlert:NSLocalizedString(@"No Internet connection", nil) withMessage: NSLocalizedString(@"Please connect to the internet.", nil)];
     }
 }
 
@@ -358,6 +353,18 @@
         }
     }];
 
+}
+
+-(void)showErrorAlert:(NSString*)title withMessage:(NSString*)message {
+    UIAlertController * alert = [UIAlertController alertControllerWithTitle:title
+                                                                    message:message
+                                                             preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction *okAA = [UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", nil) style:UIAlertActionStyleDefault
+                                                 handler:^(UIAlertAction * action) {
+                                                     [alert dismissViewControllerAnimated:YES completion:nil]; }];
+    [alert addAction:okAA];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 @end

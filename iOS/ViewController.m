@@ -305,6 +305,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (void)update
 {
+    self.controller.displaySize = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height);
     [self.controller setAllowIdleAnimation:[self shouldDoIdleAnimation]];
     [self.controller update:[NSDate timeIntervalSinceReferenceDate]];
 }
@@ -513,16 +514,21 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if (node) {
         [self updateTargetForIndex:node.index];
     } else {
-        UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error locating your node", nil) message:NSLocalizedString(@"Couldn't find a node associated with your IP.", nil)
-            preferredStyle:UIAlertControllerStyleActionSheet];
-        UIAlertAction *okAA = [UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", nil) style:UIAlertActionStyleDefault
-                                                     handler:^(UIAlertAction * action) {
-                                                         [alert dismissViewControllerAnimated:YES completion:nil]; }];
-        [alert addAction:okAA];
-        [self presentViewController:alert animated:YES completion:nil];
+        [self showErrorAlert:NSLocalizedString(@"Error locating your node", nil) withMessage: NSLocalizedString(@"Couldn't find a node associated with your IP.", nil)];
     }
 }
 
+-(void)showErrorAlert:(NSString*)title withMessage:(NSString*)message {
+    UIAlertController * alert = [UIAlertController alertControllerWithTitle:title
+                                                                    message:message
+                                                             preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction *okAA = [UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", nil) style:UIAlertActionStyleDefault
+                                                 handler:^(UIAlertAction * action) {
+                                                     [alert dismissViewControllerAnimated:YES completion:nil]; }];
+    [alert addAction:okAA];
+    [self presentViewController:alert animated:YES completion:nil];
+}
 
 #pragma mark - Action methods
 
@@ -598,11 +604,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             }];
         }
     }else {
-        UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"No Internet connection", nil) message:NSLocalizedString(@"Please connect to the internet.", nil) preferredStyle:UIAlertControllerStyleActionSheet];
-        UIAlertAction *okAA = [UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", nil) style:UIAlertActionStyleDefault
-            handler:^(UIAlertAction * action) { [alert dismissViewControllerAnimated:YES completion:nil]; }];
-        [alert addAction:okAA];
-        [self presentViewController:alert animated:YES completion:nil];
+        [self showErrorAlert:NSLocalizedString(@"No Internet connection", nil) withMessage: NSLocalizedString(@"Please connect to the internet.", nil)];
     }
 }
 
@@ -976,12 +978,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             };
         }];
     } else {
-        
-        UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"No Internet connection", nil) message:NSLocalizedString(@"Please connect to the internet.", nil) preferredStyle:UIAlertControllerStyleActionSheet];
-        UIAlertAction *okAA = [UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", nil) style:UIAlertActionStyleDefault
-                                                     handler:^(UIAlertAction * action) { [alert dismissViewControllerAnimated:YES completion:nil]; }];
-        [alert addAction:okAA];
-        [self presentViewController:alert animated:YES completion:nil];
+        [self showErrorAlert:NSLocalizedString(@"No Internet connection", nil) withMessage: NSLocalizedString(@"Please connect to the internet.", nil)];
     }
 }
 
