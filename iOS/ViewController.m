@@ -1,4 +1,4 @@
-//
+    //
 //  ViewController.m
 //  InternetMap
 //
@@ -81,6 +81,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* visualizationsActivityIndicator;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* timelineActivityIndicator;
 @property (weak, nonatomic) IBOutlet UIView *helpPopView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *helpPopViewPosition;
 @property (weak, nonatomic) IBOutlet UIImageView *helpPopBackImage;
 @property (weak, nonatomic) IBOutlet UILabel *helpPopLabel;
 
@@ -831,7 +832,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         NodeWrapper* node = [self.controller nodeAtIndex:self.controller.targetNode];
         
         //careful, the local assignment first is necessary, because the property is a weak reference
-        NodeInformationViewController* controller = [[NodeInformationViewController alloc] initWithNode:node isCurrentNode:isSelectingCurrentNode];
+        NodeInformationViewController* controller = [[NodeInformationViewController alloc] initWithNode:node isCurrentNode:isSelectingCurrentNode parent: self.view];
         self.nodeInformationViewController = controller;
         self.nodeInformationViewController.delegate = self;
 
@@ -1108,29 +1109,21 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if (menuButton == nil && self.helpPopView.isHidden) { // at a non menu shown state, show menu pop up
 
         UIButton *buttonForHelp = orderOfMenuButtons[helpLocation];
-        
-        float xPosition = buttonForHelp.frame.origin.x;
-        float yPosition = buttonForHelp.frame.origin.y;
-        
-        float buttonHeight = buttonForHelp.frame.size.height;
-        
+        CGPoint globalCoordinates = [buttonForHelp convertPoint:buttonForHelp.origin toView:self.view];
+        float xPosition = globalCoordinates.x;
         NSInteger xPadding = 0;
-        NSInteger yPadding = 0;
-        
+
         if ([HelperMethods deviceIsiPad]) {
             xPadding = -18;
-            yPadding = -5;
         } else if (buttonForHelp == _timelineButton) { // iphone and right button, dont want to clip on small screens
             xPadding = -112;
-            yPadding = 15;
             _helpPopBackImage.image = [UIImage imageNamed:@"callout_right.png"];
         } else {
             xPadding = 0;
-            yPadding = 15;
             _helpPopBackImage.image = [UIImage imageNamed:@"callout_left.png"];
         }
-        
-        self.helpPopView.frame = CGRectMake(xPosition + xPadding, yPosition + buttonHeight + yPadding, 170, 55);
+
+        self.helpPopViewPosition.constant = xPosition + xPadding;
         self.helpPopLabel.text = self.popMenuInfo[helpLocation];
         
         [self.helpPopView setAlpha:0.0f];
