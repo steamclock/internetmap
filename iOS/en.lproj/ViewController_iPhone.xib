@@ -62,9 +62,8 @@
                                         <action selector="searchButtonPressed:" destination="-1" eventType="touchUpInside" id="32"/>
                                     </connections>
                                 </button>
-                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="26" userLabel="search Activity Indicator">
-                                    <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="26" userLabel="search Activity Indicator">
+                                    <rect key="frame" x="17.666666666666668" y="17.666666666666664" width="20.000000000000004" height="20"/>
                                 </activityIndicatorView>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -72,7 +71,9 @@
                                 <constraint firstAttribute="width" constant="55" id="Kjh-aS-NsG"/>
                                 <constraint firstItem="10" firstAttribute="leading" secondItem="McM-Ex-2IK" secondAttribute="leading" id="PxR-dt-CBi"/>
                                 <constraint firstAttribute="trailing" secondItem="10" secondAttribute="trailing" id="UBG-Ex-KUf"/>
+                                <constraint firstItem="26" firstAttribute="centerY" secondItem="McM-Ex-2IK" secondAttribute="centerY" id="YpM-7j-P0h"/>
                                 <constraint firstAttribute="bottom" secondItem="10" secondAttribute="bottom" id="fHt-oV-WsE"/>
+                                <constraint firstItem="26" firstAttribute="centerX" secondItem="McM-Ex-2IK" secondAttribute="centerX" id="nbp-3J-CQs"/>
                                 <constraint firstItem="10" firstAttribute="top" secondItem="McM-Ex-2IK" secondAttribute="top" id="z2S-pv-7ta"/>
                             </constraints>
                         </view>
@@ -99,13 +100,14 @@
                                         <action selector="visualizationsButtonPressed:" destination="-1" eventType="touchUpInside" id="33"/>
                                     </connections>
                                 </button>
-                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="28" userLabel="visualizations Activity Indicator">
-                                    <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="28" userLabel="visualizations Activity Indicator">
+                                    <rect key="frame" x="17.666666666666671" y="17.666666666666664" width="20" height="20"/>
                                 </activityIndicatorView>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
+                                <constraint firstItem="28" firstAttribute="centerY" secondItem="bgQ-cY-lTM" secondAttribute="centerY" id="8v6-2e-Ssg"/>
+                                <constraint firstItem="28" firstAttribute="centerX" secondItem="bgQ-cY-lTM" secondAttribute="centerX" id="DEC-7I-TYv"/>
                                 <constraint firstAttribute="width" constant="55" id="zuR-lk-4LY"/>
                             </constraints>
                         </view>
@@ -132,14 +134,15 @@
                                         <action selector="timelineButtonPressed:" destination="-1" eventType="touchUpInside" id="34"/>
                                     </connections>
                                 </button>
-                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="29" userLabel="timeline Activity Indicator">
-                                    <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="29" userLabel="timeline Activity Indicator">
+                                    <rect key="frame" x="17.666666666666657" y="17.666666666666664" width="20" height="20"/>
                                 </activityIndicatorView>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="55" id="Y89-uC-KFs"/>
+                                <constraint firstItem="29" firstAttribute="centerY" secondItem="G2V-rS-MXV" secondAttribute="centerY" id="uUS-zd-x1V"/>
+                                <constraint firstItem="29" firstAttribute="centerX" secondItem="G2V-rS-MXV" secondAttribute="centerX" id="udP-BR-z95"/>
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WOu-El-L7K" userLabel="Spacer View">
@@ -165,14 +168,15 @@
                                         <action selector="infoButtonPressed:" destination="-1" eventType="touchUpInside" id="44"/>
                                     </connections>
                                 </button>
-                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="6" userLabel="info Activity Indicator">
-                                    <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="6" userLabel="info Activity Indicator">
+                                    <rect key="frame" x="17.666666666666686" y="17.666666666666664" width="20" height="20"/>
                                 </activityIndicatorView>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="55" id="E2e-Uy-Nre"/>
+                                <constraint firstItem="6" firstAttribute="centerX" secondItem="yRF-aq-8uu" secondAttribute="centerX" id="JHb-dk-FCY"/>
+                                <constraint firstItem="6" firstAttribute="centerY" secondItem="yRF-aq-8uu" secondAttribute="centerY" id="NSx-Pm-UiR"/>
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ha2-N7-8HZ" userLabel="Spacer View">
