@@ -1,4 +1,4 @@
-//
+    //
 //  ViewController.m
 //  InternetMap
 //
@@ -81,6 +81,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* visualizationsActivityIndicator;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* timelineActivityIndicator;
 @property (weak, nonatomic) IBOutlet UIView *helpPopView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *helpPopViewPosition;
 @property (weak, nonatomic) IBOutlet UIImageView *helpPopBackImage;
 @property (weak, nonatomic) IBOutlet UILabel *helpPopLabel;
 
@@ -304,7 +305,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (void)update
 {
-
     self.controller.displaySize = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height);
     [self.controller setAllowIdleAnimation:[self shouldDoIdleAnimation]];
     [self.controller update:[NSDate timeIntervalSinceReferenceDate]];
@@ -312,10 +312,18 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
+    self.controller.displaySize = CGSizeMake(view.drawableWidth, view.drawableHeight);
     [self.controller draw];
 }
 
 #pragma mark - Touch and GestureRecognizer handlers
+
+- (CGPoint)toDisplayPoint:(CGPoint)point {
+    GLKView* view = (GLKView*)self.view;
+    point.x = (point.x / view.bounds.size.width) * view.drawableWidth;
+    point.y = (point.y / view.bounds.size.height) * view.drawableHeight;
+    return point;
+}
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
@@ -323,9 +331,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if (touch.view == self.buttonContainerView) {
         return;
     }
+
     self.isHandlingLongPress = NO;
 
-    [self.controller handleTouchDownAtPoint:[touch locationInView:self.view]];
+    [self.controller handleTouchDownAtPoint:[self toDisplayPoint:[touch locationInView:self.view]]];
 }
 
 -(void)handleTap:(UITapGestureRecognizer*)gestureRecognizer {
@@ -358,7 +367,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if(gesture.state == UIGestureRecognizerStateBegan || gesture.state == UIGestureRecognizerStateChanged) {
         if ((!self.lastIntersectionDate || fabs([self.lastIntersectionDate timeIntervalSinceNow]) > 0.01)) {
             self.isHandlingLongPress = YES;
-            int i = [self.controller indexForNodeAtPoint:[gesture locationInView:self.view]];
+
+            int i = [self.controller indexForNodeAtPoint:[self toDisplayPoint: [gesture locationInView:self.view]]];
             self.lastIntersectionDate = [NSDate date];
             if (i != NSNotFound && [self.controller isWithinMaxNodeIndex:i]) {
 
@@ -833,7 +843,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         NodeWrapper* node = [self.controller nodeAtIndex:self.controller.targetNode];
         
         //careful, the local assignment first is necessary, because the property is a weak reference
-        NodeInformationViewController* controller = [[NodeInformationViewController alloc] initWithNode:node isCurrentNode:isSelectingCurrentNode];
+        NodeInformationViewController* controller = [[NodeInformationViewController alloc] initWithNode:node isCurrentNode:isSelectingCurrentNode parent: self.view];
         self.nodeInformationViewController = controller;
         self.nodeInformationViewController.delegate = self;
 
@@ -1001,7 +1011,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     CGRect displayRect;
     
     if (![HelperMethods deviceIsiPad]) {
-        displayRect = CGRectMake(160, self.controller.displaySize.height-self.nodeInformationViewController.preferredContentSize.height, 1, 1);
+        displayRect = CGRectMake(160, self.view.bounds.size.height-self.nodeInformationViewController.preferredContentSize.height, 1, 1);
     } else {                
         displayRect = CGRectMake([[UIScreen mainScreen] bounds].size.width/2, [[UIScreen mainScreen] bounds].size.height/2, 1, 1);
     }
@@ -1105,29 +1115,21 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if (menuButton == nil && self.helpPopView.isHidden) { // at a non menu shown state, show menu pop up
 
         UIButton *buttonForHelp = orderOfMenuButtons[helpLocation];
-        
-        float xPosition = buttonForHelp.frame.origin.x;
-        float yPosition = buttonForHelp.frame.origin.y;
-        
-        float buttonHeight = buttonForHelp.frame.size.height;
-        
+        CGPoint globalCoordinates = [buttonForHelp convertPoint:buttonForHelp.origin toView:self.view];
+        float xPosition = globalCoordinates.x;
         NSInteger xPadding = 0;
-        NSInteger yPadding = 0;
-        
+
         if ([HelperMethods deviceIsiPad]) {
             xPadding = -18;
-            yPadding = -5;
         } else if (buttonForHelp == _timelineButton) { // iphone and right button, dont want to clip on small screens
             xPadding = -112;
-            yPadding = 15;
             _helpPopBackImage.image = [UIImage imageNamed:@"callout_right.png"];
         } else {
             xPadding = 0;
-            yPadding = 15;
             _helpPopBackImage.image = [UIImage imageNamed:@"callout_left.png"];
         }
-        
-        self.helpPopView.frame = CGRectMake(xPosition + xPadding, yPosition + buttonHeight + yPadding, 170, 55);
+
+        self.helpPopViewPosition.constant = xPosition + xPadding;
         self.helpPopLabel.text = self.popMenuInfo[helpLocation];
         
         [self.helpPopView setAlpha:0.0f];
