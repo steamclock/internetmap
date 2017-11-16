@@ -24,6 +24,8 @@
     self.viewController.edgesForExtendedLayout = UIRectEdgeAll;
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
+
+    self.window.backgroundColor = [UIColor redColor];
     return YES;
 }
 
