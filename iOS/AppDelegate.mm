@@ -6,6 +6,7 @@
 #import "AppDelegate.h"
 #import "ViewController.h"
 #import <BuddyBuildSDK/BuddyBuildSDK.h>
+#import "InternetMap-Swift.h"
 
 @implementation AppDelegate
 
@@ -14,13 +15,7 @@
     [BuddyBuildSDK setup];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-
-    // Override point for customization after application launch.
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        self.viewController = [[ViewController alloc] initWithNibName:@"ViewController_iPhone" bundle:nil];
-    } else {
-        self.viewController = [[ViewController alloc] initWithNibName:@"ViewController_iPad" bundle:nil];
-    }
+    self.viewController = [[RootVC alloc] init];
     self.viewController.edgesForExtendedLayout = UIRectEdgeAll;
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];

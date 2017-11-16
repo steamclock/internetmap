@@ -124,6 +124,7 @@
 		A600AAD716A664E1003B1028 /* asinfo.json in Resources */ = {isa = PBXBuildFile; fileRef = A600AAD416A664E0003B1028 /* asinfo.json */; };
 		A60616371FB3CB9600F1AEB4 /* CreditsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60616361FB3CB9600F1AEB4 /* CreditsViewController.swift */; };
 		A60F457C1FB3CFE7001E9D25 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60F457B1FB3CFE7001E9D25 /* Theme.swift */; };
+		A60F45831FBE0309001E9D25 /* RootVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60F45821FBE0309001E9D25 /* RootVC.swift */; };
 		A625263316CEF3250015DF37 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = A625263216CEF3250015DF37 /* MBProgressHUD.m */; };
 		A6551E4716C5CBF600340590 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5641640F1FB0070E6AE /* Foundation.framework */; };
 		A6551E5316C5CC8100340590 /* main-traceroute.c in Sources */ = {isa = PBXBuildFile; fileRef = D403BBD916C1DF2F008AA000 /* main-traceroute.c */; };
@@ -384,6 +385,7 @@
 		A60616361FB3CB9600F1AEB4 /* CreditsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CreditsViewController.swift; path = iOS/CreditsViewController.swift; sourceTree = SOURCE_ROOT; };
 		A60616381FB3CBEB00F1AEB4 /* InternetMap-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "InternetMap-Bridging-Header.h"; path = "iOS/InternetMap-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		A60F457B1FB3CFE7001E9D25 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = SOURCE_ROOT; };
+		A60F45821FBE0309001E9D25 /* RootVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RootVC.swift; path = iOS/RootVC.swift; sourceTree = SOURCE_ROOT; };
 		A625263116CEF3250015DF37 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBProgressHUD.h; path = "External Code/MBProgressHUD/MBProgressHUD.h"; sourceTree = SOURCE_ROOT; };
 		A625263216CEF3250015DF37 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBProgressHUD.m; path = "External Code/MBProgressHUD/MBProgressHUD.m"; sourceTree = SOURCE_ROOT; };
 		A6551E4616C5CBF600340590 /* libExternalCode.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libExternalCode.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1113,6 +1115,7 @@
 				D4CEA32016694E53004B8E8A /* Images */,
 				A686EA5016B62B52009B070E /* AppDelegate.h */,
 				A686EA6D16B62B61009B070E /* AppDelegate.mm */,
+				A60F45821FBE0309001E9D25 /* RootVC.swift */,
 				A686EA6116B62B61009B070E /* ASNRequest.m */,
 				A686EA5116B62B52009B070E /* ASNRequest.h */,
 				A686EA5316B62B52009B070E /* CPPHelpers.h */,
@@ -1683,6 +1686,7 @@
 				A6E1D5CC16B9EFFB00D8B26F /* TypeVisualization.cpp in Sources */,
 				A6E1D5D416BAEFEA00D8B26F /* GlobeVisualization.cpp in Sources */,
 				A6551E6816CAC1AF00340590 /* FirstUseViewController.m in Sources */,
+				A60F45831FBE0309001E9D25 /* RootVC.swift in Sources */,
 				A6551E9A16CAFC7000340590 /* ContactFormViewController.m in Sources */,
 				A6551EC216CEB88700340590 /* ExpandedScrollView.m in Sources */,
 				A625263316CEF3250015DF37 /* MBProgressHUD.m in Sources */,
@@ -1815,7 +1819,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/iOS/InternetMap-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.peer1.internetmap;
@@ -1907,7 +1911,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/iOS/InternetMap-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.peer1.internetmap;
@@ -2049,7 +2053,7 @@
 				GCC_PREFIX_HEADER = "iOS/InternetMap-Prefix.pch";
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/iOS/InternetMap-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.peer1.internetmap;
@@ -2079,7 +2083,7 @@
 				GCC_PREFIX_HEADER = "iOS/InternetMap-Prefix.pch";
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/iOS/InternetMap-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.peer1.internetmap;
