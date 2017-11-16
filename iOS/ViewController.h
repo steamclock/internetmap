@@ -13,5 +13,6 @@
 @interface ViewController : GLKViewController <NodeSearchDelegate, SCTracerouteUtilityDelegate, UIGestureRecognizerDelegate, WEPopoverControllerDelegate, UIPopoverPresentationControllerDelegate, NodeInformationViewControllerDelegate>
 
 - (void) moreAboutCogeco;
+- (void)overrideCamera:(matrix_float4x4)transform projection:(matrix_float4x4)projection;
 
 @end

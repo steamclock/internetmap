@@ -318,6 +318,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.controller draw];
 }
 
+- (void)overrideCamera:(matrix_float4x4)transform projection:(matrix_float4x4)projection {
+    [self.controller overrideCameraTransform:transform projection:projection];
+}
+
 #pragma mark - Touch and GestureRecognizer handlers
 
 - (CGPoint)toDisplayPoint:(CGPoint)point {

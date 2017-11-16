@@ -75,6 +75,8 @@ class Camera {
     Quaternion _rotationTarget;
     TimeInterval _rotationStartTime;
     TimeInterval _rotationDuration;
+
+    bool overrideCamera = false;
     
     void handleAnimatedTranslateY(TimeInterval delta);
     void handleIdleMovement(TimeInterval delta);
@@ -112,7 +114,9 @@ public:
     void zoomByScale(float zoom);
     void translateYAnimated(float translateY, TimeInterval duration);
     void resetIdleTimer(void);
-    
+
+    void setOverride(Matrix4* transform, Matrix4* projection);
+
     void update(TimeInterval currentTime);
 
     Matrix4 currentModelViewProjection(void);

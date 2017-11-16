@@ -60,6 +60,10 @@ static const float NEAR_PLANE = 0.05f;
 static const float FAR_PLANE = 100.0f;
 
 void Camera::update(TimeInterval currentTime) {
+    if (overrideCamera) {
+        return;
+    }
+
     TimeInterval delta = currentTime - _updateTime;
     _updateTime = currentTime;
     
@@ -85,6 +89,20 @@ void Camera::update(TimeInterval currentTime) {
     _projectionMatrix = projectionMatrix;
     _modelViewMatrix = modelView;
     _modelViewProjectionMatrix = projectionMatrix * modelView;
+}
+
+void Camera::setOverride(Matrix4* transform, Matrix4* projection) {
+    if (transform && projection) {
+        overrideCamera = true;
+
+        _projectionMatrix = *projection;
+        _modelViewMatrix = *transform * Matrix4::scale(Vector3(0.2f, 0.2f, 0.2f));
+
+        _modelViewProjectionMatrix = _projectionMatrix * _modelViewMatrix;
+    }
+    else {
+        overrideCamera = false;
+    }
 }
 
 void Camera::handleIdleMovement(TimeInterval delta) {
