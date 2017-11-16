@@ -18,7 +18,11 @@ private class CameraDelegate: NSObject, ARSessionDelegate {
     }
 
     public func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        renderer.overrideCamera(frame.camera.viewMatrix(for: .portrait), projection: frame.camera.projectionMatrix(for: .portrait, viewportSize: CGSize(width:1080, height: 1920), zNear: 0.05, zFar: 100))
+        let orientation = UIApplication.shared.statusBarOrientation
+        let view = renderer.view as! GLKView
+        let size = CGSize(width: view.drawableWidth, height: view.drawableHeight)
+
+        renderer.overrideCamera(frame.camera.viewMatrix(for: orientation), projection: frame.camera.projectionMatrix(for: orientation, viewportSize: size, zNear: 0.05, zFar: 100))
     }
 }
 
