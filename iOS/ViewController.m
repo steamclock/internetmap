@@ -146,7 +146,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     GLKView *view = (GLKView *)self.view;
     view.context = self.context;
     view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
-    view.opaque = NO;
     view.backgroundColor = [UIColor clearColor];
 
     [EAGLContext setCurrentContext:self.context];

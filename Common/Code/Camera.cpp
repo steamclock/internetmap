@@ -60,10 +60,6 @@ static const float NEAR_PLANE = 0.05f;
 static const float FAR_PLANE = 100.0f;
 
 void Camera::update(TimeInterval currentTime) {
-    if (overrideCamera) {
-        return;
-    }
-
     TimeInterval delta = currentTime - _updateTime;
     _updateTime = currentTime;
     
@@ -77,18 +73,28 @@ void Camera::update(TimeInterval currentTime) {
     handleAnimatedTranslateY(delta);
     
     float aspect = fabsf(_displayWidth / _displayHeight);
-    Matrix4 model = _rotationMatrix * Matrix4::translation(Vector3(-currentTarget.getX(), -currentTarget.getY(), -currentTarget.getZ()));
-    Matrix4 view = Matrix4::translation(Vector3(0.0f, 0.0f, _zoom));
-    Matrix4 translation = Matrix4::translation(Vector3(0.0f, _translationY, 0.0f));
 
-    Matrix4 modelView = view * model;
-    Matrix4 projectionMatrix;
-    
-    projectionMatrix = translation * Matrix4::perspective(DegreesToRadians(65.0f), aspect, NEAR_PLANE, FAR_PLANE);
-    
-    _projectionMatrix = projectionMatrix;
-    _modelViewMatrix = modelView;
-    _modelViewProjectionMatrix = projectionMatrix * modelView;
+    if (overrideCamera) {
+        Matrix4 model = _rotationMatrix * Matrix4::scale(Vector3(0.1f, 0.1f, 0.1f));
+        Matrix4 modelView = _viewMatrix * model;
+
+        _modelViewMatrix = modelView;
+        _modelViewProjectionMatrix = _projectionMatrix * modelView;
+    }
+    else {
+        Matrix4 model = _rotationMatrix * Matrix4::translation(Vector3(-currentTarget.getX(), -currentTarget.getY(), -currentTarget.getZ()));
+        Matrix4 view = Matrix4::translation(Vector3(0.0f, 0.0f, _zoom));
+        Matrix4 translation = Matrix4::translation(Vector3(0.0f, _translationY, 0.0f));
+
+        Matrix4 modelView = view * model;
+        Matrix4 projectionMatrix;
+
+        projectionMatrix = translation * Matrix4::perspective(DegreesToRadians(65.0f), aspect, NEAR_PLANE, FAR_PLANE);
+
+        _projectionMatrix = projectionMatrix;
+        _modelViewMatrix = modelView;
+        _modelViewProjectionMatrix = projectionMatrix * modelView;
+    }
 }
 
 void Camera::setOverride(Matrix4* transform, Matrix4* projection) {
@@ -96,7 +102,7 @@ void Camera::setOverride(Matrix4* transform, Matrix4* projection) {
         overrideCamera = true;
 
         _projectionMatrix = *projection;
-        _modelViewMatrix = *transform * Matrix4::scale(Vector3(0.2f, 0.2f, 0.2f));
+        _viewMatrix = *transform;
 
         _modelViewProjectionMatrix = _projectionMatrix * _modelViewMatrix;
     }

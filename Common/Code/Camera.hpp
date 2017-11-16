@@ -38,6 +38,7 @@ class Camera {
     Matrix4 _modelViewMatrix;
     Matrix4 _projectionMatrix;
     
+    Matrix4 _viewMatrix;
     Matrix4 _rotationMatrix;
     
     float _rotation;
