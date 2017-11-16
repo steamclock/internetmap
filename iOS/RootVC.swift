@@ -8,11 +8,17 @@
 
 import UIKit
 import ARKit
-import SceneKit
+
+private class CameraDelegate: NSObject, ARSessionDelegate {
+    public func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        print(frame.camera.transform.columns.3)
+    }
+}
 
 public class RootVC: UIViewController {
-    var rendererVC: ViewController!
-    var arkitView: ARSCNView!
+    private var rendererVC: ViewController!
+    private var arkitView: ARSCNView!
+    private var cameraDelegate = CameraDelegate()
 
    public override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,6 +30,8 @@ public class RootVC: UIViewController {
         let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = .horizontal
         arkitView.session.run(configuration)
+
+        arkitView.session.delegate = cameraDelegate
 
         if UIDevice.current.userInterfaceIdiom == .phone {
             rendererVC = ViewController(nibName: "ViewController_iPhone", bundle: nil)
@@ -39,5 +47,4 @@ public class RootVC: UIViewController {
 
         // Do any additional setup after loading the view.
     }
-
 }
