@@ -193,10 +193,9 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
     _controller->display->camera->stopMomentumZoom();
 }
 
-- (void)overrideCameraTransform:(matrix_float4x4)transform projection:(matrix_float4x4)projection {
-    _controller->display->camera->setOverride((Matrix4*)&transform, (Matrix4*)&projection);
+- (void)overrideCameraTransform:(matrix_float4x4)transform projection:(matrix_float4x4)projection modelPos:(GLKVector3)modelPos {
+    _controller->display->camera->setOverride((Matrix4*)&transform, (Matrix4*)&projection, *((Vector3*)&modelPos));
 }
-
 
 #pragma mark - Data: Node retrieval
 

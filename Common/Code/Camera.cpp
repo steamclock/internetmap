@@ -75,7 +75,7 @@ void Camera::update(TimeInterval currentTime) {
     float aspect = fabsf(_displayWidth / _displayHeight);
 
     if (overrideCamera) {
-        Matrix4 model = _rotationMatrix * Matrix4::scale(Vector3(0.1f, 0.1f, 0.1f));
+        Matrix4 model = Matrix4::translation(_modelPos) * _rotationMatrix * Matrix4::scale(Vector3(0.5f, 0.5f, 0.5f));
         Matrix4 modelView = _viewMatrix * model;
 
         _modelViewMatrix = modelView;
@@ -97,14 +97,13 @@ void Camera::update(TimeInterval currentTime) {
     }
 }
 
-void Camera::setOverride(Matrix4* transform, Matrix4* projection) {
+void Camera::setOverride(Matrix4* transform, Matrix4* projection, Vector3 modelPos) {
     if (transform && projection) {
         overrideCamera = true;
 
         _projectionMatrix = *projection;
         _viewMatrix = *transform;
-
-        _modelViewProjectionMatrix = _projectionMatrix * _modelViewMatrix;
+        _modelPos = modelPos;
     }
     else {
         overrideCamera = false;

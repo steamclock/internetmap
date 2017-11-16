@@ -176,8 +176,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.rotationGestureRecognizer.delegate = self;
     
     [self.view addGestureRecognizer:self.tapRecognizer];
-    [self.view addGestureRecognizer:self.doubleTapRecognizer];
-    [self.view addGestureRecognizer:self.twoFingerTapRecognizer];
+    //[self.view addGestureRecognizer:self.doubleTapRecognizer];
+    //[self.view addGestureRecognizer:self.twoFingerTapRecognizer];
     [self.view addGestureRecognizer:self.panRecognizer];
     [self.view addGestureRecognizer:self.pinchRecognizer];
     [self.view addGestureRecognizer:self.longPressGestureRecognizer];
@@ -317,8 +317,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.controller draw];
 }
 
-- (void)overrideCamera:(matrix_float4x4)transform projection:(matrix_float4x4)projection {
-    [self.controller overrideCameraTransform:transform projection:projection];
+- (void)overrideCamera:(matrix_float4x4)transform projection:(matrix_float4x4)projection modelPos:(GLKVector3)modelPos {
+    [self.controller overrideCameraTransform:transform projection:projection modelPos:modelPos];
 }
 
 #pragma mark - Touch and GestureRecognizer handlers

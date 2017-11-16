@@ -9,8 +9,9 @@
 import UIKit
 import ARKit
 
-private class CameraDelegate: NSObject, ARSessionDelegate {
+private class CameraDelegate: NSObject, ARSessionDelegate, ARSCNViewDelegate {
     let renderer: ViewController
+    var modelPos = GLKVector3Make(0.0, 0.0, 0.0)
 
     init(renderer: ViewController) {
         self.renderer = renderer
@@ -22,7 +23,18 @@ private class CameraDelegate: NSObject, ARSessionDelegate {
         let view = renderer.view as! GLKView
         let size = CGSize(width: view.drawableWidth, height: view.drawableHeight)
 
-        renderer.overrideCamera(frame.camera.viewMatrix(for: orientation), projection: frame.camera.projectionMatrix(for: orientation, viewportSize: size, zNear: 0.05, zFar: 100))
+        renderer.overrideCamera(frame.camera.viewMatrix(for: orientation), projection: frame.camera.projectionMatrix(for: orientation, viewportSize: size, zNear: 0.05, zFar: 100), modelPos:modelPos)
+    }
+
+    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        print(anchor)
+        /*
+        let planeGeometry = SCNPlane(width: anchor. .extent.x, height: anchor.extent.z)
+        var planeNode = SCNNode(geometry: planeGeometry)
+        planeNode.position = SCNVector3Make(anchor.center.x, 0, anchor.center.z)
+        planeNode.transform = SCNMatrix4MakeRotation(-.pi / 2.0, 1.0, 0.0, 0.0)
+        node.addChildNode(planeNode)
+         */
     }
 }
 
@@ -49,12 +61,28 @@ public class RootVC: UIViewController {
         view.addSubview(rendererVC.view)
         addChildViewController(rendererVC)
 
+        let reset = UITapGestureRecognizer(target: self, action: #selector(resetPosition))
+        reset.numberOfTapsRequired = 3
+
+        rendererVC.view.addGestureRecognizer(reset)
 
         cameraDelegate = CameraDelegate(renderer: rendererVC)
         arkitView.session.delegate = cameraDelegate
+        arkitView.delegate = cameraDelegate
 
         let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = .horizontal
+        arkitView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
         arkitView.session.run(configuration)
+    }
+
+    @objc func resetPosition() {
+        let hit = arkitView.hitTest(rendererVC.view.center, types: .estimatedHorizontalPlane).first
+
+        if let hit = hit {
+            let point = hit.worldTransform.columns.3
+            cameraDelegate.modelPos = GLKVector3Make(point.x, point.y + 0.5, point.z)
+        }
+        print("foo")
     }
 }
