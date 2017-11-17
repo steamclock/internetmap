@@ -72,7 +72,7 @@ public class RootVC: UIViewController {
 
         let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = .horizontal
-        arkitView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
+        //arkitView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
         arkitView.session.run(configuration)
     }
 

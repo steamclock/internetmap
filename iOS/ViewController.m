@@ -309,6 +309,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.controller.displaySize = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height);
     [self.controller setAllowIdleAnimation:[self shouldDoIdleAnimation]];
     [self.controller update:[NSDate timeIntervalSinceReferenceDate]];
+    [self.nodeInformationPopover repositionPopoverFromRect:[self displayRectForNodeInfoPopover] inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
 }
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
@@ -1020,7 +1021,15 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     } else {                
         displayRect = CGRectMake([[UIScreen mainScreen] bounds].size.width/2, [[UIScreen mainScreen] bounds].size.height/2, 1, 1);
     }
-        
+
+    if(_controller.targetNode != INT_MAX) {
+        CGPoint position = [_controller getCoordinatesForNodeAtIndex:_controller.targetNode];
+        CGPoint offset = CGPointMake(position.x - self.view.center.x, position.y - self.view.center.y);
+
+        displayRect.origin.x += offset.x;
+        displayRect.origin.y += offset.y;
+    }
+
     return displayRect;
 }
 

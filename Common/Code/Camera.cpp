@@ -75,7 +75,7 @@ void Camera::update(TimeInterval currentTime) {
     float aspect = fabsf(_displayWidth / _displayHeight);
 
     if (overrideCamera) {
-        Matrix4 model = Matrix4::translation(_modelPos) * _rotationMatrix * Matrix4::scale(Vector3(0.5f, 0.5f, 0.5f));
+        Matrix4 model = Matrix4::translation(_modelPos) * _rotationMatrix * Matrix4::scale(Vector3(0.25f, 0.25f, 0.25f));
         Matrix4 modelView = _viewMatrix * model;
 
         _modelViewMatrix = modelView;
