@@ -13,5 +13,5 @@ Project Structure
 This project has three key parts:
 
 1. The C++ core: This is the OpenGL visualization code and the model layer that is shared between projects. These files are found in the Common folder.
-2. The iOS app: This is an Objective-C++ project that provides native UI on iPhone and iPad.
-3. [The Android app](Android/README.md): This is a Java NDK project that does the native UI on Android phones and tablets.
+2. The iOS app: This is an Objective-C++ project that provides native UI on iPhone and iPad. It is live on the [App Store](https://itunes.apple.com/us/app/map-internet-by-peer-1-hosting/id605924222).
+3. [The Android app](Android/README.md): This is a Java NDK project that does the native UI on Android phones and tablets. It is live on the [Play Store](https://play.google.com/store/apps/details?id=com.peer1.internetmap&hl=en).
