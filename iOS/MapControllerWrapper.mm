@@ -216,7 +216,9 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
 }
 
 - (NodeWrapper*)nodeByASN:(NSString*)asn{
-    
+    if (asn == nil)
+        return nil;
+
     NodePointer node = _controller->data->nodesByAsn[std::string([asn UTF8String])];
 
     if(node && node->isActive())

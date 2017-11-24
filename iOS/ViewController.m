@@ -1201,15 +1201,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     
     __block NSString* lastAsn = nil;
     __block NSInteger lastIndex = -1;
-    
-    // Put our ASN at the start of the list, just in case
 
-    if (self.cachedCurrentASN != nil) {
-        NodeWrapper* us = [self.controller nodeByASN:self.cachedCurrentASN];
-        if(us) {
-            [mergedAsnHops addObject:us];
-            lastAsn = self.cachedCurrentASN;
-        }
+    // Put our ASN at the start of the list, just in case
+    NodeWrapper* us = [self.controller nodeByASN:self.cachedCurrentASN];
+    if(us) {
+        [mergedAsnHops addObject:us];
+        lastAsn = self.cachedCurrentASN;
     }
 
     [ips enumerateObjectsUsingBlock:^(NSString* ip, NSUInteger idx, BOOL *stop) {
