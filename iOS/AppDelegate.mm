@@ -20,7 +20,8 @@
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
 
-    self.window.backgroundColor = [UIColor redColor];
+    self.window.backgroundColor = [UIColor blackColor];
+    
     return YES;
 }
 

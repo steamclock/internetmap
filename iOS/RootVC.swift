@@ -40,15 +40,11 @@ private class CameraDelegate: NSObject, ARSessionDelegate, ARSCNViewDelegate {
 
 public class RootVC: UIViewController {
     private var rendererVC: ViewController!
-    private var arkitView: ARSCNView!
-    private var cameraDelegate : CameraDelegate!
+    private var arkitView: ARSCNView?
+    private var cameraDelegate : CameraDelegate?
 
-   public override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
-
-        arkitView = ARSCNView()
-        arkitView.frame = view.frame
-        view.addSubview(arkitView)
 
         if UIDevice.current.userInterfaceIdiom == .phone {
             rendererVC = ViewController(nibName: "ViewController_iPhone", bundle: nil)
@@ -63,20 +59,54 @@ public class RootVC: UIViewController {
 
         let reset = UITapGestureRecognizer(target: self, action: #selector(resetPosition))
         reset.numberOfTapsRequired = 3
-
         rendererVC.view.addGestureRecognizer(reset)
 
+        let enable = UITapGestureRecognizer(target: self, action: #selector(toggleAR))
+        enable.numberOfTapsRequired = 2
+        enable.numberOfTouchesRequired = 2
+        rendererVC.view.addGestureRecognizer(enable)
+    }
+
+    func toggleAR() {
+        if arkitView == nil {
+            enableAR()
+        }
+        else {
+            disableAR()
+        }
+    }
+
+    func enableAR() {
+        let ar = ARSCNView()
+        ar.frame = view.frame
+        view.addSubview(ar)
+        view.sendSubview(toBack: ar)
+
         cameraDelegate = CameraDelegate(renderer: rendererVC)
-        arkitView.session.delegate = cameraDelegate
-        arkitView.delegate = cameraDelegate
+        ar.session.delegate = cameraDelegate
+        ar.delegate = cameraDelegate
 
         let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = .horizontal
         //arkitView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
-        arkitView.session.run(configuration)
+        ar.session.run(configuration)
+
+        arkitView = ar
+        rendererVC.enableAR(true)
+    }
+
+    func disableAR() {
+        arkitView?.removeFromSuperview()
+        arkitView = nil
+        cameraDelegate = nil
+        rendererVC.enableAR(false)
     }
 
     @objc func resetPosition() {
+        guard let arkitView = arkitView, let cameraDelegate = cameraDelegate else {
+            return
+        }
+
         let hit = arkitView.hitTest(rendererVC.view.center, types: .estimatedHorizontalPlane).first
 
         if let hit = hit {

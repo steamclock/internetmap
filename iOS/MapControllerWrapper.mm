@@ -197,6 +197,10 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
     _controller->display->camera->setOverride((Matrix4*)&transform, (Matrix4*)&projection, *((Vector3*)&modelPos));
 }
 
+- (void)clearCameraOverride {
+    _controller->display->camera->setOverride(NULL, NULL, Vector3(0.0, 0.0, 0.0));
+}
+
 #pragma mark - Data: Node retrieval
 
 -(NSMutableArray*)allNodes {

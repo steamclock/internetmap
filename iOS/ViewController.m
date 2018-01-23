@@ -104,6 +104,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 @property (nonatomic) BOOL suppressCameraReset;
 
+@property (nonatomic) BOOL arEnabled;
 
 @end
 
@@ -309,7 +310,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.controller.displaySize = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height);
     [self.controller setAllowIdleAnimation:[self shouldDoIdleAnimation]];
     [self.controller update:[NSDate timeIntervalSinceReferenceDate]];
-    [self.nodeInformationPopover repositionPopoverFromRect:[self displayRectForNodeInfoPopover] inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
+
+    if(self.arEnabled) {
+        [self.nodeInformationPopover repositionPopoverFromRect:[self displayRectForNodeInfoPopover] inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
+    }
 }
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
@@ -318,8 +322,19 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.controller draw];
 }
 
+#pragma mark - AR
+
 - (void)overrideCamera:(matrix_float4x4)transform projection:(matrix_float4x4)projection modelPos:(GLKVector3)modelPos {
     [self.controller overrideCameraTransform:transform projection:projection modelPos:modelPos];
+}
+
+- (void)enableAR:(BOOL)enable {
+    self.arEnabled = enable;
+
+    if(!enable) {
+        [self.controller clearCameraOverride];
+        [self.nodeInformationPopover repositionPopoverFromRect:[self displayRectForNodeInfoPopover] inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
+    }
 }
 
 #pragma mark - Touch and GestureRecognizer handlers
@@ -1022,7 +1037,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         displayRect = CGRectMake([[UIScreen mainScreen] bounds].size.width/2, [[UIScreen mainScreen] bounds].size.height/2, 1, 1);
     }
 
-    if(_controller.targetNode != INT_MAX) {
+    if(self.arEnabled && (_controller.targetNode != INT_MAX)) {
         CGPoint position = [_controller getCoordinatesForNodeAtIndex:_controller.targetNode];
         CGPoint offset = CGPointMake(position.x - self.view.center.x, position.y - self.view.center.y);
 

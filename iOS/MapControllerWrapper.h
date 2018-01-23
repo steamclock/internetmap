@@ -59,5 +59,6 @@
 - (void)setVisualization:(int)vis;
 
 - (void)overrideCameraTransform:(matrix_float4x4)transform projection:(matrix_float4x4)projection modelPos:(GLKVector3)modelPos;
+- (void)clearCameraOverride;
 
 @end
