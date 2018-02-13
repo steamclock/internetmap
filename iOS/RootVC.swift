@@ -60,11 +60,6 @@ public class RootVC: UIViewController {
         let reset = UITapGestureRecognizer(target: self, action: #selector(resetPosition))
         reset.numberOfTapsRequired = 3
         rendererVC.view.addGestureRecognizer(reset)
-
-        let enable = UITapGestureRecognizer(target: self, action: #selector(toggleAR))
-        enable.numberOfTapsRequired = 2
-        enable.numberOfTouchesRequired = 2
-        rendererVC.view.addGestureRecognizer(enable)
     }
 
     func toggleAR() {

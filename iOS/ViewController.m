@@ -21,6 +21,7 @@
 #import "FirstUseViewController.h"
 #import "ContactFormViewController.h"
 #import <SafariServices/SafariServices.h>
+#import "AppDelegate.h"
 
 #import "internetmap-Swift.h"
 
@@ -74,6 +75,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (weak, nonatomic) IBOutlet UIButton* infoButton;
 @property (weak, nonatomic) IBOutlet UIButton* visualizationsButton;
 @property (weak, nonatomic) IBOutlet UIButton* timelineButton;
+@property (weak, nonatomic) IBOutlet UIButton* arButton;
 @property (weak, nonatomic) IBOutlet UISlider* timelineSlider;
 @property (weak, nonatomic) IBOutlet UIButton* playButton;
 @property (weak, nonatomic) IBOutlet UIImageView* logo;
@@ -753,6 +755,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.infoButton.highlighted = NO;
     self.infoButton.selected = YES;
    
+}
+
+-(IBAction)arButtonPressed:(id)sender {
+    [((AppDelegate*)([UIApplication sharedApplication].delegate)).viewController toggleAR];
 }
 
 - (void) showInSafariWithURL:(NSString *)urlstring {
