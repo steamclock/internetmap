@@ -9,38 +9,38 @@
 import UIKit
 import ARKit
 
-private class CameraDelegate: NSObject, ARSessionDelegate, ARSCNViewDelegate {
+private class CameraDelegate: NSObject, ARSessionDelegate {
     let renderer: ViewController
+    let cameraImage: UIImageView
+    weak var root: RootVC?
+
     var modelPos = GLKVector3Make(0.0, 0.0, 0.0)
 
-    init(renderer: ViewController) {
+    init(root: RootVC, cameraImage: UIImageView, renderer: ViewController) {
+        self.root = root
         self.renderer = renderer
+        self.cameraImage = cameraImage
         super.init()
     }
 
     public func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        root?.updatePlacement()
+
         let orientation = UIApplication.shared.statusBarOrientation
         let view = renderer.view as! GLKView
         let size = CGSize(width: view.drawableWidth, height: view.drawableHeight)
 
         renderer.overrideCamera(frame.camera.viewMatrix(for: orientation), projection: frame.camera.projectionMatrix(for: orientation, viewportSize: size, zNear: 0.05, zFar: 100), modelPos:modelPos)
-    }
 
-    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        print(anchor)
-        /*
-        let planeGeometry = SCNPlane(width: anchor. .extent.x, height: anchor.extent.z)
-        var planeNode = SCNNode(geometry: planeGeometry)
-        planeNode.position = SCNVector3Make(anchor.center.x, 0, anchor.center.z)
-        planeNode.transform = SCNMatrix4MakeRotation(-.pi / 2.0, 1.0, 0.0, 0.0)
-        node.addChildNode(planeNode)
-         */
+        cameraImage.image = UIImage(ciImage: CIImage(cvPixelBuffer: frame.capturedImage).oriented(.right))
     }
 }
 
 public class RootVC: UIViewController {
     private var rendererVC: ViewController!
-    private var arkitView: ARSCNView?
+    private var imageView: UIImageView?
+    private var arSession: ARSession?
+    private var placing = false
     private var cameraDelegate : CameraDelegate?
 
     public override func viewDidLoad() {
@@ -56,14 +56,10 @@ public class RootVC: UIViewController {
         rendererVC.view.frame = view.frame
         view.addSubview(rendererVC.view)
         addChildViewController(rendererVC)
-
-        let reset = UITapGestureRecognizer(target: self, action: #selector(resetPosition))
-        reset.numberOfTapsRequired = 3
-        rendererVC.view.addGestureRecognizer(reset)
     }
 
     func toggleAR() {
-        if arkitView == nil {
+        if imageView == nil {
             enableAR()
         }
         else {
@@ -72,42 +68,55 @@ public class RootVC: UIViewController {
     }
 
     func enableAR() {
-        let ar = ARSCNView()
-        ar.frame = view.frame
-        view.addSubview(ar)
-        view.sendSubview(toBack: ar)
+        let image = UIImageView()
+        image.frame = view.frame
+        view.addSubview(image)
+        view.sendSubview(toBack: image)
 
-        cameraDelegate = CameraDelegate(renderer: rendererVC)
-        ar.session.delegate = cameraDelegate
-        ar.delegate = cameraDelegate
+        cameraDelegate = CameraDelegate(root: self, cameraImage: image, renderer: rendererVC)
+        arSession = ARSession()
+        arSession?.delegate = cameraDelegate
 
         let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = .horizontal
-        //arkitView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
-        ar.session.run(configuration)
+        arSession?.run(configuration)
 
-        arkitView = ar
         rendererVC.enableAR(true)
+        //rendererVC.enableRendering(false)
+        rendererVC.enablePlacementOverlay(true)
+
+        placing = true
     }
 
     func disableAR() {
-        arkitView?.removeFromSuperview()
-        arkitView = nil
+        imageView?.removeFromSuperview()
+        imageView = nil
         cameraDelegate = nil
         rendererVC.enableAR(false)
     }
 
-    @objc func resetPosition() {
-        guard let arkitView = arkitView, let cameraDelegate = cameraDelegate else {
+    func updatePlacement() {
+        guard placing, let arSession = arSession, let cameraDelegate = cameraDelegate else {
             return
         }
 
-        let hit = arkitView.hitTest(rendererVC.view.center, types: .estimatedHorizontalPlane).first
+        let hit = arSession.currentFrame?.hitTest(CGPoint(x: 0.5, y:0.5), types: .estimatedHorizontalPlane).first
 
         if let hit = hit {
             let point = hit.worldTransform.columns.3
             cameraDelegate.modelPos = GLKVector3Make(point.x, point.y + 0.5, point.z)
         }
-        print("foo")
+    }
+
+    @objc func startPlacement() {
+        placing = true
+        //rendererVC.enableRendering(false)
+        rendererVC.enablePlacementOverlay(true)
+    }
+
+    @objc func endPlacement() {
+        placing = false
+        //rendererVC.enableRendering(true)
+        rendererVC.enablePlacementOverlay(false)
     }
 }

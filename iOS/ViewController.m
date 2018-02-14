@@ -76,8 +76,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (weak, nonatomic) IBOutlet UIButton* visualizationsButton;
 @property (weak, nonatomic) IBOutlet UIButton* timelineButton;
 @property (weak, nonatomic) IBOutlet UIButton* arButton;
+@property (weak, nonatomic) IBOutlet UIButton* repositionButton;
 @property (weak, nonatomic) IBOutlet UISlider* timelineSlider;
 @property (weak, nonatomic) IBOutlet UIButton* playButton;
+@property (weak, nonatomic) IBOutlet UIButton* placeButton;
 @property (weak, nonatomic) IBOutlet UIImageView* logo;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* searchActivityIndicator;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* visualizationsActivityIndicator;
@@ -107,6 +109,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (nonatomic) BOOL suppressCameraReset;
 
 @property (nonatomic) BOOL arEnabled;
+@property (nonatomic) BOOL renderEnabled;
 
 @end
 
@@ -136,7 +139,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
+    self.renderEnabled = TRUE;
+    self.placeButton.hidden = TRUE;
+    self.repositionButton.hidden = TRUE;
+
     // globe
     self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     self.preferredFramesPerSecond = 60.0f;
@@ -321,10 +328,21 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
     self.controller.displaySize = CGSizeMake(view.drawableWidth, view.drawableHeight);
-    [self.controller draw];
+
+    if(self.renderEnabled) {
+        [self.controller draw];
+    }
+    else {
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
 }
 
 #pragma mark - AR
+
+-(IBAction)arButtonPressed:(id)sender {
+    [((AppDelegate*)([UIApplication sharedApplication].delegate)).viewController toggleAR];
+}
 
 - (void)overrideCamera:(matrix_float4x4)transform projection:(matrix_float4x4)projection modelPos:(GLKVector3)modelPos {
     [self.controller overrideCameraTransform:transform projection:projection modelPos:modelPos];
@@ -332,11 +350,28 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (void)enableAR:(BOOL)enable {
     self.arEnabled = enable;
+    self.repositionButton.hidden = !enable;
 
     if(!enable) {
         [self.controller clearCameraOverride];
         [self.nodeInformationPopover repositionPopoverFromRect:[self displayRectForNodeInfoPopover] inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
     }
+}
+
+- (void)enableRendering:(BOOL)enable {
+    self.renderEnabled = enable;
+}
+
+- (void)enablePlacementOverlay:(BOOL)enable {
+    self.placeButton.hidden = !enable;
+}
+
+-(IBAction)placeButtonPressed:(id)sender {
+    [((AppDelegate*)([UIApplication sharedApplication].delegate)).viewController endPlacement];
+}
+
+-(IBAction)repositionButtonPressed:(id)sender {
+    [((AppDelegate*)([UIApplication sharedApplication].delegate)).viewController startPlacement];
 }
 
 #pragma mark - Touch and GestureRecognizer handlers
@@ -755,10 +790,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.infoButton.highlighted = NO;
     self.infoButton.selected = YES;
    
-}
-
--(IBAction)arButtonPressed:(id)sender {
-    [((AppDelegate*)([UIApplication sharedApplication].delegate)).viewController toggleAR];
 }
 
 - (void) showInSafariWithURL:(NSString *)urlstring {

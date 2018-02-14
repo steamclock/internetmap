@@ -15,5 +15,8 @@
 - (void)moreAboutCogeco;
 - (void)overrideCamera:(matrix_float4x4)transform projection:(matrix_float4x4)projection modelPos:(GLKVector3)modelPos;
 - (void)enableAR:(BOOL)enable;
+- (void)enableRendering:(BOOL)enable;
+- (void)enablePlacementOverlay:(BOOL)enable;
+
 
 @end

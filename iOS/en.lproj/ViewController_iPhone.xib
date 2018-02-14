@@ -18,7 +18,9 @@
                 <outlet property="helpPopViewPosition" destination="zYt-mx-I2D" id="Oqv-iR-E53"/>
                 <outlet property="infoButton" destination="9" id="43"/>
                 <outlet property="logo" destination="45" id="46"/>
+                <outlet property="placeButton" destination="902-DC-52L" id="bXb-Bj-2VO"/>
                 <outlet property="playButton" destination="35" id="36"/>
+                <outlet property="repositionButton" destination="CBC-Kx-gi8" id="N2S-C3-p7n"/>
                 <outlet property="searchActivityIndicator" destination="26" id="27"/>
                 <outlet property="searchButton" destination="10" id="19"/>
                 <outlet property="timelineActivityIndicator" destination="29" id="30"/>
@@ -192,13 +194,17 @@
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <state key="normal" title="AR">
-                                        <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </state>
-                                    <state key="disabled" title="AR"/>
-                                    <state key="selected" title="AR" image="info-selected.png"/>
+                                    <state key="disabled" title="AR">
+                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <state key="selected" title="AR" image="info-selected.png">
+                                        <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
                                     <state key="highlighted" title="AR">
-                                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
                                     <connections>
                                         <action selector="arButtonPressed:" destination="-1" eventType="touchUpInside" id="psm-Vj-vwp"/>
@@ -279,20 +285,45 @@
                         <constraint firstAttribute="height" constant="55" id="zf2-3m-t7y"/>
                     </constraints>
                 </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="902-DC-52L">
+                    <rect key="frame" x="112" y="460" width="151" height="30"/>
+                    <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="qRz-mK-q7n"/>
+                        <constraint firstAttribute="width" constant="151" id="ztt-Nr-Vtj"/>
+                    </constraints>
+                    <state key="normal" title="Place Here">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="placeButtonPressed:" destination="-1" eventType="touchUpInside" id="Zca-L0-WRu"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CBC-Kx-gi8">
+                    <rect key="frame" x="302" y="111" width="73" height="30"/>
+                    <state key="normal" title="Reposition"/>
+                    <connections>
+                        <action selector="repositionButtonPressed:" destination="-1" eventType="touchUpInside" id="LIc-nR-2Jd"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="96h-Us-nrP" firstAttribute="top" secondItem="iTd-GY-53W" secondAttribute="bottom" id="1uD-az-ykB"/>
+                <constraint firstItem="CBC-Kx-gi8" firstAttribute="top" secondItem="iTd-GY-53W" secondAttribute="bottom" constant="12" id="5lT-Ql-ySH"/>
                 <constraint firstItem="iTd-GY-53W" firstAttribute="leading" secondItem="F2z-hQ-yKA" secondAttribute="leading" id="9I4-sG-7Yt"/>
                 <constraint firstItem="21" firstAttribute="leading" secondItem="F2z-hQ-yKA" secondAttribute="leading" constant="32" id="EpA-Uj-Xh3"/>
                 <constraint firstItem="F2z-hQ-yKA" firstAttribute="trailing" secondItem="21" secondAttribute="trailing" constant="32" id="KZ1-fy-9vu"/>
+                <constraint firstItem="F2z-hQ-yKA" firstAttribute="trailing" secondItem="CBC-Kx-gi8" secondAttribute="trailing" id="N9n-Ls-SVN"/>
                 <constraint firstItem="F2z-hQ-yKA" firstAttribute="bottom" secondItem="21" secondAttribute="bottom" constant="10" id="Yff-P3-Nxn"/>
                 <constraint firstItem="F2z-hQ-yKA" firstAttribute="bottom" secondItem="45" secondAttribute="bottom" constant="10" id="d8r-hL-c6M"/>
+                <constraint firstItem="902-DC-52L" firstAttribute="centerX" secondItem="F2z-hQ-yKA" secondAttribute="centerX" id="kEJ-LO-YvF"/>
                 <constraint firstItem="F2z-hQ-yKA" firstAttribute="trailing" secondItem="45" secondAttribute="trailing" constant="10" id="lZ8-KW-K4Z"/>
                 <constraint firstItem="iTd-GY-53W" firstAttribute="top" secondItem="F2z-hQ-yKA" secondAttribute="top" id="qbd-8p-12j"/>
                 <constraint firstItem="35" firstAttribute="leading" secondItem="F2z-hQ-yKA" secondAttribute="leading" constant="10" id="sDL-e6-CQ9"/>
                 <constraint firstItem="F2z-hQ-yKA" firstAttribute="bottom" secondItem="35" secondAttribute="bottom" id="yow-r9-BHr"/>
                 <constraint firstItem="F2z-hQ-yKA" firstAttribute="trailing" secondItem="iTd-GY-53W" secondAttribute="trailing" id="z39-AV-Bxn"/>
+                <constraint firstItem="902-DC-52L" firstAttribute="centerY" secondItem="F2z-hQ-yKA" secondAttribute="centerY" constant="64" id="zSG-yb-E0i"/>
                 <constraint firstItem="96h-Us-nrP" firstAttribute="leading" secondItem="F2z-hQ-yKA" secondAttribute="leading" id="zYt-mx-I2D"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
