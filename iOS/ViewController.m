@@ -352,7 +352,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.arEnabled = enable;
     self.repositionButton.hidden = !enable;
 
-    if(!enable) {
+    if(enable) {
+        [self resetVisualization];
+    }
+    else {
         [self.controller clearCameraOverride];
         [self.nodeInformationPopover repositionPopoverFromRect:[self displayRectForNodeInfoPopover] inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
     }
@@ -460,8 +463,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)handlePan:(UIPanGestureRecognizer *)gestureRecognizer
 {
-    
     [self.controller resetIdleTimer];
+
     if (!self.isHandlingLongPress) {
         if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
             CGPoint translation = [gestureRecognizer translationInView:self.view];
@@ -473,23 +476,29 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             CGPoint translation = [gestureRecognizer translationInView:self.view];
             CGPoint delta = CGPointMake(translation.x - self.lastPanPosition.x, translation.y - self.lastPanPosition.y);
             self.lastPanPosition = translation;
-            
+
             [self.controller rotateRadiansX:delta.x * 0.01];
-            [self.controller rotateRadiansY:delta.y * 0.01];
+            if(!self.arEnabled) {
+                [self.controller rotateRadiansY:delta.y * 0.01];
+            }
         } else if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
             if (isnan([gestureRecognizer velocityInView:self.view].x) || isnan([gestureRecognizer velocityInView:self.view].y)) {
                 [self.controller stopMomentumPan];
             }else {
                 CGPoint velocity = [gestureRecognizer velocityInView:self.view];
-                [self.controller startMomentumPanWithVelocity:CGPointMake(velocity.x*0.002, velocity.y*0.002)];
+                [self.controller startMomentumPanWithVelocity:CGPointMake(velocity.x*0.002, self.arEnabled ? 0.0 : velocity.y*0.002)];
             }
         }
     }
 }
 
 - (void)handleRotation:(UIRotationGestureRecognizer*)gestureRecognizer {
+    if(self.arEnabled) {
+        return;
+    }
 
     [self.controller resetIdleTimer];
+
     if (!self.isHandlingLongPress) {
         if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
             [self.controller unhoverNode];
@@ -512,7 +521,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)handlePinch:(UIPinchGestureRecognizer *)gestureRecognizer
 {
-    
+    if(self.arEnabled) {
+        return;
+    }
+
     [self.controller resetIdleTimer];
 
     if (!self.isHandlingLongPress) {
