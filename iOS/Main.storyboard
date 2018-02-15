@@ -308,13 +308,15 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tRF-cz-sIM">
                                 <rect key="frame" x="341" y="87" width="73" height="30"/>
-                                <state key="normal" title="Reposition"/>
+                                <state key="normal" title="Reposition">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
                                 <connections>
                                     <action selector="repositionButtonPressed:" destination="005-De-zcL" eventType="touchUpInside" id="1z8-Cu-wwk"/>
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Hgl-Xj-2Ay" firstAttribute="leading" secondItem="FbV-IP-9AF" secondAttribute="leading" constant="32" id="4XQ-E5-0kM"/>
                             <constraint firstItem="FbV-IP-9AF" firstAttribute="bottom" secondItem="Hgl-Xj-2Ay" secondAttribute="bottom" constant="10" id="BCP-eV-Z3e"/>
