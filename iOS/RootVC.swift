@@ -96,7 +96,8 @@ public class RootVC: UIViewController {
 
         if let hit = hit {
             let point = hit.worldTransform.columns.3
-            cameraDelegate.modelPos = GLKVector3Make(point.x, point.y + 0.5, point.z)
+            let heightAboveGround : Float = 1.0 // height above ground (of center of object, i.e. equator for globe)
+            cameraDelegate.modelPos = GLKVector3Make(point.x, point.y + heightAboveGround, point.z)
         }
     }
 
