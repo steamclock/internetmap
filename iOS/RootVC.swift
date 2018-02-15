@@ -32,7 +32,8 @@ private class CameraDelegate: NSObject, ARSessionDelegate {
 
         renderer.overrideCamera(frame.camera.viewMatrix(for: orientation), projection: frame.camera.projectionMatrix(for: orientation, viewportSize: size, zNear: 0.05, zFar: 100), modelPos:modelPos)
 
-        cameraImage.image = UIImage(ciImage: CIImage(cvPixelBuffer: frame.capturedImage).oriented(.right))
+        let cameraOrientation: CGImagePropertyOrientation = UIDevice.current.userInterfaceIdiom == .phone ? .right : .up
+        cameraImage.image = UIImage(ciImage: CIImage(cvPixelBuffer: frame.capturedImage).oriented(cameraOrientation))
     }
 }
 
@@ -45,17 +46,7 @@ public class RootVC: UIViewController {
 
     public override func viewDidLoad() {
         super.viewDidLoad()
-
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            rendererVC = ViewController(nibName: "ViewController_iPhone", bundle: nil)
-        }
-        else {
-            rendererVC = ViewController(nibName: "ViewController_iPad", bundle: nil)
-        }
-
-        rendererVC.view.frame = view.frame
-        view.addSubview(rendererVC.view)
-        addChildViewController(rendererVC)
+        rendererVC = childViewControllers.first as! ViewController
     }
 
     func toggleAR() {
@@ -72,6 +63,7 @@ public class RootVC: UIViewController {
         image.frame = view.frame
         view.addSubview(image)
         view.sendSubview(toBack: image)
+        imageView = image
 
         cameraDelegate = CameraDelegate(root: self, cameraImage: image, renderer: rendererVC)
         arSession = ARSession()

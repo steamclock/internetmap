@@ -21,7 +21,6 @@
 #import "FirstUseViewController.h"
 #import "ContactFormViewController.h"
 #import <SafariServices/SafariServices.h>
-#import "AppDelegate.h"
 
 #import "internetmap-Swift.h"
 
@@ -341,7 +340,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 #pragma mark - AR
 
 -(IBAction)arButtonPressed:(id)sender {
-    [((AppDelegate*)([UIApplication sharedApplication].delegate)).viewController toggleAR];
+    [((AppDelegate*)([UIApplication sharedApplication].delegate)).rootVC toggleAR];
 }
 
 - (void)overrideCamera:(matrix_float4x4)transform projection:(matrix_float4x4)projection modelPos:(GLKVector3)modelPos {
@@ -370,11 +369,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(IBAction)placeButtonPressed:(id)sender {
-    [((AppDelegate*)([UIApplication sharedApplication].delegate)).viewController endPlacement];
+    [((AppDelegate*)([UIApplication sharedApplication].delegate)).rootVC endPlacement];
 }
 
 -(IBAction)repositionButtonPressed:(id)sender {
-    [((AppDelegate*)([UIApplication sharedApplication].delegate)).viewController startPlacement];
+    [((AppDelegate*)([UIApplication sharedApplication].delegate)).rootVC startPlacement];
 }
 
 #pragma mark - Touch and GestureRecognizer handlers

@@ -28,6 +28,8 @@
 	<string>2</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Enable AR mode</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Nexa Bold.otf</string>
@@ -41,6 +43,8 @@
 	<string>LaunchScreen~iphone</string>
 	<key>UILaunchStoryboardName~ipad</key>
 	<string>LaunchScreen~ipad</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
 	<key>UIPrerenderedIcon</key>
 	<true/>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -65,7 +69,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSCameraUsageDescription</key>
-	<string>Enable AR mode</string>
 </dict>
 </plist>
