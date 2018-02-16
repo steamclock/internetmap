@@ -61,6 +61,7 @@ public class RootVC: UIViewController {
     func enableAR() {
         let image = UIImageView()
         image.frame = view.frame
+        image.alpha = 0.5
         view.addSubview(image)
         view.sendSubview(toBack: image)
         imageView = image
