@@ -14,9 +14,14 @@
 bool deviceIsOld();
 
 static bool sPortrait = false;
+float DefaultVisualization::sNodeScale = 1.0f;
 
 void DefaultVisualization::setPortrait(bool b) {
     sPortrait = b;
+}
+
+void DefaultVisualization::setNodeScale(float s) {
+    sNodeScale = s;
 }
 
 void DefaultVisualization::activate(std::vector<NodePointer> nodes) {
@@ -33,7 +38,7 @@ Point3 DefaultVisualization::nodePosition(NodePointer node) {
 }
 
 float DefaultVisualization::nodeSize(NodePointer node) {
-    return 0.005 + 0.7*powf(node->importance, .75);
+    return sNodeScale * (0.005 + 0.7*powf(node->importance, .75));
 }
 
 float DefaultVisualization::nodeZoom(NodePointer node) {

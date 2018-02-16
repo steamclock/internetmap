@@ -74,6 +74,10 @@ void Camera::update(TimeInterval currentTime) {
     
     float aspect = fabsf(_displayWidth / _displayHeight);
 
+    // Half size of nodes when camera is overriden, implying we are in AR mode
+    // TODO: should have better way of distributing this info
+    DefaultVisualization::setNodeScale(overrideCamera ? 0.5 : 1.0);
+
     if (overrideCamera) {
         float scaleInMetres = 1.0;
         float scaleFactor = scaleInMetres * 0.5; // raw model is 2m in diameter

@@ -35,6 +35,10 @@ public:
     virtual void updateConnectionLines(shared_ptr<MapDisplay> display, NodePointer node, std::vector<ConnectionPointer> connections);
     
     static void setPortrait(bool);
+    static void setNodeScale(float);
+
+protected:
+    static float sNodeScale;
 };
 
 #endif
