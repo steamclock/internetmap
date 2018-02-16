@@ -917,7 +917,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.nodeInformationPopover.passthroughViews = @[self.view];
         UIPopoverArrowDirection dir = UIPopoverArrowDirectionLeft;
 
-        if (![HelperMethods deviceIsiPad]) {
+        if (![HelperMethods deviceIsiPad] || self.arEnabled) {
             WEPopoverContainerViewProperties* prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
             prop.upArrowImageName = nil;
             self.nodeInformationPopover.containerViewProperties = prop;
@@ -1074,9 +1074,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 - (CGRect)displayRectForNodeInfoPopover{
     CGRect displayRect;
     
-    if (![HelperMethods deviceIsiPad]) {
-        displayRect = CGRectMake(160, self.view.bounds.size.height-self.nodeInformationViewController.preferredContentSize.height, 1, 1);
-    } else {                
+    if (![HelperMethods deviceIsiPad] || self.arEnabled) {
+        displayRect = CGRectMake([[UIScreen mainScreen] bounds].size.width/2, self.view.bounds.size.height-self.nodeInformationViewController.preferredContentSize.height, 1, 1);
+    } else {
         displayRect = CGRectMake([[UIScreen mainScreen] bounds].size.width/2, [[UIScreen mainScreen] bounds].size.height/2, 1, 1);
     }
     
@@ -1085,7 +1085,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (void)resizeNodeInfoPopover {
     self.nodeInformationPopover.popoverContentSize = CGSizeZero;
-    UIPopoverArrowDirection dir = [HelperMethods deviceIsiPad] ? UIPopoverArrowDirectionLeft : UIPopoverArrowDirectionUp;
+    UIPopoverArrowDirection dir = ([HelperMethods deviceIsiPad] && !self.arEnabled) ? UIPopoverArrowDirectionLeft : UIPopoverArrowDirectionUp;
     [self.nodeInformationPopover repositionPopoverFromRect:[self displayRectForNodeInfoPopover] inView:self.view permittedArrowDirections:dir animated:YES];
 }
 
@@ -1094,10 +1094,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self resizeNodeInfoPopover];
     
     self.tracerouteASNs = [NSMutableDictionary new];
-    
-    _suppressCameraReset = YES;
 
     if(!self.arEnabled) {
+        _suppressCameraReset = YES;
         [self resetVisualization];
     }
     
