@@ -318,10 +318,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.controller.displaySize = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height);
     [self.controller setAllowIdleAnimation:[self shouldDoIdleAnimation]];
     [self.controller update:[NSDate timeIntervalSinceReferenceDate]];
-
-    if(self.arEnabled) {
-        [self.nodeInformationPopover repositionPopoverFromRect:[self displayRectForNodeInfoPopover] inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
-    }
 }
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
@@ -356,7 +352,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
     else {
         [self.controller clearCameraOverride];
-        [self.nodeInformationPopover repositionPopoverFromRect:[self displayRectForNodeInfoPopover] inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
     }
 }
 
@@ -1084,15 +1079,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     } else {                
         displayRect = CGRectMake([[UIScreen mainScreen] bounds].size.width/2, [[UIScreen mainScreen] bounds].size.height/2, 1, 1);
     }
-
-    if(self.arEnabled && (_controller.targetNode != INT_MAX)) {
-        CGPoint position = [_controller getCoordinatesForNodeAtIndex:_controller.targetNode];
-        CGPoint offset = CGPointMake(position.x - self.view.center.x, position.y - self.view.center.y);
-
-        displayRect.origin.x += offset.x;
-        displayRect.origin.y += offset.y;
-    }
-
+    
     return displayRect;
 }
 
@@ -1109,7 +1096,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.tracerouteASNs = [NSMutableDictionary new];
     
     _suppressCameraReset = YES;
-    [self resetVisualization];
+
+    if(!self.arEnabled) {
+        [self resetVisualization];
+    }
     
     // On phones, translate up view so that we can more easily see it
     if (![HelperMethods deviceIsiPad]) {
