@@ -292,20 +292,6 @@
                                     <constraint firstAttribute="height" constant="55" id="rUO-mf-G1A"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3p7-hg-SfJ">
-                                <rect key="frame" x="436.5" y="443" width="151.5" height="30"/>
-                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="151" id="Ncc-FX-Krs"/>
-                                    <constraint firstAttribute="height" constant="30" id="Zyx-jZ-QvZ"/>
-                                </constraints>
-                                <state key="normal" title="Place Here">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="placeButtonPressed:" destination="005-De-zcL" eventType="touchUpInside" id="QsC-Bm-YtU"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tRF-cz-sIM">
                                 <rect key="frame" x="341" y="87" width="73" height="30"/>
                                 <state key="normal" title="Reposition">
@@ -313,6 +299,32 @@
                                 </state>
                                 <connections>
                                     <action selector="repositionButtonPressed:" destination="005-De-zcL" eventType="touchUpInside" id="1z8-Cu-wwk"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EDv-r7-fjC">
+                                <rect key="frame" x="409.5" y="373.5" width="206.5" height="41"/>
+                                <string key="text">Searching for a flat surface
+to place the map</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3p7-hg-SfJ">
+                                <rect key="frame" x="462.5" y="443" width="100" height="30"/>
+                                <color key="backgroundColor" red="0.1333333333" green="0.71764705880000002" blue="0.97647058819999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="aDO-iV-AUj"/>
+                                </constraints>
+                                <state key="normal" title="Place Here">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="placeButtonPressed:" destination="005-De-zcL" eventType="touchUpInside" id="QsC-Bm-YtU"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -333,7 +345,9 @@
                             <constraint firstItem="n94-ju-YXe" firstAttribute="leading" secondItem="FbV-IP-9AF" secondAttribute="leading" id="fke-3K-QJE"/>
                             <constraint firstItem="n94-ju-YXe" firstAttribute="top" secondItem="FbV-IP-9AF" secondAttribute="top" id="hiD-xu-dja"/>
                             <constraint firstItem="vOr-3f-uUJ" firstAttribute="leading" secondItem="FbV-IP-9AF" secondAttribute="leading" constant="10" id="lWG-5j-3sY"/>
+                            <constraint firstItem="EDv-r7-fjC" firstAttribute="centerX" secondItem="FbV-IP-9AF" secondAttribute="centerX" id="mrc-A1-6wF"/>
                             <constraint firstItem="FbV-IP-9AF" firstAttribute="trailing" secondItem="L1v-VT-hjP" secondAttribute="trailing" constant="10" id="rO1-Q8-l98"/>
+                            <constraint firstItem="EDv-r7-fjC" firstAttribute="centerY" secondItem="FbV-IP-9AF" secondAttribute="centerY" id="ueb-AQ-EPI"/>
                             <constraint firstItem="FbV-IP-9AF" firstAttribute="trailing" secondItem="Hgl-Xj-2Ay" secondAttribute="trailing" constant="32" id="vN1-pB-Dzi"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="FbV-IP-9AF"/>
@@ -362,6 +376,7 @@
                         <outlet property="repositionButton" destination="tRF-cz-sIM" id="3fK-iE-LQm"/>
                         <outlet property="searchActivityIndicator" destination="Rgq-JL-dN3" id="YU7-7L-RIS"/>
                         <outlet property="searchButton" destination="dr1-rA-Ped" id="rzi-tP-zQ7"/>
+                        <outlet property="searchingText" destination="EDv-r7-fjC" id="TgM-Yp-rZU"/>
                         <outlet property="timelineActivityIndicator" destination="Mbc-EH-zDR" id="RDt-CX-d0z"/>
                         <outlet property="timelineButton" destination="vmH-61-oxx" id="Bhq-FN-zyA"/>
                         <outlet property="timelineSlider" destination="Hgl-Xj-2Ay" id="bZ3-zs-9ow"/>
@@ -371,7 +386,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xGQ-3c-2s7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1413" y="-121"/>
+            <point key="canvasLocation" x="-1413.28125" y="-121.09375"/>
         </scene>
     </scenes>
     <resources>

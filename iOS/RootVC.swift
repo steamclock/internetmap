@@ -41,8 +41,24 @@ public class RootVC: UIViewController {
     private var rendererVC: ViewController!
     private var imageView: UIImageView?
     private var arSession: ARSession?
-    private var placing = false
     private var cameraDelegate : CameraDelegate?
+
+    private var mode: ARMode = .disabled {
+        didSet {
+            if mode != .disabled && arSession == nil {
+                setupSession()
+            }
+
+            if mode == .disabled {
+                imageView?.removeFromSuperview()
+                imageView = nil
+                cameraDelegate = nil
+                arSession = nil
+            }
+
+            rendererVC.setARMode(mode)
+        }
+    }
 
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,15 +66,15 @@ public class RootVC: UIViewController {
     }
 
     func toggleAR() {
-        if imageView == nil {
-            enableAR()
+        if mode == .disabled {
+            mode = .searching
         }
         else {
-            disableAR()
+            mode = .disabled
         }
     }
 
-    func enableAR() {
+    func setupSession() {
         let image = UIImageView()
         image.frame = view.frame
         image.alpha = 0.5
@@ -73,29 +89,20 @@ public class RootVC: UIViewController {
         let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = .horizontal
         arSession?.run(configuration)
-
-        rendererVC.enableAR(true)
-        //rendererVC.enableRendering(false)
-        rendererVC.enablePlacementOverlay(true)
-
-        placing = true
-    }
-
-    func disableAR() {
-        imageView?.removeFromSuperview()
-        imageView = nil
-        cameraDelegate = nil
-        rendererVC.enableAR(false)
     }
 
     func updatePlacement() {
-        guard placing, let arSession = arSession, let cameraDelegate = cameraDelegate else {
+        guard mode == .searching || mode == .placing, let arSession = arSession, let cameraDelegate = cameraDelegate else {
             return
         }
 
         let hit = arSession.currentFrame?.hitTest(CGPoint(x: 0.5, y:0.5), types: .estimatedHorizontalPlane).first
 
         if let hit = hit {
+            if mode == .searching {
+                mode = .placing
+            }
+
             let point = hit.worldTransform.columns.3
             let heightAboveGround : Float = 1.0 // height above ground (of center of object, i.e. equator for globe)
             cameraDelegate.modelPos = GLKVector3Make(point.x, point.y + heightAboveGround, point.z)
@@ -103,14 +110,14 @@ public class RootVC: UIViewController {
     }
 
     @objc func startPlacement() {
-        placing = true
-        //rendererVC.enableRendering(false)
-        rendererVC.enablePlacementOverlay(true)
+        if mode == .viewing {
+            mode = .placing
+        }
     }
 
     @objc func endPlacement() {
-        placing = false
-        //rendererVC.enableRendering(true)
-        rendererVC.enablePlacementOverlay(false)
+        if mode == .placing {
+            mode = .viewing
+        }
     }
 }

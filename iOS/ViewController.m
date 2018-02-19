@@ -79,6 +79,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (weak, nonatomic) IBOutlet UISlider* timelineSlider;
 @property (weak, nonatomic) IBOutlet UIButton* playButton;
 @property (weak, nonatomic) IBOutlet UIButton* placeButton;
+@property (weak, nonatomic) IBOutlet UILabel *searchingText;
 @property (weak, nonatomic) IBOutlet UIImageView* logo;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* searchActivityIndicator;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* visualizationsActivityIndicator;
@@ -142,6 +143,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.renderEnabled = TRUE;
     self.placeButton.hidden = TRUE;
     self.repositionButton.hidden = TRUE;
+    self.searchingText.hidden = TRUE;
 
     // globe
     self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
@@ -343,24 +345,22 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.controller overrideCameraTransform:transform projection:projection modelPos:modelPos];
 }
 
-- (void)enableAR:(BOOL)enable {
-    self.arEnabled = enable;
-    self.repositionButton.hidden = !enable;
+- (void)setARMode:(ARMode)mode {
+    BOOL wasEnabled = self.arEnabled;
+    self.arEnabled = mode != ARModeDisabled;
 
-    if(enable) {
+    if(!wasEnabled && self.arEnabled) {
         [self resetVisualization];
     }
-    else {
+
+    if(wasEnabled && !self.arEnabled) {
         [self.controller clearCameraOverride];
     }
-}
 
-- (void)enableRendering:(BOOL)enable {
-    self.renderEnabled = enable;
-}
-
-- (void)enablePlacementOverlay:(BOOL)enable {
-    self.placeButton.hidden = !enable;
+    self.renderEnabled = mode == ARModePlacing || mode == ARModeViewing;
+    self.placeButton.hidden = mode != ARModePlacing;
+    self.searchingText.hidden = mode != ARModeSearching;
+    self.repositionButton.hidden = mode != ARModeViewing;
 }
 
 -(IBAction)placeButtonPressed:(id)sender {
