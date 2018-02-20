@@ -92,20 +92,37 @@ public class RootVC: UIViewController {
     }
 
     func updatePlacement() {
-        guard mode == .searching || mode == .placing, let arSession = arSession, let cameraDelegate = cameraDelegate else {
+        guard mode == .searching || mode == .placing,
+              let arSession = arSession,
+              let cameraDelegate = cameraDelegate,
+              let plane = arSession.currentFrame?.anchors.first as? ARPlaneAnchor else {
             return
         }
 
-        let hit = arSession.currentFrame?.hitTest(CGPoint(x: 0.5, y:0.5), types: .estimatedHorizontalPlane).first
+        if mode == .searching {
+            mode = .placing
+        }
 
-        if let hit = hit {
-            if mode == .searching {
-                mode = .placing
+        let orientation = UIApplication.shared.statusBarOrientation
+        let globeRadius : Float = 0.5
+
+        if let view = arSession.currentFrame?.camera.viewMatrix(for: orientation) {
+            let camera =  matrix_invert(view)
+            let translateRaw = camera.columns.3
+            let translate = GLKVector3Make(translateRaw.x, translateRaw.y, translateRaw.z)
+
+            let forwardRaw = camera.columns.2
+            let forward = GLKVector3Make(-forwardRaw.x, -forwardRaw.y, -forwardRaw.z)
+            let scaledForward = GLKVector3MultiplyScalar(forward, 2)
+
+            var position = GLKVector3Add(translate, scaledForward)
+            let floor = plane.transform.columns.3.y
+
+            if position.y - globeRadius < floor {
+                position.y = floor + globeRadius
             }
 
-            let point = hit.worldTransform.columns.3
-            let heightAboveGround : Float = 1.0 // height above ground (of center of object, i.e. equator for globe)
-            cameraDelegate.modelPos = GLKVector3Make(point.x, point.y + heightAboveGround, point.z)
+            cameraDelegate.modelPos = position
         }
     }
 
