@@ -74,9 +74,10 @@ void Camera::update(TimeInterval currentTime) {
     
     float aspect = fabsf(_displayWidth / _displayHeight);
 
-    // Half size of nodes when camera is overriden, implying we are in AR mode
+    // Half size of nodes and change seletion colour when camera is overriden, implying we are in AR mode
     // TODO: should have better way of distributing this info
-    DefaultVisualization::setNodeScale(overrideCamera ? 0.5 : 1.0);
+    DefaultVisualization::setNodeScale(overrideCamera ? 0.75 : 1.0);
+    DefaultVisualization::setSelectedNodeColour(overrideCamera ? ColorFromRGB(0xFFA500) : ColorFromRGB(SELECTED_NODE_COLOR_HEX));
 
     if (overrideCamera) {
         float scaleInMetres = 1.0;

@@ -36,9 +36,12 @@ public:
     
     static void setPortrait(bool);
     static void setNodeScale(float);
+    static void setSelectedNodeColour(Color);
+    static Color getSelectedNodeColour();
 
 protected:
     static float sNodeScale;
+    static Color sSelectedColor;
 };
 
 #endif

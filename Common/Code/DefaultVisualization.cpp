@@ -15,6 +15,7 @@ bool deviceIsOld();
 
 static bool sPortrait = false;
 float DefaultVisualization::sNodeScale = 1.0f;
+Color DefaultVisualization::sSelectedColor = ColorFromRGB(SELECTED_NODE_COLOR_HEX);
 
 void DefaultVisualization::setPortrait(bool b) {
     sPortrait = b;
@@ -23,6 +24,15 @@ void DefaultVisualization::setPortrait(bool b) {
 void DefaultVisualization::setNodeScale(float s) {
     sNodeScale = s;
 }
+
+void DefaultVisualization::setSelectedNodeColour(Color c) {
+    sSelectedColor = c;
+}
+
+Color DefaultVisualization::getSelectedNodeColour() {
+    return sSelectedColor;
+}
+
 
 void DefaultVisualization::activate(std::vector<NodePointer> nodes) {
     for(unsigned int i = 0; i < nodes.size(); i++) {
@@ -110,8 +120,10 @@ void DefaultVisualization::updateDisplayForSelectedNodes(shared_ptr<MapDisplay> 
     display->selectedNodes->beginUpdate();
     for(unsigned int i = 0; i < nodes.size(); i++) {
         NodePointer node = nodes[i];
-        
-        display->selectedNodes->updateNode(i, nodePosition(node), nodeSize(node) * 0.8, ColorFromRGB(SELECTED_NODE_COLOR_HEX));
+        float origSize = nodeSize(node) * 0.8f;
+        float scaledSize = (sNodeScale == 1.0f) ? origSize : fmax(0.03f, origSize);
+
+        display->selectedNodes->updateNode(i, nodePosition(node), scaledSize, DefaultVisualization::getSelectedNodeColour());
         
     }
     display->selectedNodes->endUpdate();
