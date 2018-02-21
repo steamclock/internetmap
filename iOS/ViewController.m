@@ -357,7 +357,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         [self.controller clearCameraOverride];
     }
 
-    self.renderEnabled = mode == ARModePlacing || mode == ARModeViewing;
+    self.renderEnabled = mode != ARModeSearching;
     self.placeButton.hidden = mode != ARModePlacing;
     self.searchingText.hidden = mode != ARModeSearching;
     self.repositionButton.hidden = mode != ARModeViewing;
