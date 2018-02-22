@@ -350,7 +350,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.arEnabled = mode != ARModeDisabled;
 
     if(!wasEnabled && self.arEnabled) {
-        [self resetVisualization];
+        [self resetView];
+        [self forceResetVisualization];
     }
 
     if(wasEnabled && !self.arEnabled) {
@@ -1101,7 +1102,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
     
     // On phones, translate up view so that we can more easily see it
-    if (![HelperMethods deviceIsiPad]) {
+    if (![HelperMethods deviceIsiPad] && !self.arEnabled) {
         [self.controller translateYAnimated:0.25f duration:3];
     }
     
@@ -1146,18 +1147,22 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(void)doneTapped{
-
     [self dismissNodeInfoPopover];
     [self.controller deselectCurrentNode];
     [self resetVisualization];
 }
 
 -(void)resetVisualization {
-    
+    if (!self.arEnabled) {
+        [self forceResetVisualization];
+    }
+}
+
+-(void)forceResetVisualization {
     [self.controller resetZoomAndRotationAnimatedForOrientation:![HelperMethods deviceIsiPad]];
     
     // On phones, translate up view so that we can more easily see it
-    if (![HelperMethods deviceIsiPad]) {
+    if (![HelperMethods deviceIsiPad] && !self.arEnabled) {
         [self.controller translateYAnimated:0.0f duration:1];
     }
 }
