@@ -560,7 +560,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 - (BOOL)shouldDoIdleAnimation{
-    return !UIGestureRecognizerStateIsActive(self.longPressGestureRecognizer.state) && !UIGestureRecognizerStateIsActive(self.pinchRecognizer.state) && !UIGestureRecognizerStateIsActive(self.panRecognizer.state);
+    return !UIGestureRecognizerStateIsActive(self.longPressGestureRecognizer.state) && !UIGestureRecognizerStateIsActive(self.pinchRecognizer.state) && !UIGestureRecognizerStateIsActive(self.panRecognizer.state) && !self.arEnabled;
 }
 
 
