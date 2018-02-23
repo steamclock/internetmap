@@ -13,11 +13,11 @@
 #include <stdlib.h>
 #include <fstream>
 #include <assert.h>
-#include <string.h>
 
 // TODO: figure out how to do this right
 #ifdef ANDROID
 #include "jsoncpp/json.h"
+#include <string.h>
 #else
 #include "json.h"
 #endif
