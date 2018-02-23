@@ -65,6 +65,11 @@ public class RootVC: UIViewController {
         rendererVC = childViewControllers.first as! ViewController
     }
 
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        rendererVC.additionalSafeAreaInsets = view.safeAreaInsets
+    }
+
     func toggleAR() {
         if mode == .disabled {
             mode = .searching
