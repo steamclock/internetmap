@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <fstream>
 #include <assert.h>
+#include <string.h>
 
 // TODO: figure out how to do this right
 #ifdef ANDROID
