@@ -350,8 +350,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.arEnabled = mode != ARModeDisabled;
 
     if(!wasEnabled && self.arEnabled) {
-        [self resetView];
-        [self forceResetVisualization];
+        [self forceResetView];
     }
 
     if(wasEnabled && !self.arEnabled) {
@@ -720,7 +719,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         [weakSelf.controller setVisualization:vis];
     };
     
-    [self resetView];
+    [self forceResetView];
 }
 
 -(IBAction)infoButtonPressed:(id)sender {
@@ -980,10 +979,19 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 //deselect node and reset zoom/rotate. If you set the afterViewReset callback, it will be called when this finishes.
+
+// Reset UI state, but only make changes to camera / rendering if not in AR mode
 -(void) resetView {
     [self dismissNodeInfoPopover];
     [self.controller deselectCurrentNode];
     [self resetVisualization];
+}
+
+// Full reset of UI state, including rotating back to default. Used in cases where we do need a full reset (like switching visualizations)
+-(void) forceResetView {
+    [self dismissNodeInfoPopover];
+    [self.controller deselectCurrentNode];
+    [self forceResetVisualization];
 }
 
 - (void)viewResetDone{
