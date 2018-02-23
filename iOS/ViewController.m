@@ -108,6 +108,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 @property (nonatomic) BOOL suppressCameraReset;
 
+@property (nonatomic) ARMode arMode;
 @property (nonatomic) BOOL arEnabled;
 @property (nonatomic) BOOL renderEnabled;
 
@@ -272,7 +273,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     // help pop up
     [self helpPopCheckSetUp];
     self.helpPopView.hidden = YES;
-    
+
+    [self.placeButton setBackgroundImage:[[UIImage imageNamed:@"traceroute-button"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 22, 0, 22)] forState:UIControlStateNormal];
 }
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -348,6 +350,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 - (void)setARMode:(ARMode)mode {
     BOOL wasEnabled = self.arEnabled;
     self.arEnabled = mode != ARModeDisabled;
+    self.arMode = mode;
 
     if(!wasEnabled && self.arEnabled) {
         [self forceResetView];
@@ -361,6 +364,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.placeButton.hidden = mode != ARModePlacing;
     self.searchingText.hidden = mode != ARModeSearching;
     self.repositionButton.hidden = mode != ARModeViewing;
+
+    BOOL allowButtons = mode == ARModeViewing || mode == ARModeDisabled;
+    self.searchButton.enabled = allowButtons;
+    self.visualizationsButton.enabled = allowButtons;
+    self.timelineButton.enabled = allowButtons;
+    self.infoButton.enabled = allowButtons;
 }
 
 -(IBAction)placeButtonPressed:(id)sender {
@@ -811,6 +820,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(IBAction)timelineButtonPressed:(id)sender {
     [self updateTimelineWithPopoverDismiss:NO];
+
     if (self.timelineSlider.hidden) {
         self.timelineSlider.hidden = NO;
         self.timelineButton.highlighted = NO;
@@ -827,6 +837,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         // Give the timeline slider view a poke to reinitialize it with the current date
         self.timelineInfoViewController.year = 0;
         [self timelineSliderValueChanged:nil];
+
+        self.repositionButton.hidden = true;
     } else {
         [self leaveTimelineMode];
     }
@@ -836,7 +848,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         self.logo.hidden = NO;
     }
-    
+
+    self.repositionButton.hidden = self.arMode != ARModeViewing;
+
     self.timelineSlider.hidden = YES;
     self.timelineButton.selected = NO;
     self.playButton.hidden = YES;
@@ -925,7 +939,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         }
             
         [self.nodeInformationPopover presentPopoverFromRect:[self displayRectForNodeInfoPopover] inView:self.view permittedArrowDirections:dir animated:YES];
-        
+
+        self.repositionButton.hidden = true;
     }
 }
 
@@ -1065,7 +1080,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 #pragma mark - NodeInfo delegate
 
 - (void)dismissNodeInfoPopover {
-    
+    self.repositionButton.hidden = self.arMode != ARModeViewing;
+
     [self.tracer stop];
     self.tracer = nil;
     [self.nodeInformationPopover dismissPopoverAnimated:YES];
