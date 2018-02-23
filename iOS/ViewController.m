@@ -975,7 +975,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         }
     };
     
-    [self resetView];
+    [self forceResetView];
 }
 
 //deselect node and reset zoom/rotate. If you set the afterViewReset callback, it will be called when this finishes.
