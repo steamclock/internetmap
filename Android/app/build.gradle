@@ -7,14 +7,13 @@ def externalDataMakeFile = "../../Android-NDK/CMakeLists.txt"
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion '26.0.2'
     //sourceCompatibility = 1.8
 
     applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            output.outputFile = new File(
-                    output.outputFile.parent,
-                    output.outputFile.name.replace(".apk", "-${variant.versionName}-${variant.versionCode}.apk"))
+        variant.outputs.all { output ->
+            def newApkName = applicationId + "-" + variant.versionName + "(" + variant.versionCode + ")" + ".apk"
+            outputFileName = new File("${project.projectDir}/../outputs/apks/" + variant.name, newApkName)
         }
     }
 
