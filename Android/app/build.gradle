@@ -10,12 +10,15 @@ android {
     buildToolsVersion '26.0.2'
     //sourceCompatibility = 1.8
 
-//    applicationVariants.all { variant ->
-//        variant.outputs.all { output ->
-//            def newApkName = "-" + variant.versionName + "(" + variant.versionCode + ")" + ".apk"
-//            outputFileName = new File(output.outputFile.parent, newApkName)
-//        }
-//    }
+    def nevercodeBuild = System.getenv()["NEVERCODE_BUILD"]
+    if (!nevercodeBuild) {
+        applicationVariants.all { variant ->
+            variant.outputs.all { output ->
+                def newApkName = "-" + variant.versionName + "(" + variant.versionCode + ")" + ".apk"
+                outputFileName = new File(output.outputFile.parent, newApkName)
+            }
+        }
+    }
 
     defaultConfig {
         applicationId "com.peer1.internetmap"
