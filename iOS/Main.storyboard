@@ -52,18 +52,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n94-ju-YXe">
-                                <rect key="frame" x="0.0" y="20" width="414" height="55"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="n94-ju-YXe">
+                                <rect key="frame" x="10" y="20" width="394" height="55"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="O9q-Y3-xGG" userLabel="Spacer View">
-                                        <rect key="frame" x="0.0" y="0.0" width="10" height="55"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="10" id="9vT-2Y-Abm"/>
-                                        </constraints>
-                                    </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FqU-qF-2yO" userLabel="Search Button View">
-                                        <rect key="frame" x="10" y="0.0" width="55" height="55"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dr1-rA-Ped" userLabel="searchButton">
                                                 <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
@@ -95,12 +88,8 @@
                                             <constraint firstAttribute="width" constant="55" id="yrJ-1H-LvO"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rhA-iQ-fcd" userLabel="Spacer View">
-                                        <rect key="frame" x="65" y="0.0" width="30" height="55"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                    </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8jz-Z4-TMx" userLabel="Vis Button View">
-                                        <rect key="frame" x="95" y="0.0" width="55" height="55"/>
+                                        <rect key="frame" x="84.666666666666671" y="0.0" width="55.000000000000014" height="55"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="center" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cTm-Os-OY8" userLabel="visualizationsButton">
                                                 <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
@@ -119,7 +108,7 @@
                                                 </connections>
                                             </button>
                                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="e8Q-h2-9t5" userLabel="visualizations Activity Indicator">
-                                                <rect key="frame" x="17.666666666666671" y="17.666666666666664" width="20" height="20"/>
+                                                <rect key="frame" x="17.333333333333329" y="17.666666666666664" width="20" height="20"/>
                                             </activityIndicatorView>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -129,12 +118,8 @@
                                             <constraint firstItem="e8Q-h2-9t5" firstAttribute="centerX" secondItem="8jz-Z4-TMx" secondAttribute="centerX" id="ahK-KF-IMq"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="enw-Hd-qQ7" userLabel="Spacer View">
-                                        <rect key="frame" x="150" y="0.0" width="29.666666666666657" height="55"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                    </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fd0-Pj-Iya" userLabel="Timeline Button View">
-                                        <rect key="frame" x="179.66666666666666" y="0.0" width="55" height="55"/>
+                                        <rect key="frame" x="169.66666666666666" y="0.0" width="55" height="55"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="center" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vmH-61-oxx" userLabel="timeLineButton">
                                                 <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
@@ -163,12 +148,8 @@
                                             <constraint firstItem="Mbc-EH-zDR" firstAttribute="centerX" secondItem="fd0-Pj-Iya" secondAttribute="centerX" id="zNz-Qb-Lvq"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fAL-1c-3O2" userLabel="Spacer View">
-                                        <rect key="frame" x="234.66666666666666" y="0.0" width="29.333333333333343" height="55"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                    </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qoh-pR-fKl" userLabel="Info Button View">
-                                        <rect key="frame" x="264" y="0.0" width="55" height="55"/>
+                                        <rect key="frame" x="254.33333333333331" y="0.0" width="55" height="55"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="center" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cFt-E6-QxO" userLabel="infoButton">
                                                 <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
@@ -192,58 +173,35 @@
                                             <constraint firstAttribute="width" constant="55" id="20a-lv-KJC"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gJh-BP-MZV" userLabel="Spacer View">
-                                        <rect key="frame" x="319" y="0.0" width="30" height="55"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                    </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jJe-7H-bCu" userLabel="AR Button View">
-                                        <rect key="frame" x="349" y="0.0" width="55" height="55"/>
-                                        <subviews>
-                                            <button opaque="NO" contentMode="center" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AEA-7o-zOu" userLabel="arButtom">
-                                                <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                <state key="normal" title="AR">
-                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                </state>
-                                                <state key="disabled" title="AR">
-                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                </state>
-                                                <state key="selected" title="AR" image="info-selected.png">
-                                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                                </state>
-                                                <state key="highlighted" title="AR">
-                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                </state>
-                                                <connections>
-                                                    <action selector="arButtonPressed:" destination="005-De-zcL" eventType="touchUpInside" id="qRK-ol-rCS"/>
-                                                </connections>
-                                            </button>
-                                        </subviews>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AEA-7o-zOu" userLabel="arButtom">
+                                        <rect key="frame" x="339" y="0.0" width="55" height="55"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="55" id="Q4s-rR-Sbk"/>
+                                            <constraint firstAttribute="width" constant="55" id="HU4-6q-T0M"/>
                                         </constraints>
-                                    </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tDb-LL-qxm" userLabel="Spacer View">
-                                        <rect key="frame" x="404" y="0.0" width="10" height="55"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="10" id="yv7-BG-Jur"/>
-                                        </constraints>
-                                    </view>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <state key="normal" title="AR">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <state key="disabled" title="AR">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="selected" title="AR" image="info-selected.png">
+                                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted" title="AR">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="arButtonPressed:" destination="005-De-zcL" eventType="touchUpInside" id="qRK-ol-rCS"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="55" id="7mj-B6-Dwq"/>
-                                    <constraint firstAttribute="bottom" secondItem="rhA-iQ-fcd" secondAttribute="bottom" id="8Aj-jQ-3nc"/>
-                                    <constraint firstItem="gJh-BP-MZV" firstAttribute="width" secondItem="rhA-iQ-fcd" secondAttribute="width" id="Cgx-p6-zNM"/>
                                     <constraint firstAttribute="width" relation="lessThanOrEqual" constant="414" id="YnH-Qd-Z7K"/>
-                                    <constraint firstItem="8jz-Z4-TMx" firstAttribute="top" secondItem="n94-ju-YXe" secondAttribute="top" id="aqB-zv-WND"/>
-                                    <constraint firstItem="enw-Hd-qQ7" firstAttribute="width" secondItem="rhA-iQ-fcd" secondAttribute="width" id="fXt-AF-WL6"/>
-                                    <constraint firstItem="fAL-1c-3O2" firstAttribute="width" secondItem="rhA-iQ-fcd" secondAttribute="width" id="jqR-Ab-rFF"/>
                                 </constraints>
                             </stackView>
                             <slider hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Hgl-Xj-2Ay" customClass="ExpandedSlider">
@@ -307,7 +265,7 @@
                                     <fragment content="Move the camera across a flat surface to place the map.">
                                         <attributes>
                                             <color key="NSColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <font key="NSFont" size="20" name="NexaLight"/>
+                                            <font key="NSFont" metaFont="system" size="20"/>
                                             <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineHeightMultiple="1.1499999999999999" tighteningFactorForTruncation="0.0"/>
                                         </attributes>
                                     </fragment>
@@ -361,13 +319,13 @@
                             <constraint firstItem="FbV-IP-9AF" firstAttribute="bottom" secondItem="Hgl-Xj-2Ay" secondAttribute="bottom" constant="10" id="BCP-eV-Z3e"/>
                             <constraint firstItem="FbV-IP-9AF" firstAttribute="bottom" secondItem="vOr-3f-uUJ" secondAttribute="bottom" id="FHs-fd-3MW"/>
                             <constraint firstItem="FbV-IP-9AF" firstAttribute="bottom" secondItem="L1v-VT-hjP" secondAttribute="bottom" constant="10" id="Ith-cb-x3Q"/>
-                            <constraint firstItem="FbV-IP-9AF" firstAttribute="trailing" secondItem="n94-ju-YXe" secondAttribute="trailing" priority="900" id="JgQ-t4-c12"/>
+                            <constraint firstItem="FbV-IP-9AF" firstAttribute="trailing" secondItem="n94-ju-YXe" secondAttribute="trailing" priority="900" constant="10" id="JgQ-t4-c12"/>
                             <constraint firstItem="hSo-NC-vfv" firstAttribute="leading" secondItem="FbV-IP-9AF" secondAttribute="leading" id="Kkf-xk-COd"/>
                             <constraint firstItem="FbV-IP-9AF" firstAttribute="bottom" secondItem="3p7-hg-SfJ" secondAttribute="bottom" constant="60" id="RIb-6g-Xhi"/>
                             <constraint firstItem="L1v-VT-hjP" firstAttribute="top" secondItem="FbV-IP-9AF" secondAttribute="top" constant="10" id="SNS-5T-iQm"/>
                             <constraint firstItem="hSo-NC-vfv" firstAttribute="top" secondItem="n94-ju-YXe" secondAttribute="bottom" id="aoZ-UN-0Sz"/>
                             <constraint firstItem="3p7-hg-SfJ" firstAttribute="centerX" secondItem="FbV-IP-9AF" secondAttribute="centerX" id="dwf-tT-XIn"/>
-                            <constraint firstItem="n94-ju-YXe" firstAttribute="leading" secondItem="FbV-IP-9AF" secondAttribute="leading" id="fke-3K-QJE"/>
+                            <constraint firstItem="n94-ju-YXe" firstAttribute="leading" secondItem="FbV-IP-9AF" secondAttribute="leading" constant="10" id="fke-3K-QJE"/>
                             <constraint firstItem="n94-ju-YXe" firstAttribute="top" secondItem="FbV-IP-9AF" secondAttribute="top" id="hiD-xu-dja"/>
                             <constraint firstItem="FbV-IP-9AF" firstAttribute="bottom" secondItem="tRF-cz-sIM" secondAttribute="bottom" constant="10" id="kQo-JJ-Y1S"/>
                             <constraint firstItem="vOr-3f-uUJ" firstAttribute="leading" secondItem="FbV-IP-9AF" secondAttribute="leading" constant="10" id="lWG-5j-3sY"/>

@@ -21,6 +21,7 @@
 #import "FirstUseViewController.h"
 #import "ContactFormViewController.h"
 #import <SafariServices/SafariServices.h>
+#import "ARKit/ARKit.h"
 
 #import "internetmap-Swift.h"
 
@@ -273,6 +274,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     // help pop up
     [self helpPopCheckSetUp];
     self.helpPopView.hidden = YES;
+
+    self.arButton.hidden = ![ARConfiguration isSupported];
 
     self.repositionButton.layer.borderWidth = 1.0f;
     self.repositionButton.layer.borderColor = UI_BLUE_COLOR.CGColor;

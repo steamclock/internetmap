@@ -75,6 +75,7 @@ public class RootVC: UIViewController {
     }
 
     func setupSession() {
+        guard ARConfiguration.isSupported else { return NSLog("Attempted to set up AR session for unsupported device.") }
         let image = UIImageView()
         image.frame = view.frame
         image.alpha = 0.5
