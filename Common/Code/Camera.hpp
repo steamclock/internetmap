@@ -38,11 +38,14 @@ class Camera {
     Matrix4 _modelViewMatrix;
     Matrix4 _projectionMatrix;
     
+    Matrix4 _viewMatrix;
     Matrix4 _rotationMatrix;
     
     float _rotation;
     float _zoom;
     float _maxZoom; //based on target node, because big nodes look ugly close up.
+
+    Vector3 _modelPos;
     
     TimeInterval _targetMoveStartTime;
     Vector3 _targetMoveStartPosition;
@@ -75,6 +78,8 @@ class Camera {
     Quaternion _rotationTarget;
     TimeInterval _rotationStartTime;
     TimeInterval _rotationDuration;
+
+    bool overrideCamera = false;
     
     void handleAnimatedTranslateY(TimeInterval delta);
     void handleIdleMovement(TimeInterval delta);
@@ -112,7 +117,9 @@ public:
     void zoomByScale(float zoom);
     void translateYAnimated(float translateY, TimeInterval duration);
     void resetIdleTimer(void);
-    
+
+    void setOverride(Matrix4* transform, Matrix4* projection, Vector3 modelPos);
+
     void update(TimeInterval currentTime);
 
     Matrix4 currentModelViewProjection(void);

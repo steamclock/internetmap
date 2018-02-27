@@ -66,8 +66,9 @@ void MapDisplay::draw(void)
     
     glEnable(GL_PROGRAM_POINT_SIZE);
 #endif
-    glClearColor(0.17f, 0.16f, 0.16f, 1.0f); //Visualization background color
-    
+    //glClearColor(0.17f, 0.16f, 0.16f, 1.0f); //Visualization background color
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f); //Visualization background color
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     glEnable(GL_DEPTH_TEST); //enable z testing and writing

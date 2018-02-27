@@ -74,8 +74,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (weak, nonatomic) IBOutlet UIButton* infoButton;
 @property (weak, nonatomic) IBOutlet UIButton* visualizationsButton;
 @property (weak, nonatomic) IBOutlet UIButton* timelineButton;
+@property (weak, nonatomic) IBOutlet UIButton* arButton;
+@property (weak, nonatomic) IBOutlet UIButton* repositionButton;
 @property (weak, nonatomic) IBOutlet UISlider* timelineSlider;
 @property (weak, nonatomic) IBOutlet UIButton* playButton;
+@property (weak, nonatomic) IBOutlet UIButton* placeButton;
+@property (weak, nonatomic) IBOutlet UILabel *searchingText;
 @property (weak, nonatomic) IBOutlet UIImageView* logo;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* searchActivityIndicator;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView* visualizationsActivityIndicator;
@@ -104,6 +108,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 @property (nonatomic) BOOL suppressCameraReset;
 
+@property (nonatomic) ARMode arMode;
+@property (nonatomic) BOOL arEnabled;
+@property (nonatomic) BOOL renderEnabled;
 
 @end
 
@@ -133,7 +140,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
+    self.renderEnabled = TRUE;
+    self.placeButton.hidden = TRUE;
+    self.repositionButton.hidden = TRUE;
+    self.searchingText.hidden = TRUE;
+
     // globe
     self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     self.preferredFramesPerSecond = 60.0f;
@@ -146,6 +158,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     GLKView *view = (GLKView *)self.view;
     view.context = self.context;
     view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
+    view.backgroundColor = [UIColor clearColor];
 
     [EAGLContext setCurrentContext:self.context];
     
@@ -175,8 +188,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.rotationGestureRecognizer.delegate = self;
     
     [self.view addGestureRecognizer:self.tapRecognizer];
-    [self.view addGestureRecognizer:self.doubleTapRecognizer];
-    [self.view addGestureRecognizer:self.twoFingerTapRecognizer];
+    //[self.view addGestureRecognizer:self.doubleTapRecognizer];
+    //[self.view addGestureRecognizer:self.twoFingerTapRecognizer];
     [self.view addGestureRecognizer:self.panRecognizer];
     [self.view addGestureRecognizer:self.pinchRecognizer];
     [self.view addGestureRecognizer:self.longPressGestureRecognizer];
@@ -260,7 +273,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     // help pop up
     [self helpPopCheckSetUp];
     self.helpPopView.hidden = YES;
-    
+
+    [self.placeButton setBackgroundImage:[[UIImage imageNamed:@"traceroute-button"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 22, 0, 22)] forState:UIControlStateNormal];
 }
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -313,7 +327,57 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
     self.controller.displaySize = CGSizeMake(view.drawableWidth, view.drawableHeight);
-    [self.controller draw];
+
+    if(self.renderEnabled) {
+        [self.controller draw];
+    }
+    else {
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
+}
+
+#pragma mark - AR
+
+-(IBAction)arButtonPressed:(id)sender {
+    [((AppDelegate*)([UIApplication sharedApplication].delegate)).rootVC toggleAR];
+}
+
+- (void)overrideCamera:(matrix_float4x4)transform projection:(matrix_float4x4)projection modelPos:(GLKVector3)modelPos {
+    [self.controller overrideCameraTransform:transform projection:projection modelPos:modelPos];
+}
+
+- (void)setARMode:(ARMode)mode {
+    BOOL wasEnabled = self.arEnabled;
+    self.arEnabled = mode != ARModeDisabled;
+    self.arMode = mode;
+
+    if(!wasEnabled && self.arEnabled) {
+        [self forceResetView];
+    }
+
+    if(wasEnabled && !self.arEnabled) {
+        [self.controller clearCameraOverride];
+    }
+
+    self.renderEnabled = mode != ARModeSearching;
+    self.placeButton.hidden = mode != ARModePlacing;
+    self.searchingText.hidden = mode != ARModeSearching;
+    self.repositionButton.hidden = mode != ARModeViewing;
+
+    BOOL allowButtons = mode == ARModeViewing || mode == ARModeDisabled;
+    self.searchButton.enabled = allowButtons;
+    self.visualizationsButton.enabled = allowButtons;
+    self.timelineButton.enabled = allowButtons;
+    self.infoButton.enabled = allowButtons;
+}
+
+-(IBAction)placeButtonPressed:(id)sender {
+    [((AppDelegate*)([UIApplication sharedApplication].delegate)).rootVC endPlacement];
+}
+
+-(IBAction)repositionButtonPressed:(id)sender {
+    [((AppDelegate*)([UIApplication sharedApplication].delegate)).rootVC startPlacement];
 }
 
 #pragma mark - Touch and GestureRecognizer handlers
@@ -402,8 +466,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)handlePan:(UIPanGestureRecognizer *)gestureRecognizer
 {
-    
     [self.controller resetIdleTimer];
+
     if (!self.isHandlingLongPress) {
         if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
             CGPoint translation = [gestureRecognizer translationInView:self.view];
@@ -415,23 +479,29 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             CGPoint translation = [gestureRecognizer translationInView:self.view];
             CGPoint delta = CGPointMake(translation.x - self.lastPanPosition.x, translation.y - self.lastPanPosition.y);
             self.lastPanPosition = translation;
-            
+
             [self.controller rotateRadiansX:delta.x * 0.01];
-            [self.controller rotateRadiansY:delta.y * 0.01];
+            if(!self.arEnabled) {
+                [self.controller rotateRadiansY:delta.y * 0.01];
+            }
         } else if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
             if (isnan([gestureRecognizer velocityInView:self.view].x) || isnan([gestureRecognizer velocityInView:self.view].y)) {
                 [self.controller stopMomentumPan];
             }else {
                 CGPoint velocity = [gestureRecognizer velocityInView:self.view];
-                [self.controller startMomentumPanWithVelocity:CGPointMake(velocity.x*0.002, velocity.y*0.002)];
+                [self.controller startMomentumPanWithVelocity:CGPointMake(velocity.x*0.002, self.arEnabled ? 0.0 : velocity.y*0.002)];
             }
         }
     }
 }
 
 - (void)handleRotation:(UIRotationGestureRecognizer*)gestureRecognizer {
+    if(self.arEnabled) {
+        return;
+    }
 
     [self.controller resetIdleTimer];
+
     if (!self.isHandlingLongPress) {
         if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
             [self.controller unhoverNode];
@@ -454,7 +524,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)handlePinch:(UIPinchGestureRecognizer *)gestureRecognizer
 {
-    
+    if(self.arEnabled) {
+        return;
+    }
+
     [self.controller resetIdleTimer];
 
     if (!self.isHandlingLongPress) {
@@ -496,7 +569,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 - (BOOL)shouldDoIdleAnimation{
-    return !UIGestureRecognizerStateIsActive(self.longPressGestureRecognizer.state) && !UIGestureRecognizerStateIsActive(self.pinchRecognizer.state) && !UIGestureRecognizerStateIsActive(self.panRecognizer.state);
+    return !UIGestureRecognizerStateIsActive(self.longPressGestureRecognizer.state) && !UIGestureRecognizerStateIsActive(self.pinchRecognizer.state) && !UIGestureRecognizerStateIsActive(self.panRecognizer.state) && !self.arEnabled;
 }
 
 
@@ -655,7 +728,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         [weakSelf.controller setVisualization:vis];
     };
     
-    [self resetView];
+    [self forceResetView];
 }
 
 -(IBAction)infoButtonPressed:(id)sender {
@@ -747,6 +820,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(IBAction)timelineButtonPressed:(id)sender {
     [self updateTimelineWithPopoverDismiss:NO];
+
     if (self.timelineSlider.hidden) {
         self.timelineSlider.hidden = NO;
         self.timelineButton.highlighted = NO;
@@ -763,6 +837,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         // Give the timeline slider view a poke to reinitialize it with the current date
         self.timelineInfoViewController.year = 0;
         [self timelineSliderValueChanged:nil];
+
+        self.repositionButton.hidden = true;
     } else {
         [self leaveTimelineMode];
     }
@@ -772,7 +848,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         self.logo.hidden = NO;
     }
-    
+
+    self.repositionButton.hidden = self.arMode != ARModeViewing;
+
     self.timelineSlider.hidden = YES;
     self.timelineButton.selected = NO;
     self.playButton.hidden = YES;
@@ -853,7 +931,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.nodeInformationPopover.passthroughViews = @[self.view];
         UIPopoverArrowDirection dir = UIPopoverArrowDirectionLeft;
 
-        if (![HelperMethods deviceIsiPad]) {
+        if (![HelperMethods deviceIsiPad] || self.arEnabled) {
             WEPopoverContainerViewProperties* prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
             prop.upArrowImageName = nil;
             self.nodeInformationPopover.containerViewProperties = prop;
@@ -861,7 +939,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         }
             
         [self.nodeInformationPopover presentPopoverFromRect:[self displayRectForNodeInfoPopover] inView:self.view permittedArrowDirections:dir animated:YES];
-        
+
+        self.repositionButton.hidden = true;
     }
 }
 
@@ -911,14 +990,23 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         }
     };
     
-    [self resetView];
+    [self forceResetView];
 }
 
 //deselect node and reset zoom/rotate. If you set the afterViewReset callback, it will be called when this finishes.
+
+// Reset UI state, but only make changes to camera / rendering if not in AR mode
 -(void) resetView {
     [self dismissNodeInfoPopover];
     [self.controller deselectCurrentNode];
     [self resetVisualization];
+}
+
+// Full reset of UI state, including rotating back to default. Used in cases where we do need a full reset (like switching visualizations)
+-(void) forceResetView {
+    [self dismissNodeInfoPopover];
+    [self.controller deselectCurrentNode];
+    [self forceResetVisualization];
 }
 
 - (void)viewResetDone{
@@ -992,7 +1080,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 #pragma mark - NodeInfo delegate
 
 - (void)dismissNodeInfoPopover {
-    
+    self.repositionButton.hidden = self.arMode != ARModeViewing;
+
     [self.tracer stop];
     self.tracer = nil;
     [self.nodeInformationPopover dismissPopoverAnimated:YES];
@@ -1010,18 +1099,18 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 - (CGRect)displayRectForNodeInfoPopover{
     CGRect displayRect;
     
-    if (![HelperMethods deviceIsiPad]) {
-        displayRect = CGRectMake(160, self.view.bounds.size.height-self.nodeInformationViewController.preferredContentSize.height, 1, 1);
-    } else {                
+    if (![HelperMethods deviceIsiPad] || self.arEnabled) {
+        displayRect = CGRectMake([[UIScreen mainScreen] bounds].size.width/2, self.view.bounds.size.height-self.nodeInformationViewController.preferredContentSize.height, 1, 1);
+    } else {
         displayRect = CGRectMake([[UIScreen mainScreen] bounds].size.width/2, [[UIScreen mainScreen] bounds].size.height/2, 1, 1);
     }
-        
+    
     return displayRect;
 }
 
 - (void)resizeNodeInfoPopover {
     self.nodeInformationPopover.popoverContentSize = CGSizeZero;
-    UIPopoverArrowDirection dir = [HelperMethods deviceIsiPad] ? UIPopoverArrowDirectionLeft : UIPopoverArrowDirectionUp;
+    UIPopoverArrowDirection dir = ([HelperMethods deviceIsiPad] && !self.arEnabled) ? UIPopoverArrowDirectionLeft : UIPopoverArrowDirectionUp;
     [self.nodeInformationPopover repositionPopoverFromRect:[self displayRectForNodeInfoPopover] inView:self.view permittedArrowDirections:dir animated:YES];
 }
 
@@ -1030,12 +1119,14 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self resizeNodeInfoPopover];
     
     self.tracerouteASNs = [NSMutableDictionary new];
-    
-    _suppressCameraReset = YES;
-    [self resetVisualization];
+
+    if(!self.arEnabled) {
+        _suppressCameraReset = YES;
+        [self resetVisualization];
+    }
     
     // On phones, translate up view so that we can more easily see it
-    if (![HelperMethods deviceIsiPad]) {
+    if (![HelperMethods deviceIsiPad] && !self.arEnabled) {
         [self.controller translateYAnimated:0.25f duration:3];
     }
     
@@ -1080,18 +1171,22 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(void)doneTapped{
-
     [self dismissNodeInfoPopover];
     [self.controller deselectCurrentNode];
     [self resetVisualization];
 }
 
 -(void)resetVisualization {
-    
+    if (!self.arEnabled) {
+        [self forceResetVisualization];
+    }
+}
+
+-(void)forceResetVisualization {
     [self.controller resetZoomAndRotationAnimatedForOrientation:![HelperMethods deviceIsiPad]];
     
     // On phones, translate up view so that we can more easily see it
-    if (![HelperMethods deviceIsiPad]) {
+    if (![HelperMethods deviceIsiPad] && !self.arEnabled) {
         [self.controller translateYAnimated:0.0f duration:1];
     }
 }

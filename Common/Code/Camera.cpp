@@ -73,18 +73,48 @@ void Camera::update(TimeInterval currentTime) {
     handleAnimatedTranslateY(delta);
     
     float aspect = fabsf(_displayWidth / _displayHeight);
-    Matrix4 model = _rotationMatrix * Matrix4::translation(Vector3(-currentTarget.getX(), -currentTarget.getY(), -currentTarget.getZ()));
-    Matrix4 view = Matrix4::translation(Vector3(0.0f, 0.0f, _zoom));
-    Matrix4 translation = Matrix4::translation(Vector3(0.0f, _translationY, 0.0f));
 
-    Matrix4 modelView = view * model;
-    Matrix4 projectionMatrix;
-    
-    projectionMatrix = translation * Matrix4::perspective(DegreesToRadians(65.0f), aspect, NEAR_PLANE, FAR_PLANE);
-    
-    _projectionMatrix = projectionMatrix;
-    _modelViewMatrix = modelView;
-    _modelViewProjectionMatrix = projectionMatrix * modelView;
+    // Half size of nodes and change seletion colour when camera is overriden, implying we are in AR mode
+    // TODO: should have better way of distributing this info
+    DefaultVisualization::setNodeScale(overrideCamera ? 0.75 : 1.0);
+    DefaultVisualization::setSelectedNodeColour(overrideCamera ? ColorFromRGB(0xFFA500) : ColorFromRGB(SELECTED_NODE_COLOR_HEX));
+
+    if (overrideCamera) {
+        float scaleInMetres = 1.0;
+        float scaleFactor = scaleInMetres * 0.5; // raw model is 2m in diameter
+        Matrix4 model = Matrix4::translation(_modelPos) * _rotationMatrix * Matrix4::scale(Vector3(scaleFactor, scaleFactor, scaleFactor));
+        Matrix4 modelView = _viewMatrix * model;
+
+        _modelViewMatrix = modelView;
+        _modelViewProjectionMatrix = _projectionMatrix * modelView;
+    }
+    else {
+        Matrix4 model = _rotationMatrix * Matrix4::translation(Vector3(-currentTarget.getX(), -currentTarget.getY(), -currentTarget.getZ()));
+        Matrix4 view = Matrix4::translation(Vector3(0.0f, 0.0f, _zoom));
+        Matrix4 translation = Matrix4::translation(Vector3(0.0f, _translationY, 0.0f));
+
+        Matrix4 modelView = view * model;
+        Matrix4 projectionMatrix;
+
+        projectionMatrix = translation * Matrix4::perspective(DegreesToRadians(65.0f), aspect, NEAR_PLANE, FAR_PLANE);
+
+        _projectionMatrix = projectionMatrix;
+        _modelViewMatrix = modelView;
+        _modelViewProjectionMatrix = projectionMatrix * modelView;
+    }
+}
+
+void Camera::setOverride(Matrix4* transform, Matrix4* projection, Vector3 modelPos) {
+    if (transform && projection) {
+        overrideCamera = true;
+
+        _projectionMatrix = *projection;
+        _viewMatrix = *transform;
+        _modelPos = modelPos;
+    }
+    else {
+        overrideCamera = false;
+    }
 }
 
 void Camera::handleIdleMovement(TimeInterval delta) {

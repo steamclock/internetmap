@@ -179,7 +179,7 @@ void MapController::hoverNode(int i) {
     if(i != INT_MAX) {
         hoveredNodeIndex = i;
         display->nodes->beginUpdate();
-        display->nodes->updateNode(i, ColorFromRGB(SELECTED_NODE_COLOR_HEX));
+        display->nodes->updateNode(i, DefaultVisualization::getSelectedNodeColour());
         display->nodes->endUpdate();
     }
 }
@@ -228,7 +228,7 @@ void MapController::updateTargetForIndex(int index) {
         target.maxZoom = target.zoom + 0.1;
         
         display->nodes->beginUpdate();
-        display->nodes->updateNode(node->index, ColorFromRGB(SELECTED_NODE_COLOR_HEX));
+        display->nodes->updateNode(node->index, DefaultVisualization::getSelectedNodeColour());
         display->nodes->endUpdate();
         
         std::vector<NodePointer> nodes;
@@ -333,8 +333,8 @@ void MapController::highlightRoute(std::vector<NodePointer> nodeList) {
     
     for(unsigned int i = 0; i < nodeList.size(); i++) {
         NodePointer node = nodeList[i];
-        display->nodes->updateNode(node->index, ColorFromRGB(SELECTED_NODE_COLOR_HEX));
-        selectedNodes->updateNode(i, data->visualization->nodePosition(node), data->visualization->nodeSize(node) * 0.8, ColorFromRGB(SELECTED_NODE_COLOR_HEX));
+        display->nodes->updateNode(node->index, DefaultVisualization::getSelectedNodeColour());
+        selectedNodes->updateNode(i, data->visualization->nodePosition(node), data->visualization->nodeSize(node) * 0.8, DefaultVisualization::getSelectedNodeColour());
         highlightedNodes.insert(node->index);
     }
     
@@ -487,7 +487,7 @@ void MapController::update(TimeInterval currentTime) {
         float baseSize = data->visualization->nodeSize(node);
         float expandedSize = baseSize * expand;
         display->nodes->beginUpdate();
-        display->nodes->updateNode(node->index, data->visualization->nodePosition(node), expandedSize, ColorFromRGB(SELECTED_NODE_COLOR_HEX));
+        display->nodes->updateNode(node->index, data->visualization->nodePosition(node), expandedSize, DefaultVisualization::getSelectedNodeColour());
         display->nodes->endUpdate();
     }
 }

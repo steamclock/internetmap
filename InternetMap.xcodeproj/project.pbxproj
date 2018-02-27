@@ -15,7 +15,6 @@
 		1175AA3416AA117F00B93031 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1175AA3316AA117F00B93031 /* ImageIO.framework */; };
 		1ABF33A4A1E87B9BCEF92A50 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F206D222C5BA2C4D8916E78 /* AVFoundation.framework */; };
 		216CB68D4F0CE10D5F71E486 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D35DE583A2E50CC5E2BDFA99 /* AssetsLibrary.framework */; };
-		268DE1153716F526803AD278 /* BuddyBuildSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28C527A56CFB2939D5AA9DE8 /* BuddyBuildSDK.framework */; };
 		4E3E42AE1EF1AE92007224FE /* peer1-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E3E42AB1EF1AE92007224FE /* peer1-logo.png */; };
 		4E3E42AF1EF1AE92007224FE /* peer1-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E3E42AC1EF1AE92007224FE /* peer1-logo@2x.png */; };
 		4E3E42B01EF1AE92007224FE /* peer1-logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E3E42AD1EF1AE92007224FE /* peer1-logo@3x.png */; };
@@ -122,8 +121,12 @@
 		899D03717A12F1FF46CB1027 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7287BA8F546F8A1F9C6783B0 /* CoreMedia.framework */; };
 		A600AAD616A664E1003B1028 /* as2attr.txt in Resources */ = {isa = PBXBuildFile; fileRef = A600AAD316A664DF003B1028 /* as2attr.txt */; };
 		A600AAD716A664E1003B1028 /* asinfo.json in Resources */ = {isa = PBXBuildFile; fileRef = A600AAD416A664E0003B1028 /* asinfo.json */; };
+		A604A03120360FC700543D2E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A604A03020360FC700543D2E /* Main.storyboard */; };
+		A604A0332036137900543D2E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A604A0322036137900543D2E /* AppDelegate.swift */; };
+		A604A0372036161F00543D2E /* BuddyBuildSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A604A0362036161F00543D2E /* BuddyBuildSDK.framework */; };
 		A60616371FB3CB9600F1AEB4 /* CreditsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60616361FB3CB9600F1AEB4 /* CreditsViewController.swift */; };
 		A60F457C1FB3CFE7001E9D25 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60F457B1FB3CFE7001E9D25 /* Theme.swift */; };
+		A60F45831FBE0309001E9D25 /* RootVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60F45821FBE0309001E9D25 /* RootVC.swift */; };
 		A625263316CEF3250015DF37 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = A625263216CEF3250015DF37 /* MBProgressHUD.m */; };
 		A6551E4716C5CBF600340590 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5641640F1FB0070E6AE /* Foundation.framework */; };
 		A6551E5316C5CC8100340590 /* main-traceroute.c in Sources */ = {isa = PBXBuildFile; fileRef = D403BBD916C1DF2F008AA000 /* main-traceroute.c */; };
@@ -168,7 +171,6 @@
 		A6551EBE16CDB22900340590 /* credits.html in Resources */ = {isa = PBXBuildFile; fileRef = A6551EBD16CDB22900340590 /* credits.html */; };
 		A6551EC216CEB88700340590 /* ExpandedScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6551EC116CEB88700340590 /* ExpandedScrollView.m */; };
 		A686E9BA16B62915009B070E /* history.json in Resources */ = {isa = PBXBuildFile; fileRef = A686E9B916B62915009B070E /* history.json */; };
-		A686E9CA16B62970009B070E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A686E9C916B62970009B070E /* main.m */; };
 		A686E9CF16B6299D009B070E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A686E9CD16B6299D009B070E /* InfoPlist.strings */; };
 		A686EA0616B62A9D009B070E /* popoverArrowDownSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9DA16B62A9D009B070E /* popoverArrowDownSimple.png */; };
 		A686EA0716B62A9D009B070E /* popoverArrowDownSimple@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9DB16B62A9D009B070E /* popoverArrowDownSimple@2x.png */; };
@@ -196,8 +198,6 @@
 		A686EA2916B62A9D009B070E /* youarehere-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9FD16B62A9D009B070E /* youarehere-icon@2x.png */; };
 		A686EA2A16B62A9D009B070E /* youarehere.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9FE16B62A9D009B070E /* youarehere.png */; };
 		A686EA2B16B62A9D009B070E /* youarehere@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9FF16B62A9D009B070E /* youarehere@2x.png */; };
-		A686EA4E16B62B23009B070E /* ViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A686EA4A16B62B23009B070E /* ViewController_iPad.xib */; };
-		A686EA4F16B62B23009B070E /* ViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = A686EA4C16B62B23009B070E /* ViewController_iPhone.xib */; };
 		A686EA7116B62B61009B070E /* ASNRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EA6116B62B61009B070E /* ASNRequest.m */; };
 		A686EA7216B62B61009B070E /* ErrorInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EA6216B62B61009B070E /* ErrorInfoView.m */; };
 		A686EA7316B62B61009B070E /* HelperMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EA6316B62B61009B070E /* HelperMethods.m */; };
@@ -209,7 +209,6 @@
 		A686EA7A16B62B61009B070E /* UIView+Convenience.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EA6A16B62B61009B070E /* UIView+Convenience.m */; };
 		A686EA7B16B62B61009B070E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EA6B16B62B61009B070E /* ViewController.m */; };
 		A686EA7C16B62B61009B070E /* StringListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EA6C16B62B61009B070E /* StringListViewController.m */; };
-		A686EA7D16B62B61009B070E /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = A686EA6D16B62B61009B070E /* AppDelegate.mm */; };
 		A686EA7E16B62B61009B070E /* ConnectionWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = A686EA6E16B62B61009B070E /* ConnectionWrapper.mm */; };
 		A686EA7F16B62B61009B070E /* MapControllerWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = A686EA6F16B62B61009B070E /* MapControllerWrapper.mm */; };
 		A686EA8016B62B61009B070E /* NodeWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = A686EA7016B62B61009B070E /* NodeWrapper.mm */; };
@@ -274,7 +273,6 @@
 		1175AA0316AA091800B93031 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		1175AA3116AA117800B93031 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		1175AA3316AA117F00B93031 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
-		28C527A56CFB2939D5AA9DE8 /* BuddyBuildSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BuddyBuildSDK.framework; sourceTree = "<group>"; };
 		2F206D222C5BA2C4D8916E78 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		3826AB3EDD81040E4E3F010F /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		4E3E42AB1EF1AE92007224FE /* peer1-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "peer1-logo.png"; path = "iOS/Images/peer1-logo.png"; sourceTree = SOURCE_ROOT; };
@@ -381,9 +379,13 @@
 		84E947DA1F34EBE400B20758 /* contact.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = contact.html; path = Common/Data/contact.html; sourceTree = "<group>"; };
 		A600AAD316A664DF003B1028 /* as2attr.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = as2attr.txt; path = Common/data/as2attr.txt; sourceTree = "<group>"; };
 		A600AAD416A664E0003B1028 /* asinfo.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = asinfo.json; path = Common/data/asinfo.json; sourceTree = "<group>"; };
+		A604A03020360FC700543D2E /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Main.storyboard; path = iOS/Main.storyboard; sourceTree = SOURCE_ROOT; };
+		A604A0322036137900543D2E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = iOS/AppDelegate.swift; sourceTree = SOURCE_ROOT; };
+		A604A0362036161F00543D2E /* BuddyBuildSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BuddyBuildSDK.framework; sourceTree = "<group>"; };
 		A60616361FB3CB9600F1AEB4 /* CreditsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CreditsViewController.swift; path = iOS/CreditsViewController.swift; sourceTree = SOURCE_ROOT; };
 		A60616381FB3CBEB00F1AEB4 /* InternetMap-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "InternetMap-Bridging-Header.h"; path = "iOS/InternetMap-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		A60F457B1FB3CFE7001E9D25 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = SOURCE_ROOT; };
+		A60F45821FBE0309001E9D25 /* RootVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RootVC.swift; path = iOS/RootVC.swift; sourceTree = SOURCE_ROOT; };
 		A625263116CEF3250015DF37 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBProgressHUD.h; path = "External Code/MBProgressHUD/MBProgressHUD.h"; sourceTree = SOURCE_ROOT; };
 		A625263216CEF3250015DF37 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBProgressHUD.m; path = "External Code/MBProgressHUD/MBProgressHUD.m"; sourceTree = SOURCE_ROOT; };
 		A6551E4616C5CBF600340590 /* libExternalCode.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libExternalCode.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -414,7 +416,6 @@
 		A6551EC016CEB88700340590 /* ExpandedScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExpandedScrollView.h; path = iOS/ExpandedScrollView.h; sourceTree = SOURCE_ROOT; };
 		A6551EC116CEB88700340590 /* ExpandedScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ExpandedScrollView.m; path = iOS/ExpandedScrollView.m; sourceTree = SOURCE_ROOT; };
 		A686E9B916B62915009B070E /* history.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = history.json; path = Common/Data/history.json; sourceTree = "<group>"; };
-		A686E9C916B62970009B070E /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = iOS/main.m; sourceTree = SOURCE_ROOT; };
 		A686E9CB16B62986009B070E /* InternetMap-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "InternetMap-Info.plist"; path = "iOS/InternetMap-Info.plist"; sourceTree = SOURCE_ROOT; };
 		A686E9CC16B62986009B070E /* InternetMap-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "InternetMap-Prefix.pch"; path = "iOS/InternetMap-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		A686E9CE16B6299D009B070E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = iOS/en.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
@@ -448,9 +449,6 @@
 		A686E9FD16B62A9D009B070E /* youarehere-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "youarehere-icon@2x.png"; path = "iOS/Images/youarehere-icon@2x.png"; sourceTree = SOURCE_ROOT; };
 		A686E9FE16B62A9D009B070E /* youarehere.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = youarehere.png; path = iOS/Images/youarehere.png; sourceTree = SOURCE_ROOT; };
 		A686E9FF16B62A9D009B070E /* youarehere@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "youarehere@2x.png"; path = "iOS/Images/youarehere@2x.png"; sourceTree = SOURCE_ROOT; };
-		A686EA4B16B62B23009B070E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = iOS/en.lproj/ViewController_iPad.xib; sourceTree = SOURCE_ROOT; };
-		A686EA4D16B62B23009B070E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = iOS/en.lproj/ViewController_iPhone.xib; sourceTree = SOURCE_ROOT; };
-		A686EA5016B62B52009B070E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = iOS/AppDelegate.h; sourceTree = SOURCE_ROOT; };
 		A686EA5116B62B52009B070E /* ASNRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ASNRequest.h; path = iOS/ASNRequest.h; sourceTree = SOURCE_ROOT; };
 		A686EA5216B62B52009B070E /* ConnectionWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ConnectionWrapper.h; path = iOS/ConnectionWrapper.h; sourceTree = SOURCE_ROOT; };
 		A686EA5316B62B52009B070E /* CPPHelpers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CPPHelpers.h; path = iOS/CPPHelpers.h; sourceTree = SOURCE_ROOT; };
@@ -478,7 +476,6 @@
 		A686EA6A16B62B61009B070E /* UIView+Convenience.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+Convenience.m"; path = "iOS/UIView+Convenience.m"; sourceTree = SOURCE_ROOT; };
 		A686EA6B16B62B61009B070E /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ViewController.m; path = iOS/ViewController.m; sourceTree = SOURCE_ROOT; };
 		A686EA6C16B62B61009B070E /* StringListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StringListViewController.m; path = iOS/StringListViewController.m; sourceTree = SOURCE_ROOT; };
-		A686EA6D16B62B61009B070E /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = iOS/AppDelegate.mm; sourceTree = SOURCE_ROOT; };
 		A686EA6E16B62B61009B070E /* ConnectionWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ConnectionWrapper.mm; path = iOS/ConnectionWrapper.mm; sourceTree = SOURCE_ROOT; };
 		A686EA6F16B62B61009B070E /* MapControllerWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MapControllerWrapper.mm; path = iOS/MapControllerWrapper.mm; sourceTree = SOURCE_ROOT; };
 		A686EA7016B62B61009B070E /* NodeWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = NodeWrapper.mm; path = iOS/NodeWrapper.mm; sourceTree = SOURCE_ROOT; };
@@ -697,6 +694,7 @@
 				1175AA0416AA091800B93031 /* CoreText.framework in Frameworks */,
 				114DD47F167AA6950061CB36 /* libz.dylib in Frameworks */,
 				D468090516795D4D00A2C1CC /* CFNetwork.framework in Frameworks */,
+				A604A0372036161F00543D2E /* BuddyBuildSDK.framework in Frameworks */,
 				D468090416795D4600A2C1CC /* SystemConfiguration.framework in Frameworks */,
 				1117E57B1676BFCD0046AA69 /* libresolv.dylib in Frameworks */,
 				A6F3F5631640F1FB0070E6AE /* UIKit.framework in Frameworks */,
@@ -704,7 +702,6 @@
 				A6F3F5671640F1FB0070E6AE /* CoreGraphics.framework in Frameworks */,
 				A6F3F5691640F1FB0070E6AE /* GLKit.framework in Frameworks */,
 				A6F3F56B1640F1FB0070E6AE /* OpenGLES.framework in Frameworks */,
-				268DE1153716F526803AD278 /* BuddyBuildSDK.framework in Frameworks */,
 				216CB68D4F0CE10D5F71E486 /* AssetsLibrary.framework in Frameworks */,
 				691DC08B97C843AB06E3610D /* CoreTelephony.framework in Frameworks */,
 				1ABF33A4A1E87B9BCEF92A50 /* AVFoundation.framework in Frameworks */,
@@ -1081,6 +1078,7 @@
 		A6F3F5611640F1FB0070E6AE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A604A0362036161F00543D2E /* BuddyBuildSDK.framework */,
 				8404F12F1F100413009EF08B /* SafariServices.framework */,
 				7D5284861DDA7A6800E42C5F /* QuartzCore.framework */,
 				1175AA3316AA117F00B93031 /* ImageIO.framework */,
@@ -1096,7 +1094,6 @@
 				A6F3F5661640F1FB0070E6AE /* CoreGraphics.framework */,
 				A6F3F5681640F1FB0070E6AE /* GLKit.framework */,
 				A6F3F56A1640F1FB0070E6AE /* OpenGLES.framework */,
-				28C527A56CFB2939D5AA9DE8 /* BuddyBuildSDK.framework */,
 				D35DE583A2E50CC5E2BDFA99 /* AssetsLibrary.framework */,
 				3826AB3EDD81040E4E3F010F /* CoreTelephony.framework */,
 				2F206D222C5BA2C4D8916E78 /* AVFoundation.framework */,
@@ -1111,8 +1108,8 @@
 			children = (
 				1180CF54169B80E300F1FB73 /* Fonts */,
 				D4CEA32016694E53004B8E8A /* Images */,
-				A686EA5016B62B52009B070E /* AppDelegate.h */,
-				A686EA6D16B62B61009B070E /* AppDelegate.mm */,
+				A604A0322036137900543D2E /* AppDelegate.swift */,
+				A60F45821FBE0309001E9D25 /* RootVC.swift */,
 				A686EA6116B62B61009B070E /* ASNRequest.m */,
 				A686EA5116B62B52009B070E /* ASNRequest.h */,
 				A686EA5316B62B52009B070E /* CPPHelpers.h */,
@@ -1156,7 +1153,6 @@
 		A6F3F56D1640F1FB0070E6AE /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				A686E9C916B62970009B070E /* main.m */,
 				A686E9CB16B62986009B070E /* InternetMap-Info.plist */,
 				A686E9CC16B62986009B070E /* InternetMap-Prefix.pch */,
 				A686E9CD16B6299D009B070E /* InfoPlist.strings */,
@@ -1361,10 +1357,9 @@
 			children = (
 				A6551E6716CAC1AF00340590 /* FirstUseViewController~ipad.xib */,
 				84D15DCD1F05A0A300C1B3A4 /* FirstUseViewController~iphone.xib */,
-				A686EA4A16B62B23009B070E /* ViewController_iPad.xib */,
-				A686EA4C16B62B23009B070E /* ViewController_iPhone.xib */,
 				7D23CB561DF73C7900D82CC2 /* LaunchScreen~iphone.storyboard */,
 				7D23CB581DF73CB600D82CC2 /* LaunchScreen~ipad.storyboard */,
+				A604A03020360FC700543D2E /* Main.storyboard */,
 			);
 			name = XIBs;
 			sourceTree = "<group>";
@@ -1489,6 +1484,7 @@
 				84D15DD11F05A0C200C1B3A4 /* timeline-track.png in Resources */,
 				A686EA0B16B62A9D009B070E /* popoverArrowRightSimple@2x.png in Resources */,
 				A686EA0C16B62A9D009B070E /* popoverArrowUpSimple.png in Resources */,
+				A604A03120360FC700543D2E /* Main.storyboard in Resources */,
 				849FC0971F03264F00B06401 /* view-selected@3x.png in Resources */,
 				A686EA0D16B62A9D009B070E /* popoverArrowUpSimple@2x.png in Resources */,
 				A686EA0E16B62A9D009B070E /* popoverBgSimple.png in Resources */,
@@ -1536,8 +1532,6 @@
 				84D15DC21F0575AD00C1B3A4 /* help_bg.png in Resources */,
 				849FC0351F0304B800B06401 /* search-selected.png in Resources */,
 				4E8336191EDF929F0067B138 /* 2007.txt in Resources */,
-				A686EA4E16B62B23009B070E /* ViewController_iPad.xib in Resources */,
-				A686EA4F16B62B23009B070E /* ViewController_iPhone.xib in Resources */,
 				D403BBDE16C1DF2F008AA000 /* LICENSE in Resources */,
 				D403BBE016C1DF2F008AA000 /* README in Resources */,
 				84D15DC81F0575AD00C1B3A4 /* load_logo.png in Resources */,
@@ -1646,6 +1640,7 @@
 				A686EAF216B62DBD009B070E /* Camera.cpp in Sources */,
 				A686EAF316B62DBD009B070E /* Connection.cpp in Sources */,
 				A686EAF416B62DBD009B070E /* DefaultVisualization.cpp in Sources */,
+				A604A0332036137900543D2E /* AppDelegate.swift in Sources */,
 				A686EAF516B62DBD009B070E /* DisplayLines.cpp in Sources */,
 				A686EAF616B62DBD009B070E /* DisplayNodes.cpp in Sources */,
 				A686EAF716B62DBD009B070E /* IndexBox.cpp in Sources */,
@@ -1661,7 +1656,6 @@
 				D4C1083216B2043D00CA4A0E /* SCPacketRecord.m in Sources */,
 				A60616371FB3CB9600F1AEB4 /* CreditsViewController.swift in Sources */,
 				D4C1083316B2043D00CA4A0E /* SCTracerouteUtility.m in Sources */,
-				A686E9CA16B62970009B070E /* main.m in Sources */,
 				A686EA7116B62B61009B070E /* ASNRequest.m in Sources */,
 				A686EA7216B62B61009B070E /* ErrorInfoView.m in Sources */,
 				A686EA7316B62B61009B070E /* HelperMethods.m in Sources */,
@@ -1674,7 +1668,6 @@
 				A686EA7B16B62B61009B070E /* ViewController.m in Sources */,
 				A686EA7C16B62B61009B070E /* StringListViewController.m in Sources */,
 				A60F457C1FB3CFE7001E9D25 /* Theme.swift in Sources */,
-				A686EA7D16B62B61009B070E /* AppDelegate.mm in Sources */,
 				A686EA7E16B62B61009B070E /* ConnectionWrapper.mm in Sources */,
 				A686EA7F16B62B61009B070E /* MapControllerWrapper.mm in Sources */,
 				A686EA8016B62B61009B070E /* NodeWrapper.mm in Sources */,
@@ -1683,6 +1676,7 @@
 				A6E1D5CC16B9EFFB00D8B26F /* TypeVisualization.cpp in Sources */,
 				A6E1D5D416BAEFEA00D8B26F /* GlobeVisualization.cpp in Sources */,
 				A6551E6816CAC1AF00340590 /* FirstUseViewController.m in Sources */,
+				A60F45831FBE0309001E9D25 /* RootVC.swift in Sources */,
 				A6551E9A16CAFC7000340590 /* ContactFormViewController.m in Sources */,
 				A6551EC216CEB88700340590 /* ExpandedScrollView.m in Sources */,
 				A625263316CEF3250015DF37 /* MBProgressHUD.m in Sources */,
@@ -1698,22 +1692,6 @@
 				A686E9CE16B6299D009B070E /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		A686EA4A16B62B23009B070E /* ViewController_iPad.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A686EA4B16B62B23009B070E /* en */,
-			);
-			name = ViewController_iPad.xib;
-			sourceTree = "<group>";
-		};
-		A686EA4C16B62B23009B070E /* ViewController_iPhone.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A686EA4D16B62B23009B070E /* en */,
-			);
-			name = ViewController_iPhone.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1780,6 +1758,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Peer 1 Network Enterprises, Inc";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/iOS";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1809,13 +1788,14 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/iOS",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iOS/InternetMap-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/iOS/InternetMap-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.peer1.internetmap;
@@ -1872,6 +1852,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/iOS";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1901,13 +1882,14 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/iOS",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iOS/InternetMap-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/iOS/InternetMap-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.peer1.internetmap;
@@ -1966,6 +1948,7 @@
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/iOS";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -2016,6 +1999,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/iOS";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -2044,12 +2028,13 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/iOS",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iOS/InternetMap-Prefix.pch";
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/iOS/InternetMap-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.peer1.internetmap;
@@ -2074,12 +2059,13 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/iOS",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iOS/InternetMap-Prefix.pch";
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/iOS/InternetMap-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.peer1.internetmap;
