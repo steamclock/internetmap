@@ -21,6 +21,7 @@
 #import "FirstUseViewController.h"
 #import "ContactFormViewController.h"
 #import <SafariServices/SafariServices.h>
+#import "ARKit/ARKit.h"
 
 #import "internetmap-Swift.h"
 
@@ -275,6 +276,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.helpPopView.hidden = YES;
 
     [self.placeButton setBackgroundImage:[[UIImage imageNamed:@"traceroute-button"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 22, 0, 22)] forState:UIControlStateNormal];
+
+    self.arButton.hidden = ![ARConfiguration isSupported];
 }
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
