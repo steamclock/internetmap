@@ -224,13 +224,10 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
 }
 
 - (NodeWrapper*)nodeByASN:(NSString*)asn{
-    const char* utf8 = [asn UTF8String];
-
-    if(!utf8) {
+    if (asn == nil)
         return nil;
-    }
 
-    NodePointer node = _controller->data->nodesByAsn[std::string(utf8)];
+    NodePointer node = _controller->data->nodesByAsn[std::string([asn UTF8String])];
 
     if(node && node->isActive())
         return [[NodeWrapper alloc] initWithNodePointer:node];
