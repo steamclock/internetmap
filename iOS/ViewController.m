@@ -275,8 +275,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self helpPopCheckSetUp];
     self.helpPopView.hidden = YES;
 
-    [self.placeButton setBackgroundImage:[[UIImage imageNamed:@"traceroute-button"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 22, 0, 22)] forState:UIControlStateNormal];
-
     self.arButton.hidden = ![ARConfiguration isSupported];
 
     self.repositionButton.layer.borderWidth = 1.0f;
