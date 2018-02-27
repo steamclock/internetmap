@@ -1089,7 +1089,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 #pragma mark - NodeInfo delegate
 
 - (void)dismissNodeInfoPopover {
-    self.repositionButton.hidden = self.arMode != ARModeViewing;
+    self.repositionButton.hidden = (self.arMode != ARModeViewing) || (self.timelineSlider.hidden == NO);
 
     [self.tracer stop];
     self.tracer = nil;
