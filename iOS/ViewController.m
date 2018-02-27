@@ -274,7 +274,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self helpPopCheckSetUp];
     self.helpPopView.hidden = YES;
 
-    [self.placeButton setBackgroundImage:[[UIImage imageNamed:@"traceroute-button"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 22, 0, 22)] forState:UIControlStateNormal];
+    self.repositionButton.layer.borderWidth = 1.0f;
+    self.repositionButton.layer.borderColor = UI_BLUE_COLOR.CGColor;
 }
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
