@@ -468,6 +468,24 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
      
 }
 
+// Clockwise ordering of the interface orientations, for calculating number of steps betwene two of them
+-(int)orderedOrientation:(UIInterfaceOrientation)orientation {
+    switch (orientation) {
+        case UIInterfaceOrientationPortrait: return 0;
+        case UIInterfaceOrientationLandscapeLeft: return 1;
+        case UIInterfaceOrientationPortraitUpsideDown: return 2;
+        case UIInterfaceOrientationLandscapeRight: return 3;
+        default: return 0;
+    }
+}
+
+// Caclulate a rotation between one interface orientation and another
+-(CGAffineTransform)rotationForOrientationChangeFrom:(UIInterfaceOrientation)from to:(UIInterfaceOrientation)to
+{
+    int quarterTurns = ([self orderedOrientation:to] + 4) - [self orderedOrientation:from];
+    return CGAffineTransformMakeRotation((M_PI / 2) * (float)(quarterTurns));
+}
+
 -(void)handlePan:(UIPanGestureRecognizer *)gestureRecognizer
 {
     [self.controller resetIdleTimer];
@@ -484,10 +502,24 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             CGPoint delta = CGPointMake(translation.x - self.lastPanPosition.x, translation.y - self.lastPanPosition.y);
             self.lastPanPosition = translation;
 
-            [self.controller rotateRadiansX:delta.x * 0.01];
-            if(!self.arEnabled) {
-                [self.controller rotateRadiansY:delta.y * 0.01];
+            if(self.arEnabled) {
+                // If device is rotated but UI hasn't (not all orientations are supported), transform the pan gesture to
+                // the oriented device space, so the rotation will still make sense on the AR map that is a fixed orientation
+                // in the real world
+                UIDeviceOrientation device = [UIDevice currentDevice].orientation;
+                UIInterfaceOrientation from = [UIApplication sharedApplication].statusBarOrientation;
+                if(device != UIDeviceOrientationFaceUp && device != UIDeviceOrientationFaceDown) {
+                    UIInterfaceOrientation to = (UIInterfaceOrientation)device;
+                    CGAffineTransform rotate = [self rotationForOrientationChangeFrom:from to:to];
+                    delta = CGPointApplyAffineTransform(delta, rotate);
+                }
+
+                delta.y = 0;
             }
+
+            [self.controller rotateRadiansX:delta.x * 0.01];
+            [self.controller rotateRadiansY:delta.y * 0.01];
+
         } else if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
             if (isnan([gestureRecognizer velocityInView:self.view].x) || isnan([gestureRecognizer velocityInView:self.view].y)) {
                 [self.controller stopMomentumPan];
