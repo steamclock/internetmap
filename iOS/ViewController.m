@@ -732,7 +732,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         [weakSelf.controller setVisualization:vis];
     };
     
-    [self forceResetView];
+    [self resetView];
 }
 
 -(IBAction)infoButtonPressed:(id)sender {
@@ -994,7 +994,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         }
     };
     
-    [self forceResetView];
+    [self resetView];
 }
 
 //deselect node and reset zoom/rotate. If you set the afterViewReset callback, it will be called when this finishes.
@@ -1004,6 +1004,14 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self dismissNodeInfoPopover];
     [self.controller deselectCurrentNode];
     [self resetVisualization];
+
+    if(self.arEnabled && self.afterViewReset) {
+        // In AR mode we don't actually change the rotation on a view reset, so if there is a post reset callback,
+        // call it now
+        // TODO: should really find a better way to handle this
+        self.afterViewReset();
+        self.afterViewReset = nil;
+    }
 }
 
 // Full reset of UI state, including rotating back to default. Used in cases where we do need a full reset (like switching visualizations)
@@ -1084,7 +1092,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 #pragma mark - NodeInfo delegate
 
 - (void)dismissNodeInfoPopover {
-    self.repositionButton.hidden = self.arMode != ARModeViewing;
+    self.repositionButton.hidden = (self.arMode != ARModeViewing) || (self.timelineSlider.hidden == NO);
 
     [self.tracer stop];
     self.tracer = nil;
