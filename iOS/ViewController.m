@@ -934,15 +934,19 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         [self.nodeInformationPopover dismissPopoverAnimated:NO];
         NodeTooltipViewController* content = [[NodeTooltipViewController alloc] initWithNode:node];
         self.nodeInformationPopover = [[WEPopoverController alloc] initWithContentViewController:content];
+
+        if (self.arEnabled) {
+            WEPopoverContainerViewProperties *properties = [WEPopoverContainerViewProperties defaultContainerViewProperties];
+            properties.downArrowImageName = nil;
+            self.nodeInformationPopover.containerViewProperties = properties;
+        }
         
         if(simulated) {
             content.text = @"Simulated data";
         }
         
         self.nodeInformationPopover.passthroughViews = @[self.view];
-        CGPoint center = [self.controller getCoordinatesForNodeAtIndex:self.controller.targetNode];
-        
-        [self.nodeInformationPopover presentPopoverFromRect:CGRectMake(center.x, center.y, 1, 1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];
+        [self.nodeInformationPopover presentPopoverFromRect:[self displayRectForTimelineNodeInfoPopover] inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];
     }
     else {
         //check if node is the current node
@@ -1150,6 +1154,18 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
     
     return displayRect;
+}
+
+- (CGRect)displayRectForTimelineNodeInfoPopover {
+    if (self.arEnabled) {
+        CGRect sliderFrame = self.timelineSlider.frame;
+        NSInteger padding = 150;
+        return CGRectMake([[UIScreen mainScreen] bounds].size.width/2, sliderFrame.origin.y - padding, 1, 1);
+    } else {
+        CGPoint center = [self.controller getCoordinatesForNodeAtIndex:self.controller.targetNode];
+        CGRect displayRect = CGRectMake(center.x, center.y, 1, 1);
+        return displayRect;
+    }
 }
 
 - (void)resizeNodeInfoPopover {
