@@ -356,12 +356,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.arEnabled = mode != ARModeDisabled;
     self.arMode = mode;
 
-    if(!wasEnabled && self.arEnabled) {
-        [self forceResetView];
-    }
-
-    if(wasEnabled && !self.arEnabled) {
+    if(wasEnabled ^ self.arEnabled) {
         [self.controller clearCameraOverride];
+        [self forceResetView];
+        [self.controller enableAR:self.arEnabled];
     }
 
     self.renderEnabled = mode != ARModeSearching;
@@ -382,6 +380,14 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(IBAction)repositionButtonPressed:(id)sender {
     [((AppDelegate*)([UIApplication sharedApplication].delegate)).rootVC startPlacement];
+}
+
+- (float)nearPlane {
+    return [self.controller nearPlane];
+}
+
+- (float)farPlane {
+    return [self.controller farPlane];
 }
 
 #pragma mark - Touch and GestureRecognizer handlers

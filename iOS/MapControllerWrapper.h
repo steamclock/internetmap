@@ -57,8 +57,14 @@
 
 - (NSArray*)visualizationNames;
 - (void)setVisualization:(int)vis;
+- (void)updateVisualization;
 
 - (void)overrideCameraTransform:(matrix_float4x4)transform projection:(matrix_float4x4)projection modelPos:(GLKVector3)modelPos;
 - (void)clearCameraOverride;
+
+- (void)enableAR:(BOOL)enable;
+
+- (float)nearPlane;
+- (float)farPlane;
 
 @end
