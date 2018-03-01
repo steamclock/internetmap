@@ -1227,9 +1227,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         NSInteger xPadding = 0;
         _helpPopBackImage.image = [UIImage imageNamed:@"callout_left.png"];
 
-        CGRect newRect = [self.view convertRect:buttonForHelp.frame fromView:buttonForHelp];
-        NSLog(@"newRect %@", NSStringFromCGRect(newRect));
-
         if (xPosition + self.helpPopView.frame.size.width > CGRectGetMaxX(self.view.frame)) {
             // Readjust callout location if popover would clip
             xPadding = -112;
