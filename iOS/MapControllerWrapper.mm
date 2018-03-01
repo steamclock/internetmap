@@ -207,6 +207,7 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
 - (void)enableAR:(BOOL)enable {
     DefaultVisualization::setNodeScale(enable ? 0.5 : 1.0);
     DefaultVisualization::setSelectedNodeColour(enable ? ColorFromRGB(0xFFA500) : ColorFromRGB(SELECTED_NODE_COLOR_HEX));
+    DefaultVisualization::setPortrait(![HelperMethods deviceIsiPad] && !enable);
     _controller->updateDisplay(false);
 }
 
