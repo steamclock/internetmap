@@ -356,7 +356,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.arEnabled = mode != ARModeDisabled;
     self.arMode = mode;
 
-    if(wasEnabled ^ self.arEnabled) {
+    if(wasEnabled != self.arEnabled) {
         [self.controller clearCameraOverride];
         [self forceResetView];
         [self.controller enableAR:self.arEnabled];
@@ -1277,17 +1277,14 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
         UIButton *buttonForHelp = orderOfMenuButtons[helpLocation];
         CGPoint globalCoordinates = [buttonForHelp convertPoint:buttonForHelp.origin toView:self.view];
-        float xPosition = globalCoordinates.x;
+        CGFloat xPosition = globalCoordinates.x;
         NSInteger xPadding = 0;
+        _helpPopBackImage.image = [UIImage imageNamed:@"callout_left.png"];
 
-        if ([HelperMethods deviceIsiPad]) {
-            xPadding = -18;
-        } else if (buttonForHelp == _timelineButton) { // iphone and right button, dont want to clip on small screens
+        if (xPosition + self.helpPopView.frame.size.width > CGRectGetMaxX(self.view.frame)) {
+            // Readjust callout location if popover would clip
             xPadding = -112;
             _helpPopBackImage.image = [UIImage imageNamed:@"callout_right.png"];
-        } else {
-            xPadding = 0;
-            _helpPopBackImage.image = [UIImage imageNamed:@"callout_left.png"];
         }
 
         self.helpPopViewPosition.constant = xPosition + xPadding;
