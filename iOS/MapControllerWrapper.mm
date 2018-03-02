@@ -135,6 +135,14 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
     _controller->display->camera->resetIdleTimer();
 }
 
+- (float)nearPlane {
+    return NEAR_PLANE;
+}
+
+- (float)farPlane {
+    return FAR_PLANE;
+}
+
 #pragma mark - Camera: View Manipulation
 
 - (void)resetZoomAndRotationAnimatedForOrientation:(BOOL)isPortraitMode{
@@ -191,6 +199,15 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
 
 - (void)stopMomentumZoom{
     _controller->display->camera->stopMomentumZoom();
+}
+
+
+#pragma mark - AR
+
+- (void)enableAR:(BOOL)enable {
+    DefaultVisualization::setNodeScale(enable ? 0.5 : 1.0);
+    DefaultVisualization::setSelectedNodeColour(enable ? ColorFromRGB(0xFFA500) : ColorFromRGB(SELECTED_NODE_COLOR_HEX));
+    _controller->updateDisplay(false);
 }
 
 - (void)overrideCameraTransform:(matrix_float4x4)transform projection:(matrix_float4x4)projection modelPos:(GLKVector3)modelPos {

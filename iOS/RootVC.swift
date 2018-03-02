@@ -30,7 +30,7 @@ private class CameraDelegate: NSObject, ARSessionDelegate {
         let view = renderer.view as! GLKView
         let size = CGSize(width: view.drawableWidth, height: view.drawableHeight)
 
-        renderer.overrideCamera(frame.camera.viewMatrix(for: orientation), projection: frame.camera.projectionMatrix(for: orientation, viewportSize: size, zNear: 0.05, zFar: 100), modelPos:modelPos)
+        renderer.overrideCamera(frame.camera.viewMatrix(for: orientation), projection: frame.camera.projectionMatrix(for: orientation, viewportSize: size, zNear: CGFloat(renderer.nearPlane()), zFar: CGFloat(renderer.farPlane())), modelPos:modelPos)
 
         let cameraOrientation: CGImagePropertyOrientation = UIDevice.current.userInterfaceIdiom == .phone ? .right : (orientation == .landscapeRight ? .up : .down)
         cameraImage.image = UIImage(ciImage: CIImage(cvPixelBuffer: frame.capturedImage).oriented(cameraOrientation))

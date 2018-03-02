@@ -413,7 +413,7 @@ int MapController::indexForNodeAtPoint(Vector2 pointInView) {
                     
 //                    printf("intersected node %i, delta: %f\n", i, delta);
                     Vector4 transformedNodePosition = display->camera->currentModelView() * Vector4(nodePosition.getX(), nodePosition.getY(), nodePosition.getZ(), 1);
-                    if ((delta > maxDelta) && (transformedNodePosition.getZ() < -0.1)) {
+                    if ((delta > maxDelta) && (transformedNodePosition.getZ() < -NEAR_PLANE)) {
                         maxDelta = delta;
                         foundI = i;
                     }

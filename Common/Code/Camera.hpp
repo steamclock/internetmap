@@ -20,6 +20,9 @@ struct Target {
     Target():vector(0, 0, 0), zoom(0.0f), maxZoom(0.0f) {}
 };
 
+const float NEAR_PLANE = 0.05f;
+const float FAR_PLANE = 100.0f;
+
 /**
  the opengl camera for the view.
  has nice functions for targeting, animated zoom, rotation, etc.

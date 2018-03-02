@@ -19,7 +19,6 @@ void cameraMoveFinishedCallback(void);
 void cameraResetFinishedCallback(void);
 
 Camera::Camera() :
-
     _mode(MODE_UNKNOWN),
     _displayWidth(0.0f),
     _displayHeight(0.0f),
@@ -56,9 +55,6 @@ Camera::Camera() :
     _panVelocity.y = 0.0f;
 }
 
-static const float NEAR_PLANE = 0.05f;
-static const float FAR_PLANE = 100.0f;
-
 void Camera::update(TimeInterval currentTime) {
     TimeInterval delta = currentTime - _updateTime;
     _updateTime = currentTime;
@@ -73,11 +69,6 @@ void Camera::update(TimeInterval currentTime) {
     handleAnimatedTranslateY(delta);
     
     float aspect = fabsf(_displayWidth / _displayHeight);
-
-    // Half size of nodes and change seletion colour when camera is overriden, implying we are in AR mode
-    // TODO: should have better way of distributing this info
-    DefaultVisualization::setNodeScale(overrideCamera ? 0.75 : 1.0);
-    DefaultVisualization::setSelectedNodeColour(overrideCamera ? ColorFromRGB(0xFFA500) : ColorFromRGB(SELECTED_NODE_COLOR_HEX));
 
     if (overrideCamera) {
         float scaleInMetres = 1.0;
