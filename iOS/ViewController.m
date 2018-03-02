@@ -402,6 +402,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
     self.isHandlingLongPress = NO;
 
+    if (self.arMode == ARModeSearching || self.arMode == ARModePlacing) {
+        NSLog(@"Skipping touch handling due to current AR mode: %zd", self.arMode);
+        return;
+    }
+
     [self.controller handleTouchDownAtPoint:[self toDisplayPoint:[touch locationInView:self.view]]];
 }
 
