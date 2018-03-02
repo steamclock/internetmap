@@ -282,7 +282,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    
+    // Not sure if this is ever invoked anymore
     return [HelperMethods deviceIsiPad] ? UIInterfaceOrientationIsLandscape(interfaceOrientation) : UIInterfaceOrientationIsPortrait(interfaceOrientation);
 }
 
@@ -981,6 +981,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.nodeInformationPopover.delegate = self;
         self.nodeInformationPopover.passthroughViews = @[self.view];
         UIPopoverArrowDirection dir = UIPopoverArrowDirectionLeft;
+        if ([HelperMethods deviceIsiPad] && UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
+            dir = UIPopoverArrowDirectionUp;
+        }
 
         if (![HelperMethods deviceIsiPad] || self.arEnabled) {
             WEPopoverContainerViewProperties* prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
@@ -1448,6 +1451,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self resizeNodeInfoPopover];
 
     [self displayHops:hops withDestNode:[self.controller nodeAtIndex:self.controller.targetNode]];
+}
+
+#pragma mark - Rotation and transitions
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [self dismissNodeInfoPopover];
 }
 
 @end

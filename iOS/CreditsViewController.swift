@@ -188,7 +188,7 @@ public class CreditsViewController: UIViewController, UIWebViewDelegate {
     }
 
     public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return UIDevice.current.userInterfaceIdiom == .pad ? .landscape : .portrait
+        return UIDevice.current.userInterfaceIdiom == .pad ? .all : .portrait
     }
 
     override public func viewWillAppear(_ animated: Bool) {

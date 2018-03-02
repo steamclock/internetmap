@@ -32,7 +32,18 @@ private class CameraDelegate: NSObject, ARSessionDelegate {
 
         renderer.overrideCamera(frame.camera.viewMatrix(for: orientation), projection: frame.camera.projectionMatrix(for: orientation, viewportSize: size, zNear: CGFloat(renderer.nearPlane()), zFar: CGFloat(renderer.farPlane())), modelPos:modelPos)
 
-        let cameraOrientation: CGImagePropertyOrientation = UIDevice.current.userInterfaceIdiom == .phone ? .right : (orientation == .landscapeRight ? .up : .down)
+        let cameraOrientation: CGImagePropertyOrientation
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            cameraOrientation = .right
+        } else {
+            switch orientation {
+            case .landscapeRight: cameraOrientation = .up
+            case .landscapeLeft: cameraOrientation = .down
+            case .portrait: cameraOrientation = .right
+            case .portraitUpsideDown: cameraOrientation = .left
+            default: cameraOrientation = .up
+            }
+        }
         cameraImage.image = UIImage(ciImage: CIImage(cvPixelBuffer: frame.capturedImage).oriented(cameraOrientation))
     }
 }
@@ -78,7 +89,9 @@ public class RootVC: UIViewController {
         guard ARConfiguration.isSupported else { return NSLog("Attempted to set up AR session for unsupported device.") }
         let image = UIImageView()
         image.frame = view.frame
+        image.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         image.alpha = 0.5
+        image.contentMode = .scaleAspectFill
         view.addSubview(image)
         view.sendSubview(toBack: image)
         imageView = image
