@@ -356,7 +356,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.arEnabled = mode != ARModeDisabled;
     self.arMode = mode;
 
-    if(wasEnabled ^ self.arEnabled) {
+    if(wasEnabled != self.arEnabled) {
         [self.controller clearCameraOverride];
         [self forceResetView];
         [self.controller enableAR:self.arEnabled];
