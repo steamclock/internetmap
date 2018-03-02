@@ -96,35 +96,46 @@ public class RootVC: UIViewController {
         guard mode == .searching || mode == .placing,
               let arSession = arSession,
               let cameraDelegate = cameraDelegate,
-              let plane = arSession.currentFrame?.anchors.first as? ARPlaneAnchor else {
+              let view = arSession.currentFrame?.camera.viewMatrix(for: UIApplication.shared.statusBarOrientation),
+              let planes = arSession.currentFrame?.anchors.flatMap({ $0 as? ARPlaneAnchor}),
+              !planes.isEmpty else {
             return
         }
 
+        // If we've got this far, we have an AR "fix" so can switch out of search into palcement
         if mode == .searching {
             mode = .placing
         }
 
-        let orientation = UIApplication.shared.statusBarOrientation
-        let globeRadius : Float = 0.5
+        // Calulate position 2m in fornt of camera to pplace map
+        let camera = view.inverse
+        let translate = camera.columns.3
+        let forward = camera.columns.2 * -1
+        var position = translate + (forward * 2)
 
-        if let view = arSession.currentFrame?.camera.viewMatrix(for: orientation) {
-            let camera =  matrix_invert(view)
-            let translateRaw = camera.columns.3
-            let translate = GLKVector3Make(translateRaw.x, translateRaw.y, translateRaw.z)
+        let globeRadius : Float = 0.5 // TODO: should be getting this from the map data
 
-            let forwardRaw = camera.columns.2
-            let forward = GLKVector3Make(-forwardRaw.x, -forwardRaw.y, -forwardRaw.z)
-            let scaledForward = GLKVector3MultiplyScalar(forward, 2)
+        // Check if placement position is above any detected planes, and correct position upwards if needed.
+        for plane in planes {
+            let positionOnPlane =  plane.transform.inverse * position
 
-            var position = GLKVector3Add(translate, scaledForward)
-            let floor = plane.transform.columns.3.y
+            if (abs(positionOnPlane.x - plane.center.x) < plane.extent.x) && (abs(positionOnPlane.z - plane.center.z) < plane.extent.z) {
+                let height = plane.transform.columns.3.y
 
-            if position.y - globeRadius < floor {
-                position.y = floor + globeRadius
+                if position.y - globeRadius < height {
+                    position.y = height + globeRadius
+                }
             }
-
-            cameraDelegate.modelPos = position
         }
+
+        // Always make sure it is at least aboce the lowest detected height, independant of plane extents
+        let minHeight = planes.reduce(Float.greatestFiniteMagnitude) { (height, plane) in plane.transform.columns.3.y < height ? plane.transform.columns.3.y : height }
+
+        if position.y - globeRadius < minHeight {
+            position.y = minHeight + globeRadius
+        }
+
+        cameraDelegate.modelPos = GLKVector3Make(position.x, position.y, position.z)
     }
 
     @objc func startPlacement() {
