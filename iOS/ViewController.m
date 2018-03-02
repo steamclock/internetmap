@@ -281,11 +281,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.repositionButton.layer.borderColor = UI_BLUE_COLOR.CGColor;
 }
 
--(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Not sure if this is ever invoked anymore
-    return [HelperMethods deviceIsiPad] ? UIInterfaceOrientationIsLandscape(interfaceOrientation) : UIInterfaceOrientationIsPortrait(interfaceOrientation);
-}
-
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     bool shownFirstUse = [[NSUserDefaults standardUserDefaults] boolForKey:@"shownFirstUse"];
