@@ -318,14 +318,14 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (void)update
 {
-    self.controller.displaySize = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height);
+    self.controller.logicalDisplaySize = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height);
     [self.controller setAllowIdleAnimation:[self shouldDoIdleAnimation]];
     [self.controller update:[NSDate timeIntervalSinceReferenceDate]];
 }
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
-    self.controller.displaySize = CGSizeMake(view.drawableWidth, view.drawableHeight);
+    self.controller.physicalDisplaySize = CGSizeMake(view.drawableWidth, view.drawableHeight);
 
     if(self.renderEnabled) {
         [self.controller draw];
@@ -387,13 +387,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 #pragma mark - Touch and GestureRecognizer handlers
 
-- (CGPoint)toDisplayPoint:(CGPoint)point {
-    GLKView* view = (GLKView*)self.view;
-    point.x = (point.x / view.bounds.size.width) * view.drawableWidth;
-    point.y = (point.y / view.bounds.size.height) * view.drawableHeight;
-    return point;
-}
-
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
     UITouch* touch = [touches anyObject];
@@ -408,7 +401,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         return;
     }
 
-    [self.controller handleTouchDownAtPoint:[self toDisplayPoint:[touch locationInView:self.view]]];
+    [self.controller handleTouchDownAtPoint:[touch locationInView:self.view]];
 }
 
 -(void)handleTap:(UITapGestureRecognizer*)gestureRecognizer {
@@ -442,7 +435,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         if ((!self.lastIntersectionDate || fabs([self.lastIntersectionDate timeIntervalSinceNow]) > 0.01)) {
             self.isHandlingLongPress = YES;
 
-            int i = [self.controller indexForNodeAtPoint:[self toDisplayPoint: [gesture locationInView:self.view]]];
+            int i = [self.controller indexForNodeAtPoint:[gesture locationInView:self.view]];
             self.lastIntersectionDate = [NSDate date];
             if (i != NSNotFound && [self.controller isWithinMaxNodeIndex:i]) {
 
