@@ -281,11 +281,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.repositionButton.layer.borderColor = UI_BLUE_COLOR.CGColor;
 }
 
--(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    
-    return [HelperMethods deviceIsiPad] ? UIInterfaceOrientationIsLandscape(interfaceOrientation) : UIInterfaceOrientationIsPortrait(interfaceOrientation);
-}
-
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     bool shownFirstUse = [[NSUserDefaults standardUserDefaults] boolForKey:@"shownFirstUse"];
@@ -981,6 +976,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.nodeInformationPopover.delegate = self;
         self.nodeInformationPopover.passthroughViews = @[self.view];
         UIPopoverArrowDirection dir = UIPopoverArrowDirectionLeft;
+        if ([HelperMethods deviceIsiPad] && UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
+            dir = UIPopoverArrowDirectionUp;
+        }
 
         if (![HelperMethods deviceIsiPad] || self.arEnabled) {
             WEPopoverContainerViewProperties* prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
@@ -1448,6 +1446,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self resizeNodeInfoPopover];
 
     [self displayHops:hops withDestNode:[self.controller nodeAtIndex:self.controller.targetNode]];
+}
+
+#pragma mark - Rotation and transitions
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [self dismissNodeInfoPopover];
 }
 
 @end
