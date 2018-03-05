@@ -91,11 +91,11 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
     _controller->targetNode = targetNode;
 }
 
-- (CGSize)displaySize {
+- (CGSize)physicalDisplaySize {
     return CGSizeMake(_controller->display->camera->displayWidth(), _controller->display->camera->displayHeight());
 }
 
-- (void)setDisplaySize:(CGSize)displaySize {
+- (void)setPhysicalDisplaySize:(CGSize)displaySize {
     _controller->display->camera->setDisplaySize(displaySize.width, displaySize.height);
 }
 
@@ -121,6 +121,13 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
     _controller->hoverNode(index);
 }
 
+-(CGPoint)logicalToPhysical:(CGPoint)point {
+    return CGPointMake((point.x / self.logicalDisplaySize.width) * self.physicalDisplaySize.width, (point.y / self.logicalDisplaySize.height) * self.physicalDisplaySize.height);
+}
+
+-(CGPoint)physicalToLogical:(CGPoint)point {
+    return CGPointMake((point.x / self.physicalDisplaySize.width) * self.logicalDisplaySize.width, (point.y / self.physicalDisplaySize.height) * self.logicalDisplaySize.height);
+}
 #pragma mark - Camera: Misc
 
 - (void)update:(NSTimeInterval)now{
@@ -261,6 +268,7 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
 #pragma mark - Controller: Event handling
 
 - (void)handleTouchDownAtPoint:(CGPoint)point{
+    point = [self logicalToPhysical:point];
     _controller->handleTouchDownAtPoint(Vector2(point.x, point.y));
 }
 
@@ -279,12 +287,13 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
 }
 
 - (int)indexForNodeAtPoint:(CGPoint)pointInView{
+    pointInView = [self logicalToPhysical:pointInView];
     return _controller->indexForNodeAtPoint(Vector2(pointInView.x, pointInView.y));
 }
 
 -(CGPoint)getCoordinatesForNodeAtIndex:(int)index{
     Vector2 vec = _controller->getCoordinatesForNodeAtIndex(index);
-    return CGPointMake(vec.x, vec.y);
+    return [self physicalToLogical:CGPointMake(vec.x, vec.y)];
 }
 
 - (void)updateTargetForIndex:(int)index{
