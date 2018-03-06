@@ -1271,7 +1271,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void) helpPopCheckOrMenuSelected:(UIButton*)menuButton {
     
-    NSMutableString *shownMenusPopsString = [[NSUserDefaults standardUserDefaults] objectForKey:@"helpPopMenusShownDefault"];
+    NSString *shownMenusPopsString = [[NSUserDefaults standardUserDefaults] objectForKey:@"helpPopMenusShownDefault"];
     NSRange range = [shownMenusPopsString rangeOfString:@"0"];
     if (range.location == NSNotFound) return; // all help pops have been shown
     
@@ -1318,10 +1318,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             }
             currentLocation++;
         }
-        if (currentLocation != helpLocation) return;
-        
+
         // the menu with the tooltip has been viewed, mark as 1
-        shownMenusPopsString = (NSMutableString *)[shownMenusPopsString stringByReplacingCharactersInRange:NSMakeRange(helpLocation, 1) withString:@"1"];
+        shownMenusPopsString = [shownMenusPopsString stringByReplacingCharactersInRange:NSMakeRange(currentLocation, 1) withString:@"1"];
         [[NSUserDefaults standardUserDefaults] setObject:shownMenusPopsString forKey:@"helpPopMenusShownDefault"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
