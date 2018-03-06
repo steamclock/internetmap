@@ -945,7 +945,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         }
         
         self.nodeInformationPopover.passthroughViews = @[self.view];
-        [self.nodeInformationPopover presentPopoverFromRect:[self displayRectForTimelineNodeInfoPopover] inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:NO];
+        UIPopoverArrowDirection dir = [self popoverArrowDirectionForNodeInformationPopover];
+        [self.nodeInformationPopover presentPopoverFromRect:[self displayRectForTimelineNodeInfoPopover] inView:self.view permittedArrowDirections:dir animated:NO];
     }
     else {
         //check if node is the current node
@@ -968,18 +969,14 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.nodeInformationPopover = [[WEPopoverController alloc] initWithContentViewController:self.nodeInformationViewController];
         self.nodeInformationPopover.delegate = self;
         self.nodeInformationPopover.passthroughViews = @[self.view];
-        UIPopoverArrowDirection dir = UIPopoverArrowDirectionLeft;
-        if ([HelperMethods deviceIsiPad] && UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
-            dir = UIPopoverArrowDirectionUp;
-        }
 
         if (![HelperMethods deviceIsiPad] || self.arEnabled) {
             WEPopoverContainerViewProperties* prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
             prop.upArrowImageName = nil;
             self.nodeInformationPopover.containerViewProperties = prop;
-            dir = UIPopoverArrowDirectionUp;
         }
-            
+
+        UIPopoverArrowDirection dir = [self popoverArrowDirectionForNodeInformationPopover];
         [self.nodeInformationPopover presentPopoverFromRect:[self displayRectForNodeInfoPopover] inView:self.view permittedArrowDirections:dir animated:YES];
 
         self.repositionButton.hidden = true;
@@ -1170,9 +1167,21 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
 }
 
+- (UIPopoverArrowDirection)popoverArrowDirectionForNodeInformationPopover {
+    if (!self.timelineSlider.hidden) {
+        return UIPopoverArrowDirectionDown;
+    }
+
+    if ([HelperMethods deviceIsiPad] && UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
+        return UIPopoverArrowDirectionLeft;
+    }
+
+    return UIPopoverArrowDirectionUp;
+}
+
 - (void)resizeNodeInfoPopover {
     self.nodeInformationPopover.popoverContentSize = CGSizeZero;
-    UIPopoverArrowDirection dir = ([HelperMethods deviceIsiPad] && !self.arEnabled) ? UIPopoverArrowDirectionLeft : UIPopoverArrowDirectionUp;
+    UIPopoverArrowDirection dir = [self popoverArrowDirectionForNodeInformationPopover];
     [self.nodeInformationPopover repositionPopoverFromRect:[self displayRectForNodeInfoPopover] inView:self.view permittedArrowDirections:dir animated:YES];
 }
 
