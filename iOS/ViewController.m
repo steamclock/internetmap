@@ -11,7 +11,6 @@
 #import <dns_sd.h>
 #import <sys/socket.h>
 #import <ifaddrs.h>
-#import "ErrorInfoView.h"
 #import "NodeTooltipViewController.h"
 #import "MapControllerWrapper.h"
 #import "LabelNumberBoxView.h"
@@ -89,6 +88,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *helpPopViewPosition;
 @property (weak, nonatomic) IBOutlet UIImageView *helpPopBackImage;
 @property (weak, nonatomic) IBOutlet UILabel *helpPopLabel;
+@property (strong, nonatomic) IBOutlet TimedMessageLabel* errorInfoView;
 
 @property (strong, nonatomic) WEPopoverController* visualizationSelectionPopover;
 @property (strong, nonatomic) WEPopoverController* infoPopover;
@@ -99,8 +99,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (weak, nonatomic) TimelineInfoViewController* timelineInfoViewController;
 @property (strong, nonatomic) WEPopoverController* nodeTooltipPopover;
 @property (strong, nonatomic) NodeTooltipViewController* nodeTooltipViewController;
-
-@property (strong, nonatomic) ErrorInfoView* errorInfoView;
 
 @property (strong, nonatomic) NSArray* sortedYears;
 @property (strong, nonatomic) NSString* defaultYear;
@@ -201,11 +199,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     //self.youAreHereActivityIndicator.frame = CGRectMake(self.youAreHereActivityIndicator.frame.origin.x, self.youAreHereActivityIndicator.frame.origin.y, 30, 30);
     self.visualizationsActivityIndicator.frame = CGRectMake(self.visualizationsActivityIndicator.frame.origin.x, self.visualizationsActivityIndicator.frame.origin.y, 30, 30);
     self.timelineActivityIndicator.frame = CGRectMake(self.timelineActivityIndicator.frame.origin.x, self.timelineActivityIndicator.frame.origin.y, 30, 30);
-    
-    //create error info view
-    self.errorInfoView = [[ErrorInfoView alloc] initWithFrame:CGRectMake(10, 70, 300, 40)];
-    [self.view addSubview:self.errorInfoView];
-    
+
     // logo position
     if ([HelperMethods deviceIsiPad]) {
         self.logo.frame = CGRectMake([[UIScreen mainScreen] bounds].size.width-self.logo.frame.size.width-30, 34, self.logo.frame.size.width, self.logo.frame.size.height);

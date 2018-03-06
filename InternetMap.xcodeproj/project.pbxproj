@@ -127,6 +127,7 @@
 		A60616371FB3CB9600F1AEB4 /* CreditsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60616361FB3CB9600F1AEB4 /* CreditsViewController.swift */; };
 		A60F457C1FB3CFE7001E9D25 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60F457B1FB3CFE7001E9D25 /* Theme.swift */; };
 		A60F45831FBE0309001E9D25 /* RootVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60F45821FBE0309001E9D25 /* RootVC.swift */; };
+		A623BEB0204F3E60001C218D /* TimedMessageLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A623BEAF204F3E60001C218D /* TimedMessageLabel.swift */; };
 		A625263316CEF3250015DF37 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = A625263216CEF3250015DF37 /* MBProgressHUD.m */; };
 		A6551E4716C5CBF600340590 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F5641640F1FB0070E6AE /* Foundation.framework */; };
 		A6551E5316C5CC8100340590 /* main-traceroute.c in Sources */ = {isa = PBXBuildFile; fileRef = D403BBD916C1DF2F008AA000 /* main-traceroute.c */; };
@@ -199,7 +200,6 @@
 		A686EA2A16B62A9D009B070E /* youarehere.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9FE16B62A9D009B070E /* youarehere.png */; };
 		A686EA2B16B62A9D009B070E /* youarehere@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A686E9FF16B62A9D009B070E /* youarehere@2x.png */; };
 		A686EA7116B62B61009B070E /* ASNRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EA6116B62B61009B070E /* ASNRequest.m */; };
-		A686EA7216B62B61009B070E /* ErrorInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EA6216B62B61009B070E /* ErrorInfoView.m */; };
 		A686EA7316B62B61009B070E /* HelperMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EA6316B62B61009B070E /* HelperMethods.m */; };
 		A686EA7416B62B61009B070E /* LabelNumberBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EA6416B62B61009B070E /* LabelNumberBoxView.m */; };
 		A686EA7616B62B61009B070E /* NodeInformationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A686EA6616B62B61009B070E /* NodeInformationViewController.m */; };
@@ -386,6 +386,7 @@
 		A60616381FB3CBEB00F1AEB4 /* InternetMap-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "InternetMap-Bridging-Header.h"; path = "iOS/InternetMap-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		A60F457B1FB3CFE7001E9D25 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = SOURCE_ROOT; };
 		A60F45821FBE0309001E9D25 /* RootVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RootVC.swift; path = iOS/RootVC.swift; sourceTree = SOURCE_ROOT; };
+		A623BEAF204F3E60001C218D /* TimedMessageLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TimedMessageLabel.swift; path = iOS/TimedMessageLabel.swift; sourceTree = SOURCE_ROOT; };
 		A625263116CEF3250015DF37 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBProgressHUD.h; path = "External Code/MBProgressHUD/MBProgressHUD.h"; sourceTree = SOURCE_ROOT; };
 		A625263216CEF3250015DF37 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBProgressHUD.m; path = "External Code/MBProgressHUD/MBProgressHUD.m"; sourceTree = SOURCE_ROOT; };
 		A6551E4616C5CBF600340590 /* libExternalCode.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libExternalCode.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -452,7 +453,6 @@
 		A686EA5116B62B52009B070E /* ASNRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ASNRequest.h; path = iOS/ASNRequest.h; sourceTree = SOURCE_ROOT; };
 		A686EA5216B62B52009B070E /* ConnectionWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ConnectionWrapper.h; path = iOS/ConnectionWrapper.h; sourceTree = SOURCE_ROOT; };
 		A686EA5316B62B52009B070E /* CPPHelpers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CPPHelpers.h; path = iOS/CPPHelpers.h; sourceTree = SOURCE_ROOT; };
-		A686EA5416B62B52009B070E /* ErrorInfoView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ErrorInfoView.h; path = iOS/ErrorInfoView.h; sourceTree = SOURCE_ROOT; };
 		A686EA5516B62B52009B070E /* HelperMethods.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = HelperMethods.h; path = iOS/HelperMethods.h; sourceTree = SOURCE_ROOT; };
 		A686EA5616B62B52009B070E /* LabelNumberBoxView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LabelNumberBoxView.h; path = iOS/LabelNumberBoxView.h; sourceTree = SOURCE_ROOT; };
 		A686EA5716B62B52009B070E /* MapControllerWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MapControllerWrapper.h; path = iOS/MapControllerWrapper.h; sourceTree = SOURCE_ROOT; };
@@ -466,7 +466,6 @@
 		A686EA5F16B62B52009B070E /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ViewController.h; path = iOS/ViewController.h; sourceTree = SOURCE_ROOT; };
 		A686EA6016B62B52009B070E /* StringListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = StringListViewController.h; path = iOS/StringListViewController.h; sourceTree = SOURCE_ROOT; };
 		A686EA6116B62B61009B070E /* ASNRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASNRequest.m; path = iOS/ASNRequest.m; sourceTree = SOURCE_ROOT; };
-		A686EA6216B62B61009B070E /* ErrorInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ErrorInfoView.m; path = iOS/ErrorInfoView.m; sourceTree = SOURCE_ROOT; };
 		A686EA6316B62B61009B070E /* HelperMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HelperMethods.m; path = iOS/HelperMethods.m; sourceTree = SOURCE_ROOT; };
 		A686EA6416B62B61009B070E /* LabelNumberBoxView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LabelNumberBoxView.m; path = iOS/LabelNumberBoxView.m; sourceTree = SOURCE_ROOT; };
 		A686EA6616B62B61009B070E /* NodeInformationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NodeInformationViewController.m; path = iOS/NodeInformationViewController.m; sourceTree = SOURCE_ROOT; };
@@ -1113,8 +1112,7 @@
 				A686EA6116B62B61009B070E /* ASNRequest.m */,
 				A686EA5116B62B52009B070E /* ASNRequest.h */,
 				A686EA5316B62B52009B070E /* CPPHelpers.h */,
-				A686EA5416B62B52009B070E /* ErrorInfoView.h */,
-				A686EA6216B62B61009B070E /* ErrorInfoView.m */,
+				A623BEAF204F3E60001C218D /* TimedMessageLabel.swift */,
 				A686EA5516B62B52009B070E /* HelperMethods.h */,
 				A686EA6316B62B61009B070E /* HelperMethods.m */,
 				A686EA5616B62B52009B070E /* LabelNumberBoxView.h */,
@@ -1657,7 +1655,6 @@
 				A60616371FB3CB9600F1AEB4 /* CreditsViewController.swift in Sources */,
 				D4C1083316B2043D00CA4A0E /* SCTracerouteUtility.m in Sources */,
 				A686EA7116B62B61009B070E /* ASNRequest.m in Sources */,
-				A686EA7216B62B61009B070E /* ErrorInfoView.m in Sources */,
 				A686EA7316B62B61009B070E /* HelperMethods.m in Sources */,
 				A686EA7416B62B61009B070E /* LabelNumberBoxView.m in Sources */,
 				A686EA7616B62B61009B070E /* NodeInformationViewController.m in Sources */,
@@ -1672,6 +1669,7 @@
 				A686EA7F16B62B61009B070E /* MapControllerWrapper.mm in Sources */,
 				A686EA8016B62B61009B070E /* NodeWrapper.mm in Sources */,
 				A686EAE816B62D05009B070E /* SCDispatchQueue.m in Sources */,
+				A623BEB0204F3E60001C218D /* TimedMessageLabel.swift in Sources */,
 				A6E1D5C516B9EC7100D8B26F /* ExpandedSlider.m in Sources */,
 				A6E1D5CC16B9EFFB00D8B26F /* TypeVisualization.cpp in Sources */,
 				A6E1D5D416BAEFEA00D8B26F /* GlobeVisualization.cpp in Sources */,

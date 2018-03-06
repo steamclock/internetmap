@@ -204,6 +204,15 @@
                                     <constraint firstAttribute="width" relation="lessThanOrEqual" constant="414" id="YnH-Qd-Z7K"/>
                                 </constraints>
                             </stackView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error Message" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rdn-MK-Wwj" customClass="TimedMessageLabel" customModule="internetmap" customModuleProvider="target">
+                                <rect key="frame" x="10" y="83" width="394" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="OLO-Hi-9Je"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="NexaLight" family="Nexa Light" pointSize="17"/>
+                                <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <slider hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Hgl-Xj-2Ay" customClass="ExpandedSlider">
                                 <rect key="frame" x="30" y="696" width="354" height="31"/>
                                 <connections>
@@ -317,6 +326,7 @@
                         <constraints>
                             <constraint firstItem="Hgl-Xj-2Ay" firstAttribute="leading" secondItem="FbV-IP-9AF" secondAttribute="leading" constant="32" id="4XQ-E5-0kM"/>
                             <constraint firstItem="FbV-IP-9AF" firstAttribute="bottom" secondItem="Hgl-Xj-2Ay" secondAttribute="bottom" constant="10" id="BCP-eV-Z3e"/>
+                            <constraint firstItem="FbV-IP-9AF" firstAttribute="trailing" secondItem="Rdn-MK-Wwj" secondAttribute="trailing" constant="10" id="D1G-x5-ffm"/>
                             <constraint firstItem="FbV-IP-9AF" firstAttribute="bottom" secondItem="vOr-3f-uUJ" secondAttribute="bottom" id="FHs-fd-3MW"/>
                             <constraint firstItem="FbV-IP-9AF" firstAttribute="bottom" secondItem="L1v-VT-hjP" secondAttribute="bottom" constant="10" id="Ith-cb-x3Q"/>
                             <constraint firstItem="FbV-IP-9AF" firstAttribute="trailing" secondItem="n94-ju-YXe" secondAttribute="trailing" priority="900" constant="10" id="JgQ-t4-c12"/>
@@ -324,9 +334,11 @@
                             <constraint firstItem="FbV-IP-9AF" firstAttribute="bottom" secondItem="3p7-hg-SfJ" secondAttribute="bottom" constant="60" id="RIb-6g-Xhi"/>
                             <constraint firstItem="L1v-VT-hjP" firstAttribute="top" secondItem="FbV-IP-9AF" secondAttribute="top" constant="10" id="SNS-5T-iQm"/>
                             <constraint firstItem="hSo-NC-vfv" firstAttribute="top" secondItem="n94-ju-YXe" secondAttribute="bottom" id="aoZ-UN-0Sz"/>
+                            <constraint firstItem="Rdn-MK-Wwj" firstAttribute="top" secondItem="n94-ju-YXe" secondAttribute="bottom" constant="8" id="bAT-ig-2AU"/>
                             <constraint firstItem="3p7-hg-SfJ" firstAttribute="centerX" secondItem="FbV-IP-9AF" secondAttribute="centerX" id="dwf-tT-XIn"/>
                             <constraint firstItem="n94-ju-YXe" firstAttribute="leading" secondItem="FbV-IP-9AF" secondAttribute="leading" constant="10" id="fke-3K-QJE"/>
                             <constraint firstItem="n94-ju-YXe" firstAttribute="top" secondItem="FbV-IP-9AF" secondAttribute="top" id="hiD-xu-dja"/>
+                            <constraint firstItem="Rdn-MK-Wwj" firstAttribute="leading" secondItem="FbV-IP-9AF" secondAttribute="leading" constant="10" id="jdG-4d-P9J"/>
                             <constraint firstItem="FbV-IP-9AF" firstAttribute="bottom" secondItem="tRF-cz-sIM" secondAttribute="bottom" constant="10" id="kQo-JJ-Y1S"/>
                             <constraint firstItem="vOr-3f-uUJ" firstAttribute="leading" secondItem="FbV-IP-9AF" secondAttribute="leading" constant="10" id="lWG-5j-3sY"/>
                             <constraint firstItem="EDv-r7-fjC" firstAttribute="centerX" secondItem="FbV-IP-9AF" secondAttribute="centerX" id="mrc-A1-6wF"/>
@@ -350,6 +362,7 @@
                     <connections>
                         <outlet property="arButton" destination="AEA-7o-zOu" id="f5g-Vf-cR4"/>
                         <outlet property="buttonContainerView" destination="n94-ju-YXe" id="IPQ-Sd-q9p"/>
+                        <outlet property="errorInfoView" destination="Rdn-MK-Wwj" id="8pM-9D-Mog"/>
                         <outlet property="helpPopBackImage" destination="QRH-WN-oVQ" id="fPK-gQ-fXi"/>
                         <outlet property="helpPopLabel" destination="Wuu-rC-rPf" id="tpH-RW-cS2"/>
                         <outlet property="helpPopView" destination="hSo-NC-vfv" id="EP1-zu-3AI"/>
@@ -371,7 +384,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xGQ-3c-2s7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1413.28125" y="-121.09375"/>
+            <point key="canvasLocation" x="-1414.4927536231885" y="-121.46739130434784"/>
         </scene>
     </scenes>
     <resources>
