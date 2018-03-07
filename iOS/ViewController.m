@@ -790,7 +790,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             WEPopoverContainerViewProperties *prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
             prop.upArrowImageName = nil;
             self.infoPopover.containerViewProperties = prop;
-            [self.visualizationSelectionPopover setPopoverContentSize:tableforPopover.preferredContentSize];
+            [self.infoPopover setPopoverContentSize:tableforPopover.preferredContentSize];
         } else {
             [self.infoPopover setPopoverContentSize:CGSizeMake(340, 220)];
         }
