@@ -333,6 +333,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 #pragma mark - AR
 
 -(IBAction)arButtonPressed:(id)sender {
+    if (self.timelineButton.selected) {
+        [self leaveTimelineMode];
+    }
+
     [((AppDelegate*)([UIApplication sharedApplication].delegate)).rootVC toggleAR];
 }
 
