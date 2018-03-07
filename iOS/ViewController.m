@@ -338,6 +338,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
 
     [((AppDelegate*)([UIApplication sharedApplication].delegate)).rootVC toggleAR];
+
+    self.arButton.selected = self.arEnabled;
 }
 
 - (void)overrideCamera:(matrix_float4x4)transform projection:(matrix_float4x4)projection modelPos:(GLKVector3)modelPos {
