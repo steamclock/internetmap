@@ -352,6 +352,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.arMode = mode;
 
     if(wasEnabled != self.arEnabled) {
+        if(self.arEnabled) {
+            [self checkCameraAuthorization];
+        }
         [self.controller clearCameraOverride];
         [self forceResetView];
         [self.controller enableAR:self.arEnabled];
@@ -383,6 +386,27 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (float)farPlane {
     return [self.controller farPlane];
+}
+
+-(void)checkCameraAuthorization {
+    AVAuthorizationStatus auth = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+
+    NSString* text = @"Move the camera across a flat surface to place the map";
+
+    if(auth != AVAuthorizationStatusAuthorized) {
+        text = @"Please allow camera access for Internet Map in Settings";
+    }
+
+    NSMutableAttributedString* attrString = [[NSMutableAttributedString alloc] initWithString:text];
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+    NSRange range = NSMakeRange(0, text.length);
+
+    [paragraphStyle setLineHeightMultiple:1.15];
+    [paragraphStyle setAlignment:NSTextAlignmentCenter];
+    [attrString addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"NexaLight" size:20] range:range];
+    [attrString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:range];
+
+    self.searchingText.attributedText = attrString;
 }
 
 #pragma mark - Touch and GestureRecognizer handlers
