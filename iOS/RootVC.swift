@@ -80,7 +80,10 @@ public class RootVC: UIViewController {
         if mode == .disabled {
             if AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) == .notDetermined {
                 AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo) { granted in
-                    self.mode = .searching
+                    DispatchQueue.main.async {
+                        self.mode = .searching
+
+                    }
                 }
             }
             else {
