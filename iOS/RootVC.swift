@@ -78,7 +78,17 @@ public class RootVC: UIViewController {
 
     func toggleAR() {
         if mode == .disabled {
-            mode = .searching
+            if AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) == .notDetermined {
+                AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo) { granted in
+                    DispatchQueue.main.async {
+                        self.mode = .searching
+
+                    }
+                }
+            }
+            else {
+                self.mode = .searching
+            }
         }
         else {
             mode = .disabled
