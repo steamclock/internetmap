@@ -1470,7 +1470,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.nodeInformationViewController tracerouteDone];
     [self resizeNodeInfoPopover];
 
-    [self displayHops:hops withDestNode:[self.controller nodeAtIndex:self.controller.targetNode]];
+    if (self.controller.targetNode != INT_MAX) {
+        [self displayHops:hops withDestNode:[self.controller nodeAtIndex:self.controller.targetNode]];
+    }
 }
 
 #pragma mark - Rotation and transitions
