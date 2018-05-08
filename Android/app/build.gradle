@@ -34,8 +34,6 @@ android {
 //            targetCompatibility JavaVersion.VERSION_1_5
 //        }
 
-
-
         //APP_ABI := armeabi x86
 
         externalNativeBuild {

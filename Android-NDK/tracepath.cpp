@@ -16,7 +16,6 @@
 #include <sys/select.h>
 #include <unistd.h>
 
-
 #define HOST_COLUMN_SIZE	52
 
 double getNowMS() {
@@ -173,6 +172,7 @@ std::vector<tracepath_hop> Tracepath::runWithDestinationAddress(struct in_addr *
     LOG("----------------------------------------------");
     LOG(" Trace complete");
     LOG("----------------------------------------------");
+    return result;
 }
 
 int Tracepath::setupSocket(struct in_addr *dst) {
@@ -295,8 +295,8 @@ bool Tracepath::receiveError(int sock, int ttl, tracepath_hop &probe) {
         if (rcv_probe_hdr.ttl == 0 || rcv_probe_hdr.tv.tv_sec == 0) {
             //broken_router = 1;
         } else {
-            LOG("ttl %d", rcv_probe_hdr.ttl);
-            LOG("tv %d", rcv_probe_hdr.tv);
+            //LOG("ttl %d", rcv_probe_hdr.ttl);
+            //LOG("tv %d", rcv_probe_hdr.tv);
         }
     }
 
@@ -431,7 +431,7 @@ bool Tracepath::receiveData(int sock, tracepath_hop &probe) {
 
     memcpy(&rcv_hdr, data, sizeof rcv_hdr);
     if (rcv_hdr.icmp_type == ICMP_ECHOREPLY) {
-        printIcmpHdr("Received", rcv_hdr);
+        printIcmpHdr((char *)"Received", rcv_hdr);
         return true;
     } else {
         LOG("Got ICMP packet with type 0x%x ?!?", rcv_hdr.icmp_type);
@@ -466,7 +466,7 @@ bool Tracepath::sendProbe(int sock, sockaddr_in addr, int ttl, int attempt, trac
         memcpy(data + sizeof icmp_hdr, &probe_hdr, sizeof probe_hdr); //icmp payload
 
         LOG("TTL: %d", ttl);
-        printIcmpHdr("Sending", icmp_hdr);
+        printIcmpHdr((char *)"Sending", icmp_hdr);
 
         // sendto: On success, return the number of characters sent. On error, -1 is returned, and errno is set appropriately.
         int rc = sendto(sock, data, sizeof icmp_hdr + sizeof probe_hdr, 0, (struct sockaddr*)&addr, sizeof addr);
