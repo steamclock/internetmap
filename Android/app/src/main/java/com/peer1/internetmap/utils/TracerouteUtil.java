@@ -28,7 +28,7 @@ public class TracerouteUtil {
     private String traceDestination;
     private Listener listener;
     private boolean stopTrace = false;
-    private final int maxconsecutiveTimeouts = 6;
+    private final int maxconsecutiveTimeouts = 3;
     private int consecutiveTimeouts = 0;
 
 
@@ -64,9 +64,13 @@ public class TracerouteUtil {
     public void startTrace(final String to) {
         traceDestination = to; //"172.217.3.164";
 
+        // todo fix async task leak
+        //https://stackoverflow.com/questions/44309241/warning-this-asynctask-class-should-be-static-or-leaks-might-occur
         AsyncTask<Void, Void, Void> tracerouteTask = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
+
+                Log.v("Trace", String.format("Trace to " + traceDestination));
 
                 int maxHops = 255;
                 consecutiveTimeouts = 0;
@@ -87,7 +91,7 @@ public class TracerouteUtil {
                             break;
                         }
                     } else {
-                        Log.v("Trace HUZZAH", String.format("WOOP %d: %s", ttl, probeWrapper.fromAddress));
+                        Log.v("Trace", String.format("HOP %d: %s", ttl, probeWrapper.fromAddress));
                         consecutiveTimeouts = 0;
                         listener.onHopFound(ttl, probeWrapper);
 

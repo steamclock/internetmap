@@ -9,7 +9,8 @@ public class ProbeWrapper {
     public final String fromAddress;
     public final double elapsedMs;
 
-    /** This constructor should ONLY be called by wrapNode() in jniapi.cpp!
+    /**
+     * This constructor should ONLY be called by wrapNode() in jniapi.cpp!
      * it's really ugly and easy to mess up, but it was the least ugly option for c++/java bindings :(
      * if you change this code, triple-check that the argument order matches wrapNode.
      */

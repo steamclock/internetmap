@@ -60,17 +60,17 @@ probe_result Tracepath::probeDestinationAddressWithTTL(struct in_addr *dst, int 
     char* snd_addy = inet_ntoa(addr.sin_addr);
     std::string snd_addy_str = std::string(snd_addy);
 
-    LOG(" Starting probeDestinationAddressWithTTL to %s with %d", snd_addy, ttl);
+    LOG("Trace Starting probeDestinationAddressWithTTL to %s with %d", snd_addy, ttl);
 
     int sock = setupSocket(dst);
     if (sock < 0) {
-        LOG("Failed to build send socket");
+        LOG("Trace Failed to build send socket");
         return result; // TODO error result
     }
 
     // Set TTL on socket
     if (setsockopt(sock, SOL_IP, IP_TTL, &ttl, sizeof(ttl))) {
-        LOG("Failed to set IP_TTL, cannot make packet request");
+        LOG("Trace Failed to set IP_TTL, cannot make packet request");
         return result;
     }
 
@@ -89,7 +89,7 @@ probe_result Tracepath::probeDestinationAddressWithTTL(struct in_addr *dst, int 
                 endTime = getNowMS();
                 result.receive_addr = probe.receive_addr;
                 result.elapsedMs = endTime - startTime;
-                LOG("Elapsed time %.2f", result.elapsedMs);
+                LOG("Trace Elapsed time %.2f", result.elapsedMs);
                 break;
             }
         }

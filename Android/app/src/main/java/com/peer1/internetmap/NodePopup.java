@@ -528,14 +528,14 @@ public class NodePopup extends PopupWindow {
 
         String result = String.format("%d. %s", ttl, probe.fromAddress);
 
-        if (asn != null) {
-            result += String.format(" (%s) ", asn);
-        } else {
-            result += " (Unknown ASN) ";
+        if (probe.elapsedMs != 0) {
+            result += String.format(" (%.2fms) ", probe.elapsedMs);
         }
 
-        if (probe.elapsedMs != 0) {
-            result += String.format(" (%.2f) ", probe.elapsedMs);
+        if (asn != null) {
+            result += String.format(" (ASN %s) ", asn);
+        } else {
+            result += " (Unknown ASN) ";
         }
 
         nextItemView.setText(result);
