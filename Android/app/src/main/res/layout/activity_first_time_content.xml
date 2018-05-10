@@ -52,11 +52,11 @@
             android:textColor="@color/lightTextColor" />
 
         <Button
+            style="@style/brand_button"
             android:id="@+id/explore_button"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:background="@drawable/shape_button_accent_color"
             android:text="@string/explore" />
 
     </LinearLayout>

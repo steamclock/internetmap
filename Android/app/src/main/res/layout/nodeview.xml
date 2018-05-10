@@ -66,17 +66,22 @@
                 android:textColor="@color/lightTextColor" />
 
             <Button
+                style="@style/brand_button"
+                android:id="@+id/bottom_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/next"
+                android:visibility="gone" />
+
+            <Button
+                style="@style/brand_button"
                 android:id="@+id/tracerouteBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/contentPadding"
-                android:layout_marginLeft="@dimen/contentPadding"
-                android:layout_marginRight="@dimen/contentPadding"
                 android:text="@string/dotraceroute"
                 android:visibility="gone" />
 
         </LinearLayout>
-
 
         <ScrollView
             android:id="@+id/traceroute_details"
