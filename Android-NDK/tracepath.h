@@ -19,8 +19,8 @@ struct tracepath_hop {
     int error;
     int ttl;
     std::string receive_addr;
-    struct timeval sendtime;
-    struct timeval receievetime;
+    double sendtime;
+    double receievetime;
 };
 
 struct probe_result {
@@ -40,7 +40,7 @@ public:
     probe_result probeDestinationAddressWithTTL(struct in_addr *dst, int ttl);
 
 private:
-    int setupSocket(struct in_addr *dst);
+    int setupSocket();
     bool sendProbe(int sock, sockaddr_in addr, int ttl, int attempt, tracepath_hop &probe);
     bool receiveError(int sock, int ttl, tracepath_hop &probe);
     int waitForReply(int sock);

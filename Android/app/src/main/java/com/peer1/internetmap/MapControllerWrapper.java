@@ -1,7 +1,5 @@
 package com.peer1.internetmap;
 
-import java.util.ArrayList;
-
 /**
  * Methods implemented in JNI (see jniapi.cpp)
  */

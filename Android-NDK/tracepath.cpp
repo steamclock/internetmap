@@ -18,6 +18,18 @@
 
 #define HOST_COLUMN_SIZE	52
 
+/**
+ * Tracepath attempts to provide the functionality required to generate traceroute functionality.
+ * Code based on tracepath implementation found @ https://android.googlesource.com/platform/external/iputils/+/master/tracepath.c
+ *
+ * According to my research we can't do ping/traceroute in native Java; ping/traceroute  work at
+ * the ICMP level which works on top of IP, whereas Java offers support for UDP (which sits on top of IP)
+ * and TCP (again on top of IP).
+ *
+ * Tracepath allows us to setup a socket and send ICMP packets (over UDP) with a given TTL and then
+ * return us the probed packet for that TTL.
+ */
+
 double getNowMS() {
     // Note, clock() returns CPU time and cannot be relied on for generating
     // time intervals.
@@ -62,7 +74,7 @@ probe_result Tracepath::probeDestinationAddressWithTTL(struct in_addr *dst, int 
 
     LOG("Trace Starting probeDestinationAddressWithTTL to %s with %d", snd_addy, ttl);
 
-    int sock = setupSocket(dst);
+    int sock = setupSocket();
     if (sock < 0) {
         LOG("Trace Failed to build send socket");
         return result; // TODO error result
@@ -78,17 +90,15 @@ probe_result Tracepath::probeDestinationAddressWithTTL(struct in_addr *dst, int 
 
     int maxProbes = 3;
     int seq = 0;
-    double startTime, endTime;
 
     // Send up to 3 probes per TLL
     for (int probeCount = 0; probeCount < maxProbes; probeCount++) {
-
-        startTime = getNowMS();
+        probe.sendtime = getNowMS();
         if (sendProbe(sock, addr, ttl, seq++, probe)) {
             if (probe.success) {
-                endTime = getNowMS();
+                probe.receievetime = getNowMS();
                 result.receive_addr = probe.receive_addr;
-                result.elapsedMs = endTime - startTime;
+                result.elapsedMs = probe.receievetime - probe.sendtime;
                 LOG("Trace Elapsed time %.2f", result.elapsedMs);
                 break;
             }
@@ -101,81 +111,7 @@ probe_result Tracepath::probeDestinationAddressWithTTL(struct in_addr *dst, int 
     return result;
 }
 
-/**
- * NOT BEING USED
- * @param dst
- * @return
- */
-std::vector<tracepath_hop> Tracepath::runWithDestinationAddress(struct in_addr *dst)
-{
-    tracepath_hop_vec result; // TODO <-- not done with result yet.
-
-    struct sockaddr_in addr;
-    memset(&addr, 0, sizeof addr);
-
-    addr.sin_family = AF_INET;
-    addr.sin_addr = *dst;
-    char* snd_addy = inet_ntoa(addr.sin_addr);
-    std::string snd_addy_str = std::string(snd_addy);
-
-    LOG("----------------------------------------------");
-    LOG(" Starting trace to %s", snd_addy);
-
-    int sock = setupSocket(dst);
-    if (sock < 0) {
-        LOG("Failed to build send socket");
-        return result;
-    }
-
-    int maxHops = 255;
-    int maxProbes = 3;
-    int seq = 0;
-
-    for (int ttl = 1; ttl < maxHops; ttl++) {
-
-        // Set TTL on socket
-        if (setsockopt(sock, SOL_IP, IP_TTL, &ttl, sizeof(ttl))) {
-            LOG("Failed to set IP_TTL");
-            return result;
-        }
-
-        struct tracepath_hop probe;
-        probe.ttl = ttl;
-
-        // Send up to 3 probes per TLL
-        for (int probeCount = 0; probeCount < maxProbes; probeCount++) {
-
-            if (sendProbe(sock, addr, ttl, seq++, probe)) {
-                if (probe.success) {
-                    probeCount = maxProbes; // Break out of inner loop
-
-                    LOG("Pushing probe");
-                    result.push_back(probe);
-
-                    if (probe.receive_addr.compare(snd_addy_str) == 0) {
-                        // We have reached our destination
-                        // Break out of outer loop
-                        ttl = maxHops;
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    // TODO cleanup
-    close(sock);
-
-    // LEFT OFF, weird pass by reference issues happening with probe hop data.
-    print_tracepath_hop_vec(result);
-
-    LOG("----------------------------------------------");
-    LOG(" Trace complete");
-    LOG("----------------------------------------------");
-    return result;
-}
-
-int Tracepath::setupSocket(struct in_addr *dst) {
+int Tracepath::setupSocket() {
     int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_ICMP);
     if (sock < 0) {
         perror("socket");
@@ -183,17 +119,20 @@ int Tracepath::setupSocket(struct in_addr *dst) {
     }
 
     // TODO if this is not supported, we cannot run tracepath.
-    // IP_MTU_DISCOVER: Set or receive the Path MTU Discovery setting for a socket. When enabled, Linux will perform Path MTU Discovery as defined in RFC 1191 on SOCK_STREAM sockets.
-    // For non-SOCK_STREAM sockets, IP_PMTUDISC_DO forces the don't-fragment flag to be set on all outgoing packets. It is the user's responsibility to packetize
-    // e data in MTU-sized chunks and to do the retransmits if necessary. The kernel will reject (with EMSGSIZE) datagrams that are bigger than the known path MTU.
-    // IP_PMTUDISC_WANT will fragment a datagram if needed according to the path MTU, or will set the don't-fragment flag otherwise.
+    // IP_MTU_DISCOVER: Set or receive the Path MTU Discovery setting for a socket. When enabled,
+    // Linux will perform Path MTU Discovery as defined in RFC 1191 on SOCK_STREAM sockets.
+    // For non-SOCK_STREAM sockets, IP_PMTUDISC_DO forces the don't-fragment flag to be set on all
+    // outgoing packets. It is the user's responsibility to packetize data in MTU-sized chunks and
+    // to do the retransmits if necessary. The kernel will reject (with EMSGSIZE) datagrams that are
+    // bigger than the known path MTU. IP_PMTUDISC_WANT will fragment a datagram if needed according
+    // to the path MTU, or will set the don't-fragment flag otherwise.
     int on = IP_PMTUDISC_PROBE;
     if (setsockopt(sock, SOL_IP, IP_MTU_DISCOVER, &on, sizeof(on)) && (on = IP_PMTUDISC_DO, setsockopt(sock, SOL_IP, IP_MTU_DISCOVER, &on, sizeof(on)))) {
         LOG("IP_MTU_DISCOVER");
         //exit(1);
     }
-    on = 1;
 
+    on = 1;
     // SOL_IP: (set/configure various IP packet options, IP layer behaviors, [as here] netfilter module options)
     // IP_RECVERR: Enable extended reliable error message passing. When enabled on a datagram socket,
     // all generated errors will be queued in a per-socket error queue. When the user receives an error from a socket operation,
@@ -224,8 +163,7 @@ int Tracepath::waitForReply(int sock) {
     return select(sock+1, &fds, NULL, NULL, &tv);
 }
 
-struct probehdr
-{
+struct probehdr {
     int ttl;
     struct timeval tv;
 };
@@ -235,8 +173,9 @@ void printCharArray(char list[]) {
     LOG("%s", listStr.c_str());
 }
 
-// TODO define this better.
-// returns the size of the error received.
+/**
+ * Will attempt to set probe.error if data returned indicates an issue with the probe.
+ */
 bool Tracepath::receiveError(int sock, int ttl, tracepath_hop &probe) {
     struct msghdr msg;
 
@@ -251,7 +190,6 @@ bool Tracepath::receiveError(int sock, int ttl, tracepath_hop &probe) {
     memset(data, 0, messageSize);
 
     printCharArray(data);
-
 
     //memset(&rcv_icmp_hdr, -1, sizeof(rcv_icmp_hdr));
     //memset(&rcv_probe_hdr, -1, sizeof(rcv_probe_hdr));
@@ -407,6 +345,9 @@ bool Tracepath::receiveError(int sock, int ttl, tracepath_hop &probe) {
     return true;
 }
 
+/**
+ * Will attempt to set probe.receive_addr with the IP address found at the given TTL.
+ */
 bool Tracepath::receiveData(int sock, tracepath_hop &probe) {
     struct sockaddr_in rcv_addr;
     socklen_t slen = sizeof rcv_addr;
@@ -454,9 +395,7 @@ bool Tracepath::sendProbe(int sock, sockaddr_in addr, int ttl, int attempt, trac
     int i = 0;
     bool error_msg_received = false;
 
-
     probe_hdr.ttl = ttl;
-
 
     //for (i=0; i < max_attempts; i++) {
 

@@ -40,7 +40,8 @@ public class NodePopup extends PopupWindow {
     private MapControllerWrapper mapController;
     private NodeWrapper nodeWrapper;
 
-    // Traceroute
+    // Traceroute properties
+    // todo could some of thie be refactored into TracerouteUtil?
     private TracerouteUtil tracerouteUtil;
     private View traceview;
     private TextView traceTimerTextView;
@@ -49,6 +50,7 @@ public class NodePopup extends PopupWindow {
     private LinearLayout traceListLayout;
     private int ipHops, asnHops;
     private int lastASNIndex = -1;
+    private String currentElaspedTime;
     private ArrayList<Pair<Integer, ProbeWrapper>> unprocessedHops = new ArrayList<>();
     private ArrayList<NodeWrapper> hopNodeWrappers = new ArrayList<>();
     private boolean isProccessingHop = false;
@@ -72,6 +74,9 @@ public class NodePopup extends PopupWindow {
         super.dismiss();
     }
 
+    //=======================================================================
+    // Set Node info
+    //=======================================================================
     public void setNode(NodeWrapper node) {
         setNode(node, false);
     }
@@ -163,6 +168,9 @@ public class NodePopup extends PopupWindow {
         return getContentView().getMeasuredHeight();
     }
 
+    //=======================================================================
+    // Traceroute functionality
+    //=======================================================================
     private void resetTracerouteUI() {
         // Reset the traceroute UI
         View view = getContentView();
@@ -186,9 +194,6 @@ public class NodePopup extends PopupWindow {
         view.invalidate();
     }
 
-    /**
-     *
-     */
     private void startTraceroute() {
         // Shouldn't have to reset these, but do it for clarity.
         ipHops = 0;
@@ -259,8 +264,6 @@ public class NodePopup extends PopupWindow {
         traceTimer.cancel();
     }
 
-    // Returns the combined string for the stopwatch, counting in tenths of seconds.
-    private String currentElaspedTime;
     private void updateCurrentElaspedMs() {
         long nowTime = System.currentTimeMillis();
         long elapsed = nowTime - startTime;
@@ -268,9 +271,6 @@ public class NodePopup extends PopupWindow {
         traceTimerTextView.setText(currentElaspedTime);
     }
 
-    /**
-     *
-     */
     private void runTracerouteToSelectedNode() {
         // If lastSearchIP is set then run tracroute to lastSearchIP.
         // else
@@ -380,13 +380,12 @@ public class NodePopup extends PopupWindow {
             }
         });
 
-        // TODO get currentASN
+        // TODO get currentASN, need this to determine if we have changed ASN right away.
         tracerouteUtil.startTrace(destinationIP);
     }
 
     /**
-     * TODO come up with better way to handle hop queue...? Having to keep track via isProccessingHop
-     * is not ideal...
+     * TODO come up with better way to handle hop queue...? Having to keep track via isProccessingHop not ideal...
      * TODO synch around unprocessedHops array to avoid concurrent access
      */
     private void processNextHop() {
@@ -569,5 +568,4 @@ public class NodePopup extends PopupWindow {
         TextView ipHops = (TextView) getContentView().findViewById(R.id.trace_ip_hops);
         ipHops.setText(String.format("%d", this.ipHops));
     }
-
 }

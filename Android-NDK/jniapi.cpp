@@ -15,10 +15,18 @@
 
 static ANativeWindow *window = 0;
 static Renderer *renderer = 0;
-static Tracepath *tracepath = 0;
-
 static jobject activity = 0;
 static JavaVM* javaVM;
+
+static Tracepath *tracepath = 0;
+static jobject probeWrapper = 0; // Last traceroute probe
+
+// Not sure if these variables are required - attempting to reduce memory allocated during traceroute.
+// Since one probe coming back at a given time, allocate space for each of these
+// variables once and reuse.
+static std::string c_destinationAddr;
+static in_addr testaddr;
+static probe_result probeResult;
 
 #define HOST_COLUMN_SIZE	52
 
@@ -61,26 +69,26 @@ jobject wrapNode(JNIEnv* jenv, NodePointer node) {
     return wrapper;
 }
 
-//helper function for wrappers returning a probe result
-jobject wrapProbe(JNIEnv* jenv, probe_result probe) {
+//helper function for wrappers returning a traceroute probe result
+jobject wrapProbe(JNIEnv* jenv,
+                  std::string probeAddress,
+                  bool success,
+                  double elapsedMs) {
 
     //strings that need to be freed after
-    jstring from = jenv->NewStringUTF(probe.receive_addr.c_str());
-    bool success = probe.success;
-    double elapsedMs = probe.elapsedMs;
-    jdouble jlapsedMs = (jdouble)elapsedMs;
-
+    jstring from = jenv->NewStringUTF(probeAddress.c_str());
     jclass probeWrapperClass = jenv->FindClass("com/peer1/internetmap/ProbeWrapper");
+
     jmethodID constructor = jenv->GetMethodID(probeWrapperClass, "<init>", "(ZLjava/lang/String;D)V");
-    //note: if you change this code, triple-check that the argument order matches NodeWrapper.
-    jobject wrapper = jenv->NewObject(probeWrapperClass, constructor, success, from, jlapsedMs);
+    //note: if you change this code, triple-check that the argument order matches ProbeWrapper.
+    probeWrapper = jenv->NewObject(probeWrapperClass, constructor, success, from, elapsedMs);
 
     //free up the strings
     jenv->DeleteLocalRef(from);
     //oh, we need to free this too
-    //jenv->DeleteLocalRef(probeWrapperClass);
+    jenv->DeleteLocalRef(probeWrapperClass);
 
-    return wrapper;
+    return probeWrapper;
 }
 
 JNIEXPORT jboolean JNICALL Java_com_peer1_internetmap_InternetMap_nativeOnCreate(JNIEnv* jenv, jobject obj, bool smallScreen)
@@ -112,7 +120,9 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeOnPause(JNIE
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeOnDestroy(JNIEnv* jenv, jobject obj)
 {
     jenv->DeleteGlobalRef(activity);
+    jenv->DeleteGlobalRef(probeWrapper);
     activity = NULL;
+    probeWrapper = NULL;
 
     return;
 }
@@ -330,29 +340,24 @@ JNIEXPORT jstring JNICALL Java_com_peer1_internetmap_NodeWrapper_nativeFriendlyD
 }
 
 JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_probeDestinationAddressWithTTL(JNIEnv* jenv, jobject obj,
-                                                                                                     jstring destinationAddr,
-                                                                                                     int ttl) {
+                                                                                                     jstring destinationAddr, int ttl) {
     if(!tracepath) {
         tracepath = new Tracepath();
     }
 
     // Convert destination address
-    std::string c_destinationAddr = jenv->GetStringUTFChars(destinationAddr, 0);
-    struct in_addr testaddr;
+    c_destinationAddr = jenv->GetStringUTFChars(destinationAddr, 0);
     inet_aton(c_destinationAddr.c_str(), &testaddr);
 
     // Run probe
-    probe_result result = tracepath->probeDestinationAddressWithTTL(&testaddr, ttl);
-    jobject wrapper = wrapProbe(jenv, result);
+    probeResult = tracepath->probeDestinationAddressWithTTL(&testaddr, ttl);
 
-    return wrapper;
+    return wrapProbe(jenv, probeResult.receive_addr, probeResult.success, probeResult.elapsedMs);
 }
 
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_highlightRoute(JNIEnv* jenv, jobject obj, jobjectArray nodes, int length) {
-
-
-// iOS
-    // Use NodeWrapper.index to lookup NodePointer.
+// *** iOS ***
+// Use NodeWrapper.index to lookup NodePointer.
 //    std::vector<NodePointer> newList;
 //    for (NodeWrapper* node in nodeList) {
 //        NodePointer pointer = _controller->data->nodeAtIndex(node.index);
