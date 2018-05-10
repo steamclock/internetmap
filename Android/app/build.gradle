@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 
 def internalCommonDataPath = "../../Android/app/src/main/assets/data"
 def externalCommonDataPath = "../../Common/Data"
-//def externalDataMakeFile = "../../Android-NDK/Android.mk"
 def externalDataMakeFile = "../../Android-NDK/CMakeLists.txt"
 
 android {
@@ -65,12 +64,6 @@ android {
             path externalDataMakeFile
         }
     }
-
-//    externalNativeBuild {
-//        ndkBuild {
-//            path externalDataMakeFile
-//        }
-//    }
 }
 
 task deleteCommonData(type: Delete) {
