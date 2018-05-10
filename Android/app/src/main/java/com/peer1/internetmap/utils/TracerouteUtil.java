@@ -9,6 +9,9 @@ import com.peer1.internetmap.ProbeWrapper;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * Created by shayla on 2017-09-20.
@@ -20,49 +23,33 @@ public class TracerouteUtil {
         void onHopFound(int ttl, ProbeWrapper hop);
         void onHopTimeout(int ttl);
         void onComplete();
+        void onLoopDiscovered();
         void onTraceTimeout();
     }
 
     private MapControllerWrapper mapControllerWrapper;
-    private ArrayList<String> result;
+    private HashSet<String> hopIPs;
     private String traceDestination;
     private Listener listener;
     private boolean stopTrace = false;
     private final int maxconsecutiveTimeouts = 3;
     private int consecutiveTimeouts = 0;
 
-
     public TracerouteUtil(MapControllerWrapper mapControllerWrapper) {
         this.mapControllerWrapper = mapControllerWrapper;
-        this.listener = new Listener() {
-            @Override
-            public void onHopFound(int ttl, ProbeWrapper ip) {
-
-            }
-
-            @Override
-            public void onHopTimeout(int ttl) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-
-            @Override
-            public void onTraceTimeout() {
-
-            }
-        };
+        this.listener = emptyListener;
+        this.hopIPs = new HashSet<>();
     }
 
     public void setListener(Listener listener) {
         this.listener = listener;
     }
 
+    private ProbeWrapper probeWrapper;
+
     public void startTrace(final String to) {
         traceDestination = to; //"172.217.3.164";
+        hopIPs.clear();
 
         // todo fix async task leak
         //https://stackoverflow.com/questions/44309241/warning-this-asynctask-class-should-be-static-or-leaks-might-occur
@@ -80,9 +67,12 @@ public class TracerouteUtil {
                         break;
                     }
 
-                    ProbeWrapper probeWrapper = mapControllerWrapper.probeDestinationAddressWithTTL(traceDestination, ttl);
+                    probeWrapper = mapControllerWrapper.probeDestinationAddressWithTTL(traceDestination, ttl);
 
-                    if (probeWrapper.fromAddress == null || probeWrapper.fromAddress.isEmpty()) {
+                    if (probeWrapper == null) {
+                        listener.onHopTimeout(ttl);
+                    }
+                    else if (probeWrapper.fromAddress == null || probeWrapper.fromAddress.isEmpty()) {
                         consecutiveTimeouts++;
                         listener.onHopTimeout(ttl);
 
@@ -93,15 +83,24 @@ public class TracerouteUtil {
                     } else {
                         Log.v("Trace", String.format("HOP %d: %s", ttl, probeWrapper.fromAddress));
                         consecutiveTimeouts = 0;
-                        listener.onHopFound(ttl, probeWrapper);
 
-                        // TODO When tracing to an ASN node, there is a good chance we will not actually
-                        // be able to trace to the exact IP. Should we change our "stopping" case from
-                        // being the destination IP to the hitting the destination ASN?
-                        // If Yes, then I need to move the code to determine the ASN for each hop into TracerouteUtil.
-                        if (probeWrapper.fromAddress.equals(traceDestination)) {
-                            listener.onComplete();
+                        if (hopIPs.contains(probeWrapper.fromAddress)) {
+                            // About to hit a loop. Need to break.
+                            listener.onLoopDiscovered();
                             break;
+                        } else {
+                            // Hop is a-ok, carry on!
+                            hopIPs.add(probeWrapper.fromAddress);
+                            listener.onHopFound(ttl, probeWrapper);
+
+                            // TODO When tracing to an ASN node, there is a good chance we will not actually
+                            // be able to trace to the exact IP. Should we change our "stopping" case from
+                            // being the destination IP to the hitting the destination ASN?
+                            // If Yes, then I need to move the code to determine the ASN for each hop into TracerouteUtil.
+                            if (probeWrapper.fromAddress.equals(traceDestination)) {
+                                listener.onComplete();
+                                break;
+                            }
                         }
                     }
                 }
@@ -118,6 +117,22 @@ public class TracerouteUtil {
         stopTrace = true;
     }
 
+    private Listener emptyListener = new Listener() {
+        @Override
+        public void onHopFound(int ttl, ProbeWrapper ip) { }
+
+        @Override
+        public void onHopTimeout(int ttl) { }
+
+        @Override
+        public void onComplete() { }
+
+        @Override
+        public void onTraceTimeout() { }
+
+        @Override
+        public void onLoopDiscovered() { }
+    };
 
 
 //    +(BOOL)isInvalidOrPrivate:(NSString*)ipAddress {

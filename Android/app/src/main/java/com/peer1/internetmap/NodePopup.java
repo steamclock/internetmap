@@ -248,7 +248,7 @@ public class NodePopup extends PopupWindow {
                 traceview.post(new Runnable() {
                     @Override
                     public void run() {
-                        traceTimerTextView.setText(getTraceElapsedMs());
+                        updateCurrentElaspedMs();
                     }
                 });
             }
@@ -260,10 +260,12 @@ public class NodePopup extends PopupWindow {
     }
 
     // Returns the combined string for the stopwatch, counting in tenths of seconds.
-    private String getTraceElapsedMs() {
+    private String currentElaspedTime;
+    private void updateCurrentElaspedMs() {
         long nowTime = System.currentTimeMillis();
         long elapsed = nowTime - startTime;
-        return String.valueOf(elapsed);
+        currentElaspedTime = String.valueOf(elapsed);
+        traceTimerTextView.setText(currentElaspedTime);
     }
 
     /**
@@ -363,6 +365,19 @@ public class NodePopup extends PopupWindow {
                     }
                 });
             }
+
+            @Override
+            public void onLoopDiscovered() {
+                new Handler(ctx.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        stopTraceTimer();
+                        Pair<Integer, ProbeWrapper> hop = new Pair<>(null, null);
+                        unprocessedHops.add(hop);
+                        processNextHop();
+                    }
+                });
+            }
         });
 
         // TODO get currentASN
@@ -372,6 +387,7 @@ public class NodePopup extends PopupWindow {
     /**
      * TODO come up with better way to handle hop queue...? Having to keep track via isProccessingHop
      * is not ideal...
+     * TODO synch around unprocessedHops array to avoid concurrent access
      */
     private void processNextHop() {
 
