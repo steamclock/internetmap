@@ -10,11 +10,11 @@ public class ASNIPs {
     public String ips;
 
     public String getIp() {
-        if (ips == null) {
+        if (ips == null || !ips.contains("/")) {
             return null;
         }
 
         int slashIndex = ips.indexOf("/");
-        return ips.substring(0 , slashIndex);
+        return ips.substring(0, slashIndex);
     }
 }
