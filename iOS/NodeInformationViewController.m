@@ -200,14 +200,25 @@
     // traceroute button
     if (!self.isDisplayingCurrentNode) {
         self.tracerouteButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        float tracerouteButtonY = self.preferredContentSize.height - TRACEROUTE_BUTTON_HEIGHT - verticalPad - self.safeAreaPadding + 10;
-        self.tracerouteButton.frame = CGRectMake(20, tracerouteButtonY, self.scrollView.bounds.size.width - 40, TRACEROUTE_BUTTON_HEIGHT);
+        float buttonY = self.preferredContentSize.height - TRACEROUTE_BUTTON_HEIGHT - verticalPad - self.safeAreaPadding + 10;
+        CGFloat buttonWidth = (self.scrollView.bounds.size.width - 60) / 2;
+        self.tracerouteButton.frame = CGRectMake(20, buttonY, buttonWidth, TRACEROUTE_BUTTON_HEIGHT);
         self.tracerouteButton.titleLabel.font = [UIFont fontWithName:FONT_NAME_REGULAR size:20];
-        [self.tracerouteButton setTitle:NSLocalizedString(@"Perform Traceroute", nil) forState:UIControlStateNormal];
+        [self.tracerouteButton setTitle:NSLocalizedString(@"Traceroute", nil) forState:UIControlStateNormal];
         [self.tracerouteButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [self.tracerouteButton setBackgroundImage:[[UIImage imageNamed:@"traceroute-button"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 22, 0, 22)] forState:UIControlStateNormal];
         [self.tracerouteButton addTarget:self action:@selector(tracerouteButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self.scrollView addSubview:self.tracerouteButton];
+
+        self.pingButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.pingButton.frame = CGRectMake(CGRectGetMaxX(self.tracerouteButton.frame) + 20, buttonY, buttonWidth, TRACEROUTE_BUTTON_HEIGHT);
+        self.pingButton.titleLabel.font = [UIFont fontWithName:FONT_NAME_REGULAR size:20];
+        [self.pingButton setTitle:NSLocalizedString(@"Ping", nil) forState:UIControlStateNormal];
+        [self.pingButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [self.pingButton setBackgroundImage:[[UIImage imageNamed:@"traceroute-button"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 22, 0, 22)] forState:UIControlStateNormal];
+        [self.pingButton addTarget:self action:@selector(pingButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [self.pingButton setContentVerticalAlignment:UIControlContentVerticalAlignmentFill];
+        [self.scrollView addSubview:self.pingButton];
     }
 
     self.tracerouteContainerView = [[UIView alloc] initWithFrame:CGRectMake(orangeBackgroundView.x, orangeBackgroundView.y, orangeBackgroundView.width, 500)];
@@ -287,6 +298,7 @@
                 label.alpha = 0;
             }
             self.tracerouteButton.alpha = 0;
+            self.pingButton.alpha = 0;
         }];
         
         int minDesiredHeight = 250;
@@ -303,6 +315,10 @@
     } else {
         [self showErrorAlert:NSLocalizedString(@"No Internet connection", nil) withMessage: NSLocalizedString(@"Please connect to the internet.", nil)];
     }
+}
+
+-(IBAction)pingButtonTapped:(id)sender {
+    NSLog(@"ping button tapped");
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {

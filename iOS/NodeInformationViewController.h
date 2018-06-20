@@ -24,6 +24,7 @@
 
 @property (strong, nonatomic) UILabel* topLabel;
 @property (strong, nonatomic) UIButton* tracerouteButton;
+@property (strong, nonatomic) UIButton* pingButton;
 @property (nonatomic, strong) UITextView* tracerouteTextView;
 @property (nonatomic, strong) NSTimer* tracerouteTimer;
 @property (nonatomic, strong) LabelNumberBoxView* box1;
