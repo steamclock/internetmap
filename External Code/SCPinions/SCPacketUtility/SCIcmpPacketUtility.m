@@ -244,6 +244,11 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
 
 
 -(void)sendPacketWithData:(NSData *)data andTTL:(int)ttl{
+
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    NSLog(@" ttl: %d", ttl);
+    NSLog(@" data: %@", data);
+    NSLog(@" _targetAddressString: %@", self->_targetAddressString);
     
     int             err;
     NSData *        payload;

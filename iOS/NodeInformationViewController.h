@@ -12,6 +12,7 @@
 @protocol NodeInformationViewControllerDelegate <NSObject>
 
 -(void)tracerouteButtonTapped;
+-(void)pingButtonTapped;
 -(void)forceTracerouteTimeout;
 
 @end
@@ -31,6 +32,6 @@
 @property (nonatomic, strong) LabelNumberBoxView* box2;
 @property (nonatomic, strong) LabelNumberBoxView* box3;
 
-@property (weak, nonatomic) id delegate;
+@property (weak, nonatomic) id<NodeInformationViewControllerDelegate> delegate;
 
 @end

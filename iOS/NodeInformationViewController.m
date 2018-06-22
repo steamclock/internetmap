@@ -18,11 +18,13 @@
 #define LABELS_HEIGHT 20
 #define TRACEROUTE_BUTTON_HEIGHT 44
 #define TRACEROUTE_ENABLED 1
-
 #define TRACEROUTE_MAX_TIMEOUT_MILLISECONDS 30 * 1000 // arbitary cap off at 40 seconds, otherwise it can run forever
-
-
 #define INFO_BOX_HEIGHT 75
+
+typedef NS_ENUM(NSInteger, MOINodeAction) {
+    MOINodeActionTraceroute,
+    MOINodeActionPing
+};
 
 @interface NodeInformationViewController ()
 
@@ -271,7 +273,15 @@
 }
 
 -(IBAction)tracerouteButtonTapped:(id)sender{
-    
+    [self setupUIAndTriggerAction:MOINodeActionTraceroute];
+
+}
+
+-(IBAction)pingButtonTapped:(id)sender {
+    [self setupUIAndTriggerAction:MOINodeActionPing];
+}
+
+-(void)setupUIAndTriggerAction:(MOINodeAction)action {
     float verticalPad = [HelperMethods deviceIsiPad] ? VERTICAL_PADDING_IPAD : VERTICAL_PADDING_IPHONE;
     float contentHeight = self.box1.height+verticalPad/2+LABELS_HEIGHT+verticalPad/2+self.tracerouteTextView.height+verticalPad;
 
@@ -282,16 +292,16 @@
             self.scrollView.frame = CGRectMake(0, 0, self.scrollView.width, contentHeight);
         }
         self.scrollView.contentSize = CGSizeMake(self.preferredContentSize.width, contentHeight);
-        
+
         self.tracerouteContainerView.alpha = 0;
         self.tracerouteContainerView.hidden = NO;
         self.tracerouteTimer = [NSTimer scheduledTimerWithTimeInterval:0.001 target:self selector:@selector(tracerouteTimerFired) userInfo:nil repeats:YES];
         self.topLabel.text = [NSString stringWithFormat:@"To %@", self.topLabel.text];
-        
+
         if (![HelperMethods deviceIsiPad]) {
             self.scrollView.frame = CGRectMake(0, self.scrollView.frame.origin.y, self.scrollView.frame.size.width, self.scrollView.frame.size.height+250);
         }
-        
+
         [UIView animateWithDuration:1 animations:^{
             self.tracerouteContainerView.alpha = 1;
             for (UILabel* label in self.infoLabels) {
@@ -300,25 +310,30 @@
             self.tracerouteButton.alpha = 0;
             self.pingButton.alpha = 0;
         }];
-        
+
         int minDesiredHeight = 250;
         if (self.contentHeight < minDesiredHeight) {
             self.contentHeight = minDesiredHeight;
             float width = [HelperMethods deviceIsiPad] ? 443 : [[UIScreen mainScreen] bounds].size.width;
             [self setPreferredContentSize:CGSizeMake(width, minDesiredHeight)];
         }
-        
-        //tell delegate to perform actual traceroute
-        if ([self.delegate respondsToSelector:@selector(tracerouteButtonTapped)]) {
-            [self.delegate performSelector:@selector(tracerouteButtonTapped)];
+
+        //tell delegate to perform actual action
+        switch (action) {
+            case MOINodeActionPing:
+                if ([self.delegate respondsToSelector:@selector(pingButtonTapped)]) {
+                    [self.delegate performSelector:@selector(pingButtonTapped)];
+                }
+                break;
+            case MOINodeActionTraceroute:
+                if ([self.delegate respondsToSelector:@selector(tracerouteButtonTapped)]) {
+                    [self.delegate performSelector:@selector(tracerouteButtonTapped)];
+                }
+                break;
         }
     } else {
         [self showErrorAlert:NSLocalizedString(@"No Internet connection", nil) withMessage: NSLocalizedString(@"Please connect to the internet.", nil)];
     }
-}
-
--(IBAction)pingButtonTapped:(id)sender {
-    NSLog(@"ping button tapped");
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {

@@ -301,6 +301,7 @@
 
 - (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didReceiveResponsePacket:(NSData *)packet arrivedAt:(NSDate *)dateTime{
 
+    NSLog(@"%s", __PRETTY_FUNCTION__);
     // Check what kind of packet from header
     int typeOfPacket = [self processICMPPacket:packet];
 

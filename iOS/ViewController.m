@@ -35,7 +35,7 @@
 BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     return state == UIGestureRecognizerStateBegan || state == UIGestureRecognizerStateChanged || state == UIGestureRecognizerStateRecognized;
 }
-@interface ViewController ()
+@interface ViewController () <SCIcmpPacketUtilityDelegate>
 @property (strong, nonatomic) ASNRequest* request;
 @property (strong, nonatomic) EAGLContext *context;
 @property (strong, nonatomic) MapControllerWrapper* controller;
@@ -61,6 +61,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (nonatomic) int isCurrentlyFetchingASN;
 
 @property (strong, nonatomic) SCTracerouteUtility* tracer;
+@property (strong, nonatomic) SCIcmpPacketUtility* icmpPacketUtility;
 
 @property (nonatomic) NSTimeInterval updateTime;
 
@@ -1210,46 +1211,72 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(void)tracerouteButtonTapped{
-    
+
+    [self prepareUIAndFetchAddress:^(NSString *ipAddress) {
+        if (!ipAddress) {
+            [self couldntResolveIP];
+        } else {
+            NSLog(@"Tracerouting %@", ipAddress);
+            self.tracer = [SCTracerouteUtility tracerouteWithAddress:ipAddress];
+            self.tracer.delegate = self;
+            [self.tracer start];
+        }
+    }];
+}
+
+- (void)prepareUIAndFetchAddress:(void (^)(NSString *ipAddress))completion {
     [self resizeNodeInfoPopover];
-    
+
     self.tracerouteASNs = [NSMutableDictionary new];
 
     if(!self.arEnabled) {
         _suppressCameraReset = YES;
         [self resetVisualization];
     }
-    
+
     // On phones, translate up view so that we can more easily see it
     if (![HelperMethods deviceIsiPad] && !self.arEnabled) {
         [self.controller translateYAnimated:0.25f duration:3];
     }
-    
+
     if(self.controller.lastSearchIP && ![self.controller.lastSearchIP isEqualToString:@""]) {
-        self.tracer = [SCTracerouteUtility tracerouteWithAddress:self.controller.lastSearchIP];
-        self.tracer.delegate = self;
-        [self.tracer start];
+        completion(self.controller.lastSearchIP);
+        return;
     } else {
         NodeWrapper* node = [self.controller nodeAtIndex:self.controller.targetNode];
         if (node.asn) {
             [ASNRequest fetchIPsForASN:node.asn response:^(NSArray *ips) {
-
                 if ([ips count]) {
                     uint32_t rnd = arc4random_uniform((unsigned int)[ips count]);
                     NSString* arbitraryIP = [NSString stringWithFormat:@"%@", ips[rnd]];
-                    NSLog(@"Starting traceroute with IP: %@", arbitraryIP );
-                    self.tracer = [SCTracerouteUtility tracerouteWithAddress:arbitraryIP];
-                    self.tracer.delegate = self;
-                    [self.tracer start];
+                    completion(arbitraryIP);
+                    return;
                 } else {
-                    [self couldntResolveIP];
+                    completion(nil);
+                    return;
                 }
             }];
-            
+
         } else {
-            [self couldntResolveIP];
+            completion(nil);
+            return;
         }
     }
+}
+
+- (void)pingButtonTapped {
+    NSLog(@"ping button tapped in ViewController");
+    [self prepareUIAndFetchAddress:^(NSString *ipAddress) {
+        if (!ipAddress) {
+            [self couldntResolveIP];
+        } else {
+            NSLog(@"pinging %@", ipAddress);
+            [self.icmpPacketUtility stop];
+            self.icmpPacketUtility = [SCIcmpPacketUtility utilityWithHostAddress:ipAddress];
+            self.icmpPacketUtility.delegate = self;
+            [self.icmpPacketUtility start];
+        }
+    }];
 }
 
 -(void)couldntResolveIP{
@@ -1290,15 +1317,14 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self.tracer forcedTimeout];
 }
 
-
 #pragma mark - help pop
 
 -(void) helpPopCheckOrMenuSelected:(UIButton*)menuButton {
-    
+
     NSString *shownMenusPopsString = [[NSUserDefaults standardUserDefaults] objectForKey:@"helpPopMenusShownDefault"];
     NSRange range = [shownMenusPopsString rangeOfString:@"0"];
     if (range.location == NSNotFound) return; // all help pops have been shown
-    
+
     NSArray *orderOfMenuButtons = @[_searchButton, _visualizationsButton, _timelineButton];
     NSInteger helpLocation = range.location;
 
@@ -1318,7 +1344,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
         self.helpPopViewPosition.constant = xPosition + xPadding;
         self.helpPopLabel.text = self.popMenuInfo[helpLocation];
-        
+
         [self.helpPopView setAlpha:0.0f];
         [UIView animateWithDuration:0.5f animations:^{
             [self.helpPopView setAlpha:1.0f];
@@ -1327,14 +1353,14 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         }];
 
     } else if (menuButton != nil) { // user viewing menu. is it menu with tooltip? If so mark, and now next menu show tool tip
-                
+
         [self.helpPopView setAlpha:1.0f];
         [UIView animateWithDuration:0.5f animations:^{
             [self.helpPopView setAlpha:0.0f];
         } completion:^(BOOL finished) {
             self.helpPopView.hidden = YES;
         }];
-        
+
         NSInteger currentLocation = 0;
         for (UIButton *currentButton in orderOfMenuButtons) {
             if (currentButton == menuButton) {
@@ -1348,16 +1374,16 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         [[NSUserDefaults standardUserDefaults] setObject:shownMenusPopsString forKey:@"helpPopMenusShownDefault"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
-    
+
 }
 
 - (void) helpPopCheckSetUp {
-    
+
     if (! [[NSUserDefaults standardUserDefaults] objectForKey:@"helpPopMenusShownDefault"]) {
         [[NSUserDefaults standardUserDefaults] setObject:@"000" forKey:@"helpPopMenusShownDefault"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
-    
+
     self.popMenuInfo = @[@"You can search for companies and domains", @"You can also view the internet as a network", @"You can browse the history of the internet"];
 }
 
@@ -1373,10 +1399,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     self.visualizationsButton.selected = NO;
     self.infoButton.selected = NO;
     self.searchButton.selected = NO;
-    
+
     // Reshow the node info popover that we hid when the button was pressed
     [self displayInformationPopoverForCurrentNode];
-    
+
     return YES;
 }
 
@@ -1384,7 +1410,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)displayHops:(NSArray*)ips withDestNode:(NodeWrapper*)destNode {
     NSMutableArray* mergedAsnHops = [NSMutableArray new];
-    
+
     __block NSString* lastAsn = nil;
     __block NSInteger lastIndex = -1;
 
@@ -1406,30 +1432,30 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
             }
         }
     }];
-    
+
     if(destNode && (lastIndex != destNode.index)) {
         [mergedAsnHops addObject:destNode];
     }
-    
+
     if ([mergedAsnHops count] >= 2) {
         [self.controller highlightRoute:mergedAsnHops];
     }
-    
+
     self.nodeInformationViewController.box2.numberLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)[mergedAsnHops count]];
 }
 
 - (void)tracerouteDidFindHop:(NSString*)report withHops:(NSArray *)hops{
-    
+
     NSLog(@"%@", report);
-    
+
     self.nodeInformationViewController.tracerouteTextView.text = [[NSString stringWithFormat:@"%@\n%@", self.nodeInformationViewController.tracerouteTextView.text, report] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    
+
     [self.nodeInformationViewController.box1 incrementNumber];
-    
+
     if ([hops count] <= 0) {
         return;
     }
-    
+
     [hops enumerateObjectsUsingBlock:^(NSString* ip, NSUInteger idx, BOOL *stop) {
         if(ip && ![ip isEqual:[NSNull null]] && (self.tracerouteASNs[ip] == nil)) {
             [ASNRequest fetchASNForIP:ip response:^(NSString *asn) {
@@ -1437,14 +1463,14 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                     // occasionally we get a rogue one after the trace is finished, we can probably ignore that
                     return;
                 }
-                
+
                 if(asn && ![asn isEqual:[NSNull null]]) {
                     self.tracerouteASNs[ip] = asn;
                 }
                 else {
                     self.tracerouteASNs[ip] = [NSNull null];
                 }
-                
+
                 [self displayHops:hops withDestNode:nil];
             }];
         }
@@ -1479,6 +1505,51 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [self dismissNodeInfoPopover];
+}
+
+#pragma mark - SCIcmpPacketUtilityDelegate
+
+- (void)SCIcmpPacketUtility:(SCIcmpPacketUtility *)packetUtility didStartWithAddress:(NSData *)address {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    [self.icmpPacketUtility sendPacketWithData:nil andTTL:1];
+}
+
+- (void)SCIcmpPacketUtility:(SCIcmpPacketUtility *)packetUtility didFailWithError:(NSError *)error {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+}
+
+- (void)SCIcmpPacketUtility:(SCIcmpPacketUtility *)packetUtility didSendPacket:(NSData *)packet {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+}
+
+- (void)SCIcmpPacketUtility:(SCIcmpPacketUtility *)packetUtility didFailToSendPacket:(NSData *)packet error:(NSError *)error {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+}
+
+- (void)SCIcmpPacketUtility:(SCIcmpPacketUtility *)packetUtility didReceiveUnexpectedPacket:(NSData *)packet {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+}
+
+- (void)SCIcmpPacketUtility:(SCIcmpPacketUtility *)packetUtility didReceiveResponsePacket:(NSData *)packet arrivedAt:(NSDate *)dateTime {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    const ICMPHeader* header = [SCIcmpPacketUtility icmpInPacket:packet];
+    NSInteger type = (NSInteger)header->type;
+    switch (type) {
+        case kICMPTypeEchoReply:
+            NSLog(@"packet type: kICMPTypeEchoReply");
+            break;
+        case kICMPTypeDestinationUnreachable:
+            NSLog(@"packet type: kICMPTypeDestinationUnreachable");
+            break;
+        case kICMPTypeEchoRequest:
+            NSLog(@"packet type: kICMPTypeEchoRequest");
+            break;
+        case kICMPTimeExceeded:
+            NSLog(@"packet type: kICMPTimeExceeded");
+            break;
+        default:
+            NSLog(@"Unknown packet type");
+    }
 }
 
 @end
