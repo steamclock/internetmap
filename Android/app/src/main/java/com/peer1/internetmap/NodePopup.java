@@ -1,5 +1,6 @@
 package com.peer1.internetmap;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.support.v4.util.Pair;
@@ -19,6 +20,7 @@ import com.peer1.internetmap.utils.AppUtils;
 import com.peer1.internetmap.utils.TracerouteUtil;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -199,6 +201,9 @@ public class NodePopup extends PopupWindow {
         ipHops = 0;
         asnHops = 0;
         lastASNIndex = -1;
+        if (tracerouteUtil != null) {
+            tracerouteUtil.stopTrace();
+        }
         tracerouteUtil = new TracerouteUtil(mapController);
         unprocessedHops = new ArrayList<>();
         hopNodeWrappers = new ArrayList<>();
@@ -257,7 +262,7 @@ public class NodePopup extends PopupWindow {
                     }
                 });
             }
-        }, 0, 1);
+        }, 0, 100);
     }
 
     private void stopTraceTimer() {
@@ -514,23 +519,34 @@ public class NodePopup extends PopupWindow {
     }
 
     private void addTraceText(String text) {
-        final LayoutInflater inflater = (LayoutInflater)ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        if (inflater == null) {
+            inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
         TextView nextItemView = (TextView)inflater.inflate(R.layout.view_tracerout_list_item, null);
         nextItemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         nextItemView.setText(text);
         traceListLayout.addView(nextItemView);
     }
 
+    private LayoutInflater inflater;
+
     private void addTTLResult(int ttl, String text) {
-        final LayoutInflater inflater = (LayoutInflater)ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        if (inflater == null) {
+            inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
         TextView nextItemView = (TextView)inflater.inflate(R.layout.view_tracerout_list_item, null);
         nextItemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        String result = String.format("%d. %s", ttl, text);
-        nextItemView.setText(result);
+//        String result = String.format("%d. %s", ttl, text);
+        StringBuilder builder = new StringBuilder(20);
+        builder.append(ttl);
+        builder.append(". ");
+        builder.append(text);
+        nextItemView.setText(builder.toString());
         traceListLayout.addView(nextItemView);
     }
 
+    @SuppressLint("DefaultLocale")
     private void addTTLResult(int ttl, ProbeWrapper probe, String asn) {
         if (probe == null) {
             // TODO handle this error case
@@ -541,19 +557,24 @@ public class NodePopup extends PopupWindow {
         TextView nextItemView = (TextView)inflater.inflate(R.layout.view_tracerout_list_item, null);
         nextItemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        String result = String.format("%d. %s", ttl, probe.fromAddress);
+        StringBuilder s = new StringBuilder(100);
+        s.append(ttl);
+        s.append(". ");
+        s.append(probe.fromAddress);
 
         if (probe.elapsedMs != 0) {
-            result += String.format(" (%.2fms) ", probe.elapsedMs);
+            s.append(String.format(" (%.2fms) ", probe.elapsedMs));
         }
 
         if (asn != null) {
-            result += String.format(" (ASN %s) ", asn);
+            s.append(" (ASN ");
+            s.append(asn);
+            s.append(") ");
         } else {
-            result += " (Unknown ASN) ";
+            s.append(" (Unknown ASN) ");
         }
 
-        nextItemView.setText(result);
+        nextItemView.setText(s.toString());
         traceListLayout.addView(nextItemView);
     }
 

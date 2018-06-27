@@ -1,16 +1,10 @@
 package com.peer1.internetmap.network.common;
 
-import android.content.Context;
-
-import com.peer1.internetmap.R;
 import com.peer1.internetmap.models.ASN;
 import com.peer1.internetmap.models.GlobalIP;
-import com.peer1.internetmap.models.MxASNInfo;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -52,22 +46,32 @@ public class CommonClient {
     // Private methods
     //=====================================================================
 
+    private Retrofit retrofit = null;
+
+    private CommonAPI commonAPI = null;
+
     /**
      * Creates OkHttpClient and sets up Retrofit client.
      * @return Initialized CommonAPI interface
      */
     private CommonAPI createAPIInterface() {
-        // only set the HttpClient if it is null
+        if (retrofit == null) {
+            // only set the HttpClient if it is null
 
-        OkHttpClient httpClient = createHttpClient();
+            OkHttpClient httpClient = createHttpClient();
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://willnotbeused.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(httpClient)
-                .build();
+            retrofit = new Retrofit.Builder()
+                    .baseUrl("http://willnotbeused.com")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(httpClient)
+                    .build();
+        }
 
-        return retrofit.create(CommonAPI.class);
+        if (commonAPI == null) {
+            commonAPI = retrofit.create(CommonAPI.class);
+        }
+
+        return commonAPI;
     }
 
     /**
