@@ -21,6 +21,6 @@ public class ASN {
             return null;
         }
 
-        return String.valueOf(asn);
+        return asn;
     }
 }

@@ -64,7 +64,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
     private GestureDetectorCompat mGestureDetector;
     private ScaleGestureDetector mScaleDetector;
     private RotateGestureDetector mRotateDetector;
-    
+
     private MapControllerWrapper mController;
     private Handler mHandler; //handles threadsafe messages
 
@@ -123,10 +123,10 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         logo = (ImageView) findViewById(R.id.peerLogo);
 
         //init a bunch of pointers
+        mController = MapControllerWrapper.getInstance();
         mGestureDetector = new GestureDetectorCompat(this, new MyGestureListener());
         mScaleDetector = new ScaleGestureDetector(this, new ScaleListener());
         mRotateDetector = new RotateGestureDetector(this, new RotateListener());
-        mController = new MapControllerWrapper();
         mHandler = new Handler();
 
         SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);

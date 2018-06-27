@@ -3,6 +3,7 @@ package com.peer1.internetmap;
 import android.content.Context;
 import android.os.Handler;
 import android.support.v4.util.Pair;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,10 +40,11 @@ public class NodePopup extends PopupWindow {
     private boolean isSimulated;
     private MapControllerWrapper mapController;
     private NodeWrapper nodeWrapper;
+    private LayoutInflater inflater;
 
     // Traceroute properties
     // todo could some of thie be refactored into TracerouteUtil?
-    private TracerouteUtil tracerouteUtil;
+    private TracerouteUtil tracerouteUtil = TracerouteUtil.getInstance();
     private View traceview;
     private TextView traceTimerTextView;
     private long startTime;
@@ -55,9 +57,11 @@ public class NodePopup extends PopupWindow {
     private ArrayList<NodeWrapper> hopNodeWrappers = new ArrayList<>();
     private boolean isProccessingHop = false;
 
+
     public NodePopup(Context context, MapControllerWrapper mapController, View view, boolean isTimelineView, boolean isSimulated) {
         super(view);
         this.ctx = context;
+        this.inflater = (LayoutInflater)ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mapController = mapController;
         this.isTimelineView = isTimelineView;
         this.isSimulated = isSimulated;
@@ -65,11 +69,7 @@ public class NodePopup extends PopupWindow {
 
     @Override
     public void dismiss() {
-        if (tracerouteUtil != null) {
-            tracerouteUtil.stopTrace();
-            tracerouteUtil = null;
-        }
-
+        resetTraceroute();
         nodeWrapper = null;
         super.dismiss();
     }
@@ -82,15 +82,15 @@ public class NodePopup extends PopupWindow {
     }
 
     public void setNode(NodeWrapper node, boolean isUsersNode) {
-
         // If for some reason we are calling setNode on the same index, stop.
         if (nodeWrapper != null && nodeWrapper.index == node.index) {
             return;
         }
 
-        nodeWrapper = node;
-        resetTracerouteUI();
+        // Reset the traceroute view.
+        resetTraceroute();
 
+        nodeWrapper = node;
         //set up content
         String title;
         if (isSimulated) {
@@ -171,7 +171,9 @@ public class NodePopup extends PopupWindow {
     //=======================================================================
     // Traceroute functionality
     //=======================================================================
-    private void resetTracerouteUI() {
+    private void resetTraceroute() {
+        stopTraceroute();
+
         // Reset the traceroute UI
         View view = getContentView();
         TextView asnHopsText = (TextView) getContentView().findViewById(R.id.trace_asn_hops);
@@ -194,12 +196,24 @@ public class NodePopup extends PopupWindow {
         view.invalidate();
     }
 
+    private void stopTraceroute() {
+        // Stop any trace if it is running
+        stopTraceTimer();
+        tracerouteUtil.removeListener();
+        tracerouteUtil.stopTrace();
+    }
+
     private void startTraceroute() {
+        if (tracerouteUtil.isRunning()) {
+            tracerouteUtil.stopTrace();
+            AppUtils.showError(App.getAppContext(), App.getAppContext().getString(R.string.tracerouteAlreadyRunning));
+            return;
+        }
+
         // Shouldn't have to reset these, but do it for clarity.
         ipHops = 0;
         asnHops = 0;
         lastASNIndex = -1;
-        tracerouteUtil = new TracerouteUtil(mapController);
         unprocessedHops = new ArrayList<>();
         hopNodeWrappers = new ArrayList<>();
         isProccessingHop = false;
@@ -220,8 +234,6 @@ public class NodePopup extends PopupWindow {
         if (isSmallScreen) {
             mapController.translateYAnimated(0.4f, 1);
         }
-
-        mapController.clearHighlightLines();
 
         // Get the starting ASN and run trace
         addTraceText("Determining current ASN");
@@ -244,16 +256,24 @@ public class NodePopup extends PopupWindow {
         });
     }
 
+    /**
+     * Cannot re-use Java Timers or TimerTasks
+     */
     private void startTraceTimer() {
-        traceTimer = new Timer();
+        stopTraceTimer();
         startTime = System.currentTimeMillis();
+        traceTimer = new Timer();
         traceTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 traceview.post(new Runnable() {
                     @Override
                     public void run() {
-                        updateCurrentElaspedMs();
+                        long nowTime = System.currentTimeMillis();
+                        long elapsed = nowTime - startTime;
+                        currentElaspedTime = String.valueOf(elapsed);
+                        traceTimerTextView.setText(currentElaspedTime);
+                        Log.v("Trace", currentElaspedTime);
                     }
                 });
             }
@@ -261,14 +281,12 @@ public class NodePopup extends PopupWindow {
     }
 
     private void stopTraceTimer() {
-        traceTimer.cancel();
-    }
-
-    private void updateCurrentElaspedMs() {
-        long nowTime = System.currentTimeMillis();
-        long elapsed = nowTime - startTime;
-        currentElaspedTime = String.valueOf(elapsed);
-        traceTimerTextView.setText(currentElaspedTime);
+        try {
+            traceTimer.cancel();
+            traceTimer = null;
+        } catch (Exception e) {
+            // Will fail if not scheduled. Catch quietly, not a real issue.
+        }
     }
 
     private void runTracerouteToSelectedNode() {
@@ -318,6 +336,16 @@ public class NodePopup extends PopupWindow {
         // on the main thread so that we can correctly update the UI.
         // TODO find a better way to handle thread interaction
         tracerouteUtil.setListener(new TracerouteUtil.Listener() {
+            @Override
+            public void onTraceAlreadyRunning() {
+                new Handler(ctx.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // todo
+                    }
+                });
+            }
+
             @Override
             public void onHopFound(final int ttl, final ProbeWrapper probeWrapper) {
                 new Handler(ctx.getMainLooper()).post(new Runnable() {
@@ -404,6 +432,8 @@ public class NodePopup extends PopupWindow {
         final Integer ttl = nextHop.first;
         final ProbeWrapper hopProbe = nextHop.second;
 
+        Log.v("Trace", "Processing next hop");
+
         // Add entry to result list and bump IP hop if necessary
         // Note: (null, null) indicates a full tracet timeout.
         if (ttl == null) {
@@ -421,6 +451,8 @@ public class NodePopup extends PopupWindow {
         incrementIPHop();
 
         // Check to see if we have jumped an ASN
+
+        Log.v("Trace", "Calling getASNFromIP for " + hopProbe.fromAddress);
         CommonClient.getInstance().getApi().getASNFromIP(hopProbe.fromAddress).enqueue(new CommonCallback<ASN>() {
             @Override
             public void onRequestResponse(Call<ASN> call, Response<ASN> response) {
@@ -429,17 +461,24 @@ public class NodePopup extends PopupWindow {
                 boolean hasHoppedASN = false;
 
                 if (asn != null) {
+                    Log.v("Trace", hopProbe.fromAddress + " -> " + asn);
                     node = mapController.nodeByAsn(asn);
+                } else {
+                    Log.v("Trace", hopProbe.fromAddress + " -> failed to lookup ASN");
                 }
 
                 if (node != null) {
+                    Log.v("Trace", asn + " -> " + String.valueOf(node.index));
                     hopNodeWrappers.add(node);
                     hasHoppedASN = (lastASNIndex != node.index);
                     lastASNIndex = node.index;
+                } else {
+                    Log.v("Trace", asn + " -> failed to find node");
                 }
 
                 if (hasHoppedASN) {
                     // Update map
+                    Log.v("Trace", "HIPPY HOPPIDY");
                     incrementASNHop();
                     displayHops(hopNodeWrappers);
                 }
@@ -460,10 +499,9 @@ public class NodePopup extends PopupWindow {
     }
 
     private void displayHops(ArrayList<NodeWrapper> hops) {
-
         // If we are no longer running a trace, then do not display hops
         // Could happen if our request for IPtoASN comes back late.
-        if (tracerouteUtil == null) {
+        if (!tracerouteUtil.isRunning()) {
             return;
         }
 
@@ -475,46 +513,16 @@ public class NodePopup extends PopupWindow {
         // Ew, make this better, maybe pass in cleaner data.
         NodeWrapper[] mergedHops = hops.toArray(new NodeWrapper[hops.size()]);
 
+        // For reference, iOS did the following to generate highlight route, we need list of ASNS:
+        // * Put our ASN at the start of the list, just in case - TODO Android may need to do this still
+        // * For each trace hop, if the asn is not null and not equal to the previous, add to list
+        // * If destination index not equal to last in hop list, add dest to - TODO Android may need to do this still, also, isnt this fudging the last hop?
+
+        // On Android we have passed that logic off to mapController
         mapController.highlightRoute(mergedHops, mergedHops.length);
-
-
-
-//        NSMutableArray* mergedAsnHops = [NSMutableArray new];
-//
-//        __block NSString* lastAsn = nil;
-//        __block NSInteger lastIndex = -1;
-//
-//        // Put our ASN at the start of the list, just in case
-//        NodeWrapper* us = [self.controller nodeByASN:self.cachedCurrentASN];
-//        if(us) {
-//        [mergedAsnHops addObject:us];
-//            lastAsn = self.cachedCurrentASN;
-//        }
-//
-//    [ips enumerateObjectsUsingBlock:^(NSString* ip, NSUInteger idx, BOOL *stop) {
-//            NSString* asn = self.tracerouteASNs[ip];
-//            if(asn && ![asn isEqual:[NSNull null]] && ![asn isEqualToString:lastAsn])  {
-//                lastAsn = asn;
-//                NodeWrapper* node = [self.controller nodeByASN:asn];
-//                if(node) {
-//                    lastIndex = node.index;
-//                [mergedAsnHops addObject:node];
-//                }
-//            }
-//        }];
-//
-//        if(destNode && (lastIndex != destNode.index)) {
-//        [mergedAsnHops addObject:destNode];
-//        }
-//
-//        if ([mergedAsnHops count] >= 2) {
-//        [self.controller highlightRoute:mergedAsnHops];
-//        }
-
     }
 
     private void addTraceText(String text) {
-        final LayoutInflater inflater = (LayoutInflater)ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         TextView nextItemView = (TextView)inflater.inflate(R.layout.view_tracerout_list_item, null);
         nextItemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         nextItemView.setText(text);
@@ -522,11 +530,9 @@ public class NodePopup extends PopupWindow {
     }
 
     private void addTTLResult(int ttl, String text) {
-        final LayoutInflater inflater = (LayoutInflater)ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         TextView nextItemView = (TextView)inflater.inflate(R.layout.view_tracerout_list_item, null);
         nextItemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        String result = String.format("%d. %s", ttl, text);
+        String result = String.valueOf(ttl) + ". " + text; // According to forums, without conditionals, this performs the same as StringBuilder.
         nextItemView.setText(result);
         traceListLayout.addView(nextItemView);
     }
@@ -537,23 +543,22 @@ public class NodePopup extends PopupWindow {
             return;
         }
 
-        final LayoutInflater inflater = (LayoutInflater)ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         TextView nextItemView = (TextView)inflater.inflate(R.layout.view_tracerout_list_item, null);
         nextItemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        String result = String.format("%d. %s", ttl, probe.fromAddress);
+        StringBuilder result = new StringBuilder(100).append(ttl).append(". ").append(probe.fromAddress);
 
         if (probe.elapsedMs != 0) {
-            result += String.format(" (%.2fms) ", probe.elapsedMs);
+            result.append(String.format(" (%.2fms) ", probe.elapsedMs));
         }
 
         if (asn != null) {
-            result += String.format(" (ASN %s) ", asn);
+            result.append(" (ASN").append(asn).append(") ");
         } else {
-            result += " (Unknown ASN) ";
+            result.append(" (Unknown ASN) ");
         }
 
-        nextItemView.setText(result);
+        nextItemView.setText(result.toString());
         traceListLayout.addView(nextItemView);
     }
 

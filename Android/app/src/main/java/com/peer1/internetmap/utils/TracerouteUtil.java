@@ -45,13 +45,29 @@ public class TracerouteUtil {
          * Traceroute timed out (usually due to consecutive hop timeouts)
          */
         void onTraceTimeout();
+
+        /**
+         * Traceroute already running; may want to make this a more general error instead.
+         */
+        void onTraceAlreadyRunning();
+
     }
+
+    //=======================================================================
+    // Singleton
+    //=======================================================================
+    private static final TracerouteUtil instance = new TracerouteUtil();
+    private TracerouteUtil() {
+        tracerouteTask = null;
+        callbackListener = emptyListener;
+    }
+    public static TracerouteUtil getInstance() { return instance; }
 
     //=======================================================================
     // Privates
     //=======================================================================
+    private Listener callbackListener;
     private TracerouteTask tracerouteTask;
-
     private Listener emptyListener = new Listener() {
         @Override
         public void onHopFound(int ttl, ProbeWrapper ip) { }
@@ -67,31 +83,42 @@ public class TracerouteUtil {
 
         @Override
         public void onLoopDiscovered() { }
-    };
 
-    //=======================================================================
-    // Constructors
-    //=======================================================================
-    public TracerouteUtil(MapControllerWrapper mapControllerWrapper) {
-        this.tracerouteTask = new TracerouteTask();
-        this.tracerouteTask.mapControllerWrapper = mapControllerWrapper;
-        this.tracerouteTask.listener = emptyListener;
-    }
+        @Override
+        public void onTraceAlreadyRunning() { }
+    };
 
     //=======================================================================
     // Public methods
     //=======================================================================
     public void setListener(Listener listener) {
-        this.tracerouteTask.listener = listener;
+        callbackListener = listener;
     }
+    public void removeListener() { callbackListener = emptyListener; }
 
     public void startTrace(final String to) {
-        this.tracerouteTask.traceDestination = to; //"172.217.3.164";
-        tracerouteTask.execute();
+        Log.v("Trace", "startTrace called");
+
+        if (tracerouteTask != null && tracerouteTask.isRunning) {
+            callbackListener.onTraceAlreadyRunning();
+        } else {
+            // Cannot use instance of AsyncTask multiple times; create a new one with each trace.
+            tracerouteTask = new TracerouteTask();
+            tracerouteTask.listener = callbackListener;
+            tracerouteTask.traceDestination = to; //"172.217.3.164";
+            tracerouteTask.execute();
+        }
     }
 
     public void stopTrace() {
-        this.tracerouteTask.stopTrace = true;
+        Log.v("Trace", "stopTrace called");
+        if (tracerouteTask != null) {
+            tracerouteTask.stopTrace = true;
+        }
+    }
+
+    public boolean isRunning() {
+        return tracerouteTask != null && tracerouteTask.isRunning;
     }
 
     //=======================================================================
@@ -100,7 +127,7 @@ public class TracerouteUtil {
     static private class TracerouteTask extends AsyncTask<Void, Void, Void> {
         String traceDestination;
         Listener listener;
-        MapControllerWrapper mapControllerWrapper;
+        Boolean isRunning = false;
 
         private boolean stopTrace = false;
 
@@ -115,14 +142,17 @@ public class TracerouteUtil {
             Log.v("Trace", String.format("Trace to " + traceDestination));
             hopIPs.clear();
             consecutiveTimeouts = 0;
+            isRunning = true;
 
             for (int ttl = 1; ttl < maxHops; ttl++) {
+                // Given ICMP protocol limitations in Java, we rely on C++ code give us probed trace information.
+                probeWrapper = MapControllerWrapper.getInstance().probeDestinationAddressWithTTL(traceDestination, ttl);
+                Log.v("Trace", "Hop returned from mapController");
+
                 if (stopTrace) {
+                    Log.v("Trace", "stopping doInBackground");
                     break;
                 }
-
-                // Given ICMP protocol limitations in Java, we rely on C++ code give us probed trace information.
-                probeWrapper = mapControllerWrapper.probeDestinationAddressWithTTL(traceDestination, ttl);
 
                 if (probeWrapper == null) {
                     listener.onHopTimeout(ttl);
@@ -159,6 +189,8 @@ public class TracerouteUtil {
                     }
                 }
             }
+
+            isRunning = false;
             return null;
         }
     }

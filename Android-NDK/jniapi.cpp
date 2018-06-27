@@ -19,14 +19,12 @@ static jobject activity = 0;
 static JavaVM* javaVM;
 
 static Tracepath *tracepath = 0;
-static jobject probeWrapper = 0; // Last traceroute probe
 
 // Not sure if these variables are required - attempting to reduce memory allocated during traceroute.
 // Since one probe coming back at a given time, allocate space for each of these
 // variables once and reuse.
 static std::string c_destinationAddr;
 static in_addr testaddr;
-static probe_result probeResult;
 
 #define HOST_COLUMN_SIZE	52
 
@@ -81,7 +79,8 @@ jobject wrapProbe(JNIEnv* jenv,
 
     jmethodID constructor = jenv->GetMethodID(probeWrapperClass, "<init>", "(ZLjava/lang/String;D)V");
     //note: if you change this code, triple-check that the argument order matches ProbeWrapper.
-    probeWrapper = jenv->NewObject(probeWrapperClass, constructor, success, from, elapsedMs);
+
+    jobject probeWrapper = jenv->NewObject(probeWrapperClass, constructor, success, from, elapsedMs);
 
     //free up the strings
     jenv->DeleteLocalRef(from);
@@ -120,10 +119,7 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeOnPause(JNIE
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeOnDestroy(JNIEnv* jenv, jobject obj)
 {
     jenv->DeleteGlobalRef(activity);
-    jenv->DeleteGlobalRef(probeWrapper);
     activity = NULL;
-    probeWrapper = NULL;
-
     return;
 }
 
@@ -340,6 +336,7 @@ JNIEXPORT jstring JNICALL Java_com_peer1_internetmap_NodeWrapper_nativeFriendlyD
 }
 
 JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_probeDestinationAddressWithTTL(JNIEnv* jenv, jobject obj,
+
                                                                                                      jstring destinationAddr, int ttl) {
     if(!tracepath) {
         tracepath = new Tracepath();
@@ -350,21 +347,17 @@ JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_probeD
     inet_aton(c_destinationAddr.c_str(), &testaddr);
 
     // Run probe
-    probeResult = tracepath->probeDestinationAddressWithTTL(&testaddr, ttl);
+    probe_result probeResult = tracepath->probeDestinationAddressWithTTL(&testaddr, ttl);
+//    probe_result probeResult;
+//    probeResult.success = false;
+//    probeResult.elapsedMs = 50;
 
-    return wrapProbe(jenv, probeResult.receive_addr, probeResult.success, probeResult.elapsedMs);
+    jobject result = wrapProbe(jenv, probeResult.receive_addr, probeResult.success, probeResult.elapsedMs);
+
+    return result;
 }
 
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_highlightRoute(JNIEnv* jenv, jobject obj, jobjectArray nodes, int length) {
-// *** iOS ***
-// Use NodeWrapper.index to lookup NodePointer.
-//    std::vector<NodePointer> newList;
-//    for (NodeWrapper* node in nodeList) {
-//        NodePointer pointer = _controller->data->nodeAtIndex(node.index);
-//        newList.push_back(pointer);
-//    }
-//    _controller->highlightRoute(newList);
-
     MapController* controller = renderer->beginControllerModification();
 
     // Iterate over NodeWrapper array and use indexes to lookup NodePointer.

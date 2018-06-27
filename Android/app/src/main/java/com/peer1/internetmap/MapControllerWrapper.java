@@ -4,7 +4,16 @@ package com.peer1.internetmap;
  * Methods implemented in JNI (see jniapi.cpp)
  */
 public class MapControllerWrapper {
+    //-------------------------------------------------
+    // Singleton
+    //-------------------------------------------------
+    private static final MapControllerWrapper instance = new MapControllerWrapper();
+    private MapControllerWrapper() { }
+    public static MapControllerWrapper getInstance() { return instance; }
 
+    //-------------------------------------------------
+    // JNI interface
+    //-------------------------------------------------
     public native void rotateRadiansXY(float radX, float radY);
     public native void translateYAnimated(float translateY, float seconds);
     public native void startMomentumPanWithVelocity(float vX, float vY);
