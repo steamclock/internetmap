@@ -348,9 +348,6 @@ JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_probeD
 
     // Run probe
     probe_result probeResult = tracepath->probeDestinationAddressWithTTL(&testaddr, ttl);
-//    probe_result probeResult;
-//    probeResult.success = false;
-//    probeResult.elapsedMs = 50;
 
     jobject result = wrapProbe(jenv, probeResult.receive_addr, probeResult.success, probeResult.elapsedMs);
 
