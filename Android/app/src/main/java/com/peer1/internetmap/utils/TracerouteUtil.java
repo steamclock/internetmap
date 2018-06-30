@@ -195,36 +195,40 @@ public class TracerouteUtil {
         }
     }
 
+    // todo investigate when to use this, based on iOS function.
+    static public boolean isInvalidOrPrivate(String ipAddress) {
+        // This checks if our IP is in a reserved address space (eg. 192.168.1.1)
+        String[] components = ipAddress.split(".");
 
-//    +(BOOL)isInvalidOrPrivate:(NSString*)ipAddress {
-//        // This checks if our IP is in a reserved address space (eg. 192.168.1.1)
-//        NSArray* components = [ipAddress componentsSeparatedByString:@"."];
-//
-//        if(components.count != 4) {
-//            return TRUE;
-//        }
-//
-//        int a = [components[0] intValue];
-//        int b = [components[1] intValue];
-//
-//        if (a == 10) {
-//            return TRUE;
-//        }
-//
-//        if((a == 172) && ((b >= 16) && (b <= 31))) {
-//            return TRUE;
-//        }
-//
-//        if((a == 192) && (b == 168)) {
-//            return TRUE;
-//        }
-//
-//        // Probably loopback, we should ignore
-//        if ([ipAddress isEqualToString:@"127.255.255.255"]) {
-//            return TRUE;
-//        }
-//
-//        return FALSE;
-//    }
+        if (components.length != 4) {
+            return true;
+        }
 
+        try {
+            int a = Integer.valueOf(components[0]);
+            int b = Integer.valueOf(components[1]);
+
+            if (a == 10) {
+                return true;
+            }
+
+            if ((a == 172) && ((b >= 16) && (b <= 31))) {
+                return true;
+            }
+
+            if ((a == 192) && (b == 168)) {
+                return true;
+            }
+
+            // Probably loopback, we should ignore
+            if (ipAddress.equals("127.255.255.255")) {
+                return true;
+            }
+
+        } catch (Exception e) {
+            // Failed to parse, don't assume anything, return false
+        }
+
+        return false;
+    }
 }

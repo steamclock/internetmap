@@ -323,8 +323,11 @@ public class NodePopup extends PopupWindow {
     }
 
     private void runTracerouteToIp(String destinationIP) {
-
-        if (destinationIP == null || destinationIP.isEmpty()) {
+        if (TracerouteUtil.isInvalidOrPrivate(destinationIP)) {
+            addTraceText("Cannot run traceroute, IP is reserved.");
+            return;
+        }
+        else if (destinationIP == null || destinationIP.isEmpty()) {
             addTraceText("There was a problem determining the destination location");
             return;
         }
