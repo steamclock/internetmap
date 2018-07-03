@@ -20,12 +20,6 @@ static JavaVM* javaVM;
 
 static Tracepath *tracepath = 0;
 
-// Not sure if these variables are required - attempting to reduce memory allocated during traceroute.
-// Since one probe coming back at a given time, allocate space for each of these
-// variables once and reuse.
-static std::string c_destinationAddr;
-static in_addr testaddr;
-
 #define HOST_COLUMN_SIZE	52
 
 jint JNI_OnLoad(JavaVM* vm, void* reserved)
@@ -343,7 +337,8 @@ JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_probeD
     }
 
     // Convert destination address
-    c_destinationAddr = jenv->GetStringUTFChars(destinationAddr, 0);
+    in_addr testaddr;
+    std::string c_destinationAddr = jenv->GetStringUTFChars(destinationAddr, 0);
     inet_aton(c_destinationAddr.c_str(), &testaddr);
 
     // Run probe
