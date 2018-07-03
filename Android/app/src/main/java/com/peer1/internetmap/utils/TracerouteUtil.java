@@ -198,7 +198,7 @@ public class TracerouteUtil {
     // todo investigate when to use this, based on iOS function.
     static public boolean isInvalidOrPrivate(String ipAddress) {
         // This checks if our IP is in a reserved address space (eg. 192.168.1.1)
-        String[] components = ipAddress.split(".");
+        String[] components = ipAddress.split("\\.");
 
         if (components.length != 4) {
             return true;
