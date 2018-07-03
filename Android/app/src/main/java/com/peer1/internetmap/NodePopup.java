@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.peer1.internetmap.models.ASN;
 import com.peer1.internetmap.models.ASNIPs;
@@ -290,6 +291,12 @@ public class NodePopup extends PopupWindow {
     }
 
     private void runTracerouteToSelectedNode() {
+        if (!this.isShowing()) {
+            // Popup no longer showing. User may have dismissed before ASN IP was determined. Abort!
+            Log.v("Trace", "Popup no longer showing; abort runTracerouteToSelectedNode");
+            return;
+        }
+
         // If lastSearchIP is set then run tracroute to lastSearchIP.
         // else
         //      get target selected asn node
@@ -323,7 +330,11 @@ public class NodePopup extends PopupWindow {
     }
 
     private void runTracerouteToIp(String destinationIP) {
-        if (TracerouteUtil.isInvalidOrPrivate(destinationIP)) {
+        if (!this.isShowing()) {
+            // Popup no longer showing. User may have dismissed before ASN IP was determined. Abort!
+            Log.v("Trace", "Popup no longer showing; abort runTracerouteToIp");
+            return;
+        } else if (TracerouteUtil.isInvalidOrPrivate(destinationIP)) {
             addTraceText("Cannot run traceroute, IP is reserved.");
             return;
         }
