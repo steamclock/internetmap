@@ -88,8 +88,6 @@ public class NodePopup extends PopupWindow {
             return;
         }
 
-        // Reset the traceroute view.
-        resetTraceroute();
 
         nodeWrapper = node;
         //set up content
@@ -147,6 +145,8 @@ public class NodePopup extends PopupWindow {
 
 
         if (!isTimelineView) {
+            // Reset the traceroute view.
+            resetTraceroute();
             //show traceroute for all but user's current node
             Button tracerouteBtn = (Button) getContentView().findViewById(R.id.tracerouteBtn);
             tracerouteBtn.setVisibility(isUsersNode ? android.view.View.GONE : android.view.View.VISIBLE);
