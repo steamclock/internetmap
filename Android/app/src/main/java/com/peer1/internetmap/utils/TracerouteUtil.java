@@ -1,7 +1,6 @@
 package com.peer1.internetmap.utils;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.peer1.internetmap.MapControllerWrapper;
 import com.peer1.internetmap.ProbeWrapper;
@@ -97,8 +96,6 @@ public class TracerouteUtil {
     public void removeListener() { callbackListener = emptyListener; }
 
     public void startTrace(final String to) {
-        Log.v("Trace", "startTrace called");
-
         if (tracerouteTask != null && tracerouteTask.isRunning) {
             callbackListener.onTraceAlreadyRunning();
         } else {
@@ -111,7 +108,6 @@ public class TracerouteUtil {
     }
 
     public void stopTrace() {
-        Log.v("Trace", "stopTrace called");
         if (tracerouteTask != null) {
             tracerouteTask.stopTrace = true;
         }
@@ -139,7 +135,6 @@ public class TracerouteUtil {
 
         @Override
         protected Void doInBackground(Void... params) {
-            Log.v("Trace", String.format("Trace to " + traceDestination));
             hopIPs.clear();
             consecutiveTimeouts = 0;
             isRunning = true;
@@ -147,10 +142,8 @@ public class TracerouteUtil {
             for (int ttl = 1; ttl < maxHops; ttl++) {
                 // Given ICMP protocol limitations in Java, we rely on C++ code give us probed trace information.
                 probeWrapper = MapControllerWrapper.getInstance().probeDestinationAddressWithTTL(traceDestination, ttl);
-                Log.v("Trace", "Hop returned from mapController");
 
                 if (stopTrace) {
-                    Log.v("Trace", "stopping doInBackground");
                     break;
                 }
 
@@ -166,7 +159,6 @@ public class TracerouteUtil {
                         break;
                     }
                 } else {
-                    Log.v("Trace", String.format("HOP %d: %s", ttl, probeWrapper.fromAddress));
                     consecutiveTimeouts = 0;
 
                     if (hopIPs.contains(probeWrapper.fromAddress)) {
@@ -195,7 +187,6 @@ public class TracerouteUtil {
         }
     }
 
-    // todo investigate when to use this, based on iOS function.
     static public boolean isInvalidOrPrivate(String ipAddress) {
         // This checks if our IP is in a reserved address space (eg. 192.168.1.1)
         String[] components = ipAddress.split("\\.");

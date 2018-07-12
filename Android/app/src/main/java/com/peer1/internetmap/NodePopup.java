@@ -3,7 +3,6 @@ package com.peer1.internetmap;
 import android.content.Context;
 import android.os.Handler;
 import android.support.v4.util.Pair;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.peer1.internetmap.models.ASN;
 import com.peer1.internetmap.models.ASNIPs;
@@ -44,7 +42,7 @@ public class NodePopup extends PopupWindow {
     private LayoutInflater inflater;
 
     // Traceroute properties
-    // todo could some of thie be refactored into TracerouteUtil?
+    // todo could some of this be refactored into TracerouteUtil?
     private TracerouteUtil tracerouteUtil = TracerouteUtil.getInstance();
     private View traceview;
     private TextView traceTimerTextView;
@@ -55,8 +53,9 @@ public class NodePopup extends PopupWindow {
     private int lastASNIndex = -1;
     private String currentElaspedTime;
     private ArrayList<Pair<Integer, ProbeWrapper>> unprocessedHops = new ArrayList<>();
-    private ArrayList<NodeWrapper> hopNodeWrappers = new ArrayList<>();
+    private ArrayList<NodeWrapper> asnHopNodeWrappers = new ArrayList<>();
     private boolean isProccessingHop = false;
+    private NodeWrapper traceDestinationNode;
 
 
     public NodePopup(Context context, MapControllerWrapper mapController, View view, boolean isTimelineView, boolean isSimulated) {
@@ -87,7 +86,6 @@ public class NodePopup extends PopupWindow {
         if (nodeWrapper != null && nodeWrapper.index == node.index) {
             return;
         }
-
 
         nodeWrapper = node;
         //set up content
@@ -147,6 +145,7 @@ public class NodePopup extends PopupWindow {
         if (!isTimelineView) {
             // Reset the traceroute view.
             resetTraceroute();
+
             //show traceroute for all but user's current node
             Button tracerouteBtn = (Button) getContentView().findViewById(R.id.tracerouteBtn);
             tracerouteBtn.setVisibility(isUsersNode ? android.view.View.GONE : android.view.View.VISIBLE);
@@ -177,11 +176,16 @@ public class NodePopup extends PopupWindow {
 
         // Reset the traceroute UI
         View view = getContentView();
+        traceview = view.findViewById(R.id.traceroute_details);
+        if (traceview == null) {
+            return;
+        }
+
         TextView asnHopsText = (TextView) getContentView().findViewById(R.id.trace_asn_hops);
         TextView ipHops = (TextView) getContentView().findViewById(R.id.trace_ip_hops);
-        traceview = view.findViewById(R.id.traceroute_details);
         traceTimerTextView = (TextView)view.findViewById(R.id.trace_time);
         traceListLayout = (LinearLayout)view.findViewById(R.id.trace_list_layout);
+        traceDestinationNode = null;
 
         // Reset and hide traceroute details
         traceview.setVisibility(View.GONE);
@@ -216,7 +220,7 @@ public class NodePopup extends PopupWindow {
         asnHops = 0;
         lastASNIndex = -1;
         unprocessedHops = new ArrayList<>();
-        hopNodeWrappers = new ArrayList<>();
+        asnHopNodeWrappers = new ArrayList<>();
         isProccessingHop = false;
 
         // Show the traceroute UI
@@ -243,7 +247,8 @@ public class NodePopup extends PopupWindow {
             public void onRequestResponse(Call<ASN> call, Response<ASN> response) {
                 NodeWrapper node = mapController.nodeByAsn(response.body().getASNString());
                 if (node != null) {
-                    hopNodeWrappers.add(node);
+                    // Add our current asn as the first asn "hop"
+                    asnHopNodeWrappers.add(node);
                     lastASNIndex = node.index;
                 }
                 runTracerouteToSelectedNode();
@@ -274,7 +279,6 @@ public class NodePopup extends PopupWindow {
                         long elapsed = nowTime - startTime;
                         currentElaspedTime = String.valueOf(elapsed);
                         traceTimerTextView.setText(currentElaspedTime);
-                        Log.v("Trace", currentElaspedTime);
                     }
                 });
             }
@@ -293,7 +297,6 @@ public class NodePopup extends PopupWindow {
     private void runTracerouteToSelectedNode() {
         if (!this.isShowing()) {
             // Popup no longer showing. User may have dismissed before ASN IP was determined. Abort!
-            Log.v("Trace", "Popup no longer showing; abort runTracerouteToSelectedNode");
             return;
         }
 
@@ -304,17 +307,16 @@ public class NodePopup extends PopupWindow {
         //      select random ip from ip list as destination IP
         //      run trace to destination IP
 
-        // TODO get lastSearchIP
+        // TODO get lastSearchIP?
 
         int targetNodeIndex = mapController.targetNodeIndex();
-        NodeWrapper node = mapController.nodeAtIndex(targetNodeIndex);
+        traceDestinationNode = mapController.nodeAtIndex(targetNodeIndex);
 
-        if (node.asn == null) {
-            // TODO couldntResolveIP error.
+        if (traceDestinationNode.asn == null) {
             addTraceText("Failed to resolve ASN location");
         } else {
             addTraceText("Fetching selected ASN location");
-            CommonClient.getInstance().getApi().getIPsFromASN(node.asn).enqueue(new CommonCallback<ASNIPs>() {
+            CommonClient.getInstance().getApi().getIPsFromASN(traceDestinationNode.asn).enqueue(new CommonCallback<ASNIPs>() {
                 @Override
                 public void onRequestResponse(Call<ASNIPs> call, Response<ASNIPs> response) {
                     runTracerouteToIp(response.body().getIp());
@@ -322,7 +324,6 @@ public class NodePopup extends PopupWindow {
 
                 @Override
                 public void onRequestFailure(Call<ASNIPs> call, Throwable t) {
-                    // TODO couldntResolveIP error.
                     addTraceText("Failed to resolve ASN location");
                 }
             });
@@ -332,13 +333,12 @@ public class NodePopup extends PopupWindow {
     private void runTracerouteToIp(String destinationIP) {
         if (!this.isShowing()) {
             // Popup no longer showing. User may have dismissed before ASN IP was determined. Abort!
-            Log.v("Trace", "Popup no longer showing; abort runTracerouteToIp");
             return;
         } else if (TracerouteUtil.isInvalidOrPrivate(destinationIP)) {
             addTraceText("Cannot run traceroute, IP is reserved.");
             return;
         }
-        else if (destinationIP == null || destinationIP.isEmpty()) {
+        else if (destinationIP.isEmpty()) {
             addTraceText("There was a problem determining the destination location");
             return;
         }
@@ -352,12 +352,7 @@ public class NodePopup extends PopupWindow {
         tracerouteUtil.setListener(new TracerouteUtil.Listener() {
             @Override
             public void onTraceAlreadyRunning() {
-                new Handler(ctx.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        // todo
-                    }
-                });
+                // This shouldn't happen as NodePopup checks isRunning before starting a new trace.
             }
 
             @Override
@@ -403,7 +398,6 @@ public class NodePopup extends PopupWindow {
                         Pair<Integer, ProbeWrapper> hop = new Pair<>(null, null);
                         unprocessedHops.add(hop);
                         processNextHop();
-
                     }
                 });
             }
@@ -422,16 +416,14 @@ public class NodePopup extends PopupWindow {
             }
         });
 
-        // TODO get currentASN, need this to determine if we have changed ASN right away.
         tracerouteUtil.startTrace(destinationIP);
     }
 
     /**
-     * TODO come up with better way to handle hop queue...? Having to keep track via isProccessingHop not ideal...
-     * TODO synch around unprocessedHops array to avoid concurrent access
+     * Currently queueing up all "hops" as they are discovered.
+     * processNextHop will pop off the next item in the queue and process it.
      */
     private void processNextHop() {
-
         if (isProccessingHop) {
             return;
         }
@@ -446,14 +438,11 @@ public class NodePopup extends PopupWindow {
         final Integer ttl = nextHop.first;
         final ProbeWrapper hopProbe = nextHop.second;
 
-        Log.v("Trace", "Processing next hop");
-
-        // Add entry to result list and bump IP hop if necessary
-        // Note: (null, null) indicates a full tracet timeout.
+        // Note: (null, null) indicates a final traceroute timeout.
         if (ttl == null) {
             addTraceText("Traceroute complete with as many hops as we could contact.");
+            addFinalHopToDestination();
             isProccessingHop = false;
-            processNextHop();
             return;
         } else if (hopProbe == null) {
             addTTLResult(ttl, "* * * Hop did not reply or timed out");
@@ -462,42 +451,25 @@ public class NodePopup extends PopupWindow {
             return;
         }
 
-        incrementIPHop();
-
-        // Check to see if we have jumped an ASN
-
-        Log.v("Trace", "Calling getASNFromIP for " + hopProbe.fromAddress);
+        // Check to see if we have jumped an ASN. Wait to print out TTL result until we have the ASN.
         CommonClient.getInstance().getApi().getASNFromIP(hopProbe.fromAddress).enqueue(new CommonCallback<ASN>() {
             @Override
             public void onRequestResponse(Call<ASN> call, Response<ASN> response) {
                 String asn = response.body().getASNString();
-                NodeWrapper node = null;
-                boolean hasHoppedASN = false;
+                NodeWrapper asnNode = (asn != null) ? mapController.nodeByAsn(asn) : null;
+                boolean hasHoppedASN = (asnNode != null) && (lastASNIndex != asnNode.index);
 
-                if (asn != null) {
-                    Log.v("Trace", hopProbe.fromAddress + " -> " + asn);
-                    node = mapController.nodeByAsn(asn);
-                } else {
-                    Log.v("Trace", hopProbe.fromAddress + " -> failed to lookup ASN");
-                }
-
-                if (node != null) {
-                    Log.v("Trace", asn + " -> " + String.valueOf(node.index));
-                    hopNodeWrappers.add(node);
-                    hasHoppedASN = (lastASNIndex != node.index);
-                    lastASNIndex = node.index;
-                } else {
-                    Log.v("Trace", asn + " -> failed to find node");
-                }
+                // Add node as an IP hop
+                incrementIPHop();
+                addTTLResult(ttl, hopProbe, asn);
 
                 if (hasHoppedASN) {
-                    // Update map
-                    Log.v("Trace", "HIPPY HOPPIDY");
+                    lastASNIndex = asnNode.index;
+                    asnHopNodeWrappers.add(asnNode);
                     incrementASNHop();
-                    displayHops(hopNodeWrappers);
+                    displayHops(asnHopNodeWrappers);
                 }
 
-                addTTLResult(ttl, hopProbe, asn);
                 isProccessingHop = false;
                 processNextHop();
             }
@@ -507,15 +479,13 @@ public class NodePopup extends PopupWindow {
                 // TODO what to do if failed to get ASN?
                 isProccessingHop = false;
                 processNextHop();
-                Timber.e("getASNFromIP FAILED YO");
+                Timber.e("getASNFromIP failed");
             }
         });
     }
 
     private void displayHops(ArrayList<NodeWrapper> hops) {
-        // If we are no longer running a trace, then do not display hops
-        // Could happen if our request for IPtoASN comes back late.
-        if (!tracerouteUtil.isRunning()) {
+        if (!this.isShowing()) {
             return;
         }
 
@@ -524,15 +494,7 @@ public class NodePopup extends PopupWindow {
             return;
         }
 
-        // Ew, make this better, maybe pass in cleaner data.
         NodeWrapper[] mergedHops = hops.toArray(new NodeWrapper[hops.size()]);
-
-        // For reference, iOS did the following to generate highlight route, we need list of ASNS:
-        // * Put our ASN at the start of the list, just in case - TODO Android may need to do this still
-        // * For each trace hop, if the asn is not null and not equal to the previous, add to list
-        // * If destination index not equal to last in hop list, add dest to - TODO Android may need to do this still, also, isnt this fudging the last hop?
-
-        // On Android we have passed that logic off to mapController
         mapController.highlightRoute(mergedHops, mergedHops.length);
     }
 
@@ -586,5 +548,15 @@ public class NodePopup extends PopupWindow {
         ipHops = ipHops + 1;
         TextView ipHops = (TextView) getContentView().findViewById(R.id.trace_ip_hops);
         ipHops.setText(String.format("%d", this.ipHops));
+    }
+
+    private void addFinalHopToDestination() {
+        // Add final hop
+        if (traceDestinationNode != null && lastASNIndex != traceDestinationNode.index) {
+            lastASNIndex = traceDestinationNode.index;
+            asnHopNodeWrappers.add(traceDestinationNode);
+            incrementASNHop();
+            displayHops(asnHopNodeWrappers);
+        }
     }
 }
