@@ -31,4 +31,11 @@ public class NodeWrapper {
     }
     
     private native String nativeFriendlyDescription(int index);
+
+    @Override
+    public String toString() {
+        return "NodeWrapper{" +
+                "asn='" + asn + '\'' +
+                '}';
+    }
 }

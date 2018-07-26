@@ -4,7 +4,18 @@ package com.peer1.internetmap;
  * Methods implemented in JNI (see jniapi.cpp)
  */
 public class MapControllerWrapper {
+    //-------------------------------------------------
+    // Singleton
+    //-------------------------------------------------
+    private static final MapControllerWrapper instance = new MapControllerWrapper();
+    private MapControllerWrapper() { }
+    public static MapControllerWrapper getInstance() { return instance; }
+
+    //-------------------------------------------------
+    // JNI interface
+    //-------------------------------------------------
     public native void rotateRadiansXY(float radX, float radY);
+    public native void translateYAnimated(float translateY, float seconds);
     public native void startMomentumPanWithVelocity(float vX, float vY);
     public native void handleTouchDownAtPoint(float x, float y);
     public native void zoomByScale(float scale);
@@ -24,4 +35,9 @@ public class MapControllerWrapper {
     public native void resetZoomAndRotationAnimated(boolean isPortraitMode);
     public native void setAllowIdleAnimation(boolean allow);
     public native void unhoverNode();
+    //public native String lastSearchIP(); // Ended up on branch, need to bring back at some point.
+    public native void sendPacket();
+    public native ProbeWrapper probeDestinationAddressWithTTL(String destAddr, int ttl);
+    public native void highlightRoute(NodeWrapper[] nodes, int length);
+    public native void clearHighlightLines();
 }

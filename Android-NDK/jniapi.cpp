@@ -5,16 +5,22 @@
 #include <string>
 #include "jniapi.h"
 #include "renderer.h"
+#include "tracepath.h"
 
 #include <../Common/Code/MapController.hpp>
 #include <../Common/Code/MapDisplay.hpp>
 #include <../Common/Code/Camera.hpp>
 
+#include <arpa/inet.h>
+
 static ANativeWindow *window = 0;
 static Renderer *renderer = 0;
-
 static jobject activity = 0;
 static JavaVM* javaVM;
+
+static Tracepath *tracepath = 0;
+
+#define HOST_COLUMN_SIZE	52
 
 jint JNI_OnLoad(JavaVM* vm, void* reserved)
 {
@@ -55,6 +61,29 @@ jobject wrapNode(JNIEnv* jenv, NodePointer node) {
     return wrapper;
 }
 
+//helper function for wrappers returning a traceroute probe result
+jobject wrapProbe(JNIEnv* jenv,
+                  std::string probeAddress,
+                  bool success,
+                  double elapsedMs) {
+
+    //strings that need to be freed after
+    jstring from = jenv->NewStringUTF(probeAddress.c_str());
+    jclass probeWrapperClass = jenv->FindClass("com/peer1/internetmap/ProbeWrapper");
+
+    jmethodID constructor = jenv->GetMethodID(probeWrapperClass, "<init>", "(ZLjava/lang/String;D)V");
+    //note: if you change this code, triple-check that the argument order matches ProbeWrapper.
+
+    jobject probeWrapper = jenv->NewObject(probeWrapperClass, constructor, success, from, elapsedMs);
+
+    //free up the strings
+    jenv->DeleteLocalRef(from);
+    //oh, we need to free this too
+    jenv->DeleteLocalRef(probeWrapperClass);
+
+    return probeWrapper;
+}
+
 JNIEXPORT jboolean JNICALL Java_com_peer1_internetmap_InternetMap_nativeOnCreate(JNIEnv* jenv, jobject obj, bool smallScreen)
 {
     LOG("OnCreate");
@@ -85,7 +114,6 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_InternetMap_nativeOnDestroy(JN
 {
     jenv->DeleteGlobalRef(activity);
     activity = NULL;
-
     return;
 }
 
@@ -106,6 +134,12 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_rotateRad
 		float radX, float radY) {
     renderer->bufferedRotationX(radX);
     renderer->bufferedRotationY(radY);
+}
+
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_translateYAnimated(JNIEnv* jenv, jobject obj, float translateY, float seconds) {
+    MapController* controller = renderer->beginControllerModification();
+    controller->display->camera->translateYAnimated(translateY, 1);
+    renderer->endControllerModification();
 }
 
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_startMomentumPanWithVelocity(JNIEnv* jenv, jobject obj,
@@ -276,6 +310,12 @@ JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_unhoverNo
     renderer->endControllerModification();
 }
 
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_clearHighlightLines(JNIEnv* jenv, jobject obj) {
+    MapController* controller = renderer->beginControllerModification();
+    controller->clearHighlightLines();
+    renderer->endControllerModification();
+}
+
 JNIEXPORT jstring JNICALL Java_com_peer1_internetmap_NodeWrapper_nativeFriendlyDescription(JNIEnv* jenv, jobject obj, int index) {
     MapController* controller = renderer->beginControllerModification();
     if (index < 0 || index >= controller->data->nodes.size()) {
@@ -287,6 +327,46 @@ JNIEXPORT jstring JNICALL Java_com_peer1_internetmap_NodeWrapper_nativeFriendlyD
     jstring ret = jenv->NewStringUTF(node->friendlyDescription().c_str());
     renderer->endControllerModification();
     return ret;
+}
+
+JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_probeDestinationAddressWithTTL(JNIEnv* jenv, jobject obj,
+
+                                                                                                     jstring destinationAddr, int ttl) {
+    if(!tracepath) {
+        tracepath = new Tracepath();
+    }
+
+    // Convert destination address
+    in_addr testaddr;
+    std::string c_destinationAddr = jenv->GetStringUTFChars(destinationAddr, 0);
+    inet_aton(c_destinationAddr.c_str(), &testaddr);
+
+    // Run probe
+    probe_result probeResult = tracepath->probeDestinationAddressWithTTL(&testaddr, ttl);
+
+    jobject result = wrapProbe(jenv, probeResult.receive_addr, probeResult.success, probeResult.elapsedMs);
+
+    return result;
+}
+
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_highlightRoute(JNIEnv* jenv, jobject obj, jobjectArray nodes, int length) {
+    MapController* controller = renderer->beginControllerModification();
+
+    // Iterate over NodeWrapper array and use indexes to lookup NodePointer.
+    std::vector<NodePointer> nodesVector;
+    jclass nodeWrapperClass = jenv->FindClass("com/peer1/internetmap/NodeWrapper");
+
+    for (int i=0; i < length; i++) {
+        jobject obj = (jobject) jenv->GetObjectArrayElement(nodes, i);
+        jfieldID indexField = jenv->GetFieldID(nodeWrapperClass, "index", "I");
+        int index = jenv->GetIntField(obj, indexField);
+
+        NodePointer node = controller->data->nodeAtIndex(index);
+        nodesVector.push_back(node);
+    }
+
+    controller->highlightRoute(nodesVector);
+    renderer->endControllerModification();
 }
 
 void DetachThreadFromVM(void) {
