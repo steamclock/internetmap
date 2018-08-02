@@ -20,6 +20,7 @@ MapDisplay::MapDisplay() :
     nodes(new DisplayNodes(0)),
     targetNodes(new DisplayNodes(0)),
     _displayScale(1.0f),
+    _transparentClear(false),
     camera(new Camera()),
     _startBlend(0.0f),
     _endBlend(0.0f),
@@ -66,8 +67,12 @@ void MapDisplay::draw(void)
     
     glEnable(GL_PROGRAM_POINT_SIZE);
 #endif
-    //glClearColor(0.17f, 0.16f, 0.16f, 1.0f); //Visualization background color
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f); //Visualization background color
+    if(_transparentClear) {
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f); //Background color, for AR, see through
+    }
+    else {
+        glClearColor(0.17f, 0.16f, 0.16f, 1.0f); // Regular background color
+    }
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
