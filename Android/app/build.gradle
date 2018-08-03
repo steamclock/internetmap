@@ -10,12 +10,13 @@ android {
     //sourceCompatibility = 1.8
 
     def nevercodeBuild = System.getenv()["NEVERCODE_BUILD"]
-    if (!nevercodeBuild) {
-        applicationVariants.all { variant ->
-            variant.outputs.all { output ->
-                def newApkName = "-" + variant.versionName + "(" + variant.versionCode + ")" + ".apk"
-                outputFileName = new File(output.outputFile.parent, newApkName)
-            }
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            def SEP = "_"
+            def buildType = variant.variantData.variantConfiguration.buildType.name
+            def version = variant.versionName
+            def versionCode = variant.versionCode
+            outputFileName = "internetmap${SEP}${buildType}${SEP}${version}${SEP}${versionCode}.apk"
         }
     }
 
@@ -24,8 +25,8 @@ android {
         minSdkVersion 21 // Currently having issues with 19 and pthreads
         targetSdkVersion 25
 
-        versionCode 16
-        versionName "2.0.5"
+        versionCode 19
+        versionName "2.1.0"
 
         // Not sure this is required, commenting out.
 //        compileOptions {
