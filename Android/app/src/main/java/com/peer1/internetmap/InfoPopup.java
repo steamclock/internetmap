@@ -25,6 +25,8 @@ public class InfoPopup extends PopupWindow {
         return dismissedViaSelection;
     }
 
+    private PingUsAdapter.Listener pingUsListener;
+
     public InfoPopup(final InternetMap context, View view) {
         super(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -32,14 +34,15 @@ public class InfoPopup extends PopupWindow {
         setFocusable(true);
         mContext = context;
 
-        final ListView listView = (ListView) getContentView().findViewById(R.id.visualizationList);
+        final ListView listView = getContentView().findViewById(R.id.visualizationList);
         
-        String[] values = new String[5];
+        String[] values = new String[6];
         values[0] = context.getString(R.string.infoHelp);
         values[1] = context.getString(R.string.infoAboutLink);
-        values[2] = context.getString(R.string.infoContactLink);
-        values[3] = context.getString(R.string.infoOpenSource);
-        values[4] = context.getString(R.string.infoCredits);
+        values[2] = context.getString(R.string.infoPingUs);
+        values[3] = context.getString(R.string.infoContactLink);
+        values[4] = context.getString(R.string.infoOpenSource);
+        values[5] = context.getString(R.string.infoCredits);
         
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.view_info_popup_item, android.R.id.text1, values);
         listView.setAdapter(adapter);
@@ -55,12 +58,15 @@ public class InfoPopup extends PopupWindow {
                         showAbout();
                         break;
                     case 2:
-                        showContact();
+                        showPingUs();
                         break;
                     case 3:
-                        showOpenSource();
+                        showContact();
                         break;
                     case 4:
+                        showOpenSource();
+                        break;
+                    case 5:
                         showCredits();
                         break;
                     default:
@@ -93,4 +99,9 @@ public class InfoPopup extends PopupWindow {
         mContext.startActivity(intent);
     }
 
+    private void showPingUs() {
+        Intent intent = new Intent(mContext, PingUsPopup.class);
+        // Check InternetMap.onActivityResult for response handling.
+        mContext.startActivityForResult(intent, PingUsPopup.REQUEST_PING_IP);
+    }
 }

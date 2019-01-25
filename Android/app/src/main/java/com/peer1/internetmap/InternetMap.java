@@ -1,6 +1,7 @@
 package com.peer1.internetmap;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -9,6 +10,7 @@ import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -28,6 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import com.peer1.internetmap.models.ASN;
 import com.peer1.internetmap.network.common.CommonCallback;
@@ -211,6 +214,32 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
             super.onBackPressed();
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // We are responding to a ping request from the PingUsPopup
+        if (requestCode == PingUsPopup.REQUEST_PING_IP
+                && resultCode == RESULT_OK
+                && data != null) {
+
+            String ipAddress = data.getStringExtra(PingUsPopup.RESULT_EXTRA_IP);
+            if (ipAddress == null || ipAddress.isEmpty()) {
+                // todo problem!
+            } else {
+                // Run ping.
+                testPing(ipAddress);
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    private void testPing(String ipAddress) {
+        Toast.makeText(this, ipAddress, Toast.LENGTH_SHORT).show();
+
+        ProbeWrapper probeWrapper = MapControllerWrapper.getInstance().ping(ipAddress);
+        Log.d("test", probeWrapper.toString());
     }
 
     // endregion

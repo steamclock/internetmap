@@ -349,6 +349,24 @@ JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_probeD
     return result;
 }
 
+JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_ping(JNIEnv* jenv, jobject obj, jstring destinationAddr) {
+    if(!tracepath) {
+        tracepath = new Tracepath();
+    }
+
+    // Convert destination address
+    in_addr testaddr;
+    std::string c_destinationAddr = jenv->GetStringUTFChars(destinationAddr, 0);
+    inet_aton(c_destinationAddr.c_str(), &testaddr);
+
+    // Run probe
+    probe_result probeResult = tracepath->ping(&testaddr);
+
+    jobject result = wrapProbe(jenv, probeResult.receive_addr, probeResult.success, probeResult.elapsedMs);
+
+    return result;
+}
+
 JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_highlightRoute(JNIEnv* jenv, jobject obj, jobjectArray nodes, int length) {
     MapController* controller = renderer->beginControllerModification();
 

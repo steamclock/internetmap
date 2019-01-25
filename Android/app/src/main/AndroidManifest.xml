@@ -58,6 +58,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".InternetMap" />
         </activity>
+        <activity
+            android:name=".PingUsPopup"
+            android:label="@string/infoPingUs"
+            android:parentActivityName=".InternetMap">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".InternetMap" />
+        </activity>
         <activity android:name=".FirstTimeActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             android:parentActivityName=".InternetMap">

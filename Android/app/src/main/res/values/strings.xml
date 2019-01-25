@@ -22,6 +22,7 @@
     <string name="infoMoreAboutLink">Visit cogecopeer1.com</string>
     <string name="infoOpenSource">Open Source</string>
     <string name="infoCredits">Credits</string>
+    <string name="infoPingUs">Ping Us</string>
     <string name="loading">Loading %s...</string>
     <string name="contactSalesHeader">Contact Us</string>
     <string name="contactSalesBlurb">Learn more about our hosting and cloud services</string>

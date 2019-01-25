@@ -81,9 +81,11 @@ probe_result Tracepath::probeDestinationAddressWithTTL(struct in_addr *dst, int 
     }
 
     // Set TTL on socket
-    if (setsockopt(sock, SOL_IP, IP_TTL, &ttl, sizeof(ttl))) {
-        LOG("Trace Failed to set IP_TTL, cannot make packet request");
-        return result;
+    if (ttl > 0) {
+        if (setsockopt(sock, SOL_IP, IP_TTL, &ttl, sizeof(ttl))) {
+            LOG("Trace Failed to set IP_TTL, cannot make packet request");
+            return result;
+        }
     }
 
     probe.ttl = ttl;
@@ -99,6 +101,7 @@ probe_result Tracepath::probeDestinationAddressWithTTL(struct in_addr *dst, int 
                 probe.receievetime = getNowMS();
                 result.receive_addr = probe.receive_addr;
                 result.elapsedMs = probe.receievetime - probe.sendtime;
+                result.success = true;
                 LOG("Trace Elapsed time %.2f", result.elapsedMs);
                 break;
             }
@@ -109,6 +112,10 @@ probe_result Tracepath::probeDestinationAddressWithTTL(struct in_addr *dst, int 
     close(sock);
 
     return result;
+}
+
+probe_result Tracepath::ping(struct in_addr *dst) {
+    return probeDestinationAddressWithTTL(dst, -1);
 }
 
 int Tracepath::setupSocket() {
