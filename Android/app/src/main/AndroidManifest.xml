@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.peer1.internetmap"
     android:installLocation="auto">
 
@@ -24,7 +25,8 @@
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".InternetMap"
             android:label="@string/app_name">
@@ -67,7 +69,7 @@
                 android:value=".InternetMap" />
         </activity>
         <activity android:name=".FirstTimeActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+            android:theme="@style/Theme.AppCompat.NoActionBar"
             android:parentActivityName=".InternetMap">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
