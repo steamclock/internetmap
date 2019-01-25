@@ -63,6 +63,10 @@ import timber.log.Timber;
 
 public class InternetMap extends BaseActivity implements SurfaceHolder.Callback {
 
+    private static final int SELECT_METHOD_UNKNOWN = 0;
+    private static final int SELECT_METHOD_SEARCH = 1;
+    private static final int SELECT_METHOD_PING = 2;
+
     private static String TAG = "InternetMap";
     private GestureDetectorCompat mGestureDetector;
     private ScaleGestureDetector mScaleDetector;
@@ -70,6 +74,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
 
     private MapControllerWrapper mController;
     private Handler mHandler; //handles threadsafe messages
+    private int selectedNodeMethod = SELECT_METHOD_UNKNOWN;
 
     private VisualizationPopupWindow mVisualizationPopup;
     private InfoPopup mInfoPopup;
@@ -238,8 +243,35 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
     private void testPing(String ipAddress) {
         Toast.makeText(this, ipAddress, Toast.LENGTH_SHORT).show();
 
-        ProbeWrapper probeWrapper = MapControllerWrapper.getInstance().ping(ipAddress);
-        Log.d("test", probeWrapper.toString());
+//        ProbeWrapper probeWrapper = mController.ping(ipAddress);
+//        Log.d("test", probeWrapper.toString());
+
+//        if (!probeWrapper.success) {
+//            // todo show error
+//            return;
+//        }
+
+        // Popup node in ping mode...
+
+        // Else, lookup the ASN node if we are not given it.
+        CommonClient.getInstance().getApi().getASNFromIP(ipAddress).enqueue(new CommonCallback<ASN>() {
+            @Override
+            public void onRequestResponse(Call<ASN> call, Response<ASN> response) {
+                ASN asn = response.body();
+                if (asn == null) {
+                    // todo error
+                    return;
+                }
+                selectNodeByASN(asn, false, SELECT_METHOD_PING);
+            }
+
+            @Override
+            public void onRequestFailure(Call<ASN> call, Throwable t) {
+                // TODO what to do if failed to get ASN?
+                Timber.e("getASNFromIP failed");
+            }
+        });
+
     }
 
     // endregion
@@ -479,8 +511,22 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
                     }
                 });
             }
-            boolean isUserNode = (node.index == mUserNodeIndex);
-            mNodePopup.setNode(node, isUserNode);
+
+            // Since showNodePopup is fired from the C++ code after we call mController.updateTargetForIndex
+            // we use selectedNodeMethod to indicate HOW we want the node popup to behave when it pops up.
+            // For example, if we are loading the node to show a PING, we do not want to show the traceroute
+            // layout.
+            switch(selectedNodeMethod) {
+                case SELECT_METHOD_PING:
+                    mNodePopup.setPingNode(node);
+                    break;
+                default:
+                    boolean isUserNode = (node.index == mUserNodeIndex);
+                    mNodePopup.setNode(node, isUserNode);
+                    break;
+            }
+
+            selectedNodeMethod = SELECT_METHOD_UNKNOWN;
 
             View mainView = findViewById(R.id.mainLayout);
             View centerVerticalGuideline = findViewById(R.id.center_vertical_guideline);
@@ -756,7 +802,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
                             searchIcon.setVisibility(View.VISIBLE);
                             mHandler.removeCallbacks(backupTimer);
 
-                            selectNodeByASN(response.body(), false);
+                            selectNodeByASN(response.body(), false, SELECT_METHOD_SEARCH);
                         }
 
                         @Override
@@ -799,7 +845,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         CommonClient.getInstance().getUserASN(new CommonCallback<ASN>() {
             @Override
             public void onRequestResponse(Call<ASN> call, Response<ASN> response) {
-                selectNodeByASN(response.body(), true);
+                selectNodeByASN(response.body(), true, SELECT_METHOD_SEARCH);
             }
 
             @Override
@@ -843,7 +889,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
 //        });
     }
 
-    public void selectNodeByASN(ASN asn, boolean cacheIndex) {
+    public void selectNodeByASN(ASN asn, boolean cacheIndex, int mode) {
         try {
             NodeWrapper node = mController.nodeByAsn(asn.getASNString());
             if (node != null) {
@@ -859,6 +905,27 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
             showError(getString(R.string.asnAssociationFail));
         }
     }
+
+//    private void selectNodeByIPAddress(String ipAddress, final boolean cacheIndex) {
+//        // Else, lookup the ASN node if we are not given it.
+//        CommonClient.getInstance().getApi().getASNFromIP(ipAddress).enqueue(new CommonCallback<ASN>() {
+//            @Override
+//            public void onRequestResponse(Call<ASN> call, Response<ASN> response) {
+//                ASN asn = response.body();
+//                if (asn == null) {
+//                    // todo error
+//                    return;
+//                }
+//                selectNodeByASN(asn, false);
+//            }
+//
+//            @Override
+//            public void onRequestFailure(Call<ASN> call, Throwable t) {
+//                // TODO what to do if failed to get ASN?
+//                Timber.e("getASNFromIP failed");
+//            }
+//        });
+//    }
 
     // endregion
 

@@ -53,4 +53,8 @@
     <string name="trace_asn_hops">ASN Hops</string>
     <string name="trace_time">Time (ms)</string>
     <string name="traceroute_details">Details of Traceroute</string>
+
+    <string name="average">Average</string>
+
+
 </resources>

@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 /**
- * ContactPopup popup, shown from info menu. Uses WebView to render data from contact.html asset.
+ *
  */
 public class PingUsPopup extends BaseActivity {
 

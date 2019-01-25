@@ -25,7 +25,7 @@ import timber.log.Timber;
 /**
  * Shows list of Autonomous Systems (ASs), allows a user to search for and select a node
  */
-public class SearchPopup extends PopupWindow{
+public class SearchPopup extends PopupWindow {
     private static String TAG = "SearchPopup";
     private MapControllerWrapper mController;
     private NodeAdapter.NodeFilter mFilter;

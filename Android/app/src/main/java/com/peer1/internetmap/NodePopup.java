@@ -41,6 +41,9 @@ public class NodePopup extends PopupWindow {
     private NodeWrapper nodeWrapper;
     private LayoutInflater inflater;
 
+    private boolean showTraceroute = true;
+    private boolean showPing = false;
+
     // Traceroute properties
     // todo could some of this be refactored into TracerouteUtil?
     private TracerouteUtil tracerouteUtil = TracerouteUtil.getInstance();
@@ -57,7 +60,6 @@ public class NodePopup extends PopupWindow {
     private boolean isProccessingHop = false;
     private NodeWrapper traceDestinationNode;
 
-
     public NodePopup(Context context, MapControllerWrapper mapController, View view, boolean isTimelineView, boolean isSimulated) {
         super(view);
         this.ctx = context;
@@ -66,6 +68,15 @@ public class NodePopup extends PopupWindow {
         this.isTimelineView = isTimelineView;
         this.isSimulated = isSimulated;
     }
+
+//    public NodePopup(Context context, MapControllerWrapper mapController, View view, boolean isTimelineView, boolean isSimulated) {
+//        super(view);
+//        this.ctx = context;
+//        this.inflater = (LayoutInflater)ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        this.mapController = mapController;
+//        this.isTimelineView = isTimelineView;
+//        this.isSimulated = isSimulated;
+//    }
 
     @Override
     public void dismiss() {
@@ -139,15 +150,14 @@ public class NodePopup extends PopupWindow {
         TextView titleView = (TextView) getContentView().findViewById(R.id.titleView);
         titleView.setText(title);
 
-        // Reset traceroute view
-
-
         if (!isTimelineView) {
-            // Reset the traceroute view.
-            resetTraceroute();
+            // Show traceroute for all but user's current node
+            showTraceroute = !isUsersNode;
+        }
 
-            //show traceroute for all but user's current node
-            Button tracerouteBtn = (Button) getContentView().findViewById(R.id.tracerouteBtn);
+        if (showTraceroute) {
+            resetTraceroute();
+            Button tracerouteBtn = getContentView().findViewById(R.id.tracerouteBtn);
             tracerouteBtn.setVisibility(isUsersNode ? android.view.View.GONE : android.view.View.VISIBLE);
             tracerouteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -156,6 +166,16 @@ public class NodePopup extends PopupWindow {
                 }
             });
         }
+
+        if (showPing) {
+
+        }
+    }
+
+    public void setPingNode(NodeWrapper node) {
+        showTraceroute = false;
+        showPing = true;
+        setNode(node);
     }
 
     /**
@@ -166,6 +186,21 @@ public class NodePopup extends PopupWindow {
         //update the layout for current data
         getContentView().measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         return getContentView().getMeasuredHeight();
+    }
+
+    //=======================================================================
+    // Ping functionality
+    //=======================================================================
+    private void resetPing() {
+
+    }
+
+    private void startPing() {
+
+    }
+
+    private void stopPing() {
+
     }
 
     //=======================================================================

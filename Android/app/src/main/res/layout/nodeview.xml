@@ -96,6 +96,20 @@
 
         </ScrollView>
 
+
+        <ScrollView
+            android:id="@+id/ping_details"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:fillViewport="true"
+            android:visibility="gone"
+            android:animateLayoutChanges="true"
+            android:background="@color/translucentBlack">
+
+            <include layout="@layout/view_traceroute_details" />
+
+        </ScrollView>
+
     </LinearLayout>
 
 </LinearLayout>
