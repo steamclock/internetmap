@@ -16,7 +16,10 @@ import com.peer1.internetmap.models.ASNIPs;
 import com.peer1.internetmap.network.common.CommonCallback;
 import com.peer1.internetmap.network.common.CommonClient;
 import com.peer1.internetmap.utils.AppUtils;
+import com.peer1.internetmap.utils.PingUtil;
 import com.peer1.internetmap.utils.TracerouteUtil;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -40,9 +43,6 @@ public class NodePopup extends PopupWindow {
     private MapControllerWrapper mapController;
     private NodeWrapper nodeWrapper;
     private LayoutInflater inflater;
-
-    private boolean showTraceroute = true;
-    private boolean showPing = false;
 
     // Traceroute properties
     // todo could some of this be refactored into TracerouteUtil?
@@ -147,35 +147,41 @@ public class NodePopup extends PopupWindow {
                 mainTextView.setText(mainText);
             }
         }
+
         TextView titleView = (TextView) getContentView().findViewById(R.id.titleView);
         titleView.setText(title);
 
-        if (!isTimelineView) {
-            // Show traceroute for all but user's current node
-            showTraceroute = !isUsersNode;
-        }
+        // Reset traceroute view
+        final View actionButtonsLayout = getContentView().findViewById(R.id.action_buttons_layout);
+        Button tracerouteBtn = getContentView().findViewById(R.id.tracerouteBtn);
+        Button pingBtn = getContentView().findViewById(R.id.pingBtn);
 
-        if (showTraceroute) {
+        if (!isTimelineView && !isUsersNode) {
+            // Setup traceroute
             resetTraceroute();
-            Button tracerouteBtn = getContentView().findViewById(R.id.tracerouteBtn);
-            tracerouteBtn.setVisibility(isUsersNode ? android.view.View.GONE : android.view.View.VISIBLE);
             tracerouteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    actionButtonsLayout.setVisibility(View.GONE);
                     startTraceroute();
                 }
             });
+
+            // Setup ping
+            // todo reset the ping view?
+            pingBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    actionButtonsLayout.setVisibility(View.GONE);
+
+                    startPing();
+                }
+            });
+
+
+        } else {
+            actionButtonsLayout.setVisibility(View.GONE);
         }
-
-        if (showPing) {
-
-        }
-    }
-
-    public void setPingNode(NodeWrapper node) {
-        showTraceroute = false;
-        showPing = true;
-        setNode(node);
     }
 
     /**
@@ -189,13 +195,168 @@ public class NodePopup extends PopupWindow {
     }
 
     //=======================================================================
+    // Common action functionality
+    //=======================================================================
+    private void translateMapInPreparationForRoute() {
+        // Reposition map so that we can see it during the traceroute
+        boolean isSmallScreen = AppUtils.isSmallScreen(ctx);
+        mapController.resetZoomAndRotationAnimated(isSmallScreen);
+        if (isSmallScreen) {
+            mapController.translateYAnimated(0.4f, 1);
+        }
+    }
+
+    //=======================================================================
     // Ping functionality
     //=======================================================================
     private void resetPing() {
+        View pingView = getContentView().findViewById(R.id.ping_details);
+        LinearLayout pingResultList = getContentView().findViewById(R.id.ping_list_layout);
+        pingView.setVisibility(View.VISIBLE);
+        pingResultList.removeAllViews();
+
+
+
+        // left off
+        // - resetting views
+        // - showing results
 
     }
 
     private void startPing() {
+        PingUtil pingUtil = PingUtil.getInstance();
+
+        View view = getContentView();
+        View nodeDetails = view.findViewById(R.id.contentLayout);
+        View pingView = view.findViewById(R.id.ping_details);
+
+        final TextView averageText = view.findViewById(R.id.ping_average);
+        final TextView bestText = view.findViewById(R.id.ping_best);
+        final TextView receivedText = view.findViewById(R.id.ping_received);
+        final LinearLayout pingResultsLayout = view.findViewById(R.id.ping_list_layout);
+
+        averageText.setText("-");
+        bestText.setText("-");
+        receivedText.setText("-");
+
+        nodeDetails.setVisibility(View.GONE);
+        pingView.setVisibility(View.VISIBLE);
+        view.invalidate();
+
+        // Reposition map to show "over" the newly sized popup.
+        translateMapInPreparationForRoute();
+
+
+        //        // Show the traceroute UI
+//        View view = getContentView();
+//        traceview = view.findViewById(R.id.traceroute_details);
+//        traceTimerTextView = (TextView)view.findViewById(R.id.trace_time);
+//        traceListLayout = (LinearLayout)view.findViewById(R.id.trace_list_layout);
+//        View nodeDetails = getContentView().findViewById(R.id.contentLayout);
+//        traceview.setVisibility(View.VISIBLE);
+//        nodeDetails.setVisibility(View.GONE);
+//        view.invalidate();
+//
+//        // Reposition map so that we can see it during the traceroute
+//        boolean isSmallScreen = AppUtils.isSmallScreen(ctx);
+//        mapController.resetZoomAndRotationAnimated(isSmallScreen);
+//        if (isSmallScreen) {
+//            mapController.translateYAnimated(0.4f, 1);
+//        }
+
+        pingUtil.setListener(new PingUtil.Listener() {
+            @Override
+            public void onPingResult(int index, final ProbeWrapper ping) {
+                new Handler(ctx.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Add result line
+                        TextView nextItemView = (TextView)inflater.inflate(R.layout.view_tracerout_list_item, null);
+                        nextItemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                        nextItemView.setText(PingUtil.getInstance().getPingDescription(ping));
+                        pingResultsLayout.addView(nextItemView);
+                    }
+                });
+            }
+
+            @Override
+            public void onPingTimeout(int index) {
+                new Handler(ctx.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        TextView nextItemView = (TextView)inflater.inflate(R.layout.view_tracerout_list_item, null);
+                        nextItemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                        nextItemView.setText(App.getAppContext().getString(R.string.request_timed_out));
+                        pingResultsLayout.addView(nextItemView);
+                    }
+                });
+            }
+
+            @Override
+            public void onAverageUpdated(final double averageMs) {
+                new Handler(ctx.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        averageText.setText(String.valueOf(averageMs));
+                    }
+                });
+            }
+
+            @Override
+            public void onBestUpdated(final double bestMs) {
+                new Handler(ctx.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        bestText.setText(String.valueOf(bestMs));
+                    }
+                });
+
+            }
+
+            @Override
+            public void onReceivedUpdated(final double receivedPercent) {
+                new Handler(ctx.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        receivedText.setText(String.valueOf(receivedPercent));
+                    }
+                });
+
+            }
+
+            @Override
+            public void onPingAlreadyRunning() {
+                new Handler(ctx.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // todo
+                    }
+                });
+            }
+        });
+
+        String lastIP = mapController.lastSearchIP();
+        if (lastIP != null) {
+            PingUtil.getInstance().startPing(lastIP);
+        } else {
+
+            // Lookup IP.
+            // todo, if we already "know" IP do we have to do this? How do we know if we know?
+            NodeWrapper targetNode = mapController.nodeAtIndex(mapController.targetNodeIndex());
+            CommonClient.getInstance().getApi().getIPsFromASN(targetNode.asn).enqueue(new CommonCallback<ASNIPs>() {
+                @Override
+                public void onRequestResponse(Call<ASNIPs> call, Response<ASNIPs> response) {
+                    String ip = response.body().getIp();
+                    PingUtil.getInstance().startPing(ip);
+                }
+
+                @Override
+                public void onRequestFailure(Call<ASNIPs> call, Throwable t) {
+                    PingUtil.getInstance().stopPing();
+                }
+            });
+        }
+
 
     }
 
@@ -268,12 +429,8 @@ public class NodePopup extends PopupWindow {
         nodeDetails.setVisibility(View.GONE);
         view.invalidate();
 
-        // Reposition map so that we can see it during the traceroute
-        boolean isSmallScreen = AppUtils.isSmallScreen(ctx);
-        mapController.resetZoomAndRotationAnimated(isSmallScreen);
-        if (isSmallScreen) {
-            mapController.translateYAnimated(0.4f, 1);
-        }
+        // Reposition map to show "over" the newly sized popup.
+        translateMapInPreparationForRoute();
 
         // Get the starting ASN and run trace
         addTraceText("Determining current ASN");

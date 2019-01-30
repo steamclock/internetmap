@@ -329,9 +329,25 @@ JNIEXPORT jstring JNICALL Java_com_peer1_internetmap_NodeWrapper_nativeFriendlyD
     return ret;
 }
 
-JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_probeDestinationAddressWithTTL(JNIEnv* jenv, jobject obj,
+JNIEXPORT jstring JNICALL Java_com_peer1_internetmap_MapControllerWrapper_lastSearchIP(JNIEnv* jenv, jobject obj) {
+    MapController* controller = renderer->beginControllerModification();
+    jstring ret = jenv->NewStringUTF(controller->lastSearchIP.c_str());
+    renderer->endControllerModification();
+    return ret;
+}
 
-                                                                                                     jstring destinationAddr, int ttl) {
+JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_setLastSearchIP(JNIEnv* jenv, jobject obj, jstring ipAddr) {
+    MapController* controller = renderer->beginControllerModification();
+
+    // Convert ip address
+    std::string c_ip_addr = jenv->GetStringUTFChars(ipAddr, 0);
+
+    // Set on controller
+    controller->lastSearchIP = c_ip_addr;
+    renderer->endControllerModification();
+}
+
+JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_probeDestinationAddressWithTTL(JNIEnv* jenv, jobject obj, jstring destinationAddr, int ttl) {
     if(!tracepath) {
         tracepath = new Tracepath();
     }

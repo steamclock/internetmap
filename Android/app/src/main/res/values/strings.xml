@@ -6,7 +6,7 @@
     <string name="nodata">No data.</string>
     <string name="oneconnection">One Connection</string>
     <string name="nconnections">%d Connections</string>
-    <string name="dotraceroute">Perform Traceroute</string>
+    <string name="dotraceroute">Traceroute</string>
     <string name="tracerouteAlreadyRunning">A traceroute is already running</string>
     <string name="currentASNFail">Couldn\'t look up current address.</string>
     <string name="asnAssociationFail">Couldn\'t find a node associated with your host.</string>
@@ -54,7 +54,12 @@
     <string name="trace_time">Time (ms)</string>
     <string name="traceroute_details">Details of Traceroute</string>
 
-    <string name="average">Average</string>
-
+    <string name="ping">Ping</string>
+    <string name="pinging_x">Pinging %s</string>
+    <string name="ping_average">Average</string>
+    <string name="ping_best">Best</string>
+    <string name="ping_received">Received</string>
+    <string name="reply_from_x">Reply from %s</string>
+    <string name="request_timed_out">Request timed out</string>
 
 </resources>

@@ -71,15 +71,38 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/next"
+                tools:visibility="visible"
                 android:visibility="gone" />
 
-            <Button
-                style="@style/brand_button"
-                android:id="@+id/tracerouteBtn"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/action_buttons_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/dotraceroute"
-                android:visibility="gone" />
+                android:orientation="horizontal">
+
+                <Button
+                    style="@style/brand_button"
+                    android:id="@+id/tracerouteBtn"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dotraceroute"
+                    tools:visibility="visible"
+                    android:visibility="visible"
+                    android:gravity="center"/>
+
+                <Button
+                    style="@style/brand_button"
+                    android:id="@+id/pingBtn"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ping"
+                    tools:visibility="visible"
+                    android:visibility="visible"
+                    android:gravity="center"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -106,7 +129,7 @@
             android:animateLayoutChanges="true"
             android:background="@color/translucentBlack">
 
-            <include layout="@layout/view_traceroute_details" />
+            <include layout="@layout/view_ping_details" />
 
         </ScrollView>
 

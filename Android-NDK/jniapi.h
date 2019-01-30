@@ -23,6 +23,9 @@ extern "C" {
     JNIEXPORT int JNICALL Java_com_peer1_internetmap_MapControllerWrapper_targetNodeIndex(JNIEnv* jenv, jobject obj);
     JNIEXPORT jobject JNICALL Java_com_peer1_internetmap_MapControllerWrapper_nodeByAsn(JNIEnv* jenv, jobject obj, jstring asn);
     JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_updateTargetForIndex(JNIEnv* jenv, jobject obj, int index);
+    JNIEXPORT jstring JNICALL Java_com_peer1_internetmap_MapControllerWrapper_lastSearchIP(JNIEnv* jenv, jobject obj);
+    JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_setLastSearchIP(JNIEnv* jenv, jobject obj, jstring ipAddr);
+
     //get every node efficiently
     JNIEXPORT jobjectArray JNICALL Java_com_peer1_internetmap_MapControllerWrapper_allNodes(JNIEnv* jenv, jobject obj);
     JNIEXPORT void JNICALL Java_com_peer1_internetmap_MapControllerWrapper_setTimelinePoint(JNIEnv* jenv, jobject obj, jstring year);

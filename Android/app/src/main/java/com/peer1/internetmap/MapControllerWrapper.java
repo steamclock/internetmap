@@ -35,7 +35,8 @@ public class MapControllerWrapper {
     public native void resetZoomAndRotationAnimated(boolean isPortraitMode);
     public native void setAllowIdleAnimation(boolean allow);
     public native void unhoverNode();
-    //public native String lastSearchIP(); // Ended up on branch, need to bring back at some point.
+    public native String lastSearchIP();
+    public native void setLastSearchIP(String ipAddr);
     public native void sendPacket();
     public native ProbeWrapper probeDestinationAddressWithTTL(String destAddr, int ttl);
     public native ProbeWrapper ping(String destAddr);
