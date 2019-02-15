@@ -1,6 +1,7 @@
 package com.peer1.internetmap.utils;
 
 import android.os.AsyncTask;
+import android.os.Handler;
 
 import com.peer1.internetmap.App;
 import com.peer1.internetmap.MapControllerWrapper;
@@ -32,19 +33,60 @@ public class PingUtil {
     }
 
     //=======================================================================
+    // Statistics Helper classes
+    //=======================================================================
+    // Properties could be placed on PingUtil directly, but this allows us to
+    // pass back full stats at once if we desire.
+    class PingStatistics {
+        int totalAttempts = 0;
+        int successes = 0;
+        int failures = 0;
+        double totalPingMs = 0;
+        double bestPingMs = Double.MAX_VALUE;
+        double averagePingMs = 0;
+        double receivedPercent = 0;
+    }
+
+    //=======================================================================
+    // Private variables
+    //=======================================================================
+    private PingStatistics stats;
+    private String destination;
+    private boolean isRunning = false;
+    private boolean forceStop = false;
+    private final int maxPings = 255;
+
+    private Handler attemptHandler = new Handler();
+    private Runnable attemptRunnable = new Runnable() {
+        @Override
+        public void run() {
+            // Run a single attempt.
+            PingAttemptTask attempt = new PingAttemptTask();
+            attempt.execute();
+        }
+    };
+
+    private void startNextAttemptRequest(Long waitMs) {
+        if (stats.totalAttempts > maxPings || forceStop) {
+            // Done!
+            isRunning = false;
+        } else {
+            // Else post the request to make a Ping attempt.
+            attemptHandler.postDelayed(attemptRunnable, waitMs);
+        }
+    }
+
+    //=======================================================================
     // Singleton
     //=======================================================================
     private static final PingUtil instance = new PingUtil();
-    private PingUtil() {
-        pingTask = null;
-    }
+    private PingUtil() { }
     public static PingUtil getInstance() { return instance; }
 
     //=======================================================================
     // Privates
     //=======================================================================
     private Listener callbackListener;
-    private PingTask pingTask;
 
     //=======================================================================
     // Public
@@ -55,26 +97,8 @@ public class PingUtil {
 
     public void removeListener() { callbackListener = null; }
 
-    public void startPing(final String to) {
-        if (pingTask != null && pingTask.isRunning) {
-            if (callbackListener != null) callbackListener.onPingAlreadyRunning();
-        } else {
-            // Cannot use instance of AsyncTask multiple times; create a new one with each ping.
-            pingTask = new PingTask();
-            pingTask.listener = callbackListener;
-            pingTask.pingDestination = to; //"172.217.3.164";
-            pingTask.execute();
-        }
-    }
-
-    public void stopPing() {
-        if (pingTask != null) {
-            pingTask.stopPing = true;
-        }
-    }
-
     public boolean isRunning() {
-        return pingTask != null && pingTask.isRunning;
+        return isRunning;
     }
 
     public String getPingDescription(ProbeWrapper pingResult) {
@@ -88,67 +112,69 @@ public class PingUtil {
         return App.getAppContext().getString(R.string.request_timed_out);
     }
 
-    //=======================================================================
-    // PingTask, allows us to run a ping as a background async task
-    //=======================================================================
-    static private class PingTask extends AsyncTask<Void, Void, Void> {
-        String pingDestination;
-        Listener listener;
-        Boolean isRunning = false;
+    public void startPing(final String to) {
+        if (isRunning) {
+            if (callbackListener != null) callbackListener.onPingAlreadyRunning();
+        } else {
+            isRunning = true;
+            destination = to;
+            stats = new PingStatistics();
+            startNextAttemptRequest(0L); // No wait before first request.
+        }
+    }
 
-        private ArrayList<ProbeWrapper> cachedPings;
-        private boolean stopPing = false;
-        private final int maxPings = 255;
+    public void stopPing() {
+        forceStop = true;
+    }
 
-        private ProbeWrapper probeWrapper;
+    //=======================================================================
+    // AsyncTask that runs a single Ping attempt (background) and updates the
+    // statistics object (main UI) and calls startNextAttemptRequest when complete.
+    //
+    // Having a single task per attempt allows us to add a small delay between each
+    // attempt to create a nicer UI experience.
+    //=======================================================================
+    private class PingAttemptTask extends AsyncTask<Void, Void, ProbeWrapper> {
+        @Override
+        protected ProbeWrapper doInBackground(Void... params) {
+            return MapControllerWrapper.getInstance().ping(destination);
+        }
 
         @Override
-        protected Void doInBackground(Void... params) {
-            cachedPings = new ArrayList<>();
-            isRunning = true;
+        protected void onPostExecute(ProbeWrapper probeWrapper) {
+            super.onPostExecute(probeWrapper);
 
-            // Run statistics
-            int successfulPings = 0;
-            int failedPings = 0;
-            double totalPingMs = 0;
-
-            double bestPingMs = Double.MAX_VALUE;
-            double averagePingMs = 0;
-            double receivedPercent = 0;
-
-            for (int pingNumber = 1; pingNumber <= maxPings; pingNumber++) {
-                probeWrapper = MapControllerWrapper.getInstance().ping(pingDestination);
-
-                if (stopPing) {
-                    break;
-                }
-
-                if (probeWrapper.success) {
-                    successfulPings = successfulPings + 1;
-                    if (listener != null) listener.onPingResult(pingNumber, probeWrapper);
-                } else {
-                    failedPings = failedPings + 1;
-                    if (listener != null) listener.onPingTimeout(pingNumber);
-                }
-
-                double pingMs = probeWrapper.elapsedMs;
-
-                // Calculate ping run properties
-                if (bestPingMs > pingMs) {
-                    bestPingMs = pingMs;
-                    if (listener != null) listener.onBestUpdated(bestPingMs);
-                }
-
-                totalPingMs = totalPingMs + pingMs;
-                averagePingMs = totalPingMs / pingNumber;
-                if (listener != null) listener.onAverageUpdated(averagePingMs);
-
-                receivedPercent = successfulPings / pingNumber;
-                if (listener != null) listener.onReceivedUpdated(receivedPercent);
+            // Generate stats
+            if (stats == null) {
+                stats = new PingStatistics();
             }
 
-            isRunning = false;
-            return null;
+            stats.totalAttempts += 1;
+            if (probeWrapper.success) {
+                stats.successes += 1;
+                if (callbackListener != null) callbackListener.onPingResult(stats.totalAttempts, probeWrapper);
+            } else {
+                stats.failures += 1;
+                if (callbackListener != null) callbackListener.onPingTimeout(stats.totalAttempts);
+            }
+
+            double pingMs = probeWrapper.elapsedMs;
+
+            // Calculate ping run properties
+            if (stats.bestPingMs > pingMs) {
+                stats.bestPingMs = pingMs;
+                if (callbackListener != null) callbackListener.onBestUpdated(stats.bestPingMs);
+            }
+
+            stats.totalPingMs = stats.totalPingMs + pingMs;
+            stats.averagePingMs = stats.totalPingMs / stats.totalAttempts;
+            if (callbackListener != null) callbackListener.onAverageUpdated(stats.averagePingMs);
+
+            stats.receivedPercent = stats.successes / stats.totalAttempts;
+            if (callbackListener != null) callbackListener.onReceivedUpdated(stats.receivedPercent);
+
+            startNextAttemptRequest(1000L);
         }
+
     }
 }
