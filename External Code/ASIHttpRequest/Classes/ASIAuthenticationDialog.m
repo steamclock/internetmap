@@ -145,7 +145,7 @@ static const NSUInteger kDomainSection = 1;
 	CGRect f = [[UIScreen mainScreen] applicationFrame];
 
 	// Swap the frame height and width if necessary
- 	if (UIInterfaceOrientationIsPortrait(o)) {
+ 	if (UIInterfaceOrientationIsLandscape(o)) {
 		CGFloat t;
 		t = f.size.width;
 		f.size.width = f.size.height;
