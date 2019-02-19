@@ -9,6 +9,7 @@
 import json
 import csv
 import random
+import ipaddress
 
 class IPBlock:
 	def __init__(self, ipfirst, iplast, as_):
@@ -35,6 +36,9 @@ def listinsert(item, thelist, start = 0, end = None):
 	if start == end:
 		return thelist[:start] + [item] + thelist[start:]
 	
+def IPv4CIDRtoIPStartEnd(cidr):
+	n = ipaddress.IPv4Network(cidr)
+	return int(n[0]), int(n[-1])
 	
 class IPBlockList:
 	def __init__(self):
@@ -62,25 +66,57 @@ class IPBlockList:
 blocklistdic = {}
 asdic = {}
 
-with open('data/GeoIPASNum2.csv', 'rb') as csvfile:
+# Old
+# with open('data/GeoIPASNum2.csv', 'rb') as csvfile:
+	# reader = csv.reader(csvfile)
+	# counter = 0
+	# for row in reader:
+	# 	counter += 1
+	# 	# if counter < 100:
+	# 	# 	print row
+	# 	print row
+	# 	asstring = row[2].decode("latin1")
+	# 	ind = asstring.find(u" ")
+	# 	asnum = int(asstring[2:ind])
+	# 	asname = asstring[ind + 1:].encode("utf-8")
+
+	# 	if asnum not in asdic:
+	# 		asdic[asnum] = AS(asnum, asname)
+	# 	as_ = asdic[asnum]
+		
+	# 	firstip = int(row[0])
+	# 	lastip = int(row[1])
+	# 	if firstip >> 16 not in blocklistdic:
+	# 		blocklistdic[firstip >> 16] = IPBlockList()
+	# 	blocklist = blocklistdic[firstip >> 16]
+		
+	# 	newblock = IPBlock(firstip, lastip, as_)
+	# 	blocklist.insert(newblock)
+	# 	as_.ipblocks.append(newblock)
+
+
+with open('data/GeoLite2-ASN-Blocks-IPv4.csv', 'rb') as csvfile:
 	reader = csv.reader(csvfile)
 	counter = 0
+
+	next(reader, None) # Skip the header
+
 	for row in reader:
 		counter += 1
 		# if counter < 100:
 		# 	print row
 		print row
-		asstring = row[2].decode("latin1")
-		ind = asstring.find(u" ")
-		asnum = int(asstring[2:ind])
-		asname = asstring[ind + 1:].encode("utf-8")
+		cidr = row[0]
+		asnum = row[1]
+		asname = row[2]
+		firstip, lastip = IPv4CIDRtoIPStartEnd(cidr)
+
+		print str(firstip) + " " + str(lastip)
 
 		if asnum not in asdic:
 			asdic[asnum] = AS(asnum, asname)
 		as_ = asdic[asnum]
-		
-		firstip = int(row[0])
-		lastip = int(row[1])
+	
 		if firstip >> 16 not in blocklistdic:
 			blocklistdic[firstip >> 16] = IPBlockList()
 		blocklist = blocklistdic[firstip >> 16]
