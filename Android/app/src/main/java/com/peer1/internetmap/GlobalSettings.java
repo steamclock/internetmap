@@ -21,7 +21,7 @@ import java.util.Set;
 public class GlobalSettings {
 
     // App should default to show this as the default year.
-    private String defaultYear = "2017";
+    private String defaultYear = "2018";
 
     // List of years which have simulated data sets.
     private Set<String> simulatedYears = new HashSet<String>(); // Default to empty

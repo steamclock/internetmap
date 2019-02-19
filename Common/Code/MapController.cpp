@@ -107,6 +107,7 @@ MapController::MapController() :
     setTimelinePoint("2015");
     setTimelinePoint("2016");
     setTimelinePoint("2017");
+    setTimelinePoint("2018");
     setTimelinePoint("2020");
 
     setTimelinePoint(defaultYear);
