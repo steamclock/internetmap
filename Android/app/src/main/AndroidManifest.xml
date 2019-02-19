@@ -59,7 +59,7 @@
                 android:value=".InternetMap" />
         </activity>
         <activity android:name=".FirstTimeActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+            android:theme="@style/Theme.AppCompat.NoActionBar"
             android:parentActivityName=".InternetMap">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
