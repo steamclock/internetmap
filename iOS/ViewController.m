@@ -18,7 +18,6 @@
 #import "TimelineInfoViewController.h"
 #import "ExpandedSlider.h"
 #import "FirstUseViewController.h"
-#import "ContactFormViewController.h"
 #import <SafariServices/SafariServices.h>
 #import "ARKit/ARKit.h"
 
@@ -391,10 +390,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 -(void)checkCameraAuthorization {
     AVAuthorizationStatus auth = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
 
-    NSString* text = @"Move the camera across a flat surface to place the map";
+    NSString* text = NSLocalizedString(@"Move the camera across a flat surface to place the map", nil);
 
     if(auth != AVAuthorizationStatusAuthorized) {
-        text = @"Please allow camera access for Internet Map in Settings";
+        text = NSLocalizedString(@"Please allow camera access for Internet Map in Settings", nil);
     }
 
     NSMutableAttributedString* attrString = [[NSMutableAttributedString alloc] initWithString:text];
@@ -850,7 +849,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                     break;
                 }
                 default: //can't happen
-                    NSLog(@"Unexpected info index %zd!!", index);
+                    NSLog(@"Unexpected info index %d!!", index);
             }
 
             [weakSelf.infoPopover dismissPopoverAnimated:YES];

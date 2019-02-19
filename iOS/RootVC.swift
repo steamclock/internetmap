@@ -73,13 +73,13 @@ public class RootVC: UIViewController {
 
     public override func viewDidLoad() {
         super.viewDidLoad()
-        rendererVC = childViewControllers.first as! ViewController
+        rendererVC = children.first as! ViewController?
     }
 
-    func toggleAR() {
+    @objc func toggleAR() {
         if mode == .disabled {
-            if AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) == .notDetermined {
-                AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo) { granted in
+            if AVCaptureDevice.authorizationStatus(for: .video) == .notDetermined {
+                AVCaptureDevice.requestAccess(for: .video) { granted in
                     DispatchQueue.main.async {
                         self.mode = .searching
 
@@ -103,7 +103,7 @@ public class RootVC: UIViewController {
         image.alpha = 0.5
         image.contentMode = .scaleAspectFill
         view.addSubview(image)
-        view.sendSubview(toBack: image)
+        view.sendSubviewToBack(image)
         imageView = image
 
         cameraDelegate = CameraDelegate(root: self, cameraImage: image, renderer: rendererVC)
@@ -120,7 +120,7 @@ public class RootVC: UIViewController {
               let arSession = arSession,
               let cameraDelegate = cameraDelegate,
               let view = arSession.currentFrame?.camera.viewMatrix(for: UIApplication.shared.statusBarOrientation),
-              let planes = arSession.currentFrame?.anchors.flatMap({ $0 as? ARPlaneAnchor}),
+              let planes = arSession.currentFrame?.anchors.compactMap({ $0 as? ARPlaneAnchor}),
               !planes.isEmpty else {
             return
         }

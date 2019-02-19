@@ -16,7 +16,7 @@ public class TimedMessageLabel: UILabel {
         alpha = 0.0
     }
 
-    public func setErrorString(_ error: String) {
+    @objc public func setErrorString(_ error: String) {
         text = error
 
         hidingTimer?.invalidate()
