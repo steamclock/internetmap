@@ -192,10 +192,10 @@ permittedArrowDirections:(UIPopoverArrowDirection)permittedArrowDirections
 	CGFloat biggestSurface = 0.0f;
 	CGFloat currentMinMargin = 0.0f;
 	
-	UIImage *upArrowImage = [UIImage imageNamed:properties.upArrowImageName];
-	UIImage *downArrowImage = [UIImage imageNamed:properties.downArrowImageName];
-	UIImage *leftArrowImage = [UIImage imageNamed:properties.leftArrowImageName];
-	UIImage *rightArrowImage = [UIImage imageNamed:properties.rightArrowImageName];
+    UIImage *upArrowImage = properties.upArrowImageName ? [UIImage imageNamed:properties.upArrowImageName] : nil;
+    UIImage *downArrowImage = properties.downArrowImageName ? [UIImage imageNamed:properties.downArrowImageName] : nil;
+    UIImage *leftArrowImage = properties.leftArrowImageName ? [UIImage imageNamed:properties.leftArrowImageName] : nil;
+    UIImage *rightArrowImage = properties.rightArrowImageName ? [UIImage imageNamed:properties.rightArrowImageName] : nil;
 	
 	while (theArrowDirection <= UIPopoverArrowDirectionRight) {
 		
