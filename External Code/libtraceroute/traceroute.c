@@ -63,7 +63,7 @@ traceroute__init_outip(struct traceroute *t)
 	t->outp = (u_char *)(t->outip + 1);
 	t->outip->ip_dst = t->to->sin_addr;
 
-	t->outip->ip_hl = (t->outp - (u_char *)t->outip) >> 2;
+	t->outip->ip_hl = (u_int)(t->outp - (u_char *)t->outip) >> 2;
 
 	t->outip->ip_src = t->from->sin_addr;
 	return t->outip;
@@ -204,6 +204,8 @@ traceroute_time_delta(struct traceroute *t)
 int
 traceroute_wait_for_reply(struct traceroute *t)
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-variable"
 	fd_set *fdsp;
 	size_t nfds;
 	struct timeval now, wait;
@@ -213,6 +215,7 @@ traceroute_wait_for_reply(struct traceroute *t)
 	int sock = t->s;
 	struct sockaddr_in *fromp = t->from;
 	struct timeval *tp = &t->timesent;
+#pragma clang diagnostic pop
 
 	nfds = howmany(sock + 1, NFDBITS);
 	if ((fdsp = malloc(nfds * sizeof(fd_mask))) == NULL)
@@ -229,7 +232,7 @@ traceroute_wait_for_reply(struct traceroute *t)
 		exit(1);
 	}
 	if (error > 0)
-		cc = recvfrom(sock, (char *)t->packet, sizeof(t->packet), 0,
+		cc = (int)recvfrom(sock, (char *)t->packet, sizeof(t->packet), 0,
 			    (struct sockaddr *)fromp, &fromlen);
 
 	if (cc != 0)
@@ -301,7 +304,7 @@ send_probe(struct traceroute *t, int seq, int ttl)
 	}
 #endif
 
-	cc = sendto(t->sndsock, (char *)t->outip,
+	cc = (int)sendto(t->sndsock, (char *)t->outip,
 	    t->packlen, 0, &t->whereto, sizeof(t->whereto));
 	if (cc < 0)
 		return errno;
@@ -345,6 +348,8 @@ deltaT(struct timeval *t1p, struct timeval *t2p)
 	return dt;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-function"
 /*
  * Convert an ICMP "type" field to a printable string.
  */
@@ -364,6 +369,7 @@ pr_type(u_char t)
 
 	return(ttab[t]);
 }
+#pragma clang diagnostic pop
 
 int
 traceroute_packet_ok(struct traceroute *t, int cc)
@@ -406,7 +412,7 @@ traceroute_packet_ok(struct traceroute *t, int cc)
 		u_char *inner;
 
 		t->hip = &icp->icmp_ip;
-		t->hiplen = ((u_char *)icp + cc) - (u_char *)t->hip;
+		t->hiplen = (int)(((u_char *)icp + cc) - (u_char *)t->hip);
 		hlen = t->hip->ip_hl << 2;
 		inner = (u_char *)((u_char *)t->hip + hlen);
 		if (hlen + 12 <= cc
@@ -567,6 +573,8 @@ in_cksum(u_short *addr, int len)
 	return (answer);
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-function"
 /*
  * Subtract 2 timeval structs:  out = out - in.
  * Out is assumed to be within about LONG_MAX seconds of in.
@@ -581,6 +589,7 @@ tvsub(struct timeval *out, struct timeval *in)
 	}
 	out->tv_sec -= in->tv_sec;
 }
+#pragma clang diagnostic pop
 
 static struct hostinfo *
 gethostinfo(const char *hostname)
@@ -635,8 +644,11 @@ gethostinfo(const char *hostname)
 
 	return (hi);
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunreachable-code"
 free_hi_addrs:
 	free(hi->addrs);
+#pragma clang diagnostic pop
 
 free_hi:
 	free(hi);
@@ -656,6 +668,8 @@ freehostinfo(struct hostinfo *hi)
 	free((char *)hi);
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-function"
 static void
 getaddr(u_int32_t *ap, char *hostname)
 {
@@ -665,6 +679,7 @@ getaddr(u_int32_t *ap, char *hostname)
 	*ap = hi->addrs[0];
 	freehostinfo(hi);
 }
+#pragma clang diagnostic pop
 
 static void
 setsin(struct sockaddr_in *sin, u_int32_t addr)
@@ -678,6 +693,8 @@ setsin(struct sockaddr_in *sin, u_int32_t addr)
 	sin->sin_addr.s_addr = addr;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-function"
 static struct outproto *
 setproto(char *pname)
 {
@@ -703,3 +720,4 @@ setproto(char *pname)
 	}
 	return proto;
 }
+#pragma clang diagnostic pop
