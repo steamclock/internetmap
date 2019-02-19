@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GestureDetectorCompat;
+import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
@@ -33,6 +35,7 @@ import com.peer1.internetmap.network.common.CommonClient;
 import com.peer1.internetmap.utils.AppUtils;
 import com.peer1.internetmap.utils.CustomTooltipManager;
 import com.peer1.internetmap.utils.SharedPreferenceUtils;
+import com.peer1.internetmap.utils.TracerouteUtil;
 import com.peer1.internetmap.utils.ViewUtils;
 import com.spyhunter99.supertooltips.ToolTip;
 import com.spyhunter99.supertooltips.ToolTipManager;
@@ -49,6 +52,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.TreeMap;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -60,7 +64,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
     private GestureDetectorCompat mGestureDetector;
     private ScaleGestureDetector mScaleDetector;
     private RotateGestureDetector mRotateDetector;
-    
+
     private MapControllerWrapper mController;
     private Handler mHandler; //handles threadsafe messages
 
@@ -119,10 +123,10 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
         logo = (ImageView) findViewById(R.id.peerLogo);
 
         //init a bunch of pointers
+        mController = MapControllerWrapper.getInstance();
         mGestureDetector = new GestureDetectorCompat(this, new MyGestureListener());
         mScaleDetector = new ScaleGestureDetector(this, new ScaleListener());
         mRotateDetector = new RotateGestureDetector(this, new RotateListener());
-        mController = new MapControllerWrapper();
         mHandler = new Handler();
 
         SeekBar timelineBar = (SeekBar) findViewById(R.id.timelineSeekBar);
@@ -412,6 +416,19 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
                 } else {
                     isSimulated = false;
                     popupView = layoutInflater.inflate(R.layout.nodeview, null);
+
+                    // Determine height of traceview window based on the height of the device.
+                    DisplayMetrics displayMetrics = new DisplayMetrics();
+                    getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                    int heightPx = displayMetrics.heightPixels;
+                    int heightDp = heightPx / 3;
+
+                    // Set the height of the traceroute details view to be 1/3 the screen size.
+                    popupView.findViewById(R.id.traceroute_details).setLayoutParams(new LinearLayout.LayoutParams(
+                            LayoutParams.MATCH_PARENT,
+                            heightDp
+                    ));
+
                     if (isSmallScreen()) {
                         popupView.findViewById(R.id.leftArrow).setVisibility(View.GONE);
                     }
@@ -424,7 +441,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
                     });
                 }
 
-                mNodePopup = new NodePopup(this, popupView, mInTimelineMode, isSimulated);
+                mNodePopup = new NodePopup(this, mController, popupView, mInTimelineMode, isSimulated);
                 mNodePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     public void onDismiss() {
                         mNodePopup = null;
@@ -448,7 +465,7 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
             mNodePopup.setWidth(width);
             mNodePopup.setHeight(LayoutParams.WRAP_CONTENT);
             int height = mNodePopup.getMeasuredHeight();
-            mNodePopup.setHeight(height); //work around weird bugs
+            mNodePopup.setWindowLayoutMode(width, LayoutParams.WRAP_CONTENT);
 
             // Determine popup location
             int gravity, xOffset = 0, yOffset = 0;
@@ -478,42 +495,6 @@ public class InternetMap extends BaseActivity implements SurfaceHolder.Callback 
 
             mNodePopup.showAtLocation(mainView, gravity, xOffset, yOffset);
         }
-    }
-
-    public void runTraceroute(View unused) throws JSONException, UnsupportedEncodingException{
-        Timber.v(TAG, "TODO: traceroute");
-        //check internet status
-        boolean isConnected = haveConnectivity();
-
-        if (!isConnected) {
-            return;
-        }
-        String asn = "AS15169";
-//        ASNRequest.fetchIPsForASN(asn, new ASNResponseHandler() {
-//            public void onStart() {
-//
-//            }
-//            public void onFinish() {
-//
-//            }
-//
-//            public void onSuccess(JSONObject response) {
-//                try {
-//                	//Try and get legit payload here
-//                    Log.d(TAG, String.format("payload: %s", response));
-//                } catch (Exception e) {
-//                    Log.d(TAG, String.format("Can't parse response: %s", response.toString()));
-//                    showError(getString(R.string.tracerouteStartIPFail));
-//                }
-//            }
-//
-//            public void onFailure(Throwable e, String response) {
-//                String message = getString(R.string.tracerouteStartIPFail);
-//                showError(message);
-//                Log.d(TAG, message);
-//            }
-//        });
-
     }
 
     // endregion

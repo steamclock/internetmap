@@ -3,6 +3,9 @@ package com.peer1.internetmap;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.widget.Toast;
+
+import com.peer1.internetmap.utils.AppUtils;
 
 import timber.log.Timber;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -59,5 +62,13 @@ public class App extends Application {
 
     public static Context getAppContext() {
         return appContext;
+    }
+
+    public static boolean hasConnection() {
+        return AppUtils.haveConnectivity(appContext);
+    }
+
+    public static void showNoConnectionFeedback() {
+        Toast.makeText(appContext, "No network connection", Toast.LENGTH_LONG).show();
     }
 }

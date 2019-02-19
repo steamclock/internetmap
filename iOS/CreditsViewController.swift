@@ -9,8 +9,8 @@
 import UIKit
 
 public class CreditsViewController: UIViewController, UIWebViewDelegate {
-    public var informationType = ""
-    public var delegate: AnyObject?
+    @objc public var informationType = ""
+    @objc public var delegate: AnyObject?
 
     private var webView: UIWebView!
     private var aboutMoreButton: UIButton?
@@ -21,9 +21,8 @@ public class CreditsViewController: UIViewController, UIWebViewDelegate {
     
     class func size(in orientation: UIInterfaceOrientation) -> CGSize {
         var size: CGSize = UIScreen.main.bounds.size
-        let application = UIApplication.shared
 
-        if UIInterfaceOrientationIsLandscape(orientation) {
+        if orientation.isLandscape {
             size = CGSize(width: size.height, height: size.width)
         }
 
@@ -70,10 +69,10 @@ public class CreditsViewController: UIViewController, UIWebViewDelegate {
 
         var filePath: String
 
-        if informationType != nil && (informationType == "about") {
+        if informationType == "about" {
             filePath = Bundle.main.path(forResource: "about", ofType: "html") ?? ""
         }
-        else if informationType != nil && (informationType == "contact") {
+        else if informationType == "contact" {
             filePath = Bundle.main.path(forResource: "contact", ofType: "html") ?? ""
         }
         else {
@@ -157,7 +156,7 @@ public class CreditsViewController: UIViewController, UIWebViewDelegate {
             aboutMoreButton.bottomAnchor.constraint(equalTo: guide.bottomAnchor, constant:-10).isActive = true
             aboutMoreButton.heightAnchor.constraint(equalToConstant: aboutMoreButtonHeight).isActive = true
             aboutMoreButton.widthAnchor.constraint(equalToConstant: contactButtonWidth).isActive = true
-            aboutMoreButton.centerXAnchor.constraintEqualToSystemSpacingAfter(guide.centerXAnchor, multiplier: 1.0).isActive = true
+            aboutMoreButton.centerXAnchor.constraint(equalToSystemSpacingAfter: guide.centerXAnchor, multiplier: 1.0).isActive = true
         }
     }
 
@@ -180,7 +179,7 @@ public class CreditsViewController: UIViewController, UIWebViewDelegate {
     @IBAction func aboutMore(_ sender: Any) {
         dismiss(animated: false)
 
-        let sel = Selector("moreAboutCogeco")
+        let sel = #selector(ViewController.moreAboutCogeco)
 
         if delegate?.responds(to: sel) ?? false {
             _ = delegate?.perform(sel)

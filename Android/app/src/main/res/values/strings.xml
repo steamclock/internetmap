@@ -7,6 +7,7 @@
     <string name="oneconnection">One Connection</string>
     <string name="nconnections">%d Connections</string>
     <string name="dotraceroute">Perform Traceroute</string>
+    <string name="tracerouteAlreadyRunning">A traceroute is already running</string>
     <string name="currentASNFail">Couldn\'t look up current address.</string>
     <string name="asnAssociationFail">Couldn\'t find a node associated with your host.</string>
     <string name="tracerouteStartIPFail">Error: ASN couldn\'t be resolved into IP. Please try another node!</string>
@@ -46,4 +47,9 @@
     <string name="searchTooltip">Here you can search for\ncompanies and domains</string>
     <string name="visTooltip">You can also view the\ninternet as a network</string>
     <string name="timelineTooltip">And browse the\nhistory of the internet</string>
+
+    <string name="trace_ip_hops">IP Hops</string>
+    <string name="trace_asn_hops">ASN Hops</string>
+    <string name="trace_time">Time (ms)</string>
+    <string name="traceroute_details">Details of Traceroute</string>
 </resources>

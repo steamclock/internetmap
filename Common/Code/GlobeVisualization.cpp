@@ -154,7 +154,7 @@ void GlobeVisualization::updateConnectionLines(shared_ptr<MapDisplay> display, N
     float radius = length(Vector3(nodePosition(node)));
 
 
-    shared_ptr<DisplayLines> lines(new DisplayLines(connections.size() * numSubdiv));
+    shared_ptr<DisplayLines> lines(new DisplayLines((int)connections.size() * numSubdiv));
     lines->beginUpdate();
 
     Color selfColor = ColorFromRGB(SELECTED_CONNECTION_COLOR_SELF_HEX);

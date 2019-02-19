@@ -3978,7 +3978,8 @@ static NSOperationQueue *sharedQueue = nil;
 		// Work around <rdar://problem/5530166>.  This dummy call to 
 		// CFNetworkCopyProxiesForURL initialise some state within CFNetwork 
 		// that is required by CFNetworkCopyProxiesForAutoConfigurationScript.
-		CFRelease(CFNetworkCopyProxiesForURL((CFURLRef)[self url], NULL));
+        NSDictionary *systemProxySettings = [(NSDictionary *) CFNetworkCopySystemProxySettings() autorelease];
+		CFRelease(CFNetworkCopyProxiesForURL((CFURLRef)[self url], (CFDictionaryRef) systemProxySettings));
 
 		// Obtain the list of proxies by running the autoconfiguration script
 		CFErrorRef err = NULL;
@@ -4730,14 +4731,18 @@ static NSOperationQueue *sharedQueue = nil;
 + (void)showNetworkActivityIndicator
 {
 #if TARGET_OS_IPHONE
-	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    });
 #endif
 }
 
 + (void)hideNetworkActivityIndicator
 {
 #if TARGET_OS_IPHONE
-	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];	
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    });
 #endif
 }
 

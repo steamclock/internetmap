@@ -159,7 +159,7 @@ void DefaultVisualization::updateHighlightRouteLines(shared_ptr<MapDisplay> disp
 }
 
 void DefaultVisualization::updateConnectionLines(shared_ptr<MapDisplay> display, NodePointer node, std::vector<ConnectionPointer> connections) {
-    shared_ptr<DisplayLines> lines(new DisplayLines(connections.size()));
+    shared_ptr<DisplayLines> lines(new DisplayLines((int)connections.size()));
     lines->beginUpdate();
 
     Color otherColor = ColorFromRGB(SELECTED_CONNECTION_COLOR_OTHER_HEX);

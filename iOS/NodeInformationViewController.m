@@ -193,7 +193,7 @@ typedef NS_ENUM(NSInteger, MOINodeAction) {
     connectionsLabel.textColor = FONT_COLOR_WHITE;
     connectionsLabel.backgroundColor = [UIColor clearColor];
     NSString* conn = self.node.numberOfConnections == 1 ? @"Connection" : @"Connections";
-    connectionsLabel.text = [NSString stringWithFormat:@"%zd %@", self.node.numberOfConnections, conn];
+    connectionsLabel.text = [NSString stringWithFormat:@"%d %@", self.node.numberOfConnections, conn];
     [self.scrollView addSubview:connectionsLabel];
     [self.infoLabels addObject:connectionsLabel];
     

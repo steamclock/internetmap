@@ -141,7 +141,7 @@ struct traceroute {
 };
 
 /* traceroute methods */
-struct traceroute * traceroute_alloc();
+struct traceroute * traceroute_alloc(void);
 void traceroute_free(struct traceroute *);
 
 void traceroute_init(struct traceroute *);

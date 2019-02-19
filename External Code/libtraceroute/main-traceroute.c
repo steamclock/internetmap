@@ -57,6 +57,8 @@ int
 main_traceroute(int argc, char **argv)
 {
 	struct traceroute *t = traceroute_alloc();
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-variable"
 	int op, code, n;
 	char *cp;
 	const char *err;
@@ -71,6 +73,7 @@ main_traceroute(int argc, char **argv)
 	const char devnull[] = "/dev/null";
 	int printdiff = 0; /* Print the difference between sent and quoted */
 	int ret;
+#pragma clang diagnostic pop
 
 	/* Insure the socket fds won't be 0, 1 or 2 */
 	if (open(devnull, O_RDONLY) < 0 ||

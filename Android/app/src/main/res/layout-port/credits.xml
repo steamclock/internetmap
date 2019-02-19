@@ -25,13 +25,10 @@
             android:background="@android:color/transparent" />
 
         <Button
+            style="@style/brand_button"
             android:id="@+id/bottom_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="10dp"
-            android:background="@drawable/shape_button_accent_color"
-            android:padding="10dp"
             android:text="@string/next"
             android:visibility="gone" />
 

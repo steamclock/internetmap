@@ -216,6 +216,7 @@ Matrix4 Matrix4FromGLKMatrix4(GLKMatrix4 mat) {
     DefaultVisualization::setSelectedNodeColour(enable ? ColorFromRGB(0xFFA500) : ColorFromRGB(SELECTED_NODE_COLOR_HEX));
     DefaultVisualization::setPortrait(![HelperMethods deviceIsiPad] && !enable);
     _controller->updateDisplay(false);
+    _controller->display->setTransparentClear(enable);
 }
 
 - (void)overrideCameraTransform:(matrix_float4x4)transform projection:(matrix_float4x4)projection modelPos:(GLKVector3)modelPos {

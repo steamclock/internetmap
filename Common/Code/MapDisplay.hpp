@@ -25,6 +25,7 @@ class MapDisplay {
 
     float _displayScale;
     TimeInterval _currentTime;
+    bool _transparentClear;
     
     TimeInterval _pendingBlendTime;
     TimeInterval _startBlend;
@@ -35,7 +36,10 @@ public:
     
     void setDisplayScale(float f) { _displayScale = f; }
     float getDisplayScale() { return _displayScale;}
-    
+
+    void setTransparentClear(bool b) { _transparentClear = b; }
+    bool getTransparentClear() { return _transparentClear;}
+
     shared_ptr<Camera> camera;
     shared_ptr<DisplayNodes> nodes;
     shared_ptr<DisplayNodes> targetNodes;

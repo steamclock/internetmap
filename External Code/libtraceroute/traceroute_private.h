@@ -50,6 +50,8 @@ static int	icmp_check(struct traceroute *, const u_char *, int);
 static struct hostinfo *gethostinfo(const char *hostname);
 
 /* Forwards */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-function"
 static void	freehostinfo(struct hostinfo *);
 static void	getaddr(u_int32_t *, char *);
 static struct	hostinfo *gethostinfo(const char *);
@@ -70,6 +72,7 @@ int	usleep(u_int);
 static int send_probe(struct traceroute *, int, int);
 static double deltaT(struct timeval *t1p, struct timeval *t2p);
 static void	setsin(struct sockaddr_in *, u_int32_t);
+#pragma clang diagnostic pop
 
 /* List of supported protocols. The first one is the default. The last
    one is the handler for generic protocols not explicitly listed. */
