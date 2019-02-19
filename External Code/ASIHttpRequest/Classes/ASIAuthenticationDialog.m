@@ -133,7 +133,7 @@ static const NSUInteger kDomainSection = 1;
 {
 	[self showTitle];
 	
-	UIInterfaceOrientation o = (UIInterfaceOrientation)[[UIApplication sharedApplication] statusBarOrientation];
+	UIInterfaceOrientation o = [[UIApplication sharedApplication] statusBarOrientation];
 	CGFloat angle = 0;
 	switch (o) {
 		case UIDeviceOrientationLandscapeLeft: angle = 90; break;
@@ -145,7 +145,7 @@ static const NSUInteger kDomainSection = 1;
 	CGRect f = [[UIScreen mainScreen] applicationFrame];
 
 	// Swap the frame height and width if necessary
- 	if (UIDeviceOrientationIsLandscape(o)) {
+ 	if (UIInterfaceOrientationIsPortrait(o)) {
 		CGFloat t;
 		t = f.size.width;
 		f.size.width = f.size.height;
@@ -247,7 +247,7 @@ static const NSUInteger kDomainSection = 1;
 {
 	UINavigationBar *navigationBar = [[[self view] subviews] objectAtIndex:0];
 	UINavigationItem *navItem = [[navigationBar items] objectAtIndex:0];
-	if (UIInterfaceOrientationIsPortrait([[UIDevice currentDevice] orientation])) {
+	if (UIDeviceOrientationIsPortrait([[UIDevice currentDevice] orientation])) {
 		// Setup the title
 		if ([self type] == ASIProxyAuthenticationType) {
 			[navItem setPrompt:@"Login to this secure proxy server."];

@@ -58,28 +58,28 @@
 -(id)initWithDispatchQueue:(dispatch_queue_t)queue;
 
 // Asynchronously dispatch the block on the queue, just like dispatch_async
--(void)dispatchAsync:(void(^)())block;
+-(void)dispatchAsync:(void(^)(void))block;
 
 // Synchronously dispatch the block on the queue, unlike plain dispatch_sync, this won't 
 // deadlock of you try to sync with the current queue (it will just run the block immediatly)
--(void)dispatchSync:(void(^)())block;
+-(void)dispatchSync:(void(^)(void))block;
 
 // Synchrnously dispatch the block on the queue, with a return value, safe to sync with current queue
--(id)dispatchSyncWithObjectReturn:(id(^)())block;
--(BOOL)dispatchSyncWithBoolReturn:(BOOL(^)())block;
--(int)dispatchSyncWithIntReturn:(int(^)())block;
--(double)dispatchSyncWithDoubleReturn:(double(^)())block;
--(float)dispatchSyncWithFloatReturn:(float(^)())block;
+-(id)dispatchSyncWithObjectReturn:(id(^)(void))block;
+-(BOOL)dispatchSyncWithBoolReturn:(BOOL(^)(void))block;
+-(int)dispatchSyncWithIntReturn:(int(^)(void))block;
+-(double)dispatchSyncWithDoubleReturn:(double(^)(void))block;
+-(float)dispatchSyncWithFloatReturn:(float(^)(void))block;
 
 // Dispatch on the queue after a delay
--(void)dispatchAfter:(NSTimeInterval)time block:(void(^)())block;
+-(void)dispatchAfter:(NSTimeInterval)time block:(void(^)(void))block;
 
 // Dispatch on the queue with a given time period, until the called block returns FALSE
--(void)dispatchEvery:(NSTimeInterval)time block:(BOOL(^)())block;
+-(void)dispatchEvery:(NSTimeInterval)time block:(BOOL(^)(void))block;
 
 // faster, but more dangerous version of dispatchSync, will deadlock if you try to sync 
 // with the current queue (like raw dispatch_sync)
--(void)dispatchSyncFast:(void(^)())block;
+-(void)dispatchSyncFast:(void(^)(void))block;
 
 // Are we currently executing on this queue?
 -(BOOL)isCurrent;
@@ -92,7 +92,7 @@
 -(id)initWithQueue:(SCDispatchQueue*)queue;
 
 // Asynchronously dispatch the block on the queue as part of this group
--(void)dispatchAsync:(void(^)())block;
+-(void)dispatchAsync:(void(^)(void))block;
 
 // Wait for the group to complete
 -(void)wait;

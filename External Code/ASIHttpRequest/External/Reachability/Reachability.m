@@ -513,7 +513,7 @@ const SCNetworkReachabilityFlags kConnectionDown =  kSCNetworkReachabilityFlagsC
 
 		status = [self networkStatusForFlags: flags];
 
-//		logNetworkStatus(status);
+		logNetworkStatus(status);
 		
 		return (kNotReachable != status);
 		

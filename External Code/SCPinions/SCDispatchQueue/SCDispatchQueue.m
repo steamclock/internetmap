@@ -124,11 +124,11 @@ static int uniqueQueueId = 0;
     return self;
 }
 
--(void)dispatchAsync:(void(^)())block {
+-(void)dispatchAsync:(void(^)(void))block {
     dispatch_async(self.queue, block);
 }
 
--(void)dispatchSync:(void(^)())block {
+-(void)dispatchSync:(void(^)(void))block {
     if ([self isCurrent]) {
         block();
     }
@@ -151,40 +151,40 @@ ret = block();\
 \
 return ret;
 
--(id)dispatchSyncWithObjectReturn:(id(^)())block {
+-(id)dispatchSyncWithObjectReturn:(id(^)(void))block {
     DISPATCH_SYNC_RETURN_IMPLIMENTATION(id, block, self.queue);
 }
 
--(BOOL)dispatchSyncWithBoolReturn:(BOOL(^)())block {
+-(BOOL)dispatchSyncWithBoolReturn:(BOOL(^)(void))block {
     DISPATCH_SYNC_RETURN_IMPLIMENTATION(BOOL, block, self.queue);
 }
 
--(int)dispatchSyncWithIntReturn:(int(^)())block {
+-(int)dispatchSyncWithIntReturn:(int(^)(void))block {
     DISPATCH_SYNC_RETURN_IMPLIMENTATION(int, block, self.queue);
 }
 
--(float)dispatchSyncWithFloatReturn:(float(^)())block {
+-(float)dispatchSyncWithFloatReturn:(float(^)(void))block {
     DISPATCH_SYNC_RETURN_IMPLIMENTATION(float, block, self.queue);
 }
 
--(double)dispatchSyncWithDoubleReturn:(double(^)())block {
+-(double)dispatchSyncWithDoubleReturn:(double(^)(void))block {
     DISPATCH_SYNC_RETURN_IMPLIMENTATION(double, block, self.queue);
 }
 
--(void)dispatchAfter:(NSTimeInterval)time block:(void(^)())block {
+-(void)dispatchAfter:(NSTimeInterval)time block:(void(^)(void))block {
     double delayInSeconds = time;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), block);
 }
 
--(void)dispatchEvery:(NSTimeInterval)time block:(BOOL(^)())block {
+-(void)dispatchEvery:(NSTimeInterval)time block:(BOOL(^)(void))block {
     __block dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, self.queue);
     
     if(!timer) {
         return;
     }
     
-    void (^wrapper)() = ^{
+    void (^wrapper)(void) = ^{
         BOOL shouldContinue = block();
         
         if(!shouldContinue) {
@@ -197,7 +197,7 @@ return ret;
     dispatch_resume(timer);
 }
 
--(void)dispatchSyncFast:(void(^)())block {
+-(void)dispatchSyncFast:(void(^)(void))block {
     dispatch_sync(self.queue, block);
 }
 
@@ -223,7 +223,7 @@ return ret;
     return self;
 }
 
--(void)dispatchAsync:(void(^)())block {
+-(void)dispatchAsync:(void(^)(void))block {
     dispatch_group_async(self.group, self.queue.queue, block);
 }
 
