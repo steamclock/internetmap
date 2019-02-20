@@ -25,7 +25,7 @@ class AS:
 		self.ipblocks = []
 		self.locdic = {}
 		self.lat = 0
-		self.long = 0
+		self.lng = 0
 		self.loc = None
 	def __repr__(self):
 		return "AS" + str(self.asnum) + "|" + self.name + "}" + str(len(self.ipblocks)) + " blocks"
@@ -94,7 +94,8 @@ asdic = {}
 	# 	blocklist.insert(newblock)
 	# 	as_.ipblocks.append(newblock)
 
-
+print "\n\n=== Starting geo location (loc.py) generation ==="
+print "\n> Creating IP Blocklist (to ASN) lookup..."
 with open('data/GeoLite2-ASN-Blocks-IPv4.csv', 'rb') as csvfile:
 	reader = csv.reader(csvfile)
 	counter = 0
@@ -105,84 +106,160 @@ with open('data/GeoLite2-ASN-Blocks-IPv4.csv', 'rb') as csvfile:
 		counter += 1
 		# if counter < 100:
 		# 	print row
-		print row
+	
 		cidr = row[0]
-		asnum = row[1]
+		asnum = int(row[1])
 		asname = row[2]
 		firstip, lastip = IPv4CIDRtoIPStartEnd(cidr)
+		blockId = firstip >> 16
 
-		print str(firstip) + " " + str(lastip)
+		#print str(firstip) + " " + str(lastip)
 
+		# Add ASN to asn dictionary
 		if asnum not in asdic:
 			asdic[asnum] = AS(asnum, asname)
 		as_ = asdic[asnum]
 	
-		if firstip >> 16 not in blocklistdic:
-			blocklistdic[firstip >> 16] = IPBlockList()
-		blocklist = blocklistdic[firstip >> 16]
+		# Add IP block to block dictionary
+		if blockId not in blocklistdic:
+			blocklistdic[blockId] = IPBlockList()
+		blocklist = blocklistdic[blockId]
 		
 		newblock = IPBlock(firstip, lastip, as_)
 		blocklist.insert(newblock)
 		as_.ipblocks.append(newblock)
 
+		#if (counter > 100):
+			#break
+
+	print "Completed. " + str(len(blocklistdic)) + " IP Blocks found over " + str(counter) + " rows"
+
 # print asdic
 # print sorted(asdic.keys())
-
-
 # print blocklist.blocklist
 # print len(blocklist.blocklist)
 
-# load geographic location blocks
-with open('data/GeoLiteCity-Blocks.csv', 'rb') as csvfile:
+# Generate City Location lookup DB
+# New csv structure do not contain lat/lng lookups anymore. 
+# This will only map our Geoname -> City
+class Location:
+	def __init__(self, lat, lng, city):
+		self.lat = lat
+		self.lng = lng
+		self.city = city
+		self.used = False
+
+locdb = {}
+print "\n> Creating Geoname location lookup table..."
+with open('data/GeoLite2-City-Locations-en.csv', 'rb') as csvfile:
 	reader = csv.reader(csvfile)
-	reader.next()
-	reader.next()
 	counter = 0
+
+	next(reader, None) # Skip the header
+
 	for row in reader:
 		counter += 1
 		# if counter % 1000 == 0:
 		# 	print row
-		# print row
-		startip = int(row[0])
-		endip = int(row[1])
-		loc = int(row[2])
-		if startip >> 16 not in blocklistdic:
+
+		loc = int(row[0]) # Use Geoname ID as location UUID
+		city = row[10]
+
+		locdb[loc] = Location(-1, -1, city) # Don't know lat/lng yet
+
+	print "Completed. " + str(len(locdb)) + " locations found"
+
+
+# IP block -> City
+print "\n> Converting IP blocks to locations..."
+with open('data/GeoLite2-City-Blocks-IPv4.csv', 'rb') as csvfile:
+	reader = csv.reader(csvfile)
+	counter = 0
+	successes = 0
+	fails = 0
+
+	next(reader, None) # Skip the header
+
+	for row in reader:
+		counter += 1
+		# if counter % 1000 == 0:
+		# 	print row
+	 	#print row
+
+		cidr = row[0]
+		startip, endip = IPv4CIDRtoIPStartEnd(cidr)
+		geonameId = row[1] # Use Geoname id as location identifier
+		#countryGeonameId = row[2] # Not sure if we need this
+		lat = row[7]
+		lng = row[8]
+		
+		if not geonameId:
+			fails += 1
 			continue
-		blocklist = blocklistdic[startip >> 16]
+
+		loc = int(geonameId)
+		blockId = startip >> 16
+
+		if blockId not in blocklistdic:
+			fails += 1
+			continue
+
+		blocklist = blocklistdic[blockId]
 		block = blocklist.findBlock(startip, endip)
 		if block is None:
+			fails += 1
 			continue
+
 		as_ = block.as_
 		if loc not in as_.locdic:
 			as_.locdic[loc] = 0
 		as_.locdic[loc] += endip - startip + 1
 
-class Location:
-	def __init__(self, lat, long, city):
-		self.lat = lat
-		self.long = long
-		self.city = city
-		self.used = False
-		# print city
+		if (not lat or not lng):
+			#print("Failed to parse location for " + str(loc))
+			fails += 1
+			continue
 
-# 	load location DB
-locdb = {}
-with open('data/GeoLiteCity-Location.csv', 'rb') as csvfile:
-	reader = csv.reader(csvfile)
-	reader.next()
-	reader.next()
-	counter = 0
-	for row in reader:
-		counter += 1
-		# if counter % 1000 == 0:
-		# 	print row
-		# print row
-		loc = int(row[0])
-		locdb[loc] = Location(float(row[5]), float(row[6]), row[3])
-		# if row[1] == "FR":
-		# 	print row
-		
+		# Update locdb with lat/lng
+		if loc in locdb:
+			city = locdb[loc]
+			city.lat = float(lat)
+			city.lng = float(lng)
 
+		successes += 1
+
+	print "Completed. Checked " + str(counter) + " IP Blocks"
+	print "  Found locations: " + str(successes)
+	print "  Failed to find location: " + str(fails)
+
+
+# Old - get location id
+#with open('data/GeoLite2-City-Blocks-IPv4', 'rb') as csvfile:
+#	reader = csv.reader(csvfile)
+#	reader.next()
+#	reader.next()
+#	counter = 0
+#	for row in reader:
+#		counter += 1
+#		# if counter % 1000 == 0:
+#		# 	print row
+#		# print row
+#		startip = int(row[0])
+#		endip = int(row[1])
+#		loc = int(row[2])
+#		if startip >> 16 not in blocklistdic:
+#			continue
+#		blocklist = blocklistdic[startip >> 16]
+#		block = blocklist.findBlock(startip, endip)
+#		if block is None:
+#			continue
+#		as_ = block.as_
+#		if loc not in as_.locdic:
+#			as_.locdic[loc] = 0
+#		as_.locdic[loc] += endip - startip + 1
+
+
+print "\n> ???..."
 for as_ in asdic.values():
 	# maxloc = 0
 	# maxcount = 0
@@ -191,11 +268,13 @@ for as_ in asdic.values():
 	# 		maxloc = loc
 	# 		maxcount = count
 	# as_.loc = maxloc
-	print "AS:", as_.asnum
+	#print "AS:", as_.asnum
 	items = as_.locdic.items();
 	items.sort(key = lambda item: -item[1])
-	for item in items:
-		print "---", item[1], locdb[item[0]].city
+	
+	#for item in items:
+	#	print "---", item[1], locdb[item[0]].city
+
 	for item in items:
 		# print "looking at city:", locdb[item[0]].city
 		if item[0] not in locdb:
@@ -211,14 +290,19 @@ for as_ in asdic.values():
 		else:
 			# print "choosing:", items[0][0].city
 			as_.loc = items[0][0]
-	if as_.loc:
-		print "----->", locdb[as_.loc].city
+
+	#if as_.loc:
+	#	print "----->", locdb[as_.loc].city
+
+print "Complete."
 	
+
+print "\n> Creating final results dictionary, replacing old Cogeco names..."
 oldPeer1Names = ["Peer 1 Network (USA) Inc.", "COGECODATA"]
 newCogeconame = "Cogeco Peer 1"	
-
 resultsdic = {}
 notfound = 0
+
 for as_ in asdic.values():
 	# print as_.asnum, as_.name
 	if as_.loc in locdb:
@@ -229,10 +313,12 @@ for as_ in asdic.values():
 		if as_.name in oldPeer1Names:
 			as_.name = newCogeconame	
 
-		resultsdic[as_.asnum] = [as_.name, loc.lat, loc.long]
+		resultsdic[as_.asnum] = [as_.name, loc.lat, loc.lng]
 	else:
 		# print "not found!"
 		notfound += 1
+
+print "Complete."
 print notfound, "locations not found"
 
 random.seed(4)
@@ -241,14 +327,16 @@ for i in range(19009):
 # for i in range(12009):
 	asnum = (8192 << 16) + i
 	loc = unused[random.randrange(len(unused))]
-	# resultsdic[asnum] = ["", loc.lat + round(random.uniform(-0.1, 0.1), 4), loc.long + round(random.uniform(-0.1, 0.1), 4)]
-	resultsdic[asnum] = ["", loc.lat, loc.long]
+	# resultsdic[asnum] = ["", loc.lat + round(random.uniform(-0.1, 0.1), 4), loc.lng + round(random.uniform(-0.1, 0.1), 4)]
+	resultsdic[asnum] = ["", loc.lat, loc.lng]
 
 
 # used = [True for loc in locdb.values() if loc.used]
 # print "locations used: ", len(used), "/", len(locdb.values())
 
+print "\n> Generating loc.py based on final results dictionary..."
 outfile = open("../loc.py", "w")
 outfile.write("locinfo = ")
 outfile.write(repr(resultsdic))
 outfile.close()
+print "Complete.\n"
