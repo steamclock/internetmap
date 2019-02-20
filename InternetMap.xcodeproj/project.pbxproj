@@ -248,6 +248,8 @@
 		D403BBE016C1DF2F008AA000 /* README in Resources */ = {isa = PBXBuildFile; fileRef = D403BBDA16C1DF2F008AA000 /* README */; };
 		D468090416795D4600A2C1CC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D468090216795CC200A2C1CC /* SystemConfiguration.framework */; };
 		D468090516795D4D00A2C1CC /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D468090016795CB700A2C1CC /* CFNetwork.framework */; };
+		D490FEA8221CC7FF00F00C3C /* PingLocationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D490FEA7221CC7FF00F00C3C /* PingLocationsViewController.swift */; };
+		D490FEAA221CCAA300F00C3C /* DoneButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D490FEA9221CCAA300F00C3C /* DoneButton.swift */; };
 		D4C1083116B2043D00CA4A0E /* SCIcmpPacketUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = D4C1082B16B2043D00CA4A0E /* SCIcmpPacketUtility.m */; };
 		D4C1083216B2043D00CA4A0E /* SCPacketRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = D4C1082E16B2043D00CA4A0E /* SCPacketRecord.m */; };
 		D4C1083316B2043D00CA4A0E /* SCTracerouteUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = D4C1083016B2043D00CA4A0E /* SCTracerouteUtility.m */; };
@@ -658,6 +660,8 @@
 		D403BBE216C1E272008AA000 /* main-traceroute.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "main-traceroute.h"; sourceTree = "<group>"; };
 		D468090016795CB700A2C1CC /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		D468090216795CC200A2C1CC /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		D490FEA7221CC7FF00F00C3C /* PingLocationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PingLocationsViewController.swift; path = iOS/PingLocationsViewController.swift; sourceTree = SOURCE_ROOT; };
+		D490FEA9221CCAA300F00C3C /* DoneButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DoneButton.swift; path = iOS/DoneButton.swift; sourceTree = SOURCE_ROOT; };
 		D4C1082A16B2043D00CA4A0E /* SCIcmpPacketUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCIcmpPacketUtility.h; path = "External Code/SCPinions/SCPacketUtility/SCIcmpPacketUtility.h"; sourceTree = SOURCE_ROOT; };
 		D4C1082B16B2043D00CA4A0E /* SCIcmpPacketUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCIcmpPacketUtility.m; path = "External Code/SCPinions/SCPacketUtility/SCIcmpPacketUtility.m"; sourceTree = SOURCE_ROOT; };
 		D4C1082C16B2043D00CA4A0E /* SCPacketDeclarations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCPacketDeclarations.h; path = "External Code/SCPinions/SCPacketUtility/SCPacketDeclarations.h"; sourceTree = SOURCE_ROOT; };
@@ -1175,16 +1179,22 @@
 		A6F3F56C1640F1FB0070E6AE /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				1180CF54169B80E300F1FB73 /* Fonts */,
-				D4CEA32016694E53004B8E8A /* Images */,
 				A604A0322036137900543D2E /* AppDelegate.swift */,
-				A60F45821FBE0309001E9D25 /* RootVC.swift */,
-				A686EA6116B62B61009B070E /* ASNRequest.m */,
 				A686EA5116B62B52009B070E /* ASNRequest.h */,
+				A686EA6116B62B61009B070E /* ASNRequest.m */,
 				A686EA5316B62B52009B070E /* CPPHelpers.h */,
-				A623BEAF204F3E60001C218D /* TimedMessageLabel.swift */,
+				A60616361FB3CB9600F1AEB4 /* CreditsViewController.swift */,
+				D490FEA9221CCAA300F00C3C /* DoneButton.swift */,
+				A6551EC016CEB88700340590 /* ExpandedScrollView.h */,
+				A6551EC116CEB88700340590 /* ExpandedScrollView.m */,
+				A6E1D5C316B9EC7100D8B26F /* ExpandedSlider.h */,
+				A6E1D5C416B9EC7100D8B26F /* ExpandedSlider.m */,
+				A6551E6516CAC1AE00340590 /* FirstUseViewController.h */,
+				A6551E6616CAC1AF00340590 /* FirstUseViewController.m */,
+				1180CF54169B80E300F1FB73 /* Fonts */,
 				A686EA5516B62B52009B070E /* HelperMethods.h */,
 				A686EA6316B62B61009B070E /* HelperMethods.m */,
+				D4CEA32016694E53004B8E8A /* Images */,
 				A686EA5616B62B52009B070E /* LabelNumberBoxView.h */,
 				A686EA6416B62B61009B070E /* LabelNumberBoxView.m */,
 				A686EA5816B62B52009B070E /* NodeInformationViewController.h */,
@@ -1193,23 +1203,19 @@
 				A686EA6716B62B61009B070E /* NodeSearchViewController.m */,
 				A686EA5A16B62B52009B070E /* NodeTooltipViewController.h */,
 				A686EA6816B62B61009B070E /* NodeTooltipViewController.m */,
+				1127C9CF16A0BBFB00413FE9 /* Objective-C++ Wrappers */,
+				D490FEA7221CC7FF00F00C3C /* PingLocationsViewController.swift */,
+				A60F45821FBE0309001E9D25 /* RootVC.swift */,
+				A686EA6016B62B52009B070E /* StringListViewController.h */,
+				A686EA6C16B62B61009B070E /* StringListViewController.m */,
+				A60F457B1FB3CFE7001E9D25 /* Theme.swift */,
+				A623BEAF204F3E60001C218D /* TimedMessageLabel.swift */,
 				A686EA5D16B62B52009B070E /* TimelineInfoViewController.h */,
 				A686EA6916B62B61009B070E /* TimelineInfoViewController.m */,
 				A686EA5E16B62B52009B070E /* UIView+Convenience.h */,
 				A686EA6A16B62B61009B070E /* UIView+Convenience.m */,
 				A686EA5F16B62B52009B070E /* ViewController.h */,
 				A686EA6B16B62B61009B070E /* ViewController.m */,
-				A686EA6016B62B52009B070E /* StringListViewController.h */,
-				A686EA6C16B62B61009B070E /* StringListViewController.m */,
-				A6E1D5C316B9EC7100D8B26F /* ExpandedSlider.h */,
-				A6E1D5C416B9EC7100D8B26F /* ExpandedSlider.m */,
-				A6551E6516CAC1AE00340590 /* FirstUseViewController.h */,
-				A6551E6616CAC1AF00340590 /* FirstUseViewController.m */,
-				A6551EC016CEB88700340590 /* ExpandedScrollView.h */,
-				A6551EC116CEB88700340590 /* ExpandedScrollView.m */,
-				A60F457B1FB3CFE7001E9D25 /* Theme.swift */,
-				A60616361FB3CB9600F1AEB4 /* CreditsViewController.swift */,
-				1127C9CF16A0BBFB00413FE9 /* Objective-C++ Wrappers */,
 				D4D17D20166EA621003A489C /* XIBs */,
 			);
 			name = UI;
@@ -1647,6 +1653,7 @@
 				A686EAFF16B62DBD009B070E /* VertexBuffer.cpp in Sources */,
 				D4C1083116B2043D00CA4A0E /* SCIcmpPacketUtility.m in Sources */,
 				D4C1083216B2043D00CA4A0E /* SCPacketRecord.m in Sources */,
+				D490FEAA221CCAA300F00C3C /* DoneButton.swift in Sources */,
 				A60616371FB3CB9600F1AEB4 /* CreditsViewController.swift in Sources */,
 				D4C1083316B2043D00CA4A0E /* SCTracerouteUtility.m in Sources */,
 				A686EA7116B62B61009B070E /* ASNRequest.m in Sources */,
@@ -1661,6 +1668,7 @@
 				A686EA7C16B62B61009B070E /* StringListViewController.m in Sources */,
 				A60F457C1FB3CFE7001E9D25 /* Theme.swift in Sources */,
 				A686EA7E16B62B61009B070E /* ConnectionWrapper.mm in Sources */,
+				D490FEA8221CC7FF00F00C3C /* PingLocationsViewController.swift in Sources */,
 				A686EA7F16B62B61009B070E /* MapControllerWrapper.mm in Sources */,
 				A686EA8016B62B61009B070E /* NodeWrapper.mm in Sources */,
 				A686EAE816B62D05009B070E /* SCDispatchQueue.m in Sources */,

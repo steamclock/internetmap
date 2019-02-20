@@ -708,6 +708,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self presentViewController:credits animated:YES completion:nil];
 }
 
+-(void)showPingLocations {
+    PingLocationsViewController *pingLocations = [[PingLocationsViewController alloc] init];
+    [self presentViewController:pingLocations animated:YES completion:nil];
+}
+
 -(void)selectYouAreHereNode {
     [self.nodeSearchPopover dismissPopoverAnimated:YES];
     self.searchButton.selected = NO;
@@ -808,7 +813,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.infoPopover = [[WEPopoverController alloc] initWithContentViewController:tableforPopover];
         self.infoPopover.delegate = self;
         
-        tableforPopover.items = @[ @"Introduction", @"About Cogeco Peer 1", @"Contact Cogeco Peer 1", @"Open Source", @"Credits" ];
+        tableforPopover.items = @[ @"Introduction", @"About Cogeco Peer 1", @"Ping Cogeco Peer 1", @"Contact Cogeco Peer 1", @"Open Source", @"Credits" ];
                         
         if (![HelperMethods deviceIsiPad]) {
             WEPopoverContainerViewProperties *prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
@@ -833,18 +838,22 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                     [weakSelf showCredits:@"about"];
                     break;
                 }
-                case 2: //contact
+                case 2: //ping
+                {
+                    [weakSelf showPingLocations];
+                    break;
+                }
+                case 3: //contact
                 {
                     [weakSelf showCredits:@"contact"];
                     break;
                 }
-
-                case 3: //open source
+                case 4: //open source
                 {
                     [weakSelf showInSafariWithURL:@"https://github.com/steamclock/internetmap"];
                     break;
                 }
-                case 4: //credits
+                case 5: //credits
                 {
                     [weakSelf showCredits:@"credit"];
                     break;

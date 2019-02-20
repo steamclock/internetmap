@@ -109,22 +109,19 @@ public class CreditsViewController: UIViewController, UIWebViewDelegate {
         doneButton.layer.cornerRadius = doneButton.frame.size.height / 2
         view.addSubview(doneButton)
 
-        // iPhoneX support
-        if #available(iOS 11.0, *) {
-            let guide = self.view.safeAreaLayoutGuide
+        let guide = self.view.safeAreaLayoutGuide
 
-            doneButton.translatesAutoresizingMaskIntoConstraints = false
-            doneButton.topAnchor.constraint(equalTo: guide.topAnchor, constant:10).isActive = true
-            doneButton.heightAnchor.constraint(equalToConstant: doneButtonHeight).isActive = true
-            doneButton.widthAnchor.constraint(equalToConstant: doneButtonWidth).isActive = true
-            doneButton.rightAnchor.constraint(equalTo: guide.rightAnchor, constant: -15).isActive = true
+        doneButton.translatesAutoresizingMaskIntoConstraints = false
+        doneButton.topAnchor.constraint(equalTo: guide.topAnchor, constant:10).isActive = true
+        doneButton.heightAnchor.constraint(equalToConstant: doneButtonHeight).isActive = true
+        doneButton.widthAnchor.constraint(equalToConstant: doneButtonWidth).isActive = true
+        doneButton.rightAnchor.constraint(equalTo: guide.rightAnchor, constant: -15).isActive = true
 
-            webView.translatesAutoresizingMaskIntoConstraints = false
-            webView.topAnchor.constraint(equalTo: guide.topAnchor, constant:0).isActive = true
-            webView.bottomAnchor.constraint(equalTo: guide.bottomAnchor, constant:0).isActive = true
-            webView.leftAnchor.constraint(equalTo: guide.leftAnchor, constant:20).isActive = true
-            webView.rightAnchor.constraint(equalTo: guide.rightAnchor, constant:-20).isActive = true
-        }
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        webView.topAnchor.constraint(equalTo: guide.topAnchor, constant:0).isActive = true
+        webView.bottomAnchor.constraint(equalTo: guide.bottomAnchor, constant:0).isActive = true
+        webView.leftAnchor.constraint(equalTo: guide.leftAnchor, constant:20).isActive = true
+        webView.rightAnchor.constraint(equalTo: guide.rightAnchor, constant:-20).isActive = true
 
         super.viewDidLoad()
     }
