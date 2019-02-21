@@ -88,7 +88,6 @@ print "   ASNs with locations: " + str(len(oldLocInfo))
 
 print "\nNew Year:"
 print "   ASNs with locations: " + str(len(newLocinfo))
-print "   ASNs processed: " + str(counter)
 print "   Existing ASNs: " + str(continuingEntries)
 print "     Location Changed: " + str(locationChanged)
 print "     Location Unchanged: " + str(locationUnchanged)
