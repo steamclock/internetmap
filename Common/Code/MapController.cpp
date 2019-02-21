@@ -57,7 +57,16 @@ MapController::MapController() :
     // turn this back on permentntly, or turn it back on temporarily, and comment in the
     // dump of the unified data (path is hardcoded for that right now, so make sure you
     // change it).
-    setTimelinePoint("", false);
+
+    // Two generate the next unified data file you must:
+    // 1. Add the new XXXX.txt file from Data/Common
+    // 2. Make sure you call setTimelinePoint on the LAST year worth of data first.
+    // 3. Add setTimelinePoint for last year's data.
+    // 4. Update the location where the unified file is being dumped.
+    // 5. Build on emulator.
+
+    // IMPORTANT: Change this year to be your new default year of data.
+    setTimelinePoint("2018", false);
     
     clock_t start = clock();
    
@@ -107,14 +116,15 @@ MapController::MapController() :
     setTimelinePoint("2015");
     setTimelinePoint("2016");
     setTimelinePoint("2017");
-    setTimelinePoint("2018");
+    // IMPORTANT: Make sure all years (except for the default year wich has been set "first") are set here.
+
     setTimelinePoint("2020");
 
     setTimelinePoint(defaultYear);
 
     data->dumpUnified();
     
- 
+    LOG("Dumped Unified");
 
 #else
     lastTimelinePoint = defaultYear;

@@ -5,11 +5,13 @@
 #     find all locations
 #   find location that corresponds to largest total IP space
 
-
 import json
 import csv
 import random
 import ipaddress
+
+debug = False # Shows verbose debug prints if True
+debugMaxCounter = 50 # Set to limit number of iterations through CSVs. Makes high level testing quicker.
 
 class IPBlock:
 	def __init__(self, ipfirst, iplast, as_):
@@ -29,6 +31,13 @@ class AS:
 		self.loc = None
 	def __repr__(self):
 		return "AS" + str(self.asnum) + "|" + self.name + "}" + str(len(self.ipblocks)) + " blocks"
+
+class Location:
+	def __init__(self, lat, lng, city):
+		self.lat = lat
+		self.lng = lng
+		self.city = city
+		self.used = False
 
 def listinsert(item, thelist, start = 0, end = None):
 	if end is None:
@@ -62,37 +71,9 @@ class IPBlockList:
 		return None
 		
 
-# load mapping of IP blocks to AS
+# Step 1: Create ASN dictionary (asdic) that maps ASN numbers to blocks of IPs "owned" by the ASN.
 blocklistdic = {}
 asdic = {}
-
-# Old
-# with open('data/GeoIPASNum2.csv', 'rb') as csvfile:
-	# reader = csv.reader(csvfile)
-	# counter = 0
-	# for row in reader:
-	# 	counter += 1
-	# 	# if counter < 100:
-	# 	# 	print row
-	# 	print row
-	# 	asstring = row[2].decode("latin1")
-	# 	ind = asstring.find(u" ")
-	# 	asnum = int(asstring[2:ind])
-	# 	asname = asstring[ind + 1:].encode("utf-8")
-
-	# 	if asnum not in asdic:
-	# 		asdic[asnum] = AS(asnum, asname)
-	# 	as_ = asdic[asnum]
-		
-	# 	firstip = int(row[0])
-	# 	lastip = int(row[1])
-	# 	if firstip >> 16 not in blocklistdic:
-	# 		blocklistdic[firstip >> 16] = IPBlockList()
-	# 	blocklist = blocklistdic[firstip >> 16]
-		
-	# 	newblock = IPBlock(firstip, lastip, as_)
-	# 	blocklist.insert(newblock)
-	# 	as_.ipblocks.append(newblock)
 
 print "\n\n=== Starting geo location (loc.py) generation ==="
 print "\n> Creating IP Blocklist (to ASN) lookup..."
@@ -125,30 +106,20 @@ with open('data/GeoLite2-ASN-Blocks-IPv4.csv', 'rb') as csvfile:
 			blocklistdic[blockId] = IPBlockList()
 		blocklist = blocklistdic[blockId]
 		
+		# Associate IPBlock with ASN 
 		newblock = IPBlock(firstip, lastip, as_)
 		blocklist.insert(newblock)
 		as_.ipblocks.append(newblock)
 
-		#if (counter > 100):
-			#break
+		if (debug):
+			if (counter > debugMaxCounter):
+				break
 
 	print "Completed. " + str(len(blocklistdic)) + " IP Blocks found over " + str(counter) + " rows"
 
-# print asdic
-# print sorted(asdic.keys())
-# print blocklist.blocklist
-# print len(blocklist.blocklist)
 
-# Generate City Location lookup DB
-# New csv structure do not contain lat/lng lookups anymore. 
-# This will only map our Geoname -> City
-class Location:
-	def __init__(self, lat, lng, city):
-		self.lat = lat
-		self.lng = lng
-		self.city = city
-		self.used = False
-
+# Step 2: Generate the location DB lookup table that will associate a Geoname (id) with an English
+# city name. Note, our new data file does not contain lat/lng. That will get filled in at a later step.
 locdb = {}
 print "\n> Creating Geoname location lookup table..."
 with open('data/GeoLite2-City-Locations-en.csv', 'rb') as csvfile:
@@ -159,9 +130,7 @@ with open('data/GeoLite2-City-Locations-en.csv', 'rb') as csvfile:
 
 	for row in reader:
 		counter += 1
-		# if counter % 1000 == 0:
-		# 	print row
-
+		
 		loc = int(row[0]) # Use Geoname ID as location UUID
 		city = row[10]
 
@@ -170,7 +139,8 @@ with open('data/GeoLite2-City-Locations-en.csv', 'rb') as csvfile:
 	print "Completed. " + str(len(locdb)) + " locations found"
 
 
-# IP block -> City
+# Step 3: For each IP Block, update the known location for that block and add the location 
+# to the ASN associated with it.
 print "\n> Converting IP blocks to locations..."
 with open('data/GeoLite2-City-Blocks-IPv4.csv', 'rb') as csvfile:
 	reader = csv.reader(csvfile)
@@ -188,7 +158,7 @@ with open('data/GeoLite2-City-Blocks-IPv4.csv', 'rb') as csvfile:
 
 		cidr = row[0]
 		startip, endip = IPv4CIDRtoIPStartEnd(cidr)
-		geonameId = row[1] # Use Geoname id as location identifier
+		geonameId = row[1] # Use (city) Geoname id as location identifier
 		#countryGeonameId = row[2] # Not sure if we need this
 		lat = row[7]
 		lng = row[8]
@@ -204,15 +174,20 @@ with open('data/GeoLite2-City-Blocks-IPv4.csv', 'rb') as csvfile:
 			fails += 1
 			continue
 
+		# Lookup IPBlock in dictionary
 		blocklist = blocklistdic[blockId]
 		block = blocklist.findBlock(startip, endip)
 		if block is None:
 			fails += 1
 			continue
 
+		# Get the ASN associated with that IP Block; add the location to the ASNs locdic 
+		# and calculate the number of IP adddress that this location hosts. This will be used
+		# later to order the relative importance of the IP Blocks.
 		as_ = block.as_
 		if loc not in as_.locdic:
 			as_.locdic[loc] = 0
+
 		as_.locdic[loc] += endip - startip + 1
 
 		if (not lat or not lng):
@@ -220,7 +195,7 @@ with open('data/GeoLite2-City-Blocks-IPv4.csv', 'rb') as csvfile:
 			fails += 1
 			continue
 
-		# Update locdb with lat/lng
+		# Update locdb with lat/lng if possible.
 		if loc in locdb:
 			city = locdb[loc]
 			city.lat = float(lat)
@@ -228,62 +203,63 @@ with open('data/GeoLite2-City-Blocks-IPv4.csv', 'rb') as csvfile:
 
 		successes += 1
 
+		if (debug):
+			print "Location ", loc, "now associated with [", lat, ", ", lng, "]"
+			if (counter > debugMaxCounter):
+				break
+
 	print "Completed. Checked " + str(counter) + " IP Blocks"
 	print "  Found locations: " + str(successes)
 	print "  Failed to find location: " + str(fails)
 
+# Step 4: Remove all locations from our DB that did not get updated lat/lng coordinates.
+print "\n> Removing all locations with invalid lat/lng values..."
+print "Starting with " + str(len(locdb)) + " unique geonamed locations"
+tempLocDB = {}
 
-# Old - get location id
-#with open('data/GeoLite2-City-Blocks-IPv4', 'rb') as csvfile:
-#	reader = csv.reader(csvfile)
-#	reader.next()
-#	reader.next()
-#	counter = 0
-#	for row in reader:
-#		counter += 1
-#		# if counter % 1000 == 0:
-#		# 	print row
-#		# print row
-#		startip = int(row[0])
-#		endip = int(row[1])
-#		loc = int(row[2])
-#		if startip >> 16 not in blocklistdic:
-#			continue
-#		blocklist = blocklistdic[startip >> 16]
-#		block = blocklist.findBlock(startip, endip)
-#		if block is None:
-#			continue
-#		as_ = block.as_
-#		if loc not in as_.locdic:
-#			as_.locdic[loc] = 0
-#		as_.locdic[loc] += endip - startip + 1
+for key,loc in locdb.items():
+	if (loc.lat == -1 or loc.lng == -1):
+		continue
+	
+	tempLocDB[key] = loc
 
+	if (debug):
+		print str(key), ": ", loc.city, "(", loc.lat, ", ", loc.lng, ")"
 
-print "\n> ???..."
+locdb = tempLocDB
+print "Completed. There are " + str(len(locdb)) + " unique geonamed locations with lat/lng values"
+
+# Step 4: Associate a single location to an ASN (based on the location of the largest block of IPs)
+print "\n> Associating ASN locations to be the geo location that has the largest block of IPs"
 for as_ in asdic.values():
-	# maxloc = 0
-	# maxcount = 0
-	# for loc, count in as_.locdic.items():
-	# 	if count > maxcount:
-	# 		maxloc = loc
-	# 		maxcount = count
-	# as_.loc = maxloc
-	#print "AS:", as_.asnum
+	# Get all ipblocks associated with ASN
 	items = as_.locdic.items();
+
+	# Sort by number of IPs in the block descending
 	items.sort(key = lambda item: -item[1])
 	
+
+	#print "--- " + as_.name + " ---"
 	#for item in items:
-	#	print "---", item[1], locdb[item[0]].city
+	#	print item #"---", item[1], locdb[item[0]].city
 
 	for item in items:
-		# print "looking at city:", locdb[item[0]].city
-		if item[0] not in locdb:
+		locId = item[0]
+
+		# If we do not have a location for that ID in our location dictionary, continue
+		# and check the new block.
+		if locId not in locdb:
 			continue
-		if len(locdb[item[0]].city) == 0:
-			# print "ignoring empty city:", locdb[item[0]].city
+
+		loc = locdb[locId]
+
+		# If city is unknown, continue to check new block.
+		if len(loc.city) == 0:
 			continue
-		as_.loc = item[0]
+
+		as_.loc = locId
 		break
+
 	if as_.loc is None:
 		if len(items) == 0:
 			as_.loc = 0
@@ -291,12 +267,15 @@ for as_ in asdic.values():
 			# print "choosing:", items[0][0].city
 			as_.loc = items[0][0]
 
-	#if as_.loc:
-	#	print "----->", locdb[as_.loc].city
+	if (debug):
+		if as_.loc not in locdb:
+			print as_.name + "(" + str(as_.asnum) + "): No city found"
+		else: 
+			print as_.name + "(" + str(as_.asnum) + "): Selected: locId(" + str(as_.loc) + "): " + locdb[as_.loc].city		
 
 print "Complete."
 	
-
+# Step 5: Create final results dictionary by replacing some old ASN names if required.
 print "\n> Creating final results dictionary, replacing old Cogeco names..."
 oldPeer1Names = ["Peer 1 Network (USA) Inc.", "COGECODATA"]
 newCogeconame = "Cogeco Peer 1"	
@@ -321,19 +300,22 @@ for as_ in asdic.values():
 print "Complete."
 print notfound, "locations not found"
 
+# Step 6: Creating fake ASNs based on large locations that have not already been used?
+# Not sure WHY this is being done, but was included in the original script. Perhaps to do 
+# with projected data?
+print "\n> Generating random ASNs based on unused DB values"
 random.seed(4)
 unused = [loc for loc in locdb.values() if not loc.used]
 for i in range(19009):
-# for i in range(12009):
+ #for i in range(12009):
 	asnum = (8192 << 16) + i
 	loc = unused[random.randrange(len(unused))]
 	# resultsdic[asnum] = ["", loc.lat + round(random.uniform(-0.1, 0.1), 4), loc.lng + round(random.uniform(-0.1, 0.1), 4)]
 	resultsdic[asnum] = ["", loc.lat, loc.lng]
+print "Complete."
 
 
-# used = [True for loc in locdb.values() if loc.used]
-# print "locations used: ", len(used), "/", len(locdb.values())
-
+# Step 7: gGnerate final results in separate file.
 print "\n> Generating loc.py based on final results dictionary..."
 outfile = open("../loc.py", "w")
 outfile.write("locinfo = ")
