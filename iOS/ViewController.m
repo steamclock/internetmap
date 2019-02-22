@@ -34,7 +34,7 @@
 BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     return state == UIGestureRecognizerStateBegan || state == UIGestureRecognizerStateChanged || state == UIGestureRecognizerStateRecognized;
 }
-@interface ViewController () <SCIcmpPacketUtilityDelegate>
+@interface ViewController () <SCIcmpPacketUtilityDelegate, PingLocationsDelegate, SCPingUtilityDelegate>
 @property (strong, nonatomic) ASNRequest* request;
 @property (strong, nonatomic) EAGLContext *context;
 @property (strong, nonatomic) MapControllerWrapper* controller;
@@ -61,6 +61,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 @property (strong, nonatomic) SCTracerouteUtility* tracer;
 @property (strong, nonatomic) SCIcmpPacketUtility* icmpPacketUtility;
+@property (strong, nonatomic) SCPingUtility* pingUtility;
 
 @property (nonatomic) NSTimeInterval updateTime;
 
@@ -651,6 +652,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(void)showErrorAlert:(NSString*)title withMessage:(NSString*)message {
+    // Don't try presenting error if something else is already presented.
+    if (self.presentedViewController) { return; }
     UIAlertController * alert = [UIAlertController alertControllerWithTitle:title
                                                                     message:message
                                                              preferredStyle:UIAlertControllerStyleAlert];
@@ -710,6 +713,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)showPingLocations {
     PingLocationsViewController *pingLocations = [[PingLocationsViewController alloc] init];
+    pingLocations.delegate = self;
     [self presentViewController:pingLocations animated:YES completion:nil];
 }
 
@@ -1273,16 +1277,13 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 - (void)pingButtonTapped {
-    NSLog(@"ping button tapped in ViewController");
     [self prepareUIAndFetchAddress:^(NSString *ipAddress) {
         if (!ipAddress) {
             [self couldntResolveIP];
         } else {
-            NSLog(@"pinging %@", ipAddress);
-            [self.icmpPacketUtility stop];
-            self.icmpPacketUtility = [SCIcmpPacketUtility utilityWithHostAddress:ipAddress];
-            self.icmpPacketUtility.delegate = self;
-            [self.icmpPacketUtility start];
+            self.pingUtility = [[SCPingUtility alloc] initWithIpAddress:ipAddress count:5 ttl:56 wait:1];
+            self.pingUtility.delegate = self;
+            [self.pingUtility start];
         }
     }];
 }
@@ -1519,7 +1520,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (void)SCIcmpPacketUtility:(SCIcmpPacketUtility *)packetUtility didStartWithAddress:(NSData *)address {
     NSLog(@"%s", __PRETTY_FUNCTION__);
-    [self.icmpPacketUtility sendPacketWithData:nil andTTL:1];
+    [self.icmpPacketUtility sendPacketWithData:nil andTTL:255];
 }
 
 - (void)SCIcmpPacketUtility:(SCIcmpPacketUtility *)packetUtility didFailWithError:(NSError *)error {
@@ -1540,6 +1541,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (void)SCIcmpPacketUtility:(SCIcmpPacketUtility *)packetUtility didReceiveResponsePacket:(NSData *)packet arrivedAt:(NSDate *)dateTime {
     NSLog(@"%s", __PRETTY_FUNCTION__);
+    NSLog(@"utility %@", packetUtility);
     const ICMPHeader* header = [SCIcmpPacketUtility icmpInPacket:packet];
     NSInteger type = (NSInteger)header->type;
     switch (type) {
@@ -1558,6 +1560,66 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         default:
             NSLog(@"Unknown packet type");
     }
+}
+
+#pragma mark - PingLocationsDelegate
+
+- (void)pingLocationsViewController:(PingLocationsViewController *)pingLocationsViewController selectedHostName:(NSString *)hostName {
+    [self selectNodeByHostLookup:hostName];
+}
+
+#pragma mark - SCPingUtilityDelegate
+
+- (void)pingUtility:(SCPingUtility *)pingUtility didFinishWithRecords:(NSArray<SCPacketRecord *> * _Nonnull)records {
+    [self updatePingViewsWithRecords:records];
+}
+
+- (void)pingUtility:(SCPingUtility *)pingUtility didFailWithError:(NSError *)error {
+    [self showErrorAlert:NSLocalizedString(@"Error Pinging Node", nil) withMessage:error.localizedDescription];
+}
+
+- (void)pingUtility:(SCPingUtility *)pingUtility didReceiveResponse:(NSArray<SCPacketRecord *> *)records {
+    [self updatePingViewsWithRecords:records];
+}
+
+- (void)pingUtilityWillSendPing:(SCPingUtility *)pingUtility {
+    [self updatePingViewsWithRecords:pingUtility.packetRecords];
+}
+
+- (void)updatePingViewsWithRecords:(NSArray<SCPacketRecord *> *)records {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    NSString *resultText = @"";
+    NSInteger received = 0;
+    float totalRTT = 0;
+
+    for (NSInteger i = 0; i < records.count; i++) {
+        SCPacketRecord *record = records[i];
+        NSString *recordMessage = @"";
+
+        if (!record.timedOut && !record.arrival) {
+            // This ping is in-flight.
+            recordMessage = @"Ping sent...";
+        } else if (record.timedOut) {
+            recordMessage = @"Request timed out.";
+        } else if (record.arrival) {
+            received++;
+            totalRTT = totalRTT + record.rtt;
+            recordMessage = [NSString stringWithFormat:@"Reply from %@: %zdms", record.responseAddress, (NSInteger)record.rtt];
+        } else {
+            recordMessage = @"Unknown response";
+        }
+
+        resultText = [NSString stringWithFormat:@"%@%zd. %@\n", resultText, i + 1, recordMessage];
+    }
+
+    NSInteger lost = records.count - received;
+    NSInteger averagePingTime = received > 0 ? totalRTT / received : 0;
+
+    self.nodeInformationViewController.detailsLabel.text = [NSString stringWithFormat:@"Average Ping Time: %zdms", averagePingTime];
+    self.nodeInformationViewController.tracerouteTextView.text = resultText;
+    self.nodeInformationViewController.box1.numberLabel.text = [NSString stringWithFormat:@"%zd", records.count];
+    self.nodeInformationViewController.box2.numberLabel.text = [NSString stringWithFormat:@"%zd", received];
+    self.nodeInformationViewController.box3.numberLabel.text = [NSString stringWithFormat:@"%zd", lost];
 }
 
 @end

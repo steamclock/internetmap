@@ -231,23 +231,22 @@ typedef NS_ENUM(NSInteger, MOINodeAction) {
 
     CGFloat boxWidth = (self.preferredContentSize.width-20-30-30-20)/3.0; //total width subtracted by outer and inner margins and divided by three
     
-    self.box1 = [[LabelNumberBoxView alloc] initWithFrame:CGRectMake(20, orangeBackgroundView.y+orangeBackgroundView.height+6, boxWidth, INFO_BOX_HEIGHT) labelText:@"IP Hops" numberText:@"0"];
+    self.box1 = [[LabelNumberBoxView alloc] initWithFrame:CGRectMake(20, orangeBackgroundView.y+orangeBackgroundView.height+6, boxWidth, INFO_BOX_HEIGHT) labelText:@"" numberText:@"0"];
     [self.tracerouteContainerView addSubview:self.box1];
 
-    self.box2 = [[LabelNumberBoxView alloc] initWithFrame:CGRectMake(20+boxWidth+30, orangeBackgroundView.y+orangeBackgroundView.height+6, boxWidth, INFO_BOX_HEIGHT) labelText:@"ASN Hops" numberText:@"0"];
+    self.box2 = [[LabelNumberBoxView alloc] initWithFrame:CGRectMake(20+boxWidth+30, orangeBackgroundView.y+orangeBackgroundView.height+6, boxWidth, INFO_BOX_HEIGHT) labelText:@"" numberText:@"0"];
     [self.tracerouteContainerView addSubview:self.box2];
     
-    self.box3 = [[LabelNumberBoxView alloc] initWithFrame:CGRectMake(20+boxWidth+30+boxWidth+30, orangeBackgroundView.y+orangeBackgroundView.height+6, boxWidth, INFO_BOX_HEIGHT) labelText:@"Time (ms)" numberText:@"0"];
+    self.box3 = [[LabelNumberBoxView alloc] initWithFrame:CGRectMake(20+boxWidth+30+boxWidth+30, orangeBackgroundView.y+orangeBackgroundView.height+6, boxWidth, INFO_BOX_HEIGHT) labelText:@"" numberText:@"0"];
     [self.tracerouteContainerView addSubview:self.box3];
     
-    UILabel* detailsLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, self.box1.y+self.box1.height+verticalPad/2, self.tracerouteContainerView.width-20, LABELS_HEIGHT)];
-    detailsLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:18];
-    detailsLabel.textColor = FONT_COLOR_WHITE;
-    detailsLabel.backgroundColor = [UIColor clearColor];
-    detailsLabel.text = NSLocalizedString(@"Details of Traceroute", nil);
-    [self.tracerouteContainerView addSubview:detailsLabel];
+    self.detailsLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, self.box1.y+self.box1.height+verticalPad/2, self.tracerouteContainerView.width-20, LABELS_HEIGHT)];
+    self.detailsLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:18];
+    self.detailsLabel.textColor = FONT_COLOR_WHITE;
+    self.detailsLabel.backgroundColor = [UIColor clearColor];
+    [self.tracerouteContainerView addSubview:self.detailsLabel];
 
-    UIView* dividerView = [[UIView alloc] initWithFrame:CGRectMake(detailsLabel.x, detailsLabel.y+detailsLabel.height+verticalPad/2, detailsLabel.width, 1)];
+    UIView* dividerView = [[UIView alloc] initWithFrame:CGRectMake(self.detailsLabel.x, self.detailsLabel.y+self.detailsLabel.height+verticalPad/2, self.detailsLabel.width, 1)];
     dividerView.backgroundColor = [UIColor grayColor];
     [self.tracerouteContainerView addSubview:dividerView];
     
@@ -295,7 +294,6 @@ typedef NS_ENUM(NSInteger, MOINodeAction) {
 
         self.tracerouteContainerView.alpha = 0;
         self.tracerouteContainerView.hidden = NO;
-        self.tracerouteTimer = [NSTimer scheduledTimerWithTimeInterval:0.001 target:self selector:@selector(tracerouteTimerFired) userInfo:nil repeats:YES];
         self.topLabel.text = [NSString stringWithFormat:@"To %@", self.topLabel.text];
 
         if (![HelperMethods deviceIsiPad]) {
@@ -321,11 +319,20 @@ typedef NS_ENUM(NSInteger, MOINodeAction) {
         //tell delegate to perform actual action
         switch (action) {
             case MOINodeActionPing:
+                self.box1.textLabel.text = NSLocalizedString(@"Sent", nil);
+                self.box2.textLabel.text = NSLocalizedString(@"Received", nil);
+                self.box3.textLabel.text = NSLocalizedString(@"Lost", nil);
+                self.detailsLabel.text = NSLocalizedString(@"Details of Ping", nil);
                 if ([self.delegate respondsToSelector:@selector(pingButtonTapped)]) {
                     [self.delegate performSelector:@selector(pingButtonTapped)];
                 }
                 break;
             case MOINodeActionTraceroute:
+                self.tracerouteTimer = [NSTimer scheduledTimerWithTimeInterval:0.001 target:self selector:@selector(tracerouteTimerFired) userInfo:nil repeats:YES];
+                self.box1.textLabel.text = NSLocalizedString(@"IP Hops", nil);
+                self.box2.textLabel.text = NSLocalizedString(@"ASN Hops", nil);
+                self.box3.textLabel.text = NSLocalizedString(@"Time (ms)", nil);
+                self.detailsLabel.text = NSLocalizedString(@"Details of Traceroute", nil);
                 if ([self.delegate respondsToSelector:@selector(tracerouteButtonTapped)]) {
                     [self.delegate performSelector:@selector(tracerouteButtonTapped)];
                 }

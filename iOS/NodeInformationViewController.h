@@ -31,6 +31,7 @@
 @property (nonatomic, strong) LabelNumberBoxView* box1;
 @property (nonatomic, strong) LabelNumberBoxView* box2;
 @property (nonatomic, strong) LabelNumberBoxView* box3;
+@property (nonatomic, strong) UILabel* detailsLabel;
 
 @property (weak, nonatomic) id<NodeInformationViewControllerDelegate> delegate;
 

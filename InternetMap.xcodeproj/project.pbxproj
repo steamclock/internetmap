@@ -246,6 +246,7 @@
 		A6F3F56B1640F1FB0070E6AE /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F3F56A1640F1FB0070E6AE /* OpenGLES.framework */; };
 		D403BBDE16C1DF2F008AA000 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = D403BBD816C1DF2F008AA000 /* LICENSE */; };
 		D403BBE016C1DF2F008AA000 /* README in Resources */ = {isa = PBXBuildFile; fileRef = D403BBDA16C1DF2F008AA000 /* README */; };
+		D429C707221F16FB0031555C /* SCPingUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = D429C706221F16FB0031555C /* SCPingUtility.swift */; };
 		D468090416795D4600A2C1CC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D468090216795CC200A2C1CC /* SystemConfiguration.framework */; };
 		D468090516795D4D00A2C1CC /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D468090016795CB700A2C1CC /* CFNetwork.framework */; };
 		D490FEA8221CC7FF00F00C3C /* PingLocationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D490FEA7221CC7FF00F00C3C /* PingLocationsViewController.swift */; };
@@ -658,6 +659,7 @@
 		D403BBDC16C1DF2F008AA000 /* traceroute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = traceroute.h; sourceTree = "<group>"; };
 		D403BBDD16C1DF2F008AA000 /* traceroute_private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = traceroute_private.h; sourceTree = "<group>"; };
 		D403BBE216C1E272008AA000 /* main-traceroute.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "main-traceroute.h"; sourceTree = "<group>"; };
+		D429C706221F16FB0031555C /* SCPingUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SCPingUtility.swift; sourceTree = "<group>"; };
 		D468090016795CB700A2C1CC /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		D468090216795CC200A2C1CC /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		D490FEA7221CC7FF00F00C3C /* PingLocationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PingLocationsViewController.swift; path = iOS/PingLocationsViewController.swift; sourceTree = SOURCE_ROOT; };
@@ -1130,10 +1132,11 @@
 			children = (
 				84DDB7F61F06E4E00059BAE7 /* Images.xcassets */,
 				A600AADA16A664E9003B1028 /* Data */,
+				114DD459167AA62D0061CB36 /* ExternalCode */,
+				D429C705221F16C50031555C /* Library */,
+				A6D54A8616544B3000028B51 /* Map */,
 				A6F3F56D1640F1FB0070E6AE /* Supporting Files */,
 				A6F3F56C1640F1FB0070E6AE /* UI */,
-				A6D54A8616544B3000028B51 /* Map */,
-				114DD459167AA62D0061CB36 /* ExternalCode */,
 				A6F3F5611640F1FB0070E6AE /* Frameworks */,
 				A6F3F55F1640F1FB0070E6AE /* Products */,
 			);
@@ -1262,6 +1265,14 @@
 			);
 			name = SCPacketUtility;
 			path = ..;
+			sourceTree = "<group>";
+		};
+		D429C705221F16C50031555C /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				D429C706221F16FB0031555C /* SCPingUtility.swift */,
+			);
+			path = Library;
 			sourceTree = "<group>";
 		};
 		D4CEA32016694E53004B8E8A /* Images */ = {
@@ -1668,6 +1679,7 @@
 				A686EA7C16B62B61009B070E /* StringListViewController.m in Sources */,
 				A60F457C1FB3CFE7001E9D25 /* Theme.swift in Sources */,
 				A686EA7E16B62B61009B070E /* ConnectionWrapper.mm in Sources */,
+				D429C707221F16FB0031555C /* SCPingUtility.swift in Sources */,
 				D490FEA8221CC7FF00F00C3C /* PingLocationsViewController.swift in Sources */,
 				A686EA7F16B62B61009B070E /* MapControllerWrapper.mm in Sources */,
 				A686EA8016B62B61009B070E /* NodeWrapper.mm in Sources */,
