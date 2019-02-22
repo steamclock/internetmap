@@ -44,6 +44,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 @property (strong, nonatomic) NSDate* lastIntersectionDate;
 @property (assign, nonatomic) BOOL isHandlingLongPress;
+@property (nonatomic, strong) NSString *asnToPingAutomatically;
 
 @property (strong, nonatomic) UITapGestureRecognizer* tapRecognizer;
 @property (strong, nonatomic) UITapGestureRecognizer* twoFingerTapRecognizer;
@@ -1119,7 +1120,11 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     [self nodeSearchDelegateDone];
 }
 
--(void)selectNodeByHostLookup:(NSString*)host {
+-(void)selectNodeByHostLookup:(NSString *)host {
+    [self selectNodeByHostLookup:host withLookupCompletion:nil];
+}
+
+-(void)selectNodeByHostLookup:(NSString*)host withLookupCompletion:(void (^)(NSString *asn))completion {
 
     [self.nodeSearchPopover dismissPopoverAnimated:YES];
     self.searchButton.selected = NO;
@@ -1138,19 +1143,23 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                     
                     if(asn) {
                         [self selectNodeForASN:asn];
+                        if (completion) completion(asn);
                     }
                     else {
                         [self.errorInfoView setErrorString:@"Couldn't find ASN for host."];
+                        if (completion) completion(nil);
                     }
                 }];
             } else {
                 [self.errorInfoView setErrorString:@"Couldn't find IP address for host."];
                 [self.searchActivityIndicator stopAnimating];
                 self.searchButton.hidden = NO;
+                if (completion) completion(nil);
             };
         }];
     } else {
         [self showErrorAlert:NSLocalizedString(@"No Internet connection", nil) withMessage: NSLocalizedString(@"Please connect to the internet.", nil)];
+        if (completion) completion(nil);
     }
 }
 
@@ -1324,6 +1333,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 -(void)forceTracerouteTimeout {
     [self.tracer forcedTimeout];
+}
+
+-(BOOL)nodeInformationViewControllerAutomaticallyStartPing:(NodeInformationViewController *)nodeInformation {
+    return self.asnToPingAutomatically == nodeInformation.node.asn;
 }
 
 #pragma mark - help pop
@@ -1565,7 +1578,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 #pragma mark - PingLocationsDelegate
 
 - (void)pingLocationsViewController:(PingLocationsViewController *)pingLocationsViewController selectedHostName:(NSString *)hostName {
-    [self selectNodeByHostLookup:hostName];
+    NSLog(@"self.nodeInformationViewController: %@", self.nodeInformationViewController);
+    [self selectNodeByHostLookup:hostName withLookupCompletion:^(NSString *asn) {
+        self.asnToPingAutomatically = asn;
+    }];
 }
 
 #pragma mark - SCPingUtilityDelegate
@@ -1584,10 +1600,10 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (void)pingUtilityWillSendPing:(SCPingUtility *)pingUtility {
     [self updatePingViewsWithRecords:pingUtility.packetRecords];
+    self.asnToPingAutomatically = nil;;
 }
 
 - (void)updatePingViewsWithRecords:(NSArray<SCPacketRecord *> *)records {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     NSString *resultText = @"";
     NSInteger received = 0;
     float totalRTT = 0;
@@ -1614,8 +1630,9 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
     NSInteger lost = records.count - received;
     NSInteger averagePingTime = received > 0 ? totalRTT / received : 0;
+    NSString *averagePingTimeMessage = received > 0 ? [NSString stringWithFormat:@"%zdms", averagePingTime] : @"N/A";
 
-    self.nodeInformationViewController.detailsLabel.text = [NSString stringWithFormat:@"Average Ping Time: %zdms", averagePingTime];
+    self.nodeInformationViewController.detailsLabel.text = [NSString stringWithFormat:@"Average Ping Time: %@", averagePingTimeMessage];
     self.nodeInformationViewController.tracerouteTextView.text = resultText;
     self.nodeInformationViewController.box1.numberLabel.text = [NSString stringWithFormat:@"%zd", records.count];
     self.nodeInformationViewController.box2.numberLabel.text = [NSString stringWithFormat:@"%zd", received];

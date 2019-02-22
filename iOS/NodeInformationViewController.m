@@ -28,7 +28,6 @@ typedef NS_ENUM(NSInteger, MOINodeAction) {
 
 @interface NodeInformationViewController ()
 
-@property (nonatomic, strong) NodeWrapper* node;
 @property (nonatomic, strong) UIButton* doneButton;
 @property (nonatomic, assign) BOOL isDisplayingCurrentNode;
 @property (nonatomic, strong) NSMutableArray* firstGroupOfStrings;
@@ -203,24 +202,14 @@ typedef NS_ENUM(NSInteger, MOINodeAction) {
     if (!self.isDisplayingCurrentNode) {
         self.tracerouteButton = [UIButton buttonWithType:UIButtonTypeCustom];
         float buttonY = self.preferredContentSize.height - TRACEROUTE_BUTTON_HEIGHT - verticalPad - self.safeAreaPadding + 10;
-        CGFloat buttonWidth = (self.scrollView.bounds.size.width - 60) / 2;
+        CGFloat buttonWidth = (self.scrollView.bounds.size.width - 40);
         self.tracerouteButton.frame = CGRectMake(20, buttonY, buttonWidth, TRACEROUTE_BUTTON_HEIGHT);
         self.tracerouteButton.titleLabel.font = [UIFont fontWithName:FONT_NAME_REGULAR size:20];
-        [self.tracerouteButton setTitle:NSLocalizedString(@"Traceroute", nil) forState:UIControlStateNormal];
+        [self.tracerouteButton setTitle:NSLocalizedString(@"Perform Traceroute", nil) forState:UIControlStateNormal];
         [self.tracerouteButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [self.tracerouteButton setBackgroundImage:[[UIImage imageNamed:@"traceroute-button"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 22, 0, 22)] forState:UIControlStateNormal];
         [self.tracerouteButton addTarget:self action:@selector(tracerouteButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self.scrollView addSubview:self.tracerouteButton];
-
-        self.pingButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        self.pingButton.frame = CGRectMake(CGRectGetMaxX(self.tracerouteButton.frame) + 20, buttonY, buttonWidth, TRACEROUTE_BUTTON_HEIGHT);
-        self.pingButton.titleLabel.font = [UIFont fontWithName:FONT_NAME_REGULAR size:20];
-        [self.pingButton setTitle:NSLocalizedString(@"Ping", nil) forState:UIControlStateNormal];
-        [self.pingButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [self.pingButton setBackgroundImage:[[UIImage imageNamed:@"traceroute-button"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 22, 0, 22)] forState:UIControlStateNormal];
-        [self.pingButton addTarget:self action:@selector(pingButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [self.pingButton setContentVerticalAlignment:UIControlContentVerticalAlignmentFill];
-        [self.scrollView addSubview:self.pingButton];
     }
 
     self.tracerouteContainerView = [[UIView alloc] initWithFrame:CGRectMake(orangeBackgroundView.x, orangeBackgroundView.y, orangeBackgroundView.width, 500)];
@@ -262,6 +251,16 @@ typedef NS_ENUM(NSInteger, MOINodeAction) {
     
     if (![HelperMethods deviceIsiPad]) {
         [self.tracerouteTextView addObserver:self forKeyPath:@"text" options:NSKeyValueObservingOptionNew context:nil];
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    if ([self.delegate nodeInformationViewControllerAutomaticallyStartPing:self]) {
+        // A small delay to make the zoom-in, zoom-out animations more palatable.
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self setupUIAndTriggerAction:MOINodeActionPing];
+        });
     }
 }
 

@@ -8,12 +8,14 @@
 
 @class LabelNumberBoxView;
 @class NodeWrapper;
+@class NodeInformationViewController;
 
 @protocol NodeInformationViewControllerDelegate <NSObject>
 
 -(void)tracerouteButtonTapped;
 -(void)pingButtonTapped;
 -(void)forceTracerouteTimeout;
+-(BOOL)nodeInformationViewControllerAutomaticallyStartPing:(NodeInformationViewController *)nodeInformation;
 
 @end
 
@@ -23,6 +25,7 @@
 - (id)initWithNode:(NodeWrapper*)node isCurrentNode:(BOOL)isCurrent parent:(UIView*)parent;
 - (void)tracerouteDone;
 
+@property (nonatomic, strong) NodeWrapper* node;
 @property (strong, nonatomic) UILabel* topLabel;
 @property (strong, nonatomic) UIButton* tracerouteButton;
 @property (strong, nonatomic) UIButton* pingButton;
