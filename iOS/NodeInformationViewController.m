@@ -272,11 +272,6 @@ typedef NS_ENUM(NSInteger, MOINodeAction) {
 
 -(IBAction)tracerouteButtonTapped:(id)sender{
     [self setupUIAndTriggerAction:MOINodeActionTraceroute];
-
-}
-
--(IBAction)pingButtonTapped:(id)sender {
-    [self setupUIAndTriggerAction:MOINodeActionPing];
 }
 
 -(void)setupUIAndTriggerAction:(MOINodeAction)action {

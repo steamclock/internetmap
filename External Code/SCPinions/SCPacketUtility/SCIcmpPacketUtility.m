@@ -243,12 +243,7 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
 #pragma mark - Packet sending
 
 
--(void)sendPacketWithData:(NSData *)data andTTL:(NSInteger)ttl{
-
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-    NSLog(@" ttl: %zd", ttl);
-    NSLog(@" data: %@", data);
-    NSLog(@" _targetAddressString: %@", self->_targetAddressString);
+-(void)sendPacketWithData:(NSData *)data andTTL:(NSInteger)ttl {
     
     int             err;
     NSData *        payload;

@@ -34,7 +34,7 @@
 BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     return state == UIGestureRecognizerStateBegan || state == UIGestureRecognizerStateChanged || state == UIGestureRecognizerStateRecognized;
 }
-@interface ViewController () <SCIcmpPacketUtilityDelegate, PingLocationsDelegate, SCPingUtilityDelegate>
+@interface ViewController () <PingLocationsDelegate, SCPingUtilityDelegate>
 @property (strong, nonatomic) ASNRequest* request;
 @property (strong, nonatomic) EAGLContext *context;
 @property (strong, nonatomic) MapControllerWrapper* controller;
@@ -61,7 +61,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 @property (nonatomic) int isCurrentlyFetchingASN;
 
 @property (strong, nonatomic) SCTracerouteUtility* tracer;
-@property (strong, nonatomic) SCIcmpPacketUtility* icmpPacketUtility;
 @property (strong, nonatomic) SCPingUtility* pingUtility;
 
 @property (nonatomic) NSTimeInterval updateTime;
@@ -1232,7 +1231,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 }
 
 -(void)tracerouteButtonTapped{
-
     [self prepareUIAndFetchAddress:^(NSString *ipAddress) {
         if (!ipAddress) {
             [self couldntResolveIP];
@@ -1527,52 +1525,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [self dismissNodeInfoPopover];
-}
-
-#pragma mark - SCIcmpPacketUtilityDelegate
-
-- (void)SCIcmpPacketUtility:(SCIcmpPacketUtility *)packetUtility didStartWithAddress:(NSData *)address {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-    [self.icmpPacketUtility sendPacketWithData:nil andTTL:255];
-}
-
-- (void)SCIcmpPacketUtility:(SCIcmpPacketUtility *)packetUtility didFailWithError:(NSError *)error {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-}
-
-- (void)SCIcmpPacketUtility:(SCIcmpPacketUtility *)packetUtility didSendPacket:(NSData *)packet {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-}
-
-- (void)SCIcmpPacketUtility:(SCIcmpPacketUtility *)packetUtility didFailToSendPacket:(NSData *)packet error:(NSError *)error {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-}
-
-- (void)SCIcmpPacketUtility:(SCIcmpPacketUtility *)packetUtility didReceiveUnexpectedPacket:(NSData *)packet {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-}
-
-- (void)SCIcmpPacketUtility:(SCIcmpPacketUtility *)packetUtility didReceiveResponsePacket:(NSData *)packet arrivedAt:(NSDate *)dateTime {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-    NSLog(@"utility %@", packetUtility);
-    const ICMPHeader* header = [SCIcmpPacketUtility icmpInPacket:packet];
-    NSInteger type = (NSInteger)header->type;
-    switch (type) {
-        case kICMPTypeEchoReply:
-            NSLog(@"packet type: kICMPTypeEchoReply");
-            break;
-        case kICMPTypeDestinationUnreachable:
-            NSLog(@"packet type: kICMPTypeDestinationUnreachable");
-            break;
-        case kICMPTypeEchoRequest:
-            NSLog(@"packet type: kICMPTypeEchoRequest");
-            break;
-        case kICMPTimeExceeded:
-            NSLog(@"packet type: kICMPTimeExceeded");
-            break;
-        default:
-            NSLog(@"Unknown packet type");
-    }
 }
 
 #pragma mark - PingLocationsDelegate
