@@ -1283,7 +1283,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     }
 }
 
-- (void)pingButtonTapped {
+- (void)nodeInformationViewControllerDidTriggerPingAction:(NodeInformationViewController *)nodeInformation {
     [self prepareUIAndFetchAddress:^(NSString *ipAddress) {
         if (!ipAddress) {
             [self couldntResolveIP];

@@ -317,8 +317,8 @@ typedef NS_ENUM(NSInteger, MOINodeAction) {
                 self.box2.textLabel.text = NSLocalizedString(@"Received", nil);
                 self.box3.textLabel.text = NSLocalizedString(@"Lost", nil);
                 self.detailsLabel.text = NSLocalizedString(@"Details of Ping", nil);
-                if ([self.delegate respondsToSelector:@selector(pingButtonTapped)]) {
-                    [self.delegate performSelector:@selector(pingButtonTapped)];
+                if ([self.delegate respondsToSelector:@selector(nodeInformationViewControllerDidTriggerPingAction:)]) {
+                    [self.delegate nodeInformationViewControllerDidTriggerPingAction:self];
                 }
                 break;
             case MOINodeActionTraceroute:

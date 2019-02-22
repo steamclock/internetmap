@@ -13,7 +13,7 @@
 @protocol NodeInformationViewControllerDelegate <NSObject>
 
 -(void)tracerouteButtonTapped;
--(void)pingButtonTapped;
+-(void)nodeInformationViewControllerDidTriggerPingAction:(NodeInformationViewController *)nodeInformation;
 -(void)forceTracerouteTimeout;
 -(BOOL)nodeInformationViewControllerAutomaticallyStartPing:(NodeInformationViewController *)nodeInformation;
 
