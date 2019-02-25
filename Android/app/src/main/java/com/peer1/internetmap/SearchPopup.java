@@ -2,8 +2,6 @@ package com.peer1.internetmap;
 
 import java.util.ArrayList;
 
-import junit.framework.Assert;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -19,6 +17,8 @@ import android.view.WindowManager.LayoutParams;
 import android.view.inputmethod.EditorInfo;
 import android.widget.*;
 import android.widget.TextView.OnEditorActionListener;
+
+import com.peer1.internetmap.utils.Assert;
 
 import timber.log.Timber;
 
