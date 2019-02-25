@@ -1,15 +1,15 @@
 package com.peer1.internetmap;
 
-import junit.framework.Assert;
 import android.content.Context;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.RelativeLayout;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
+
+import com.peer1.internetmap.utils.Assert;
 
 /**
  * Timeline popup; allows users to change the data sets being shown in the visualizations

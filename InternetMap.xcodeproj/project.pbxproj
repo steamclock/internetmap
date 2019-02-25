@@ -19,6 +19,7 @@
 		4E3E42AF1EF1AE92007224FE /* peer1-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E3E42AC1EF1AE92007224FE /* peer1-logo@2x.png */; };
 		4E3E42B01EF1AE92007224FE /* peer1-logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E3E42AD1EF1AE92007224FE /* peer1-logo@3x.png */; };
 		4E41F8471EF478B900CF0A5C /* timeline-handle@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E41F8461EF478B900CF0A5C /* timeline-handle@3x.png */; };
+		4E43096C221F657B000B98B9 /* 2018.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E43096B221F657B000B98B9 /* 2018.txt */; };
 		4E80ECEC1EE1D72300C5542F /* 2020.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E80ECEB1EE1D72300C5542F /* 2020.txt */; };
 		4E80ECF11EE1DB7600C5542F /* 2014.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E80ECED1EE1DB7600C5542F /* 2014.txt */; };
 		4E80ECF21EE1DB7600C5542F /* 2015.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E80ECEE1EE1DB7600C5542F /* 2015.txt */; };
@@ -278,6 +279,7 @@
 		4E3E42AC1EF1AE92007224FE /* peer1-logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "peer1-logo@2x.png"; path = "iOS/Images/peer1-logo@2x.png"; sourceTree = SOURCE_ROOT; };
 		4E3E42AD1EF1AE92007224FE /* peer1-logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "peer1-logo@3x.png"; path = "iOS/Images/peer1-logo@3x.png"; sourceTree = SOURCE_ROOT; };
 		4E41F8461EF478B900CF0A5C /* timeline-handle@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "timeline-handle@3x.png"; path = "iOS/Images/timeline-handle@3x.png"; sourceTree = SOURCE_ROOT; };
+		4E43096B221F657B000B98B9 /* 2018.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2018.txt; path = Common/Data/2018.txt; sourceTree = "<group>"; };
 		4E5D1D8C1F75BE7C00BD3DAA /* cc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cc.h; sourceTree = "<group>"; };
 		4E5D1D8D1F75BE7C00BD3DAA /* icmp6.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = icmp6.h; sourceTree = "<group>"; };
 		4E5D1D8E1F75BE7C00BD3DAA /* icmp_var.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = icmp_var.h; sourceTree = "<group>"; };
@@ -944,6 +946,7 @@
 				4E80ECEE1EE1DB7600C5542F /* 2015.txt */,
 				4E80ECEF1EE1DB7600C5542F /* 2016.txt */,
 				4E80ECF01EE1DB7600C5542F /* 2017.txt */,
+				4E43096B221F657B000B98B9 /* 2018.txt */,
 				4E80ECEB1EE1D72300C5542F /* 2020.txt */,
 				84E947DA1F34EBE400B20758 /* contact.html */,
 				848D48B31F313CEF00B78C59 /* about.html */,
@@ -1570,6 +1573,7 @@
 				849FC0981F03264F00B06401 /* view.png in Resources */,
 				849FC03A1F0304B800B06401 /* search@3x.png in Resources */,
 				A6551E9616CAF38800340590 /* finish@2x.png in Resources */,
+				4E43096C221F657B000B98B9 /* 2018.txt in Resources */,
 				4E83360F1EDF929F0067B138 /* 1997.txt in Resources */,
 				84DDB8021F0C11000059BAE7 /* callout_right@2x.png in Resources */,
 				849FC0961F03264F00B06401 /* view-selected@2x.png in Resources */,

@@ -14,3 +14,7 @@ Android/gen
 Android/libs/armeabi
 Android/libs/x86
 Android/obj
+
+venv
+Android/app/release
+

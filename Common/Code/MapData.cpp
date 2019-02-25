@@ -23,8 +23,8 @@
 #include "json.h"
 #endif
 
-static const char *ASNS_AT_TOP[] = {"13768", "23498", "3", "15169", "714", "32934", "7847"}; //Peer1, Cogeco, MIT, google, apple, facebook, NASA
-static const int NUM_ASNS_AT_TOP = 7;
+static const char *ASNS_AT_TOP[] = {"13768", "23498", "3", "15169", "714", "32934"/*, "7847"*/}; //Peer1, Cogeco, MIT, google, apple, facebook, NASA
+static const int NUM_ASNS_AT_TOP = 6;
 
 NodePointer MapData::nodeAtIndex(unsigned int index) {
     return nodes[index];

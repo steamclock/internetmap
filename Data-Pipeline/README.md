@@ -38,9 +38,12 @@ The result of our data pipeline spits out these major files:
 ### Steps to add new year
 
 #### 1. Update Geo data
-1. Download new geo data (from http://dev.maxmind.com/geoip/legacy/geolite/)
-2. Run `geopipeline.py` to generate `loc.py`
-3. Run `converttojson.py` to create asinfo.json 
+As of 2019 the data files used to generate the geolocation data has changed. MaxMind no longer hosts the "legacy" databases we were using. Changes were made to use the new GeoLite2 DBs. They are "comparable to, but less accurate than, MaxMind’s GeoIP2 databases." 
+
+1. Download new geo data (from https://dev.maxmind.com/geoip/geoip2/geolite2/); get the City (`GeoLite2 City`)and ASN (`GeoLite2 ASN`) hosted files in CSV format. (We are currently not using Country data)
+2. Unzip and copy `GeoLite2-ASN-Blocks-IPv4.csv`, `GeoLite2-City-Locations-en.csv` and `GeoLite2-City-Blocks-IPv4.csv` into the geopipeline/Data folder. 
+3. Run `geopipeline.py` to generate `loc.py`
+4. Run `converttojson.py` to create asinfo.json
 
 Note: Need to look into steamlining this since there is really no need for the intermediate loc.py file.
 
@@ -50,6 +53,7 @@ Note: Need to look into steamlining this since there is really no need for the i
 3. Unzip and copy those files into the `aspipeline/data` folder
 4. Run `aspipeline.py`; this will generate the data files under `aspipeline/out`.
 5. Copy the files from `aspipeline/out` into the project's `Common/Data` folder.
+6. For iOS make sure to manually ADD the file into the XCode project or else the data will fail to load due to nil file reference.
 
 ### 3. Update Taxonomy data 
 
@@ -67,9 +71,15 @@ Update these data files to include reference to the new XXXX.txt data file gener
 
 ### 6. Update unified.txt
 
-In order to speed up initial app load, we need to create the unified.txt file which contains quick lookup data for the new "default" year. Currently this is done by enabling the block of code in MapController.cpp that creates the unified file and then running tha app on an emulator in iOS.
+In order to speed up initial app load, we need to create the unified.txt file which contains quick lookup data for the new "default" year. 
 
-Note: Now that we have complete control over the data pipeline we should look into creating this file in python.
+Currently this is done by enabling the block of code in MapController.cpp that creates the unified file, adding setTimelinePoint for the new year and then running tha app on an emulator in iOS.
+
+Notes:
+* Must build on an emulator to generate file.
+* Must update outupt directory in dumpUnified method to a local path on your machine.
+* Make sure unified.txt does not exist in the output directory; code will not replace existing file, so if you need to generate it multiple times, make sure you delete the old verion first.
+* Now that we have complete control over the data pipeline we should look into creating this file in python.
 
 ## Troubleshooting
 
@@ -96,4 +106,9 @@ SOLUTION: Create sorted_components = sorted(nx.connected_components(self.graph),
 NOTE: Occurs after a period of time, numerous calls made successfully; more than likely hit a new rate limit imposed by the ipduh.com services
 
 OPTIONS: use getasinfo2.py (run in batches) to save the HTML and scrape that later.
+
+#### ERROR (iOS building unified.txt): ERROR: trying to extend display nodes beyond vertex buffer size
+
+SOLUTION: Bump MAX_DISPLAY_NODES node buffer to be larger
+
 

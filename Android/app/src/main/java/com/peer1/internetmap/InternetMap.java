@@ -33,26 +33,22 @@ import com.peer1.internetmap.models.ASN;
 import com.peer1.internetmap.network.common.CommonCallback;
 import com.peer1.internetmap.network.common.CommonClient;
 import com.peer1.internetmap.utils.AppUtils;
+import com.peer1.internetmap.utils.Assert;
 import com.peer1.internetmap.utils.CustomTooltipManager;
 import com.peer1.internetmap.utils.SharedPreferenceUtils;
-import com.peer1.internetmap.utils.TracerouteUtil;
 import com.peer1.internetmap.utils.ViewUtils;
 import com.spyhunter99.supertooltips.ToolTip;
 import com.spyhunter99.supertooltips.ToolTipManager;
-
-import junit.framework.Assert;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.TreeMap;
 
 import retrofit2.Call;
 import retrofit2.Response;
