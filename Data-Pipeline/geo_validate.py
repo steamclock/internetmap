@@ -1,6 +1,6 @@
 # 
 # 2019-02-19
-# geoValidate.py
+# geo_validate.py
 #
 # Created in an attempt to validify and compare the data created for 2018 (since our location data set changed due to data deprication)
 # 
