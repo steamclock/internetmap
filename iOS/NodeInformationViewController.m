@@ -18,15 +18,16 @@
 #define LABELS_HEIGHT 20
 #define TRACEROUTE_BUTTON_HEIGHT 44
 #define TRACEROUTE_ENABLED 1
-
 #define TRACEROUTE_MAX_TIMEOUT_MILLISECONDS 30 * 1000 // arbitary cap off at 40 seconds, otherwise it can run forever
-
-
 #define INFO_BOX_HEIGHT 75
+
+typedef NS_ENUM(NSInteger, MOINodeAction) {
+    MOINodeActionTraceroute,
+    MOINodeActionPing
+};
 
 @interface NodeInformationViewController ()
 
-@property (nonatomic, strong) NodeWrapper* node;
 @property (nonatomic, strong) UIButton* doneButton;
 @property (nonatomic, assign) BOOL isDisplayingCurrentNode;
 @property (nonatomic, strong) NSMutableArray* firstGroupOfStrings;
@@ -200,8 +201,9 @@
     // traceroute button
     if (!self.isDisplayingCurrentNode) {
         self.tracerouteButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        float tracerouteButtonY = self.preferredContentSize.height - TRACEROUTE_BUTTON_HEIGHT - verticalPad - self.safeAreaPadding + 10;
-        self.tracerouteButton.frame = CGRectMake(20, tracerouteButtonY, self.scrollView.bounds.size.width - 40, TRACEROUTE_BUTTON_HEIGHT);
+        float buttonY = self.preferredContentSize.height - TRACEROUTE_BUTTON_HEIGHT - verticalPad - self.safeAreaPadding + 10;
+        CGFloat buttonWidth = (self.scrollView.bounds.size.width - 40);
+        self.tracerouteButton.frame = CGRectMake(20, buttonY, buttonWidth, TRACEROUTE_BUTTON_HEIGHT);
         self.tracerouteButton.titleLabel.font = [UIFont fontWithName:FONT_NAME_REGULAR size:20];
         [self.tracerouteButton setTitle:NSLocalizedString(@"Perform Traceroute", nil) forState:UIControlStateNormal];
         [self.tracerouteButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
@@ -218,23 +220,22 @@
 
     CGFloat boxWidth = (self.preferredContentSize.width-20-30-30-20)/3.0; //total width subtracted by outer and inner margins and divided by three
     
-    self.box1 = [[LabelNumberBoxView alloc] initWithFrame:CGRectMake(20, orangeBackgroundView.y+orangeBackgroundView.height+6, boxWidth, INFO_BOX_HEIGHT) labelText:@"IP Hops" numberText:@"0"];
+    self.box1 = [[LabelNumberBoxView alloc] initWithFrame:CGRectMake(20, orangeBackgroundView.y+orangeBackgroundView.height+6, boxWidth, INFO_BOX_HEIGHT) labelText:@"" numberText:@"0"];
     [self.tracerouteContainerView addSubview:self.box1];
 
-    self.box2 = [[LabelNumberBoxView alloc] initWithFrame:CGRectMake(20+boxWidth+30, orangeBackgroundView.y+orangeBackgroundView.height+6, boxWidth, INFO_BOX_HEIGHT) labelText:@"ASN Hops" numberText:@"0"];
+    self.box2 = [[LabelNumberBoxView alloc] initWithFrame:CGRectMake(20+boxWidth+30, orangeBackgroundView.y+orangeBackgroundView.height+6, boxWidth, INFO_BOX_HEIGHT) labelText:@"" numberText:@"0"];
     [self.tracerouteContainerView addSubview:self.box2];
     
-    self.box3 = [[LabelNumberBoxView alloc] initWithFrame:CGRectMake(20+boxWidth+30+boxWidth+30, orangeBackgroundView.y+orangeBackgroundView.height+6, boxWidth, INFO_BOX_HEIGHT) labelText:@"Time (ms)" numberText:@"0"];
+    self.box3 = [[LabelNumberBoxView alloc] initWithFrame:CGRectMake(20+boxWidth+30+boxWidth+30, orangeBackgroundView.y+orangeBackgroundView.height+6, boxWidth, INFO_BOX_HEIGHT) labelText:@"" numberText:@"0"];
     [self.tracerouteContainerView addSubview:self.box3];
     
-    UILabel* detailsLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, self.box1.y+self.box1.height+verticalPad/2, self.tracerouteContainerView.width-20, LABELS_HEIGHT)];
-    detailsLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:18];
-    detailsLabel.textColor = FONT_COLOR_WHITE;
-    detailsLabel.backgroundColor = [UIColor clearColor];
-    detailsLabel.text = NSLocalizedString(@"Details of Traceroute", nil);
-    [self.tracerouteContainerView addSubview:detailsLabel];
+    self.detailsLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, self.box1.y+self.box1.height+verticalPad/2, self.tracerouteContainerView.width-20, LABELS_HEIGHT)];
+    self.detailsLabel.font = [UIFont fontWithName:FONT_NAME_LIGHT size:18];
+    self.detailsLabel.textColor = FONT_COLOR_WHITE;
+    self.detailsLabel.backgroundColor = [UIColor clearColor];
+    [self.tracerouteContainerView addSubview:self.detailsLabel];
 
-    UIView* dividerView = [[UIView alloc] initWithFrame:CGRectMake(detailsLabel.x, detailsLabel.y+detailsLabel.height+verticalPad/2, detailsLabel.width, 1)];
+    UIView* dividerView = [[UIView alloc] initWithFrame:CGRectMake(self.detailsLabel.x, self.detailsLabel.y+self.detailsLabel.height+verticalPad/2, self.detailsLabel.width, 1)];
     dividerView.backgroundColor = [UIColor grayColor];
     [self.tracerouteContainerView addSubview:dividerView];
     
@@ -253,6 +254,16 @@
     }
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    if ([self.delegate nodeInformationViewControllerAutomaticallyStartPing:self]) {
+        // A small delay to make the zoom-in, zoom-out animations more palatable.
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self setupUIAndTriggerAction:MOINodeActionPing];
+        });
+    }
+}
+
 - (IBAction)doneTapped {
     if ([self.delegate respondsToSelector:@selector(doneTapped)]) {
         [self.delegate performSelector:@selector(doneTapped)];
@@ -260,7 +271,10 @@
 }
 
 -(IBAction)tracerouteButtonTapped:(id)sender{
-    
+    [self setupUIAndTriggerAction:MOINodeActionTraceroute];
+}
+
+-(void)setupUIAndTriggerAction:(MOINodeAction)action {
     float verticalPad = [HelperMethods deviceIsiPad] ? VERTICAL_PADDING_IPAD : VERTICAL_PADDING_IPHONE;
     float contentHeight = self.box1.height+verticalPad/2+LABELS_HEIGHT+verticalPad/2+self.tracerouteTextView.height+verticalPad;
 
@@ -271,34 +285,52 @@
             self.scrollView.frame = CGRectMake(0, 0, self.scrollView.width, contentHeight);
         }
         self.scrollView.contentSize = CGSizeMake(self.preferredContentSize.width, contentHeight);
-        
+
         self.tracerouteContainerView.alpha = 0;
         self.tracerouteContainerView.hidden = NO;
-        self.tracerouteTimer = [NSTimer scheduledTimerWithTimeInterval:0.001 target:self selector:@selector(tracerouteTimerFired) userInfo:nil repeats:YES];
         self.topLabel.text = [NSString stringWithFormat:@"To %@", self.topLabel.text];
-        
+
         if (![HelperMethods deviceIsiPad]) {
             self.scrollView.frame = CGRectMake(0, self.scrollView.frame.origin.y, self.scrollView.frame.size.width, self.scrollView.frame.size.height+250);
         }
-        
+
         [UIView animateWithDuration:1 animations:^{
             self.tracerouteContainerView.alpha = 1;
             for (UILabel* label in self.infoLabels) {
                 label.alpha = 0;
             }
             self.tracerouteButton.alpha = 0;
+            self.pingButton.alpha = 0;
         }];
-        
+
         int minDesiredHeight = 250;
         if (self.contentHeight < minDesiredHeight) {
             self.contentHeight = minDesiredHeight;
             float width = [HelperMethods deviceIsiPad] ? 443 : [[UIScreen mainScreen] bounds].size.width;
             [self setPreferredContentSize:CGSizeMake(width, minDesiredHeight)];
         }
-        
-        //tell delegate to perform actual traceroute
-        if ([self.delegate respondsToSelector:@selector(tracerouteButtonTapped)]) {
-            [self.delegate performSelector:@selector(tracerouteButtonTapped)];
+
+        //tell delegate to perform actual action
+        switch (action) {
+            case MOINodeActionPing:
+                self.box1.textLabel.text = NSLocalizedString(@"Sent", nil);
+                self.box2.textLabel.text = NSLocalizedString(@"Received", nil);
+                self.box3.textLabel.text = NSLocalizedString(@"Lost", nil);
+                self.detailsLabel.text = NSLocalizedString(@"Details of Ping", nil);
+                if ([self.delegate respondsToSelector:@selector(nodeInformationViewControllerDidTriggerPingAction:)]) {
+                    [self.delegate nodeInformationViewControllerDidTriggerPingAction:self];
+                }
+                break;
+            case MOINodeActionTraceroute:
+                self.tracerouteTimer = [NSTimer scheduledTimerWithTimeInterval:0.001 target:self selector:@selector(tracerouteTimerFired) userInfo:nil repeats:YES];
+                self.box1.textLabel.text = NSLocalizedString(@"IP Hops", nil);
+                self.box2.textLabel.text = NSLocalizedString(@"ASN Hops", nil);
+                self.box3.textLabel.text = NSLocalizedString(@"Time (ms)", nil);
+                self.detailsLabel.text = NSLocalizedString(@"Details of Traceroute", nil);
+                if ([self.delegate respondsToSelector:@selector(tracerouteButtonTapped)]) {
+                    [self.delegate performSelector:@selector(tracerouteButtonTapped)];
+                }
+                break;
         }
     } else {
         [self showErrorAlert:NSLocalizedString(@"No Internet connection", nil) withMessage: NSLocalizedString(@"Please connect to the internet.", nil)];

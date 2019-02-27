@@ -16,5 +16,9 @@ enum Theme {
     static let primary = Theme.blue
 
     static let fontNameLight = "NexaLight"
+
+    static func settingsItemBackgroundImage() -> UIImage {
+        return UIDevice.current.userInterfaceIdiom == .phone ? UIImage(named: "iphone-bg.png")! : UIImage(named: "ipad-bg.png")!
+    }
 }
 

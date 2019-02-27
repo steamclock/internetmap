@@ -43,6 +43,8 @@
 
 @protocol SCIcmpPacketUtilityDelegate;
 
+@class SCPacketRecord;
+
 @interface SCIcmpPacketUtility : NSObject
 {
     NSData*     _targetAddress;
@@ -57,7 +59,7 @@
 @property (nonatomic, copy,   readonly) NSData*               targetAddress;
 @property (nonatomic, copy, readwrite) NSString*             targetAddressString;
 @property (nonatomic, assign, readonly) uint16_t              nextSequenceNumber;
-@property (strong, nonatomic, readonly) NSMutableArray*       packetRecords;
+@property (strong, nonatomic, readonly, nonnull) NSArray<SCPacketRecord *>* packetRecords;
 
 + (SCIcmpPacketUtility*)utilityWithHostAddress:(NSString*)hostAddress;    // contains (struct sockaddr) - should have this take IP string, then convert to struct sockaddr
 
@@ -67,7 +69,7 @@
 - (void)start;
 // Starts the packet utility object doing it's thing.  You should call this after you've setup the delegate.
 
-- (void)sendPacketWithData:(NSData *)data andTTL:(int)ttl;
+- (void)sendPacketWithData:(NSData *)data andTTL:(NSInteger)ttl;
 // Sends an ICMP packet. Do not try to send a packet before you receive the -SCIcmpPacketUtility:didStartWithAddress: delegate callback.
 
 - (void)stop;
@@ -80,27 +82,27 @@
 
 @optional
 
+/// Called after the SCIcmpPacketUtility has successfully started up.  After this callback, you can start sending packets via -sendPacketWithData:
 - (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didStartWithAddress:(NSData *)address;
-// Called after the SCIcmpPacketUtility has successfully started up.  After this callback, you can start sending packets via -sendPacketWithData:
 
+/// If this is called, the SCIcmpPacketUtility object has failed.  By the time this callback is called, the object has stopped (that is, you don't need to call -stop yourself).
 - (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didFailWithError:(NSError *)error;
-// If this is called, the SCIcmpPacketUtility object has failed.  By the time this callback is called, the object has stopped (that is, you don't need to call -stop yourself).
 
 // IMPORTANT: On the send side the packet does not include an IP header.
 // On the receive side, it does.  In that case, use +[SCIcmpPacketUtility icmpInPacket:]
 // to find the ICMP header within the packet.
 
+/// Called whenever the SCIcmpPacketUtility object has successfully sent a packet.
 - (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didSendPacket:(NSData *)packet;
-// Called whenever the SCIcmpPacketUtility object has successfully sent a packet.
 
+/// Called whenever the SCIcmpPacketUtility object tries and fails to send a packet.
 - (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didFailToSendPacket:(NSData *)packet error:(NSError *)error;
-// Called whenever the SCIcmpPacketUtility object tries and fails to send a packet.
 
+/// Called whenever the SCIcmpPacketUtility object receives an ICMP packet that looks like a response to one of our packets
 - (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didReceiveResponsePacket:(NSData *)packet arrivedAt:(NSDate*)dateTime;
-// Called whenever the SCIcmpPacketUtility object receives an ICMP packet that looks like a response to one of our packets
 
+/// Called whenever the SCIcmpPacketUtility object receives an ICMP packet that does not look like a response to one of our packets.
 - (void)SCIcmpPacketUtility:(SCIcmpPacketUtility*)packetUtility didReceiveUnexpectedPacket:(NSData *)packet;
-// Called whenever the SCIcmpPacketUtility object receives an ICMP packet that does not look like a response to one of our packets.
 
 @end
 

@@ -34,7 +34,7 @@
 @interface SCPacketRecord : NSObject
 
 @property uint16_t sequenceNumber; //A sequence number for tracking of packet relationships as we perform network operations
-@property int sentWithTTL; // The TTL that our original packet has assigned to it
+@property NSInteger sentWithTTL; // The TTL that our original packet has assigned to it
 @property NSString* responseAddress; //The address of the machine that sent us a respponse packet for this sequence number
 @property NSDate* departure; // Departure time of packet sent for this sequence number
 @property NSDate* arrival; // Arrive of response packet for this sequence number

@@ -100,31 +100,26 @@ public class CreditsViewController: UIViewController, UIWebViewDelegate {
         let doneButtonWidth = xImage.size.width + 20
         let doneButtonHeight = xImage.size.height + 20
         let doneButton = UIButton(type: .custom)
-        let doneFrame = CGRect(x: UIScreen.main.bounds.size.width - (xImage.size.width + 20), y: 20, width: doneButtonWidth, height: doneButtonHeight)
-        doneButton.frame = doneFrame
         doneButton.imageView?.contentMode = .center
         doneButton.setImage(xImage, for: .normal)
         doneButton.addTarget(self, action: #selector(self.close), for: .touchUpInside)
         doneButton.backgroundColor = Theme.primary
-        doneButton.layer.cornerRadius = doneButton.frame.size.height / 2
+        doneButton.layer.cornerRadius = doneButtonHeight / 2
         view.addSubview(doneButton)
 
-        // iPhoneX support
-        if #available(iOS 11.0, *) {
-            let guide = self.view.safeAreaLayoutGuide
+        let guide = self.view.safeAreaLayoutGuide
 
-            doneButton.translatesAutoresizingMaskIntoConstraints = false
-            doneButton.topAnchor.constraint(equalTo: guide.topAnchor, constant:10).isActive = true
-            doneButton.heightAnchor.constraint(equalToConstant: doneButtonHeight).isActive = true
-            doneButton.widthAnchor.constraint(equalToConstant: doneButtonWidth).isActive = true
-            doneButton.rightAnchor.constraint(equalTo: guide.rightAnchor, constant: -15).isActive = true
+        doneButton.translatesAutoresizingMaskIntoConstraints = false
+        doneButton.topAnchor.constraint(equalTo: guide.topAnchor, constant:10).isActive = true
+        doneButton.heightAnchor.constraint(equalToConstant: doneButtonHeight).isActive = true
+        doneButton.widthAnchor.constraint(equalToConstant: doneButtonWidth).isActive = true
+        doneButton.rightAnchor.constraint(equalTo: guide.rightAnchor, constant: -15).isActive = true
 
-            webView.translatesAutoresizingMaskIntoConstraints = false
-            webView.topAnchor.constraint(equalTo: guide.topAnchor, constant:0).isActive = true
-            webView.bottomAnchor.constraint(equalTo: guide.bottomAnchor, constant:0).isActive = true
-            webView.leftAnchor.constraint(equalTo: guide.leftAnchor, constant:20).isActive = true
-            webView.rightAnchor.constraint(equalTo: guide.rightAnchor, constant:-20).isActive = true
-        }
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        webView.topAnchor.constraint(equalTo: guide.topAnchor, constant:0).isActive = true
+        webView.bottomAnchor.constraint(equalTo: guide.bottomAnchor, constant:0).isActive = true
+        webView.leftAnchor.constraint(equalTo: guide.leftAnchor, constant:20).isActive = true
+        webView.rightAnchor.constraint(equalTo: guide.rightAnchor, constant:-20).isActive = true
 
         super.viewDidLoad()
     }
@@ -140,24 +135,18 @@ public class CreditsViewController: UIViewController, UIWebViewDelegate {
         if UIScreen.main.bounds.size.width > 300 {
             contactButtonWidth = 300
         }
-        let contactFrame = CGRect(x: UIScreen.main.bounds.size.width / 2 - (contactButtonWidth / 2), y: UIScreen.main.bounds.size.height - 60, width: contactButtonWidth, height: aboutMoreButtonHeight)
-        aboutMoreButton.frame = contactFrame
         aboutMoreButton.layer.cornerRadius = aboutMoreButton.frame.size.height / 2
         aboutMoreButton.addTarget(self, action: #selector(self.aboutMore), for: .touchUpInside)
 
         self.aboutMoreButton = aboutMoreButton
-
         view.addSubview(aboutMoreButton)
 
-        // iPhoneX support
-        if #available(iOS 11.0, *) {
-            aboutMoreButton.translatesAutoresizingMaskIntoConstraints = false
-            let guide = self.view.safeAreaLayoutGuide
-            aboutMoreButton.bottomAnchor.constraint(equalTo: guide.bottomAnchor, constant:-10).isActive = true
-            aboutMoreButton.heightAnchor.constraint(equalToConstant: aboutMoreButtonHeight).isActive = true
-            aboutMoreButton.widthAnchor.constraint(equalToConstant: contactButtonWidth).isActive = true
-            aboutMoreButton.centerXAnchor.constraint(equalToSystemSpacingAfter: guide.centerXAnchor, multiplier: 1.0).isActive = true
-        }
+        aboutMoreButton.translatesAutoresizingMaskIntoConstraints = false
+        let guide = self.view.safeAreaLayoutGuide
+        aboutMoreButton.bottomAnchor.constraint(equalTo: guide.bottomAnchor, constant:-10).isActive = true
+        aboutMoreButton.heightAnchor.constraint(equalToConstant: aboutMoreButtonHeight).isActive = true
+        aboutMoreButton.widthAnchor.constraint(equalToConstant: contactButtonWidth).isActive = true
+        aboutMoreButton.centerXAnchor.constraint(equalToSystemSpacingAfter: guide.centerXAnchor, multiplier: 1.0).isActive = true
     }
 
     public func webViewDidFinishLoad(_ webView: UIWebView) {
