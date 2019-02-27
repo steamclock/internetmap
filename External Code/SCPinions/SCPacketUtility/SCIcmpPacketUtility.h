@@ -59,7 +59,7 @@
 @property (nonatomic, copy,   readonly) NSData*               targetAddress;
 @property (nonatomic, copy, readwrite) NSString*             targetAddressString;
 @property (nonatomic, assign, readonly) uint16_t              nextSequenceNumber;
-@property (strong, nonatomic, readonly) NSMutableArray<SCPacketRecord *>* packetRecords;
+@property (strong, nonatomic, readonly, nonnull) NSArray<SCPacketRecord *>* packetRecords;
 
 + (SCIcmpPacketUtility*)utilityWithHostAddress:(NSString*)hostAddress;    // contains (struct sockaddr) - should have this take IP string, then convert to struct sockaddr
 

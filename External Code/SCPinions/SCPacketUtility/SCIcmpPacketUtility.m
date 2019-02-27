@@ -41,6 +41,7 @@
 
 @property (nonatomic, copy,   readwrite) NSData*    targetAddress;
 @property (nonatomic, assign, readwrite) uint16_t   nextSequenceNumber;
+@property (strong, nonatomic, nonnull) NSMutableArray<SCPacketRecord *>* packetRecordsInternal;
 
 @end
 
@@ -146,9 +147,13 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
     if (self != nil) {
         self->_targetAddressString = [hostAddress copy];
         self->_targetAddress = hostAddressData;
-        self->_packetRecords = [[NSMutableArray alloc] init];
+        self.packetRecordsInternal = [[NSMutableArray alloc] init];
     }
     return self;
+}
+
+- (NSArray<SCPacketRecord *>*)packetRecords {
+    return [self.packetRecordsInternal copy];
 }
 
 - (NSData*)_formatAddress:(NSString*)address{
@@ -315,8 +320,8 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
             packetRecord.sentWithTTL = ttl;
             packetRecord.sequenceNumber = self.nextSequenceNumber;
             packetRecord.departure = now;
-            
-            [self.packetRecords addObject:packetRecord];
+
+            [self.packetRecordsInternal addObject:packetRecord];
         }
     }
     

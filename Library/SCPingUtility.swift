@@ -35,7 +35,7 @@ import Foundation
     @objc var delegate: SCPingUtilityDelegate?
 
     @objc public var packetRecords: [SCPacketRecord] {
-        let records = icmpUtility.packetRecords as! [SCPacketRecord]
+        let records = icmpUtility.packetRecords
         records.forEach { record in
             // The ICMPHeader sequence numbers are big endian. Need to convert them before looking them up.
             let responseHeader = responsePacketHeaders.first(where: { CFSwapInt16BigToHost($0.0.sequenceNumber) == record.sequenceNumber})
