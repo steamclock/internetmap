@@ -288,7 +288,6 @@ typedef NS_ENUM(NSInteger, MOINodeAction) {
 
         self.tracerouteContainerView.alpha = 0;
         self.tracerouteContainerView.hidden = NO;
-        self.topLabel.text = [NSString stringWithFormat:@"To %@", self.topLabel.text];
 
         if (![HelperMethods deviceIsiPad]) {
             self.scrollView.frame = CGRectMake(0, self.scrollView.frame.origin.y, self.scrollView.frame.size.width, self.scrollView.frame.size.height+250);
@@ -313,15 +312,17 @@ typedef NS_ENUM(NSInteger, MOINodeAction) {
         //tell delegate to perform actual action
         switch (action) {
             case MOINodeActionPing:
-                self.box1.textLabel.text = NSLocalizedString(@"Sent", nil);
-                self.box2.textLabel.text = NSLocalizedString(@"Received", nil);
-                self.box3.textLabel.text = NSLocalizedString(@"Lost", nil);
+                self.topLabel.text = [NSString stringWithFormat:@"Pinging %@", self.topLabel.text];
+                self.box1.textLabel.text = NSLocalizedString(@"Average", nil);
+                self.box2.textLabel.text = NSLocalizedString(@"Best", nil);
+                self.box3.textLabel.text = NSLocalizedString(@"Received", nil);
                 self.detailsLabel.text = NSLocalizedString(@"Details of Ping", nil);
                 if ([self.delegate respondsToSelector:@selector(nodeInformationViewControllerDidTriggerPingAction:)]) {
                     [self.delegate nodeInformationViewControllerDidTriggerPingAction:self];
                 }
                 break;
             case MOINodeActionTraceroute:
+                self.topLabel.text = [NSString stringWithFormat:@"To %@", self.topLabel.text];
                 self.tracerouteTimer = [NSTimer scheduledTimerWithTimeInterval:0.001 target:self selector:@selector(tracerouteTimerFired) userInfo:nil repeats:YES];
                 self.box1.textLabel.text = NSLocalizedString(@"IP Hops", nil);
                 self.box2.textLabel.text = NSLocalizedString(@"ASN Hops", nil);

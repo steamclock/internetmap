@@ -1530,7 +1530,6 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
 #pragma mark - PingLocationsDelegate
 
 - (void)pingLocationsViewController:(PingLocationsViewController *)pingLocationsViewController selectedHostName:(NSString *)hostName {
-    NSLog(@"self.nodeInformationViewController: %@", self.nodeInformationViewController);
     [self selectNodeByHostLookup:hostName withLookupCompletion:^(NSString *asn) {
         self.asnToPingAutomatically = asn;
     }];
@@ -1559,6 +1558,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
     NSString *resultText = @"";
     NSInteger received = 0;
     float totalRTT = 0;
+    float bestRTT = 0;
 
     for (NSInteger i = 0; i < records.count; i++) {
         SCPacketRecord *record = records[i];
@@ -1572,7 +1572,8 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         } else if (record.arrival) {
             received++;
             totalRTT = totalRTT + record.rtt;
-            recordMessage = [NSString stringWithFormat:@"Reply from %@: %zdms", record.responseAddress, (NSInteger)record.rtt];
+            bestRTT = bestRTT > 0 ? MIN(bestRTT, record.rtt) : record.rtt;
+            recordMessage = [NSString stringWithFormat:@"Reply from %@: %.00fms", record.responseAddress, record.rtt];
         } else {
             recordMessage = @"Unknown response";
         }
@@ -1580,15 +1581,15 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         resultText = [NSString stringWithFormat:@"%@%zd. %@\n", resultText, i + 1, recordMessage];
     }
 
-    NSInteger lost = records.count - received;
+    float receivedPercent = records.count > 0 ? received / (float) records.count : 0;
     NSInteger averagePingTime = received > 0 ? totalRTT / received : 0;
     NSString *averagePingTimeMessage = received > 0 ? [NSString stringWithFormat:@"%zdms", averagePingTime] : @"N/A";
+    NSString *bestPingTime = bestRTT > 0 ? [NSString stringWithFormat:@"%.00fms", bestRTT] : @"N/A";
 
-    self.nodeInformationViewController.detailsLabel.text = [NSString stringWithFormat:@"Average Ping Time: %@", averagePingTimeMessage];
     self.nodeInformationViewController.tracerouteTextView.text = resultText;
-    self.nodeInformationViewController.box1.numberLabel.text = [NSString stringWithFormat:@"%zd", records.count];
-    self.nodeInformationViewController.box2.numberLabel.text = [NSString stringWithFormat:@"%zd", received];
-    self.nodeInformationViewController.box3.numberLabel.text = [NSString stringWithFormat:@"%zd", lost];
+    self.nodeInformationViewController.box1.numberLabel.text = [NSString stringWithFormat:@"%@", averagePingTimeMessage];
+    self.nodeInformationViewController.box2.numberLabel.text = [NSString stringWithFormat:@"%@", bestPingTime];
+    self.nodeInformationViewController.box3.numberLabel.text = [NSString stringWithFormat:@"%.00f%%", receivedPercent * 100];
 }
 
 @end
