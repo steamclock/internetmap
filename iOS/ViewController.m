@@ -817,7 +817,7 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
         self.infoPopover = [[WEPopoverController alloc] initWithContentViewController:tableforPopover];
         self.infoPopover.delegate = self;
         
-        tableforPopover.items = @[ @"Introduction", @"About Cogeco Peer 1", @"Ping Cogeco Peer 1", @"Contact Cogeco Peer 1", @"Open Source", @"Credits" ];
+        tableforPopover.items = @[ @"Introduction", @"About Cogeco Peer 1", @"Ping Cogeco Peer 1", @"Contact Cogeco Peer 1", @"Open Source", @"Privacy Policy", @"Credits" ];
                         
         if (![HelperMethods deviceIsiPad]) {
             WEPopoverContainerViewProperties *prop = [WEPopoverContainerViewProperties defaultContainerViewProperties];
@@ -857,7 +857,12 @@ BOOL UIGestureRecognizerStateIsActive(UIGestureRecognizerState state) {
                     [weakSelf showInSafariWithURL:@"https://github.com/steamclock/internetmap"];
                     break;
                 }
-                case 5: //credits
+                case 5: //privacy policy
+                {
+                    [weakSelf showInSafariWithURL:@"https://www.cogecopeer1.com/legal/privacy-policy/"];
+                    break;
+                }
+                case 6: //credits
                 {
                     [weakSelf showCredits:@"credit"];
                     break;
