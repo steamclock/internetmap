@@ -1,0 +1,22 @@
+# ninja log v5
+2	2463	0	CMakeFiles/internetmaprenderer.dir/tracepath.cpp.o	5bf48947031f8f1b
+5	3502	0	CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/DisplayLines.cpp.o	3bd5be62557b291e
+13	3524	0	CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/VertexBuffer.cpp.o	7cf784b7419c95a8
+7	3571	0	CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/DisplayNodes.cpp.o	6ce94a86c225ebc0
+3	3749	0	CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/OpenGL.cpp.o	efd820ae62880fb3
+11	4041	0	CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/Program.cpp.o	6117c5bfacf1a67d
+19	4193	0	CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/MapDisplay.cpp.o	98fc4b801e6020c3
+16	4469	0	CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/Camera.cpp.o	1a41d9ae4c7b8969
+1	4989	0	CMakeFiles/internetmaprenderer.dir/renderer.cpp.o	d341d70aa6c85287
+2465	6229	0	CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/MapUtilities.cpp.o	2c1a48f117c446a
+0	6832	0	CMakeFiles/internetmaprenderer.dir/jniapi.cpp.o	3d11685d7a29ae23
+3572	6881	0	CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/Connection.cpp.o	85c1c06d52be649e
+3524	7157	0	CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/TypeVisualization.cpp.o	32728e470db3a692
+4041	7289	0	CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/IndexBox.cpp.o	2e37f5ac218bbf7d
+3749	7436	0	CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/Node.cpp.o	2bfb13b704679018
+3503	7580	0	CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/DefaultVisualization.cpp.o	25ddd9e2ced64e72
+6229	8602	0	CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/GlobeVisualization.cpp.o	804379f9164b43e4
+4470	10044	0	CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/MapController.cpp.o	4d7de72b5bc3e5e9
+4990	10907	0	CMakeFiles/internetmaprenderer.dir/jsoncpp/jsoncpp.cpp.o	caca736e2f8943e7
+4194	11063	0	CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/MapData.cpp.o	eddc7b950b0ee7ed
+11063	11694	0	/Users/jake/steamclock/internetmap/Android/app/build/intermediates/cmake/debug/obj/armeabi-v7a/libinternetmaprenderer.so	84c8ddb2e100e466

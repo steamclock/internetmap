@@ -1,0 +1,62 @@
+[1/21] Building CXX object CMakeFiles/internetmaprenderer.dir/jniapi.cpp.o
+[2/21] Building CXX object CMakeFiles/internetmaprenderer.dir/renderer.cpp.o
+[3/21] Building CXX object CMakeFiles/internetmaprenderer.dir/tracepath.cpp.o
+[4/21] Building CXX object CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/OpenGL.cpp.o
+[5/21] Building CXX object CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/DisplayLines.cpp.o
+[6/21] Building CXX object CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/DisplayNodes.cpp.o
+[7/21] Building CXX object CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/Program.cpp.o
+[8/21] Building CXX object CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/VertexBuffer.cpp.o
+[9/21] Building CXX object CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/Camera.cpp.o
+[10/21] Building CXX object CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/MapDisplay.cpp.o
+/Users/jake/steamclock/internetmap/Android-NDK/tracepath.cpp:388:20: warning: unused variable 'tv' [-Wunused-variable]
+    struct timeval tv;
+                   ^
+/Users/jake/steamclock/internetmap/Android-NDK/tracepath.cpp:389:9: warning: unused variable 'sequence' [-Wunused-variable]
+    int sequence = 0;
+        ^
+/Users/jake/steamclock/internetmap/Android-NDK/tracepath.cpp:394:9: warning: unused variable 'max_attempts' [-Wunused-variable]
+    int max_attempts = 10;
+        ^
+/Users/jake/steamclock/internetmap/Android-NDK/tracepath.cpp:395:9: warning: unused variable 'i' [-Wunused-variable]
+    int i = 0;
+        ^
+4 warnings generated.
+[11/21] Building CXX object CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/MapUtilities.cpp.o
+[12/21] Building CXX object CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/DefaultVisualization.cpp.o
+[13/21] Building CXX object CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/TypeVisualization.cpp.o
+[14/21] Building CXX object CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/Connection.cpp.o
+[15/21] Building CXX object CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/Node.cpp.o
+[16/21] Building CXX object CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/IndexBox.cpp.o
+/Users/jake/steamclock/internetmap/Common/Code/MapDisplay.cpp:21:5: warning: field 'targetNodes' will be initialized after field '_displayScale' [-Wreorder]
+    targetNodes(new DisplayNodes(0)),
+    ^
+/Users/jake/steamclock/internetmap/Common/Code/MapDisplay.cpp:24:5: warning: field 'camera' will be initialized after field '_startBlend' [-Wreorder]
+    camera(new Camera()),
+    ^
+/Users/jake/steamclock/internetmap/Common/Code/MapDisplay.cpp:26:5: warning: field '_endBlend' will be initialized after field '_pendingBlendTime' [-Wreorder]
+    _endBlend(0.0f),
+    ^
+3 warnings generated.
+[17/21] Building CXX object CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/MapData.cpp.o
+/Users/jake/steamclock/internetmap/Common/Code/Camera.cpp:50:5: warning: field '_rotationDuration' will be initialized after field '_moveDuration' [-Wreorder]
+    _rotationDuration(0.0f),
+    ^
+In file included from /Users/jake/steamclock/internetmap/Common/Code/Camera.cpp:6:
+/Users/jake/steamclock/internetmap/Common/Code/Camera.hpp:47:11: warning: private field '_rotation' is not used [-Wunused-private-field]
+    float _rotation;
+          ^
+2 warnings generated.
+[18/21] Building CXX object CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/MapController.cpp.o
+[19/21] Building CXX object CMakeFiles/internetmaprenderer.dir/jsoncpp/jsoncpp.cpp.o
+[20/21] Building CXX object CMakeFiles/internetmaprenderer.dir/Users/jake/steamclock/internetmap/Common/Code/GlobeVisualization.cpp.o
+/Users/jake/steamclock/internetmap/Common/Code/Node.cpp:12:5: warning: field 'mInitializedFriendly' will be initialized after field 'hasLatLong' [-Wreorder]
+    mInitializedFriendly(false),
+    ^
+/Users/jake/steamclock/internetmap/Common/Code/Node.cpp:15:5: warning: field 'longitude' will be initialized after field 'activeDefault' [-Wreorder]
+    longitude(0.0f),
+    ^
+/Users/jake/steamclock/internetmap/Common/Code/Node.cpp:16:5: warning: field 'activeDefault' will be initialized after field 'neverLoaded' [-Wreorder]
+    activeDefault(false),
+    ^
+3 warnings generated.
+[21/21] Linking CXX shared library /Users/jake/steamclock/internetmap/Android/app/build/intermediates/cmake/debug/obj/armeabi-v7a/libinternetmaprenderer.so

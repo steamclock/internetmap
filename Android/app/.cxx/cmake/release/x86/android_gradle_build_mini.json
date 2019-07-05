@@ -1,0 +1,16 @@
+{
+  "buildFiles": [
+    "/Users/jake/steamclock/internetmap/Android-NDK/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/Users/jake/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/jake/steamclock/internetmap/Android/app/.cxx/cmake/release/x86 --target clean"
+  ],
+  "libraries": {
+    "internetmaprenderer-Release-x86": {
+      "artifactName": "internetmaprenderer",
+      "buildCommand": "/Users/jake/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/jake/steamclock/internetmap/Android/app/.cxx/cmake/release/x86 --target internetmaprenderer",
+      "abi": "x86",
+      "output": "/Users/jake/steamclock/internetmap/Android/app/build/intermediates/cmake/release/obj/x86/libinternetmaprenderer.so"
+    }
+  }
+}

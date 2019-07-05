@@ -1,0 +1,35 @@
+-- Check for working C compiler: /Users/jake/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang
+-- Check for working C compiler: /Users/jake/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /Users/jake/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++
+-- Check for working CXX compiler: /Users/jake/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- [ /Users/jake/Library/Android/sdk/cmake/3.6.4111459/share/cmake-3.6/Modules/FindBoost.cmake:946 ] _boost_TEST_VERSIONS = 1.61.0;1.61;1.60.0;1.60;1.59.0;1.59;1.58.0;1.58;1.57.0;1.57;1.56.0;1.56;1.55.0;1.55;1.54.0;1.54;1.53.0;1.53;1.52.0;1.52;1.51.0;1.51;1.50.0;1.50;1.49.0;1.49;1.48.0;1.48;1.47.0;1.47;1.46.1;1.46.0;1.46;1.45.0;1.45;1.44.0;1.44;1.43.0;1.43;1.42.0;1.42;1.41.0;1.41;1.40.0;1.40;1.39.0;1.39;1.38.0;1.38;1.37.0;1.37;1.36.1;1.36.0;1.36;1.35.1;1.35.0;1.35;1.34.1;1.34.0;1.34;1.33.1;1.33.0;1.33
+-- [ /Users/jake/Library/Android/sdk/cmake/3.6.4111459/share/cmake-3.6/Modules/FindBoost.cmake:948 ] Boost_USE_MULTITHREADED = ON
+-- [ /Users/jake/Library/Android/sdk/cmake/3.6.4111459/share/cmake-3.6/Modules/FindBoost.cmake:950 ] Boost_USE_STATIC_LIBS = ON
+-- [ /Users/jake/Library/Android/sdk/cmake/3.6.4111459/share/cmake-3.6/Modules/FindBoost.cmake:952 ] Boost_USE_STATIC_RUNTIME = 
+-- [ /Users/jake/Library/Android/sdk/cmake/3.6.4111459/share/cmake-3.6/Modules/FindBoost.cmake:954 ] Boost_ADDITIONAL_VERSIONS = 
+-- [ /Users/jake/Library/Android/sdk/cmake/3.6.4111459/share/cmake-3.6/Modules/FindBoost.cmake:956 ] Boost_NO_SYSTEM_PATHS = 
+-- [ /Users/jake/Library/Android/sdk/cmake/3.6.4111459/share/cmake-3.6/Modules/FindBoost.cmake:1024 ] Declared as CMake or Environmental Variables:
+-- [ /Users/jake/Library/Android/sdk/cmake/3.6.4111459/share/cmake-3.6/Modules/FindBoost.cmake:1026 ]   BOOST_ROOT = ../External-Code-Android
+-- [ /Users/jake/Library/Android/sdk/cmake/3.6.4111459/share/cmake-3.6/Modules/FindBoost.cmake:1028 ]   BOOST_INCLUDEDIR = ../External-Code-Android
+-- [ /Users/jake/Library/Android/sdk/cmake/3.6.4111459/share/cmake-3.6/Modules/FindBoost.cmake:1030 ]   BOOST_LIBRARYDIR = ../External-Code-Android
+-- [ /Users/jake/Library/Android/sdk/cmake/3.6.4111459/share/cmake-3.6/Modules/FindBoost.cmake:1032 ] _boost_TEST_VERSIONS = 1.61.0;1.61;1.60.0;1.60;1.59.0;1.59;1.58.0;1.58;1.57.0;1.57;1.56.0;1.56;1.55.0;1.55;1.54.0;1.54;1.53.0;1.53;1.52.0;1.52;1.51.0;1.51;1.50.0;1.50;1.49.0;1.49;1.48.0;1.48;1.47.0;1.47;1.46.1;1.46.0;1.46;1.45.0;1.45;1.44.0;1.44;1.43.0;1.43;1.42.0;1.42;1.41.0;1.41;1.40.0;1.40;1.39.0;1.39;1.38.0;1.38;1.37.0;1.37;1.36.1;1.36.0;1.36;1.35.1;1.35.0;1.35;1.34.1;1.34.0;1.34;1.33.1;1.33.0;1.33
+-- [ /Users/jake/Library/Android/sdk/cmake/3.6.4111459/share/cmake-3.6/Modules/FindBoost.cmake:1125 ] location of version.hpp: ../External-Code-Android/boost/version.hpp
+-- [ /Users/jake/Library/Android/sdk/cmake/3.6.4111459/share/cmake-3.6/Modules/FindBoost.cmake:1149 ] version.hpp reveals boost 1.52.0
+-- [ /Users/jake/Library/Android/sdk/cmake/3.6.4111459/share/cmake-3.6/Modules/FindBoost.cmake:1235 ] guessed _boost_COMPILER = 
+-- [ /Users/jake/Library/Android/sdk/cmake/3.6.4111459/share/cmake-3.6/Modules/FindBoost.cmake:1245 ] _boost_MULTITHREADED = -mt
+-- [ /Users/jake/Library/Android/sdk/cmake/3.6.4111459/share/cmake-3.6/Modules/FindBoost.cmake:1288 ] _boost_RELEASE_ABI_TAG = -
+-- [ /Users/jake/Library/Android/sdk/cmake/3.6.4111459/share/cmake-3.6/Modules/FindBoost.cmake:1290 ] _boost_DEBUG_ABI_TAG = -d
+-- [ /Users/jake/Library/Android/sdk/cmake/3.6.4111459/share/cmake-3.6/Modules/FindBoost.cmake:1344 ] _boost_LIBRARY_SEARCH_DIRS_RELEASE = ../External-Code-Android;../External-Code-Android/lib;../External-Code-Android/stage/lib;../External-Code-Android/lib;../External-Code-Android/../lib;../External-Code-Android/stage/lib;PATHS;C:/boost/lib;C:/boost;/sw/local/lib_boost_LIBRARY_SEARCH_DIRS_DEBUG   = ../External-Code-Android;../External-Code-Android/lib;../External-Code-Android/stage/lib;../External-Code-Android/lib;../External-Code-Android/../lib;../External-Code-Android/stage/lib;PATHS;C:/boost/lib;C:/boost;/sw/local/lib
+-- [ /Users/jake/Library/Android/sdk/cmake/3.6.4111459/share/cmake-3.6/Modules/FindBoost.cmake:1595 ] Boost_FOUND = 1
+-- Boost version: 1.52.0
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /Users/jake/steamclock/internetmap/Android/app/.cxx/cmake/debug/x86_64
